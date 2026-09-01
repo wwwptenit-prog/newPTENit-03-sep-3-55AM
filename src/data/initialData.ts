@@ -12,7 +12,8 @@ import {
   MarketplaceJob,
   MarketplaceProposal,
   MarketplaceOrder,
-  DigitalProduct
+  DigitalProduct,
+  LiveClassSession
 } from '../types';
 
 export const initialSiteSettings: SiteSettings = {
@@ -3079,5 +3080,69 @@ export const initialDigitalProducts: DigitalProduct[] = [
     licenseKey: "PTENIT-FREE-FIGMA-UIKIT-ACCESS"
   }
 ];
+
+export const initialLiveSessions: LiveClassSession[] = [
+  {
+    id: "live-canva-1",
+    courseId: "c-canva",
+    courseTitle: "Canva দিয়ে প্রফেশনাল গ্রাফিক্স ডিজাইন",
+    instructorName: "শামীম আহমেদ",
+    topic: "ক্যানভা সোশ্যাল মিডিয়া পোস্ট ডিজাইন ও ব্রান্ডিং কিট লাইভ প্র্যাকটিস",
+    moduleNo: "০১",
+    moduleTitle: "ক্যানভা পরিচিতি ও ইন্টারফেস",
+    lessonNo: "০৩",
+    lessonTitle: "সোশ্যাল মিডিয়া ব্যানার ডিজাইন",
+    serialNo: "০৩",
+    date: "2026-09-01",
+    time: "20:00",
+    durationMinutes: 90,
+    meetLink: "https://meet.google.com/canva-live-2026",
+    platform: "google_meet",
+    note: "ক্লাসের জন্য ক্যানভা ফ্রি/প্রো অ্যাকাউন্ট রেডি রাখবেন।",
+    thumbnail: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=800&q=80",
+    createdAt: "2026-09-01T10:00:00.000Z"
+  },
+  {
+    id: "live-pte-1",
+    courseId: "c-pte-basic",
+    courseTitle: "PTE Academic Crash Course for Beginners",
+    instructorName: "মুহাম্মাদ রেজওয়ান",
+    topic: "PTE Speaking Read Aloud & Repeat Sentence Masterclass",
+    moduleNo: "০১",
+    moduleTitle: "Speaking Section Breakdown",
+    lessonNo: "০১",
+    lessonTitle: "Read Aloud Scoring Strategy",
+    serialNo: "০১",
+    date: "2026-09-02",
+    time: "20:30",
+    durationMinutes: 90,
+    meetLink: "https://meet.google.com/pte-live-speaking",
+    platform: "google_meet",
+    note: "মাইক্রোফোন টেস্ট করে ক্লাসে জয়েন করবেন।",
+    thumbnail: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80",
+    createdAt: "2026-09-01T11:00:00.000Z"
+  },
+  {
+    id: "live-wp-1",
+    courseId: "c-wp",
+    courseTitle: "WordPress ও WooCommerce ই-কমার্স ডেভেলপমেন্ট",
+    instructorName: "শামীম আহমেদ",
+    topic: "উ-কমার্স স্টোর সেটআপ ও বিকাশ/নগদ গেটওয়ে ইন্টিগ্রেশন হ্যান্ডস-অন",
+    moduleNo: "০২",
+    moduleTitle: "WooCommerce Advanced Setup",
+    lessonNo: "০২",
+    lessonTitle: "Payment Gateway Integration",
+    serialNo: "০৪",
+    date: "2026-09-03",
+    time: "21:00",
+    durationMinutes: 90,
+    meetLink: "https://meet.google.com/wp-live-ecommerce",
+    platform: "google_meet",
+    note: "লোকালহোস্ট অথবা সিপ্যানেল ওপেন রাখবেন।",
+    thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+    createdAt: "2026-09-01T12:00:00.000Z"
+  }
+];
+
 
 

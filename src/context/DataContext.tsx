@@ -24,7 +24,8 @@ import {
   MarketplaceJob,
   MarketplaceProposal,
   MarketplaceOrder,
-  DigitalProduct
+  DigitalProduct,
+  LiveClassSession
 } from '../types';
 import {
   initialSiteSettings,
@@ -40,7 +41,8 @@ import {
   initialJobs,
   initialProposals,
   initialMarketplaceOrders,
-  initialDigitalProducts
+  initialDigitalProducts,
+  initialLiveSessions
 } from '../data/initialData';
 
 interface DataContextType {
@@ -99,6 +101,12 @@ interface DataContextType {
   addDigitalProduct: (product: Omit<DigitalProduct, 'id' | 'createdAt' | 'salesCount'>) => void;
   updateDigitalProduct: (id: string, product: Partial<DigitalProduct>) => void;
   deleteDigitalProduct: (id: string) => void;
+  
+  // Live Classes & Scheduled Sessions
+  liveSessions: LiveClassSession[];
+  addLiveSession: (session: Omit<LiveClassSession, 'id' | 'createdAt'>) => void;
+  updateLiveSession: (id: string, session: Partial<LiveClassSession>) => void;
+  deleteLiveSession: (id: string) => void;
   
   // Marketplace & Agency Dispatch Actions
   createGig: (gig: Omit<MarketplaceGig, 'id' | 'createdAt' | 'rating' | 'reviewsCount' | 'salesCount'>) => void;
@@ -1062,6 +1070,19 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return initialDigitalProducts;
   });
 
+  const [liveSessions, setLiveSessions] = useState<LiveClassSession[]>(() => {
+    const saved = localStorage.getItem(`${STORAGE_KEY}_live_sessions`);
+    if (saved) {
+      try {
+        const parsed: LiveClassSession[] = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch {}
+    }
+    return initialLiveSessions;
+  });
+
 
 
   const [marketplaceOrders, setMarketplaceOrders] = useState<MarketplaceOrder[]>(() => {
@@ -1120,6 +1141,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_digital_products`, JSON.stringify(digitalProducts));
   }, [digitalProducts]);
+
+  useEffect(() => {
+    localStorage.setItem(`${STORAGE_KEY}_live_sessions`, JSON.stringify(liveSessions));
+  }, [liveSessions]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_marketplace_orders`, JSON.stringify(marketplaceOrders));
@@ -2673,6 +2698,23 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTeacherNotices(prev => prev.filter(n => n.id !== id));
   };
 
+  const addLiveSession = (session: Omit<LiveClassSession, 'id' | 'createdAt'>) => {
+    const newSession: LiveClassSession = {
+      ...session,
+      id: `live-${Date.now()}`,
+      createdAt: new Date().toISOString()
+    };
+    setLiveSessions(prev => [newSession, ...prev]);
+  };
+
+  const updateLiveSession = (id: string, updatedFields: Partial<LiveClassSession>) => {
+    setLiveSessions(prev => prev.map(s => s.id === id ? { ...s, ...updatedFields } : s));
+  };
+
+  const deleteLiveSession = (id: string) => {
+    setLiveSessions(prev => prev.filter(s => s.id !== id));
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -2733,6 +2775,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addDigitalProduct,
         updateDigitalProduct,
         deleteDigitalProduct,
+        liveSessions,
+        addLiveSession,
+        updateLiveSession,
+        deleteLiveSession,
         createGig,
         updateGig,
         deleteGig,

@@ -68,7 +68,12 @@ import {
   Copy
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
-import { Assignment, AssignmentSubmission, Course, CustomerProject } from '../types';
+import { Assignment, AssignmentSubmission, Course, CustomerProject, LiveClassSession } from '../types';
+import {
+  getActiveLiveSessions,
+  getLiveSessionDynamicStatus,
+  formatBanglaLiveSchedule
+} from '../services/liveClassService';
 
 interface TeacherDashboardProps {
   onViewCourse?: (courseId: string) => void;
@@ -93,6 +98,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
     currentUser,
     users = [],
     courses = [],
+    liveSessions = [],
     customerProjects = [],
     enrollments = [],
     certificates = [],
@@ -107,6 +113,9 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
     requestTeacherPayout,
     addAssignment,
     deleteAssignment,
+    addLiveSession,
+    updateLiveSession,
+    deleteLiveSession,
     gradeSubmission,
     updateSubmissionStatus,
     deleteSubmission,
@@ -294,60 +303,29 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   const [settingsPayoutNumber, setSettingsPayoutNumber] = useState(currentUser?.mobile || '01700000000');
   const [settingsPayoutSaved, setSettingsPayoutSaved] = useState(false);
 
-  // Smart & Intuitive Live Class Management State
-  const [editingLiveModalCourse, setEditingLiveModalCourse] = useState<Course | null>(null);
-  const [modalLiveModuleNo, setModalLiveModuleNo] = useState<string>('১');
-  const [modalLiveModuleTitle, setModalLiveModuleTitle] = useState<string>('');
-  const [modalLiveLessonNo, setModalLiveLessonNo] = useState<string>('১');
-  const [modalLiveLessonTitle, setModalLiveLessonTitle] = useState<string>('');
-  const [modalLiveSerialNo, setModalLiveSerialNo] = useState<string>('১');
-  const [modalLiveTopic, setModalLiveTopic] = useState<string>('');
-  const [modalLiveDate, setModalLiveDate] = useState<string>('');
-  const [modalLiveTime, setModalLiveTime] = useState<string>('21:00');
-  const [modalLiveUrl, setModalLiveUrl] = useState<string>('');
-  const [modalLiveStatus, setModalLiveStatus] = useState<'scheduled' | 'live_now' | 'completed'>('scheduled');
-  const [modalLivePresetSchedule, setModalLivePresetSchedule] = useState<string>('');
+  // Smart & Automated Live Class Management State
+  const [liveModalOpen, setLiveModalOpen] = useState(false);
+  const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
+  const [modalCourseId, setModalCourseId] = useState<string>('');
+  const [modalModuleNo, setModalModuleNo] = useState<string>('১');
+  const [modalModuleTitle, setModalModuleTitle] = useState<string>('');
+  const [modalLessonNo, setModalLessonNo] = useState<string>('১');
+  const [modalLessonTitle, setModalLessonTitle] = useState<string>('');
+  const [modalClassSerialNo, setModalClassSerialNo] = useState<string>('১');
+  const [modalTopic, setModalTopic] = useState<string>('');
+  const [modalDate, setModalDate] = useState<string>('');
+  const [modalTime, setModalTime] = useState<string>('21:00');
+  const [modalDuration, setModalDuration] = useState<number>(90);
+  const [modalMeetingLink, setModalMeetingLink] = useState<string>('https://meet.google.com/ptenit-live-class');
+  const [modalSpecialNotes, setModalSpecialNotes] = useState<string>('');
   const [liveSearchQuery, setLiveSearchQuery] = useState<string>('');
-  const [liveFilterTab, setLiveFilterTab] = useState<'all' | 'live' | 'scheduled'>('all');
+  const [showPastSessions, setShowPastSessions] = useState<boolean>(false);
   const [liveToastMsg, setLiveToastMsg] = useState<string>('');
   const [copiedLink, setCopiedLink] = useState<string | null>(null);
 
   // Helper to format schedule into readable Bengali
-  const getFormattedSchedule = (dateStr: string, timeStr: string, customPreset?: string) => {
-    if (customPreset && customPreset.trim() && !dateStr) {
-      return customPreset;
-    }
-    
-    // Format time: e.g. 21:00 -> রাত ০৯:০০ টা
-    let formattedTime = timeStr || '21:00';
-    try {
-      const [hours, minutes] = (timeStr || '21:00').split(':').map(Number);
-      const displayHours = hours % 12 || 12;
-      const period = hours < 6 ? 'রাত' : hours < 12 ? 'সকাল' : hours < 15 ? 'দুপুর' : hours < 18 ? 'বিকাল' : hours < 20 ? 'সন্ধ্যা' : 'রাত';
-      const toBengaliNumber = (num: number) => num.toString().padStart(2, '0').replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[+d]);
-      formattedTime = `${period} ${toBengaliNumber(displayHours)}:${toBengaliNumber(minutes)} টা`;
-    } catch {
-      formattedTime = timeStr;
-    }
-
-    if (!dateStr) {
-      return `আজ, ${formattedTime}`;
-    }
-
-    try {
-      const d = new Date(dateStr);
-      if (!isNaN(d.getTime())) {
-        const months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
-        const day = d.getDate().toString().replace(/\d/g, num => '০১২৩৪৫৬৭৮৯'[+num]);
-        const month = months[d.getMonth()];
-        const year = d.getFullYear().toString().replace(/\d/g, num => '০১২৩৪৫৬৭৮৯'[+num]);
-        return `${day} ${month} ${year}, ${formattedTime}`;
-      }
-    } catch {
-      // fallback
-    }
-
-    return `${dateStr}, ${formattedTime}`;
+  const getFormattedSchedule = (dateStr: string, timeStr: string) => {
+    return formatBanglaLiveSchedule(dateStr, timeStr);
   };
 
   // Helper to auto-generate topic title
@@ -361,76 +339,118 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
     return prefix ? `${prefix} - লাইভ প্র্যাকটিস ও ডিসকাশন ক্লাস` : 'লাইভ ক্লাস';
   };
 
-  const openSimpleLiveModal = (course: Course) => {
-    setEditingLiveModalCourse(course);
-    setModalLiveUrl(course.liveClassLink || 'https://meet.google.com/ptenit-live-class');
+  const openCreateLiveModal = (preselectedCourseId?: string) => {
+    const course = courses.find(c => c.id === preselectedCourseId) || courses[0];
+    setEditingSessionId(null);
+    setModalCourseId(course ? course.id : '');
+    setModalModuleNo('১');
+    setModalModuleTitle(course?.modules?.[0]?.title || 'মৌলিক পরিচিতি ও ফান্ডামেন্টালস');
+    setModalLessonNo('১');
+    setModalLessonTitle(course?.modules?.[0]?.lessons?.[0]?.title || 'প্রথম পরিচিতি ও প্র্যাকটিস');
+    setModalClassSerialNo('১');
+    setModalTopic(course ? `${course.title} - লাইভ প্র্যাকটিস ও প্রশ্নোত্তর সেশন` : 'লাইভ প্র্যাকটিস ক্লাস');
     
-    // Module info
-    const initialModNo = course.liveClassModuleNo || '১';
-    setModalLiveModuleNo(initialModNo);
-    const initialModTitle = course.liveClassModuleTitle || (course.modules && course.modules[0] ? course.modules[0].title : '');
-    setModalLiveModuleTitle(initialModTitle);
-
-    // Lesson info
-    const initialLessonNo = course.liveClassLessonNo || '১';
-    setModalLiveLessonNo(initialLessonNo);
-    const initialLessonTitle = course.liveClassLessonTitle || (course.modules && course.modules[0]?.lessons?.[0] ? course.modules[0].lessons[0].title : '');
-    setModalLiveLessonTitle(initialLessonTitle);
-
-    // Class Serial No
-    setModalLiveSerialNo(course.liveClassSerialNo || '১');
-
-    // Topic
-    if (course.liveClassTopic) {
-      setModalLiveTopic(course.liveClassTopic);
-    } else {
-      setModalLiveTopic(generateLiveTopic(initialModNo, initialLessonNo, initialLessonTitle || course.title));
-    }
-
-    // Date & Time
-    const todayStr = new Date().toISOString().split('T')[0];
-    setModalLiveDate(course.liveClassDate || todayStr);
-    setModalLiveTime(course.liveClassTime || '21:00');
-    setModalLivePresetSchedule(course.liveSchedule || '');
-    setModalLiveStatus(course.liveClassStatus || 'scheduled');
+    const today = new Date().toISOString().split('T')[0];
+    setModalDate(today);
+    setModalTime('21:00');
+    setModalDuration(90);
+    setModalMeetingLink('https://meet.google.com/ptenit-live-class');
+    setModalSpecialNotes('সকলকে সময়মতো গুগল মিট রুমে জয়েন করার অনুরোধ করা হচ্ছে।');
+    setLiveModalOpen(true);
   };
 
-  const handleSaveSimpleLive = () => {
-    if (!editingLiveModalCourse) return;
-    const formattedSchedule = getFormattedSchedule(modalLiveDate, modalLiveTime, modalLivePresetSchedule);
-    
-    updateCourse(editingLiveModalCourse.id, {
-      liveClassLink: modalLiveUrl.trim(),
-      liveClassDate: modalLiveDate.trim(),
-      liveClassTime: modalLiveTime.trim(),
-      liveSchedule: formattedSchedule,
-      liveClassModuleNo: modalLiveModuleNo.trim(),
-      liveClassModuleTitle: modalLiveModuleTitle.trim(),
-      liveClassLessonNo: modalLiveLessonNo.trim(),
-      liveClassLessonTitle: modalLiveLessonTitle.trim(),
-      liveClassSerialNo: modalLiveSerialNo.trim(),
-      liveClassTopic: modalLiveTopic.trim() || generateLiveTopic(modalLiveModuleNo, modalLiveLessonNo, modalLiveLessonTitle),
-      liveClassStatus: modalLiveStatus
+  const openEditLiveModal = (session: LiveClassSession) => {
+    setEditingSessionId(session.id);
+    setModalCourseId(session.courseId);
+    setModalModuleNo(session.moduleNo || '১');
+    setModalModuleTitle(session.moduleTitle || '');
+    setModalLessonNo(session.lessonNo || '১');
+    setModalLessonTitle(session.lessonTitle || '');
+    setModalClassSerialNo(session.classSerialNo || '১');
+    setModalTopic(session.topic || '');
+    setModalDate(session.date || new Date().toISOString().split('T')[0]);
+    setModalTime(session.time || '21:00');
+    setModalDuration(session.durationMinutes || 90);
+    setModalMeetingLink(session.meetingLink || 'https://meet.google.com/ptenit-live-class');
+    setModalSpecialNotes(session.specialNotes || '');
+    setLiveModalOpen(true);
+  };
+
+  const handleSaveLiveSession = () => {
+    const course = courses.find(c => c.id === modalCourseId);
+    if (!modalCourseId || !course) {
+      alert('অনুগ্রহ করে একটি কোর্স নির্বাচন করুন।');
+      return;
+    }
+
+    if (!modalTopic.trim()) {
+      alert('অনুগ্রহ করে ক্লাসের টপিক লিখুন।');
+      return;
+    }
+
+    if (editingSessionId) {
+      updateLiveSession(editingSessionId, {
+        courseId: modalCourseId,
+        courseTitle: course.title,
+        courseThumbnail: course.thumbnail,
+        instructorName: course.instructor || currentUser?.name || 'PTENit Teacher',
+        moduleNo: modalModuleNo.trim(),
+        moduleTitle: modalModuleTitle.trim(),
+        lessonNo: modalLessonNo.trim(),
+        lessonTitle: modalLessonTitle.trim(),
+        classSerialNo: modalClassSerialNo.trim(),
+        topic: modalTopic.trim(),
+        date: modalDate.trim(),
+        time: modalTime.trim(),
+        durationMinutes: modalDuration || 90,
+        meetingLink: modalMeetingLink.trim(),
+        specialNotes: modalSpecialNotes.trim()
+      });
+      setLiveToastMsg(`✅ "${modalTopic}" শিডিউল সফলভাবে আপডেট করা হয়েছে!`);
+    } else {
+      addLiveSession({
+        courseId: modalCourseId,
+        courseTitle: course.title,
+        courseThumbnail: course.thumbnail,
+        instructorName: course.instructor || currentUser?.name || 'PTENit Teacher',
+        moduleNo: modalModuleNo.trim(),
+        moduleTitle: modalModuleTitle.trim(),
+        lessonNo: modalLessonNo.trim(),
+        lessonTitle: modalLessonTitle.trim(),
+        classSerialNo: modalClassSerialNo.trim(),
+        topic: modalTopic.trim(),
+        date: modalDate.trim(),
+        time: modalTime.trim(),
+        durationMinutes: modalDuration || 90,
+        meetingLink: modalMeetingLink.trim(),
+        specialNotes: modalSpecialNotes.trim()
+      });
+      setLiveToastMsg(`✅ নতুন লাইভ ক্লাস "${modalTopic}" সফলভাবে তৈরি হয়েছে!`);
+    }
+
+    // Sync to course object for backward compatibility
+    updateCourse(modalCourseId, {
+      liveClassLink: modalMeetingLink.trim(),
+      liveClassDate: modalDate.trim(),
+      liveClassTime: modalTime.trim(),
+      liveClassModuleNo: modalModuleNo.trim(),
+      liveClassModuleTitle: modalModuleTitle.trim(),
+      liveClassLessonNo: modalLessonNo.trim(),
+      liveClassLessonTitle: modalLessonTitle.trim(),
+      liveClassSerialNo: modalClassSerialNo.trim(),
+      liveClassTopic: modalTopic.trim()
     });
 
-    setLiveToastMsg(`✅ "${editingLiveModalCourse.title}" এর মডিউল, লেসন ও লাইভ শিডিউল সফলভাবে সেভ হয়েছে!`);
-    setEditingLiveModalCourse(null);
+    setLiveModalOpen(false);
     setTimeout(() => setLiveToastMsg(''), 3500);
   };
 
-  const handleToggleLiveNow = (course: Course) => {
-    const nextStatus = course.liveClassStatus === 'live_now' ? 'completed' : 'live_now';
-    updateCourse(course.id, {
-      liveClassStatus: nextStatus
-    });
-
-    if (nextStatus === 'live_now') {
-      window.open(course.liveClassLink || 'https://meet.google.com/ptenit-live-class', '_blank');
-      setLiveToastMsg(`🔴 "${course.title}" এর লাইভ ক্লাস শুরু হয়েছে!`);
-    } else {
-      setLiveToastMsg(`🟢 "${course.title}" এর লাইভ ক্লাস সমাপ্ত হিসেবে চিহ্নিত হয়েছে।`);
+  const handleDeleteLiveSession = (session: LiveClassSession) => {
+    if (window.confirm(`আপনি কি নিশ্চিত "${session.topic}" লাইভ ক্লাসটি ডিলিট করতে চান?`)) {
+      deleteLiveSession(session.id);
+      setLiveToastMsg(`🗑️ "${session.topic}" ক্লাসটি মুছে ফেলা হয়েছে।`);
+      setTimeout(() => setLiveToastMsg(''), 3500);
     }
-    setTimeout(() => setLiveToastMsg(''), 3500);
   };
 
   const [chatInputText, setChatInputText] = useState('');
@@ -2458,7 +2478,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
           </div>
         )}
 
-        {/* TAB: লাইভ ক্লাস ও লিংক সেটআপ (LIVE CLASSES TAB - ULTRA SIMPLE & CLEAN) */}
+        {/* TAB: লাইভ ক্লাস ও লিংক সেটআপ (LIVE CLASSES TAB - AUTOMATED & CLEAN) */}
         {activeTab === 'live_classes' && (
           <div className="space-y-5 font-bengali animate-fadeIn">
             {/* Live Toast Alert */}
@@ -2477,57 +2497,19 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
               </div>
             )}
 
-            {/* Simple Clean Header & Search */}
+            {/* Simple Clean Header with Create Live Class Button */}
             <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
               <div className="space-y-0.5">
                 <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
                   <Video className="w-5 h-5 text-rose-500 shrink-0" />
-                  <span>লাইভ ক্লাস ও মিটিং রুম</span>
+                  <span>লাইভ ক্লাস</span>
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                  এক ক্লিকে গুগল মিট বা জুম মিটিং লিংক সেট করুন এবং সরাসরি লাইভ ক্লাস পরিচালনা করুন।
+                  শিডিউল অনুযায়ী অটো লাইভ ও স্বয়ংক্রিয় রিমুভ
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2">
-                {/* Status Filter Pills */}
-                <div className="flex items-center p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold">
-                  <button
-                    type="button"
-                    onClick={() => setLiveFilterTab('all')}
-                    className={`px-3 py-1.5 rounded-lg transition cursor-pointer font-black ${
-                      liveFilterTab === 'all'
-                        ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-2xs'
-                        : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'
-                    }`}
-                  >
-                    সকল কোর্স ({courses.length})
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setLiveFilterTab('live')}
-                    className={`px-3 py-1.5 rounded-lg transition cursor-pointer flex items-center gap-1 font-black ${
-                      liveFilterTab === 'live'
-                        ? 'bg-rose-500 text-white shadow-2xs'
-                        : 'text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30'
-                    }`}
-                  >
-                    <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
-                    <span>লাইভ ({courses.filter(c => c.liveClassStatus === 'live_now').length})</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setLiveFilterTab('scheduled')}
-                    className={`px-3 py-1.5 rounded-lg transition cursor-pointer font-black ${
-                      liveFilterTab === 'scheduled'
-                        ? 'bg-amber-500 text-white shadow-2xs'
-                        : 'text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30'
-                    }`}
-                  >
-                    <span>শিডিউল ({courses.filter(c => c.liveClassStatus !== 'live_now').length})</span>
-                  </button>
-                </div>
-
+              <div className="flex flex-wrap items-center gap-2.5">
                 {/* Quick Search */}
                 <div className="relative w-full sm:w-56">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
@@ -2535,71 +2517,92 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                     type="text"
                     value={liveSearchQuery}
                     onChange={e => setLiveSearchQuery(e.target.value)}
-                    placeholder="কোর্স খুঁজুন..."
-                    className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-3 py-1.5 text-xs font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:outline-none"
+                    placeholder="খুঁজুন..."
+                    className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:outline-none"
                   />
                 </div>
+
+                {/* Primary Action: Create Live Class */}
+                <button
+                  type="button"
+                  onClick={() => openCreateLiveModal()}
+                  className="px-4 py-2.5 bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white text-xs font-black rounded-xl shadow-md hover:shadow-lg transition cursor-pointer flex items-center justify-center gap-2 active:scale-95 whitespace-nowrap"
+                >
+                  <Plus className="w-4 h-4 stroke-[3]" />
+                  <span>নতুন লাইভ ক্লাস</span>
+                </button>
               </div>
             </div>
 
-            {/* Courses List - Simple & Clean */}
+            {/* Active Live Classes List (Auto-Scheduled & Auto-Removing Expired) */}
             {(() => {
-              let filteredLiveCourses = courses.filter(c =>
-                c.title.toLowerCase().includes(liveSearchQuery.toLowerCase()) ||
-                c.category.toLowerCase().includes(liveSearchQuery.toLowerCase())
+              const activeSessions = getActiveLiveSessions(liveSessions);
+              const filteredSessions = activeSessions.filter(s =>
+                s.topic.toLowerCase().includes(liveSearchQuery.toLowerCase()) ||
+                s.courseTitle.toLowerCase().includes(liveSearchQuery.toLowerCase()) ||
+                (s.moduleTitle && s.moduleTitle.toLowerCase().includes(liveSearchQuery.toLowerCase()))
               );
 
-              if (liveFilterTab === 'live') {
-                filteredLiveCourses = filteredLiveCourses.filter(c => c.liveClassStatus === 'live_now');
-              } else if (liveFilterTab === 'scheduled') {
-                filteredLiveCourses = filteredLiveCourses.filter(c => c.liveClassStatus !== 'live_now');
-              }
-
-              if (filteredLiveCourses.length === 0) {
+              if (filteredSessions.length === 0) {
                 return (
-                  <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 text-center space-y-2">
-                    <Video className="w-10 h-10 text-slate-400 mx-auto" />
-                    <p className="text-sm font-bold text-slate-600 dark:text-slate-300">কোনো কোর্স পাওয়া যায়নি</p>
+                  <div className="bg-white dark:bg-slate-900 p-10 rounded-3xl border border-slate-200 dark:border-slate-800 text-center space-y-4">
+                    <div className="w-16 h-16 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto">
+                      <Video className="w-8 h-8" />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-base font-black text-slate-900 dark:text-white">
+                        কোনো লাইভ ক্লাস নেই
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+                        শিক্ষার্থীদের জন্য নতুন লাইভ ক্লাস শিডিউল করুন।
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => openCreateLiveModal()}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-black text-xs rounded-xl shadow-md transition cursor-pointer active:scale-95"
+                    >
+                      <Plus className="w-4 h-4 stroke-[3]" />
+                      <span>নতুন লাইভ ক্লাস তৈরি করুন</span>
+                    </button>
                   </div>
                 );
               }
 
               return (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredLiveCourses.map(course => {
-                    const isLive = course.liveClassStatus === 'live_now';
-                    const link = course.liveClassLink || 'https://meet.google.com/ptenit-live-class';
-                    const modNo = course.liveClassModuleNo || '১';
-                    const lessonNo = course.liveClassLessonNo || '১';
-                    const serialNo = course.liveClassSerialNo || '১';
-                    const topic = course.liveClassTopic || `${course.title} - লাইভ প্র্যাকটিস ক্লাস`;
-                    const scheduleDisplay = course.liveSchedule || (course.liveClassDate ? getFormattedSchedule(course.liveClassDate, course.liveClassTime || '21:00') : 'আজ রাত ০৯:০০ টা');
+                  {filteredSessions.map(session => {
+                    const dynamicStatus = getLiveSessionDynamicStatus(session);
+                    const isLive = dynamicStatus === 'live_now';
+                    const link = session.meetingLink || 'https://meet.google.com/ptenit-live-class';
+                    const scheduleDisplay = formatBanglaLiveSchedule(session.date, session.time);
+                    const course = courses.find(c => c.id === session.courseId);
 
                     return (
                       <div
-                        key={course.id}
+                        key={session.id}
                         className={`bg-white dark:bg-slate-900 rounded-3xl border transition-all p-4 sm:p-5 flex flex-col justify-between gap-4 shadow-sm hover:shadow-md ${
                           isLive
                             ? 'border-rose-500 dark:border-rose-500 ring-2 ring-rose-500/20 shadow-rose-500/10'
                             : 'border-slate-200 dark:border-slate-800'
                         }`}
                       >
-                        {/* Course Info & Badges */}
+                        {/* Session Info & Badges */}
                         <div className="space-y-3">
                           <div className="flex items-start gap-3">
                             <img
-                              src={course.thumbnail}
-                              alt={course.title}
-                              className="w-13 h-13 rounded-2xl object-cover border border-slate-200 dark:border-slate-700 shrink-0 shadow-2xs"
+                              src={session.courseThumbnail || course?.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&auto=format&fit=crop&q=80'}
+                              alt={session.courseTitle}
+                              className="w-12 h-12 rounded-2xl object-cover border border-slate-200 dark:border-slate-700 shrink-0 shadow-2xs"
                             />
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center justify-between gap-1 mb-1">
-                                <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 truncate">
-                                  {course.category}
+                                <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 truncate max-w-[110px]">
+                                  {course?.category || 'কোর্স'}
                                 </span>
-                                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0 ${
+                                <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 shrink-0 ${
                                   isLive
-                                    ? 'bg-rose-500 text-white animate-pulse'
+                                    ? 'bg-rose-500 text-white animate-pulse shadow-xs'
                                     : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
                                 }`}>
                                   <span className={`w-1.5 h-1.5 rounded-full ${isLive ? 'bg-white' : 'bg-emerald-500'}`} />
@@ -2607,7 +2610,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                                 </span>
                               </div>
                               <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white line-clamp-1">
-                                {course.title}
+                                {session.courseTitle}
                               </h3>
                             </div>
                           </div>
@@ -2616,34 +2619,37 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                           <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
                             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-700 dark:text-purple-300 font-extrabold text-[11px]">
                               <Layers className="w-3 h-3" />
-                              <span>মডিউল {modNo}</span>
+                              <span>মডিউল {session.moduleNo}</span>
                             </span>
                             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-extrabold text-[11px]">
                               <BookOpen className="w-3 h-3" />
-                              <span>লেসন {lessonNo}</span>
+                              <span>লেসন {session.lessonNo}</span>
                             </span>
                             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-[11px]">
-                              <span>ক্লাস নং {serialNo}</span>
+                              <span>ক্লাস নং {session.classSerialNo}</span>
                             </span>
                           </div>
 
-                          {/* Today's Live Class Topic Box */}
-                          <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 space-y-2.5">
+                          {/* Live Class Topic Box */}
+                          <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 space-y-2.5">
                             <div>
                               <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
-                                আজকের লাইভ টপিক
+                                ক্লাসের টপিক / বিষয়বস্তু
                               </span>
                               <p className="text-xs font-black text-slate-800 dark:text-slate-100 line-clamp-2 mt-0.5">
-                                {topic}
+                                {session.topic}
                               </p>
                             </div>
 
-                            {/* Schedule Date & Time Display */}
-                            <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-[11px] font-bold text-slate-600 dark:text-slate-300">
+                            {/* Schedule Date, Time & Duration */}
+                            <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-[11px] font-bold">
                               <div className="flex items-center gap-1.5 text-teal-700 dark:text-teal-400 truncate">
                                 <Calendar className="w-3.5 h-3.5 shrink-0" />
                                 <span className="truncate">{scheduleDisplay}</span>
                               </div>
+                              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold shrink-0 bg-white dark:bg-slate-900 px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                                {session.durationMinutes || 90} মিনিট
+                              </span>
                             </div>
 
                             {/* Link Row */}
@@ -2656,20 +2662,20 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                                   type="button"
                                   onClick={() => {
                                     navigator.clipboard.writeText(link);
-                                    setCopiedLink(course.id);
+                                    setCopiedLink(session.id);
                                     setTimeout(() => setCopiedLink(null), 2000);
                                   }}
                                   className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-400 cursor-pointer transition"
                                   title="মিটিং লিংক কপি করুন"
                                 >
-                                  {copiedLink === course.id ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                                  {copiedLink === session.id ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                                 </button>
                                 <a
                                   href={link}
                                   target="_blank"
                                   rel="noreferrer"
                                   className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-teal-600 dark:text-teal-400 cursor-pointer transition"
-                                  title="রুম টেস্ট / সরাসরি জয়েন"
+                                  title="রুম টেস্ট / সরাসরি ওপেন"
                                 >
                                   <ExternalLink className="w-3.5 h-3.5" />
                                 </a>
@@ -2679,27 +2685,37 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-100 dark:border-slate-800">
+                        <div className="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                          <a
+                            href={link}
+                            target="_blank"
+                            rel="noreferrer"
+                            className={`flex-1 py-2.5 px-3 text-white font-black text-xs rounded-xl shadow-xs transition cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 ${
+                              isLive
+                                ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-500/30'
+                                : 'bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700'
+                            }`}
+                          >
+                            <Video className="w-3.5 h-3.5" />
+                            <span>{isLive ? 'গুগল মিটে জয়েন করুন' : 'মিট রুম খুলুন'}</span>
+                          </a>
+
                           <button
                             type="button"
-                            onClick={() => openSimpleLiveModal(course)}
-                            className="py-2.5 px-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs rounded-xl border border-slate-200 dark:border-slate-700 transition cursor-pointer flex items-center justify-center gap-1.5"
+                            onClick={() => openEditLiveModal(session)}
+                            className="p-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl border border-slate-200 dark:border-slate-700 transition cursor-pointer"
+                            title="শিডিউল ও টপিক এডিট করুন"
                           >
-                            <Pencil className="w-3.5 h-3.5 text-slate-500" />
-                            <span>মডিউল ও শিডিউল</span>
+                            <Pencil className="w-3.5 h-3.5" />
                           </button>
 
                           <button
                             type="button"
-                            onClick={() => handleToggleLiveNow(course)}
-                            className={`py-2.5 px-2 text-white font-black text-xs rounded-xl shadow-xs transition cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 ${
-                              isLive
-                                ? 'bg-slate-800 hover:bg-slate-900 dark:bg-slate-700'
-                                : 'bg-rose-500 hover:bg-rose-600 shadow-rose-500/20'
-                            }`}
+                            onClick={() => handleDeleteLiveSession(session)}
+                            className="p-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 rounded-xl border border-rose-500/20 transition cursor-pointer"
+                            title="মুছে ফেলুন"
                           >
-                            <Play className="w-3.5 h-3.5" />
-                            <span>{isLive ? 'লাইভ বন্ধ করুন' : 'লাইভ শুরু করুন'}</span>
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </div>
@@ -2709,8 +2725,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
               );
             })()}
 
-            {/* COMPREHENSIVE SMART MODAL FOR MODULE, LESSON, TITLE & SCHEDULE */}
-            {editingLiveModalCourse && (
+            {/* UNIFIED AUTOMATED LIVE CLASS CREATION & EDIT MODAL */}
+            {liveModalOpen && (
               <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 font-bengali animate-fadeIn overflow-y-auto">
                 <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-5 sm:p-6 space-y-4 my-8">
                   {/* Modal Header */}
@@ -2721,16 +2737,16 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                       </div>
                       <div className="min-w-0">
                         <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate">
-                          লাইভ ক্লাস, মডিউল ও শিডিউল সেটআপ
+                          {editingSessionId ? 'লাইভ ক্লাস শিডিউল এডিট করুন' : 'নতুন লাইভ ক্লাস তৈরি করুন'}
                         </h3>
                         <p className="text-xs text-slate-500 dark:text-slate-400 truncate font-bold">
-                          {editingLiveModalCourse.title}
+                          তারিখ ও সময় অনুযায়ী স্ট্যাটাস স্বয়ংক্রিয়ভাবে পরিচালিত হবে
                         </p>
                       </div>
                     </div>
                     <button
                       type="button"
-                      onClick={() => setEditingLiveModalCourse(null)}
+                      onClick={() => setLiveModalOpen(false)}
                       className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white flex items-center justify-center cursor-pointer transition"
                     >
                       ✕
@@ -2739,115 +2755,147 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
                   {/* Form Body */}
                   <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
-                    {/* SECTION 1: Module & Lesson Selection */}
-                    <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700/80 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1.5">
-                          <Layers className="w-3.5 h-3.5 text-purple-600" />
-                          <span>মডিউল, লেসন ও সিরিয়াল নির্বাচন</span>
-                        </span>
-                        <span className="text-[10px] font-bold text-slate-400">
-                          আজকের ক্লাস ক্রম
-                        </span>
-                      </div>
-
-                      {/* Course Modules Dropdown (If Available) */}
-                      {editingLiveModalCourse.modules && editingLiveModalCourse.modules.length > 0 && (
-                        <div>
-                          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                            কোর্সের সিলেবাস থেকে দ্রুত সিলেক্ট করুন:
-                          </label>
-                          <select
-                            onChange={e => {
-                              const modIndex = Number(e.target.value);
-                              const selectedMod = editingLiveModalCourse.modules?.[modIndex];
-                              if (selectedMod) {
-                                const mNo = (modIndex + 1).toString();
-                                setModalLiveModuleNo(mNo);
-                                setModalLiveModuleTitle(selectedMod.title);
-                                const firstLesson = selectedMod.lessons?.[0];
-                                const lNo = firstLesson ? '১' : '১';
-                                setModalLiveLessonNo(lNo);
-                                setModalLiveLessonTitle(firstLesson ? firstLesson.title : '');
-                                setModalLiveSerialNo((modIndex + 1).toString());
-                                setModalLiveTopic(generateLiveTopic(mNo, lNo, firstLesson ? firstLesson.title : selectedMod.title));
-                              }
-                            }}
-                            className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-purple-500 focus:outline-none"
-                          >
-                            <option value="">-- সিলেবাস থেকে নির্বাচন করুন --</option>
-                            {editingLiveModalCourse.modules.map((m, idx) => (
-                              <option key={m.id || idx} value={idx}>
-                                মডিউল {idx + 1}: {m.title} ({m.lessons?.length || 0}টি লেসন)
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      )}
-
-                      {/* 3 Grid Inputs: Module No, Lesson No, Class Serial No */}
-                      <div className="grid grid-cols-3 gap-2">
-                        <div>
-                          <label className="block text-[10px] font-black text-purple-700 dark:text-purple-300 mb-1">
-                            মডিউল নং:
-                          </label>
-                          <input
-                            type="text"
-                            value={modalLiveModuleNo}
-                            onChange={e => {
-                              setModalLiveModuleNo(e.target.value);
-                              setModalLiveTopic(generateLiveTopic(e.target.value, modalLiveLessonNo, modalLiveLessonTitle));
-                            }}
-                            placeholder="যেমন: ১ বা ০২"
-                            className="w-full bg-white dark:bg-slate-900 border border-purple-300 dark:border-purple-800 rounded-xl px-2.5 py-1.5 text-xs font-black text-purple-900 dark:text-purple-100 text-center focus:ring-2 focus:ring-purple-500 focus:outline-none"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[10px] font-black text-indigo-700 dark:text-indigo-300 mb-1">
-                            লেসন নং:
-                          </label>
-                          <input
-                            type="text"
-                            value={modalLiveLessonNo}
-                            onChange={e => {
-                              setModalLiveLessonNo(e.target.value);
-                              setModalLiveTopic(generateLiveTopic(modalLiveModuleNo, e.target.value, modalLiveLessonTitle));
-                            }}
-                            placeholder="যেমন: ১ বা ০৩"
-                            className="w-full bg-white dark:bg-slate-900 border border-indigo-300 dark:border-indigo-800 rounded-xl px-2.5 py-1.5 text-xs font-black text-indigo-900 dark:text-indigo-100 text-center focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[10px] font-black text-amber-700 dark:text-amber-300 mb-1">
-                            ক্লাস সিরিয়াল নং:
-                          </label>
-                          <input
-                            type="text"
-                            value={modalLiveSerialNo}
-                            onChange={e => setModalLiveSerialNo(e.target.value)}
-                            placeholder="যেমন: ১ বা ০৫"
-                            className="w-full bg-white dark:bg-slate-900 border border-amber-300 dark:border-amber-800 rounded-xl px-2.5 py-1.5 text-xs font-black text-amber-900 dark:text-amber-100 text-center focus:ring-2 focus:ring-amber-500 focus:outline-none"
-                          />
-                        </div>
-                      </div>
+                    {/* SECTION 1: Course Selection */}
+                    <div>
+                      <label className="block text-xs font-black text-slate-900 dark:text-white mb-1.5">
+                        ১. কোর্স নির্বাচন করুন:
+                      </label>
+                      <select
+                        value={modalCourseId}
+                        onChange={e => {
+                          const cId = e.target.value;
+                          setModalCourseId(cId);
+                          const selCourse = courses.find(c => c.id === cId);
+                          if (selCourse) {
+                            setModalModuleTitle(selCourse.modules?.[0]?.title || 'মৌলিক পরিচিতি');
+                            setModalLessonTitle(selCourse.modules?.[0]?.lessons?.[0]?.title || 'প্রথম পরিচিতি');
+                            setModalTopic(generateLiveTopic(modalModuleNo, modalLessonNo, selCourse.modules?.[0]?.lessons?.[0]?.title || selCourse.title));
+                          }
+                        }}
+                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:outline-none"
+                      >
+                        {courses.map(course => (
+                          <option key={course.id} value={course.id}>
+                            {course.title} ({course.category})
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
-                    {/* SECTION 2: Topic / Title Auto-Generator */}
+                    {/* SECTION 2: Module, Lesson & Serial */}
+                    {(() => {
+                      const selCourse = courses.find(c => c.id === modalCourseId);
+                      return (
+                        <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700/80 space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+                              <Layers className="w-3.5 h-3.5 text-purple-600" />
+                              <span>২. মডিউল, লেসন ও সিরিয়াল নির্বাচন</span>
+                            </span>
+                            <span className="text-[10px] font-bold text-slate-400">
+                              ক্লাস ক্রম
+                            </span>
+                          </div>
+
+                          {/* Quick Syllabus dropdown if course has modules */}
+                          {selCourse?.modules && selCourse.modules.length > 0 && (
+                            <div>
+                              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                                কোর্সের সিলেবাস থেকে দ্রুত সেট করুন:
+                              </label>
+                              <select
+                                onChange={e => {
+                                  const modIndex = Number(e.target.value);
+                                  const selectedMod = selCourse.modules?.[modIndex];
+                                  if (selectedMod) {
+                                    const mNo = (modIndex + 1).toString();
+                                    setModalModuleNo(mNo);
+                                    setModalModuleTitle(selectedMod.title);
+                                    const firstLesson = selectedMod.lessons?.[0];
+                                    const lNo = firstLesson ? '১' : '১';
+                                    setModalLessonNo(lNo);
+                                    setModalLessonTitle(firstLesson ? firstLesson.title : '');
+                                    setModalClassSerialNo((modIndex + 1).toString());
+                                    setModalTopic(generateLiveTopic(mNo, lNo, firstLesson ? firstLesson.title : selectedMod.title));
+                                  }
+                                }}
+                                className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                              >
+                                <option value="">-- সিলেবাস থেকে নির্বাচন করুন --</option>
+                                {selCourse.modules.map((m, idx) => (
+                                  <option key={m.id || idx} value={idx}>
+                                    মডিউল {idx + 1}: {m.title} ({m.lessons?.length || 0}টি লেসন)
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          )}
+
+                          {/* 3 Grid Inputs: Module No, Lesson No, Class Serial No */}
+                          <div className="grid grid-cols-3 gap-2">
+                            <div>
+                              <label className="block text-[10px] font-black text-purple-700 dark:text-purple-300 mb-1">
+                                মডিউল নং:
+                              </label>
+                              <input
+                                type="text"
+                                value={modalModuleNo}
+                                onChange={e => {
+                                  setModalModuleNo(e.target.value);
+                                  setModalTopic(generateLiveTopic(e.target.value, modalLessonNo, modalLessonTitle));
+                                }}
+                                placeholder="যেমন: ১ বা ০২"
+                                className="w-full bg-white dark:bg-slate-900 border border-purple-300 dark:border-purple-800 rounded-xl px-2.5 py-1.5 text-xs font-black text-purple-900 dark:text-purple-100 text-center focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-[10px] font-black text-indigo-700 dark:text-indigo-300 mb-1">
+                                লেসন নং:
+                              </label>
+                              <input
+                                type="text"
+                                value={modalLessonNo}
+                                onChange={e => {
+                                  setModalLessonNo(e.target.value);
+                                  setModalTopic(generateLiveTopic(modalModuleNo, e.target.value, modalLessonTitle));
+                                }}
+                                placeholder="যেমন: ১ বা ০৩"
+                                className="w-full bg-white dark:bg-slate-900 border border-indigo-300 dark:border-indigo-800 rounded-xl px-2.5 py-1.5 text-xs font-black text-indigo-900 dark:text-indigo-100 text-center focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-[10px] font-black text-amber-700 dark:text-amber-300 mb-1">
+                                ক্লাস সিরিয়াল নং:
+                              </label>
+                              <input
+                                type="text"
+                                value={modalClassSerialNo}
+                                onChange={e => setModalClassSerialNo(e.target.value)}
+                                placeholder="যেমন: ১ বা ০৫"
+                                className="w-full bg-white dark:bg-slate-900 border border-amber-300 dark:border-amber-800 rounded-xl px-2.5 py-1.5 text-xs font-black text-amber-900 dark:text-amber-100 text-center focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
+                    {/* SECTION 3: Live Topic */}
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
                         <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                          আজকের লাইভ ক্লাসের টাইটেল/টপিক:
+                          ৩. লাইভ ক্লাসের টাইটেল/টপিক:
                         </label>
                         <button
                           type="button"
                           onClick={() => {
-                            const auto = generateLiveTopic(modalLiveModuleNo, modalLiveLessonNo, modalLiveLessonTitle || editingLiveModalCourse.title);
-                            setModalLiveTopic(auto);
+                            const selCourse = courses.find(c => c.id === modalCourseId);
+                            const auto = generateLiveTopic(modalModuleNo, modalLessonNo, modalLessonTitle || selCourse?.title || '');
+                            setModalTopic(auto);
                           }}
                           className="text-[10px] font-black text-purple-600 dark:text-purple-400 hover:underline cursor-pointer flex items-center gap-1"
-                          title="মডিউল ও লেসন নং দিয়ে স্বয়ংক্রিয় টাইটেল বানান"
                         >
                           <Sparkles className="w-3 h-3" />
                           <span>অটো-টাইটেল</span>
@@ -2855,19 +2903,19 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                       </div>
                       <input
                         type="text"
-                        value={modalLiveTopic}
-                        onChange={e => setModalLiveTopic(e.target.value)}
+                        value={modalTopic}
+                        onChange={e => setModalTopic(e.target.value)}
                         placeholder="যেমন: মডিউল ০১: লেসন ০৩ - ফটোশপ সিলেকশন টুলস প্র্যাকটিস"
                         className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:outline-none"
                       />
                     </div>
 
-                    {/* SECTION 3: Date & Time Schedule Picker */}
+                    {/* SECTION 4: Date, Time & Duration Schedule */}
                     <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700/80 space-y-2.5">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1.5">
                           <Calendar className="w-3.5 h-3.5 text-teal-600" />
-                          <span>সঠিক তারিখ ও সময় (শিডিউল)</span>
+                          <span>৪. তারিখ, সময় ও স্থায়িত্বকাল</span>
                         </span>
                         <span className="text-[10px] font-bold text-teal-700 dark:text-teal-400">
                           সময়সূচি
@@ -2881,8 +2929,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                           </label>
                           <input
                             type="date"
-                            value={modalLiveDate}
-                            onChange={e => setModalLiveDate(e.target.value)}
+                            value={modalDate}
+                            onChange={e => setModalDate(e.target.value)}
                             className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
                           />
                         </div>
@@ -2893,67 +2941,65 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                           </label>
                           <input
                             type="time"
-                            value={modalLiveTime}
-                            onChange={e => setModalLiveTime(e.target.value)}
+                            value={modalTime}
+                            onChange={e => setModalTime(e.target.value)}
                             className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
                           />
                         </div>
                       </div>
 
-                      {/* Quick Time Presets */}
+                      {/* Duration Presets */}
                       <div>
                         <label className="block text-[10px] font-bold text-slate-500 mb-1">
-                          কুইক সময় প্রিসেট:
+                          ক্লাস স্থায়িত্বকাল (Duration):
                         </label>
                         <div className="flex flex-wrap gap-1.5">
                           {[
-                            { label: 'রাত ৯:০০ টা', time: '21:00' },
-                            { label: 'রাত ৮:০০ টা', time: '20:00' },
-                            { label: 'রাত ১০:০০ টা', time: '22:00' },
-                            { label: 'বিকাল ৫:০০ টা', time: '17:00' },
-                            { label: 'সকাল ১১:০০ টা', time: '11:00' }
-                          ].map(preset => (
+                            { label: '৬০ মিনিট (১ ঘণ্টা)', val: 60 },
+                            { label: '৯০ মিনিট (দেড় ঘণ্টা)', val: 90 },
+                            { label: '১২০ মিনিট (২ ঘণ্টা)', val: 120 }
+                          ].map(dur => (
                             <button
-                              key={preset.time}
+                              key={dur.val}
                               type="button"
-                              onClick={() => setModalLiveTime(preset.time)}
-                              className={`px-2 py-1 rounded-lg text-[11px] font-bold border transition cursor-pointer ${
-                                modalLiveTime === preset.time
-                                  ? 'bg-teal-500 text-white border-teal-500'
+                              onClick={() => setModalDuration(dur.val)}
+                              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition cursor-pointer ${
+                                modalDuration === dur.val
+                                  ? 'bg-teal-600 text-white border-teal-600 shadow-2xs'
                                   : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
                               }`}
                             >
-                              {preset.label}
+                              {dur.label}
                             </button>
                           ))}
                         </div>
                       </div>
 
-                      {/* Formatted Schedule Preview */}
-                      <div className="p-2 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center gap-2 text-xs font-bold text-teal-800 dark:text-teal-300">
-                        <Clock className="w-3.5 h-3.5 shrink-0" />
-                        <span>শিডিউল প্রিভিউ: <strong className="font-black">{getFormattedSchedule(modalLiveDate, modalLiveTime, modalLivePresetSchedule)}</strong></span>
+                      {/* Formatted Preview */}
+                      <div className="p-2.5 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center gap-2 text-xs font-bold text-teal-800 dark:text-teal-300">
+                        <Clock className="w-4 h-4 shrink-0" />
+                        <span>শিডিউল প্রিভিউ: <strong className="font-black">{formatBanglaLiveSchedule(modalDate, modalTime)} ({modalDuration} মিনিট)</strong></span>
                       </div>
                     </div>
 
-                    {/* SECTION 4: Meeting Link & Quick Platform */}
+                    {/* SECTION 5: Meeting Link */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                          লাইভ মিটিং লিংক:
+                          ৫. লাইভ মিটিং লিংক:
                         </label>
                         <div className="flex items-center gap-1.5">
                           <button
                             type="button"
-                            onClick={() => setModalLiveUrl('https://meet.google.com/ptenit-live-class')}
-                            className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 dark:bg-slate-800 hover:bg-rose-500/10 hover:text-rose-500 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition cursor-pointer"
+                            onClick={() => setModalMeetingLink('https://meet.google.com/ptenit-live-class')}
+                            className="px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 dark:bg-slate-800 hover:bg-rose-500/10 hover:text-rose-500 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition cursor-pointer"
                           >
                             Google Meet
                           </button>
                           <button
                             type="button"
-                            onClick={() => setModalLiveUrl('https://zoom.us/j/ptenit-live-room')}
-                            className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 dark:bg-slate-800 hover:bg-rose-500/10 hover:text-rose-500 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition cursor-pointer"
+                            onClick={() => setModalMeetingLink('https://zoom.us/j/ptenit-live-room')}
+                            className="px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 dark:bg-slate-800 hover:bg-rose-500/10 hover:text-rose-500 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition cursor-pointer"
                           >
                             Zoom
                           </button>
@@ -2961,41 +3007,32 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                       </div>
                       <input
                         type="url"
-                        value={modalLiveUrl}
-                        onChange={e => setModalLiveUrl(e.target.value)}
+                        value={modalMeetingLink}
+                        onChange={e => setModalMeetingLink(e.target.value)}
                         placeholder="https://meet.google.com/xxx-xxxx-xxx"
                         className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:outline-none"
                       />
                     </div>
 
-                    {/* SECTION 5: Status Selection */}
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                        বর্তমান লাইভ স্ট্যাটাস:
+                    {/* SECTION 6: Instructions / Notes */}
+                    <div className="space-y-1">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                        ৬. শিক্ষার্থীদের জন্য নির্দেশনা (ঐচ্ছিক):
                       </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setModalLiveStatus('scheduled')}
-                          className={`py-2 px-2 rounded-xl text-xs font-bold transition cursor-pointer border flex items-center justify-center gap-1.5 ${
-                            modalLiveStatus === 'scheduled'
-                              ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/50 font-black'
-                              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700'
-                          }`}
-                        >
-                          <span>🟡 শিডিউল করা (Scheduled)</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setModalLiveStatus('live_now')}
-                          className={`py-2 px-2 rounded-xl text-xs font-bold transition cursor-pointer border flex items-center justify-center gap-1.5 ${
-                            modalLiveStatus === 'live_now'
-                              ? 'bg-rose-500 text-white border-rose-400 font-black shadow-xs'
-                              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700'
-                          }`}
-                        >
-                          <span>🔴 এখনই লাইভ (Live Now)</span>
-                        </button>
+                      <input
+                        type="text"
+                        value={modalSpecialNotes}
+                        onChange={e => setModalSpecialNotes(e.target.value)}
+                        placeholder="যেমন: ক্লাসে মাইক্রোফোন মিউট রাখবেন এবং প্রশ্ন থাকলে হ্যান্ডরেইজ করবেন।"
+                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:outline-none"
+                      />
+                    </div>
+
+                    {/* Automatic Status Explanation Notice */}
+                    <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex items-start gap-2.5 text-xs text-blue-800 dark:text-blue-300">
+                      <Info className="w-4 h-4 shrink-0 mt-0.5 text-blue-500" />
+                      <div>
+                        <span className="font-bold">স্বয়ংক্রিয় শিডিউল সিস্টেম:</span> নির্ধারিত সময় এলে সিস্টেমে অটোমেটিক <strong>"লাইভ চলছে"</strong> স্ট্যাটাস সক্রিয় হবে এবং ক্লাস সমাপ্তির পর তালিকা থেকে নিজে নিজেই হাইড হয়ে যাবে।
                       </div>
                     </div>
                   </div>
@@ -3004,18 +3041,18 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                   <div className="pt-3 flex items-center justify-end gap-2 border-t border-slate-100 dark:border-slate-800">
                     <button
                       type="button"
-                      onClick={() => setEditingLiveModalCourse(null)}
+                      onClick={() => setLiveModalOpen(false)}
                       className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl transition cursor-pointer"
                     >
                       বাতিল
                     </button>
                     <button
                       type="button"
-                      onClick={handleSaveSimpleLive}
+                      onClick={handleSaveLiveSession}
                       className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-md transition cursor-pointer flex items-center gap-1.5 active:scale-95"
                     >
                       <Save className="w-3.5 h-3.5" />
-                      <span>সেভ ও শিডিউল প্রকাশ করুন</span>
+                      <span>{editingSessionId ? 'আপডেট সেভ করুন' : 'শিডিউল প্রকাশ করুন'}</span>
                     </button>
                   </div>
                 </div>

@@ -632,3 +632,30 @@ export interface DigitalProduct {
   createdAt?: string;
 }
 
+export interface LiveClassSession {
+  id: string;
+  courseId: string;
+  courseTitle: string;
+  instructorId?: string;
+  instructorName?: string;
+  topic: string;
+  moduleNo: string;
+  moduleTitle?: string;
+  lessonNo: string;
+  lessonTitle?: string;
+  serialNo: string;
+  classSerialNo?: string;
+  date: string; // "YYYY-MM-DD"
+  time: string; // "HH:mm"
+  durationMinutes?: number; // default 90 minutes
+  meetLink: string;
+  meetingLink?: string;
+  platform?: 'google_meet' | 'zoom' | 'youtube' | 'custom';
+  note?: string;
+  specialNotes?: string;
+  thumbnail?: string;
+  courseThumbnail?: string;
+  createdAt: string;
+}
+
+

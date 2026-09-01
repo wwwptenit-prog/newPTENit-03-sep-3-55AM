@@ -38,6 +38,11 @@ import {
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { Assignment } from '../types';
+import {
+  getActiveLiveSessions,
+  getLiveSessionDynamicStatus,
+  formatBanglaLiveSchedule
+} from '../services/liveClassService';
 
 interface StudentDashboardProps {
   onStartLearning: (courseId: string) => void;
@@ -64,6 +69,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
     toggleDarkMode,
     currentUser,
     courses,
+    liveSessions,
     enrollments,
     certificates,
     orders,
@@ -88,7 +94,6 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
     }
   }, [initialSubTab]);
 
-  const [liveClassFilterTab, setLiveClassFilterTab] = useState<'all' | 'live_now' | 'scheduled'>('all');
   const [copiedStudentLiveLink, setCopiedStudentLiveLink] = useState<string | null>(null);
 
   const [notifOpen, setNotifOpen] = useState(false);
@@ -768,10 +773,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                   id: 'live-classes', 
                   label: 'লাইভ ক্লাস ও শিডিউল', 
                   icon: Radio, 
-                  badge: courses.filter(c => c.liveClassStatus === 'live_now').length > 0 
-                    ? `🔴 ${courses.filter(c => c.liveClassStatus === 'live_now').length} লাইভ` 
-                    : `${courses.length} শিডিউল`,
-                  isLive: courses.some(c => c.liveClassStatus === 'live_now')
+                  badge: (() => {
+                    const active = getActiveLiveSessions(liveSessions);
+                    const liveCount = active.filter(s => getLiveSessionDynamicStatus(s) === 'live_now').length;
+                    return liveCount > 0 ? `🔴 ${liveCount} লাইভ` : `${active.length} শিডিউল`;
+                  })(),
+                  isLive: getActiveLiveSessions(liveSessions).some(s => getLiveSessionDynamicStatus(s) === 'live_now')
                 },
                 { id: 'certificates', label: 'সার্টিফিকেটস', icon: Award, badge: myCertificates.length },
                 { id: 'assignments', label: 'অ্যাসাইনমেন্ট ও ক্লাসরুম', icon: FileText, badge: submissions.filter(s => s.studentId === currentUser.id).length },
@@ -1078,7 +1085,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
           <div className="space-y-6 font-bengali">
             {/* Header, Stats & Search Bar */}
             <div className="bg-white dark:bg-slate-900 p-5 sm:p-7 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-md space-y-5">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-5">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div className="space-y-1.5">
                   <div className="flex flex-wrap items-center gap-2.5">
                     <div className="p-2.5 bg-rose-500/10 text-rose-500 rounded-2xl border border-rose-500/20">
@@ -1087,12 +1094,14 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     <div>
                       <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
                         <span>লাইভ ক্লাস ও শিডিউল সেন্টার</span>
-                        <span className="px-2.5 py-0.5 bg-rose-500/15 text-rose-600 dark:text-rose-400 text-xs font-black rounded-full border border-rose-500/30 animate-pulse">
-                          🔴 লাইভ রুম
-                        </span>
+                        {getActiveLiveSessions(liveSessions).some(s => getLiveSessionDynamicStatus(s) === 'live_now') && (
+                          <span className="px-2.5 py-0.5 bg-rose-500/15 text-rose-600 dark:text-rose-400 text-xs font-black rounded-full border border-rose-500/30 animate-pulse">
+                            🔴 লাইভ চলছে
+                          </span>
+                        )}
                       </h2>
                       <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-                        মডিউল, লেসন ও সঠিক ক্রমিক নং অনুযায়ী নির্ধারিত লাইভ ক্লাস ও সরাসরি গুগল মিট সেশন
+                        মডিউল, লেসন ও সঠিক ক্রমিক নং অনুযায়ী নির্ধারিত লাইভ ক্লাস (সময় অতিক্রান্ত হলে স্বয়ংক্রিয়ভাবে রিমুভ হবে)
                       </p>
                     </div>
                   </div>
@@ -1119,115 +1128,95 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 </div>
               </div>
 
-              {/* KPI Counter Badges */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 text-center">
-                  <span className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white block font-mono">
-                    {courses.length}
-                  </span>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold">সকল কোর্স (15)</span>
-                </div>
-                <div className="bg-rose-500/10 p-3.5 rounded-2xl border border-rose-500/30 text-center">
-                  <span className="text-lg sm:text-2xl font-black text-rose-600 dark:text-rose-400 block font-mono">
-                    {courses.filter(c => c.liveClassStatus === 'live_now').length}
-                  </span>
-                  <span className="text-[11px] text-rose-600 dark:text-rose-400 font-bold flex items-center justify-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
-                    লাইভ (1)
-                  </span>
-                </div>
-                <div className="bg-emerald-500/10 p-3.5 rounded-2xl border border-emerald-500/30 text-center">
-                  <span className="text-lg sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 block font-mono">
-                    {courses.filter(c => c.liveClassStatus !== 'live_now').length}
-                  </span>
-                  <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-bold">শিডিউল (14)</span>
-                </div>
-                <div className="bg-teal-500/10 p-3.5 rounded-2xl border border-teal-500/30 text-center">
-                  <span className="text-lg sm:text-2xl font-black text-teal-600 dark:text-teal-400 block font-mono">
-                    {myEnrollments.length}
-                  </span>
-                  <span className="text-[11px] text-teal-700 dark:text-teal-300 font-bold">আমার এনরোলকৃত</span>
-                </div>
-              </div>
+              {/* Status Summary Chips (Automatic, no tabs) */}
+              {(() => {
+                const activeSessions = getActiveLiveSessions(liveSessions);
+                const liveNowCount = activeSessions.filter(s => getLiveSessionDynamicStatus(s) === 'live_now').length;
+                const scheduledCount = activeSessions.length - liveNowCount;
 
-              {/* Filter Tabs Pills */}
-              <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pt-1 border-t border-slate-100 dark:border-slate-800 text-xs font-bold">
-                <span className="text-slate-400 shrink-0 text-[11px]">ফিল্টার করুন:</span>
-                {[
-                  { id: 'all', label: `সকল কোর্স (${courses.length})` },
-                  { id: 'live', label: `🔴 সরাসরি লাইভ চলছে (${courses.filter(c => c.liveClassStatus === 'live_now').length})` },
-                  { id: 'scheduled', label: `🗓️ নির্ধারিত শিডিউল (${courses.filter(c => c.liveClassStatus !== 'live_now').length})` },
-                  { id: 'enrolled', label: `🎓 আমার এনরোলকৃত (${myEnrollments.length})` },
-                ].map(f => (
-                  <button
-                    key={f.id}
-                    onClick={() => setLiveClassFilterTab(f.id as any)}
-                    className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer shrink-0 text-xs font-bold border ${
-                      liveClassFilterTab === f.id
-                        ? 'bg-[#1DB954] text-white border-[#1DB954] shadow-md font-black'
-                        : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#1DB954]'
-                    }`}
-                  >
-                    {f.label}
-                  </button>
-                ))}
-              </div>
+                return (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+                    <div className="bg-rose-500/10 p-3.5 rounded-2xl border border-rose-500/30 text-center">
+                      <span className="text-lg sm:text-2xl font-black text-rose-600 dark:text-rose-400 block font-mono">
+                        {liveNowCount}
+                      </span>
+                      <span className="text-[11px] text-rose-600 dark:text-rose-400 font-bold flex items-center justify-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
+                        এখনই লাইভ চলছে
+                      </span>
+                    </div>
+
+                    <div className="bg-emerald-500/10 p-3.5 rounded-2xl border border-emerald-500/30 text-center">
+                      <span className="text-lg sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 block font-mono">
+                        {scheduledCount}
+                      </span>
+                      <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-bold">
+                        🗓️ নির্ধারিত শিডিউল
+                      </span>
+                    </div>
+
+                    <div className="col-span-2 sm:col-span-1 bg-teal-500/10 p-3.5 rounded-2xl border border-teal-500/30 text-center">
+                      <span className="text-lg sm:text-2xl font-black text-teal-600 dark:text-teal-400 block font-mono">
+                        {myEnrollments.length}
+                      </span>
+                      <span className="text-[11px] text-teal-700 dark:text-teal-300 font-bold">
+                        আমার এনরোলকৃত কোর্স
+                      </span>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Live Courses Cards Grid */}
             {(() => {
-              const filteredCourses = courses.filter(course => {
-                // Search filter
-                if (courseSearchQuery.trim()) {
-                  const q = courseSearchQuery.toLowerCase();
-                  const matchTitle = course.title?.toLowerCase().includes(q);
-                  const matchTopic = course.liveClassTopic?.toLowerCase().includes(q);
-                  const matchInstructor = course.instructor?.toLowerCase().includes(q);
-                  const matchModule = course.liveClassModuleNo?.toLowerCase().includes(q);
-                  const matchLesson = course.liveClassLessonNo?.toLowerCase().includes(q);
-                  if (!matchTitle && !matchTopic && !matchInstructor && !matchModule && !matchLesson) return false;
-                }
+              const activeSessions = getActiveLiveSessions(liveSessions);
 
-                // Category filter
-                if (liveClassFilterTab === 'live') {
-                  return course.liveClassStatus === 'live_now';
-                }
-                if (liveClassFilterTab === 'scheduled') {
-                  return course.liveClassStatus !== 'live_now';
-                }
-                if (liveClassFilterTab === 'enrolled') {
-                  return myEnrollments.some(e => e.courseId === course.id);
-                }
-                return true;
+              const filtered = activeSessions.filter(session => {
+                if (!courseSearchQuery.trim()) return true;
+                const q = courseSearchQuery.toLowerCase();
+                const matchTopic = session.topic?.toLowerCase().includes(q);
+                const matchCourse = session.courseTitle?.toLowerCase().includes(q);
+                const matchInstructor = session.instructorName?.toLowerCase().includes(q);
+                const matchMod = session.moduleNo?.toLowerCase().includes(q) || session.moduleTitle?.toLowerCase().includes(q);
+                const matchLesson = session.lessonNo?.toLowerCase().includes(q) || session.lessonTitle?.toLowerCase().includes(q);
+                return matchTopic || matchCourse || matchInstructor || matchMod || matchLesson;
               });
 
-              if (filteredCourses.length === 0) {
+              if (filtered.length === 0) {
                 return (
                   <div className="p-8 sm:p-12 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 space-y-3">
                     <Radio className="w-12 h-12 text-slate-400 mx-auto" />
                     <p className="text-slate-600 dark:text-slate-300 text-sm font-semibold">
-                      {courseSearchQuery ? 'সার্চ অনুযায়ী কোনো লাইভ ক্লাস পাওয়া যায়নি।' : 'বর্তমানে এই ফিল্টারে কোনো লাইভ ক্লাস নেই।'}
+                      {courseSearchQuery
+                        ? 'কোনো লাইভ ক্লাস পাওয়া যায়নি।'
+                        : 'বর্তমানে কোনো সক্রিয় লাইভ ক্লাস নেই।'}
                     </p>
-                    <button
-                      onClick={() => { setCourseSearchQuery(''); setLiveClassFilterTab('all'); }}
-                      className="px-5 py-2.5 bg-[#1DB954] text-white font-bold text-xs rounded-xl shadow cursor-pointer"
-                    >
-                      সকল লাইভ ক্লাস দেখুন
-                    </button>
+                    {courseSearchQuery && (
+                      <button
+                        onClick={() => setCourseSearchQuery('')}
+                        className="px-5 py-2.5 bg-[#1DB954] text-white font-bold text-xs rounded-xl shadow cursor-pointer"
+                      >
+                        সকল ক্লাস দেখুন
+                      </button>
+                    )}
                   </div>
                 );
               }
 
               return (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
-                  {filteredCourses.map(course => {
-                    const isLiveNow = course.liveClassStatus === 'live_now';
-                    const isEnrolled = myEnrollments.some(e => e.courseId === course.id);
-                    const meetLink = course.liveClassLink || (isLiveNow ? 'https://meet.google.com/canva-live-2026' : 'https://meet.google.com/scheduled-class');
+                  {filtered.map(session => {
+                    const dynamicStatus = getLiveSessionDynamicStatus(session);
+                    const isLiveNow = dynamicStatus === 'live_now';
+                    const isEnrolled = myEnrollments.some(e => e.courseId === session.courseId);
+                    const meetLink = session.meetingLink || 'https://meet.google.com/ptenit-live-class';
+                    const courseObj = courses.find(c => c.id === session.courseId);
+                    const courseThumbnail = session.courseThumbnail || courseObj?.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800';
 
                     return (
                       <div
-                        key={course.id}
+                        key={session.id}
                         className={`bg-white dark:bg-slate-900 rounded-3xl border p-5 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between space-y-4 relative overflow-hidden ${
                           isLiveNow
                             ? 'border-rose-500/50 dark:border-rose-500/60 ring-2 ring-rose-500/20'
@@ -1270,15 +1259,15 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                             <div className="flex items-center gap-3 font-bold text-slate-800 dark:text-slate-200">
                               <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-mono">
                                 <Layers className="w-3.5 h-3.5" />
-                                <span>মডিউল: {course.liveClassModuleNo || '০১'}</span>
+                                <span>মডিউল: {session.moduleNo || '০১'}</span>
                               </span>
                               <span className="text-slate-300 dark:text-slate-600">|</span>
                               <span className="text-slate-700 dark:text-slate-300 font-mono">
-                                লেসন: {course.liveClassLessonNo || '০১'}
+                                লেসন: {session.lessonNo || '০১'}
                               </span>
                             </div>
                             <span className="px-2 py-0.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono font-bold text-[10px] rounded-lg">
-                              ক্রমিক নং: #{course.liveClassSerialNo || '০১'}
+                              ক্রমিক নং: #{session.classSerialNo || '০১'}
                             </span>
                           </div>
 
@@ -1288,24 +1277,24 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                               আজকের লাইভ ক্লাসের টপিক:
                             </span>
                             <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug">
-                              🎯 {course.liveClassTopic || course.title}
+                              🎯 {session.topic}
                             </h3>
                           </div>
 
                           {/* Course Thumbnail & Title */}
                           <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800">
                             <img
-                              src={course.thumbnail}
-                              alt={course.title}
+                              src={courseThumbnail}
+                              alt={session.courseTitle}
                               className="w-14 h-14 rounded-xl object-cover shrink-0 border border-slate-200 dark:border-slate-700"
                             />
                             <div className="min-w-0 flex-1">
                               <span className="text-[10px] font-bold text-slate-400 uppercase">মূল কোর্স:</span>
                               <h4 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 truncate">
-                                {course.title}
+                                {session.courseTitle}
                               </h4>
                               <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
-                                ইনস্ট্রাক্টর: <strong className="text-slate-700 dark:text-slate-300">{course.instructor}</strong>
+                                ইনস্ট্রাক্টর: <strong className="text-slate-700 dark:text-slate-300">{session.instructorName}</strong>
                               </span>
                             </div>
                           </div>
@@ -1317,7 +1306,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                               <div className="min-w-0">
                                 <span className="text-[10px] text-slate-400 block">তারিখ:</span>
                                 <span className="font-bold text-slate-800 dark:text-slate-200 truncate block">
-                                  {course.liveClassDate || '২০২৬-০৯-০১'}
+                                  {session.date}
                                 </span>
                               </div>
                             </div>
@@ -1325,21 +1314,19 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                             <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-2">
                               <Clock className="w-4 h-4 text-amber-500 shrink-0" />
                               <div className="min-w-0">
-                                <span className="text-[10px] text-slate-400 block">সময়:</span>
+                                <span className="text-[10px] text-slate-400 block">সময় ও মেয়াদ:</span>
                                 <span className="font-bold text-slate-800 dark:text-slate-200 truncate block">
-                                  {course.liveClassTime || '২০:০০'} টা
+                                  {session.time} ({session.durationMinutes || 90} মি.)
                                 </span>
                               </div>
                             </div>
                           </div>
 
-                          {/* Full Schedule Text Info */}
-                          {course.liveSchedule && (
-                            <p className="text-xs text-slate-600 dark:text-slate-400 font-medium flex items-center gap-1.5 px-1">
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954]" />
-                              <span>শিডিউল: <strong>{course.liveSchedule}</strong></span>
-                            </p>
-                          )}
+                          {/* Bangla Formatted Schedule */}
+                          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium flex items-center gap-1.5 px-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954]" />
+                            <span>শিডিউল: <strong>{formatBanglaLiveSchedule(session.date, session.time)}</strong></span>
+                          </p>
                         </div>
 
                         {/* Actions Row */}
@@ -1359,7 +1346,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                             <span>
                               {isLiveNow
                                 ? '🔴 সরাসরি লাইভ ক্লাসে জয়েন করুন (Google Meet)'
-                                : '🗓️ গুগল মিট লিংক চেক করুন'}
+                                : '🗓️ গুগল মিট রুম চেক করুন'}
                             </span>
                             <ExternalLink className="w-3.5 h-3.5 ml-0.5" />
                           </a>
@@ -1369,12 +1356,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                             <button
                               onClick={() => {
                                 navigator.clipboard.writeText(meetLink);
-                                setCopiedStudentLiveLink(course.id);
+                                setCopiedStudentLiveLink(session.id);
                                 setTimeout(() => setCopiedStudentLiveLink(null), 3000);
                               }}
                               className="flex-1 py-2 px-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer border border-slate-200 dark:border-slate-700"
                             >
-                              {copiedStudentLiveLink === course.id ? (
+                              {copiedStudentLiveLink === session.id ? (
                                 <>
                                   <CheckCircle2 className="w-3.5 h-3.5 text-[#1DB954]" />
                                   <span className="text-[#1DB954]">লিংক কপি হয়েছে!</span>
@@ -1390,7 +1377,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                             <button
                               onClick={() => {
                                 if (onStartLearning && isEnrolled) {
-                                  onStartLearning(course.id);
+                                  onStartLearning(session.courseId);
                                 } else {
                                   setActiveTab?.('courses');
                                 }

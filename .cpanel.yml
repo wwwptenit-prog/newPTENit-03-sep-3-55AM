@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/binnibaz/pten.binnibazar.com/
+    - /bin/cp -R * $DEPLOYPATH

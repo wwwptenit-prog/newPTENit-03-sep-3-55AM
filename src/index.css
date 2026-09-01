@@ -1,0 +1,268 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Hind Siliguri', 'Noto Sans Bengali', 'Anek Bangla', 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    --font-heading: 'Hind Siliguri', 'Sora', 'Plus Jakarta Sans', 'Outfit', sans-serif;
+    --font-bengali: 'Hind Siliguri', 'Noto Sans Bengali', 'Anek Bangla', sans-serif;
+    --font-english: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  }
+
+  html {
+    font-size: 17.5px;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    letter-spacing: normal;
+    background-color: #f8fafc;
+    color: #0f172a;
+    max-width: 100vw;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  #root {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+}
+
+/* Typography Utilities */
+.font-sans {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Anek Bangla', 'Plus Jakarta Sans', 'Inter', sans-serif !important;
+}
+
+.font-heading {
+  font-family: 'Hind Siliguri', 'Sora', 'Plus Jakarta Sans', 'Outfit', sans-serif !important;
+  letter-spacing: normal;
+}
+
+.font-bengali {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Anek Bangla', sans-serif !important;
+}
+
+.font-english {
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif !important;
+  letter-spacing: -0.015em;
+}
+
+/* PTENit Brand Color Palette Helpers */
+.bg-ptenit-green {
+  background-color: #1DB954;
+}
+
+.text-ptenit-green {
+  color: #1DB954;
+}
+
+.border-ptenit-green {
+  border-color: #1DB954;
+}
+
+.bg-ptenit-dark {
+  background-color: #0B132B;
+}
+
+.bg-ptenit-card {
+  background-color: #131F37;
+}
+
+/* Custom scrollbar */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom scrollbars & Hide Scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    display: none;
+  }
+  * {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@media (min-width: 769px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #1DB954;
+  }
+}
+
+/* Glassmorphism helpers */
+.glass-nav {
+  background: rgba(11, 19, 43, 0.94);
+  backdrop-filter: blur(16px);
+}
+
+.glass-card {
+  background: rgba(19, 31, 55, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(29, 185, 84, 0.2);
+}
+
+/* Premium Colorful Card Theme */
+.premium-card {
+  --bg-1: #031d18;
+  --bg-2: #062d27;
+  --bg-3: #071b35;
+
+  --green: #00e887;
+  --cyan: #00d9ff;
+  --blue: #4f7cff;
+  --purple: #9b5cff;
+  --pink: #e94cff;
+  --gold: #ffd43b;
+  --orange: #ff8a2a;
+
+  background:
+    radial-gradient(circle at 10% 10%, rgba(0,232,135,.16), transparent 30%),
+    radial-gradient(circle at 90% 20%, rgba(79,124,255,.14), transparent 30%),
+    radial-gradient(circle at 50% 100%, rgba(155,92,255,.12), transparent 35%),
+    linear-gradient(145deg, var(--bg-1), var(--bg-2) 55%, #04162c);
+
+  border: 0 !important;
+  border-radius: 24px;
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.06);
+
+  overflow: hidden;
+}
+
+/* Glass/Premium Inner Elements */
+.premium-card .glass {
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,.07);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* Colorful Accent */
+.premium-card .green {
+  background: linear-gradient(135deg, #00e887, #00bfa5);
+}
+
+.premium-card .blue {
+  background: linear-gradient(135deg, #00d9ff, #4f7cff);
+}
+
+.premium-card .purple {
+  background: linear-gradient(135deg, #9b5cff, #e94cff);
+}
+
+.premium-card .gold {
+  background: linear-gradient(135deg, #00e887, #ffd43b);
+}
+
+/* Pills */
+.premium-card .pill {
+  border: 0 !important;
+  background: rgba(255,255,255,.07);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
+}
+
+/* Main Balance Highlight */
+.premium-card .balance {
+  background:
+    radial-gradient(circle at 0% 50%, rgba(0,232,135,.20), transparent 35%),
+    linear-gradient(120deg, rgba(0,232,135,.10), rgba(79,124,255,.10), rgba(155,92,255,.12));
+  border: 1px solid rgba(0,232,135,.28);
+}
+
+/* Primary Action */
+.premium-card .primary-action {
+  background: linear-gradient(100deg, #00e887, #00d9ff, #ffd43b);
+  color: #031711 !important;
+  border: 0 !important;
+  box-shadow: 0 8px 25px rgba(0,232,135,.22);
+}
+
+/* Progress */
+.premium-card .progress {
+  background: linear-gradient(
+    90deg,
+    #00e887,
+    #00d9ff,
+    #4f7cff,
+    #9b5cff
+  );
+  box-shadow: 0 0 14px rgba(0,217,255,.35);
+}
+
+
+
+
+/* Global Text Selection - Crisp White Text with Brand Green Highlight */
+::selection {
+  background-color: #1DB954 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+::-moz-selection {
+  background-color: #1DB954 !important;
+  color: #ffffff !important;
+}
+
+*::selection {
+  background-color: #1DB954 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+*::-moz-selection {
+  background-color: #1DB954 !important;
+  color: #ffffff !important;
+}
+
+input::selection,
+textarea::selection {
+  background-color: #1DB954 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}

@@ -11,17 +11,18 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import { getLocalizedCourse } from '../utils/localization';
 
 interface FooterProps {
   setActiveTab: (tab: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
-  const { siteSettings, services, courses, t } = useData();
+  const { siteSettings, services, courses, t, lang } = useData();
 
   return (
     <footer className="bg-[#142B4D] text-slate-300 pt-16 pb-8 border-t border-slate-800">
-      <div className="max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-slate-800">
           
           {/* Column 1: Logo & About */}
@@ -138,26 +139,29 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
                 {t('জনপ্রিয় কোর্সসমূহ', 'Popular Courses')}
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm font-bengali">
-                {courses.slice(0, 5).map(c => (
-                  <li key={c.id}>
-                    <button
-                      onClick={() => setActiveTab('courses')}
-                      className="hover:text-[#1DB954] transition-colors flex items-center gap-1.5 text-left"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954] shrink-0" />
-                      <span className="line-clamp-1">{c.title}</span>
-                    </button>
-                  </li>
-                ))}
+                {courses.slice(0, 5).map(c => {
+                  const loc = getLocalizedCourse(c, lang);
+                  return (
+                    <li key={c.id}>
+                      <button
+                        onClick={() => setActiveTab('courses')}
+                        className="hover:text-[#1DB954] transition-colors flex items-center gap-1.5 text-left"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954] shrink-0" />
+                        <span className="line-clamp-1">{loc.title}</span>
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
 
               {/* Escrow Guarantee Box */}
               <div className="mt-4 p-2.5 sm:p-3 rounded-xl bg-slate-800/80 border border-slate-700/60 font-bengali space-y-1">
                 <span className="text-[10px] sm:text-[11px] font-black text-[#1DB954] block">
-                  🛡️ শতভাগ নিরাপদ লেনদেন
+                  {t('🛡️ শতভাগ নিরাপদ লেনদেন', '🛡️ 100% Secure Transactions')}
                 </span>
                 <p className="text-[9px] sm:text-[10px] text-slate-400 leading-tight sm:leading-normal">
-                  সকল লেনদেন এবং সার্ভিস ডেলিভারির দায়ভার প্রতিষ্ঠান কর্তৃক সরাসরি পরিচালিত।
+                  {t('সকল লেনদেন এবং সার্ভিস ডেলিভারির দায়ভার প্রতিষ্ঠান কর্তৃক সরাসরি পরিচালিত।', 'All transactions and service deliveries are directly managed and guaranteed by the institute.')}
                 </p>
               </div>
             </div>
@@ -171,7 +175,9 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
             <ul className="space-y-3.5 text-sm">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-[#1DB954] shrink-0 mt-0.5" />
-                <span className="text-slate-300 text-xs leading-relaxed font-bengali">{siteSettings.officeAddress}</span>
+                <span className="text-slate-300 text-xs leading-relaxed font-bengali">
+                  {lang === 'en' ? 'House #12, Road #4, Sector #3, Uttara, Dhaka - 1230, Bangladesh' : siteSettings.officeAddress}
+                </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-[#1DB954] shrink-0" />
@@ -199,7 +205,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
               <div className="bg-slate-800/90 px-2.5 py-1.5 flex items-center justify-between text-[11px] text-slate-200 font-bengali">
                 <span className="font-bold flex items-center gap-1">
                   <MapPin className="w-3 h-3 text-[#1DB954]" />
-                  গুগল ম্যাপ লোকেশন
+                  {t('গুগল ম্যাপ লোকেশন', 'Google Map Location')}
                 </span>
                 <a
                   href="https://maps.google.com/?q=Uttara+Dhaka+Bangladesh"
@@ -207,7 +213,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
                   rel="noreferrer"
                   className="text-[#1DB954] hover:underline font-bold text-[10px]"
                 >
-                  বড় করে দেখুন ↗
+                  {t('বড় করে দেখুন ↗', 'View Larger ↗')}
                 </a>
               </div>
               <div className="w-full h-28 sm:h-32 bg-slate-950 relative">
@@ -278,6 +284,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
         {/* Bottom Copyright */}
         <div className="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 gap-4">
           <p>© {new Date().getFullYear()} PTENit. All Rights Reserved.</p>
+
           <p className="text-slate-400 font-bengali">
             {t('"আপনার ডিজিটাল প্ল্যাটফর্ম এখানে তৈরি করুন"', '"Build Your Digital Platform Here"')}
           </p>

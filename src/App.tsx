@@ -28,7 +28,7 @@ import { NotificationCenterModal } from './components/NotificationCenterModal';
 import { Course } from './types';
 
 const MainAppContent: React.FC = () => {
-  const { currentUser, courses, siteSettings, closeMessengerInbox } = useData();
+  const { currentUser, courses, siteSettings, closeMessengerInbox, marketplaceMode } = useData();
 
   const [activeTab, setActiveTab] = useState<string>('home');
   const [marketplaceCategory, setMarketplaceCategory] = useState<string>('All');
@@ -77,7 +77,7 @@ const MainAppContent: React.FC = () => {
     } else if (tab === 'customer-dashboard') {
       setMarketplaceCategory('buying');
     } else if (tab === 'marketplace') {
-      setMarketplaceCategory('All');
+      setMarketplaceCategory(marketplaceMode === 'selling' ? 'selling' : 'All');
     }
     setActiveTab(tab);
   };
@@ -140,13 +140,23 @@ const MainAppContent: React.FC = () => {
 
     // 4. Pop from Navigation History Stack
     if (navHistory.length > 0) {
-      const last = navHistory[navHistory.length - 1];
-      setNavHistory(prev => prev.slice(0, -1));
-      if (last.category) {
-        setMarketplaceCategory(last.category);
+      let prevEntry: { tab: string; category?: string } | null = null;
+      let newHistory = [...navHistory];
+      while (newHistory.length > 0) {
+        const candidate = newHistory.pop()!;
+        if (candidate.tab !== activeTab || (candidate.category && candidate.category !== marketplaceCategory)) {
+          prevEntry = candidate;
+          break;
+        }
       }
-      setActiveTab(last.tab);
-      return;
+      setNavHistory(newHistory);
+      if (prevEntry) {
+        if (prevEntry.category) {
+          setMarketplaceCategory(prevEntry.category);
+        }
+        setActiveTab(prevEntry.tab);
+        return;
+      }
     }
 
     // 5. Default fallback to home or student-dashboard
@@ -308,7 +318,12 @@ const MainAppContent: React.FC = () => {
 
         {/* VIEW 3: SERVICES PAGE */}
         {activeTab === 'services' && (
-          <ServicesSection setActiveTab={handleSetActiveTab} isStandalonePage={true} />
+          <ServicesSection
+            setActiveTab={handleSetActiveTab}
+            openAuthModal={() => setAuthModalOpen(true)}
+            isStandalonePage={true}
+            onBack={handleGoBack}
+          />
         )}
 
         {/* VIEW 3.5: MARKETPLACE PAGE */}
@@ -326,14 +341,14 @@ const MainAppContent: React.FC = () => {
         {/* VIEW 4: ABOUT PAGE */}
         {activeTab === 'about' && (
           <>
-            <AboutSection />
+            <AboutSection onBack={handleGoBack} />
             <WhyChooseUs />
           </>
         )}
 
         {/* VIEW 5: GALLERY PAGE */}
         {activeTab === 'gallery' && (
-          <GallerySection />
+          <GallerySection onBack={handleGoBack} />
         )}
 
         {/* VIEW 6: CERTIFICATE VERIFICATION PORTAL */}
@@ -410,7 +425,7 @@ const MainAppContent: React.FC = () => {
 
       {/* Main Footer (Only on public website pages) */}
       {!isDashboardView && (
-        <Footer setActiveTab={setActiveTab} />
+        <Footer setActiveTab={handleSetActiveTab} />
       )}
 
       {/* Modals Container */}
@@ -430,7 +445,7 @@ const MainAppContent: React.FC = () => {
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         onSuccess={() => {
-          setActiveTab('home');
+          handleSetActiveTab('home');
         }}
       />
 
@@ -438,7 +453,7 @@ const MainAppContent: React.FC = () => {
       <FloatingMessengerWindows onNavigateTab={handleSetActiveTab} />
 
       {/* Central Mobile & Desktop Notification Center Modal */}
-      <NotificationCenterModal onNavigateTab={setActiveTab} />
+      <NotificationCenterModal onNavigateTab={handleSetActiveTab} />
 
     </div>
   );

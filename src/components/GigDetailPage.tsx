@@ -63,7 +63,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
   setActiveTab: setGlobalActiveTab,
   onOrderSuccess
 }) => {
-  const { siteSettings, deleteGig, updateGig, openChatWindow, openMessengerInbox, marketplaceOrders } = useData();
+  const { siteSettings, deleteGig, updateGig, openChatWindow, openMessengerInbox, marketplaceOrders, t } = useData();
 
   // Active order for this gig placed by current user
   const userActiveOrder = marketplaceOrders?.find(o => {
@@ -85,7 +85,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
       openChatWindow({
         id: sellerId,
         orderId: userActiveOrder?.id,
-        senderName: gig.sellerName || 'গিগ প্রোভাইডার (PTENit Pro)',
+        senderName: gig.sellerName || t('গিগ প্রোভাইডার', 'Gig Provider'),
         senderRole: 'seller',
         senderAvatar: gig.sellerAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80',
         initialMessage: `আসসালামু আলাইকুম ${gig.sellerName || 'ভাইয়া'}! আমি আপনার "${gig.title}" সার্ভিসটির বিষয়ে আলোচনা ও মেসেজ দিতে চাচ্ছি।`
@@ -272,8 +272,8 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-bengali text-slate-900 dark:text-slate-100 pb-28 lg:pb-16 animate-fadeIn">
       
       {/* 1. TOP HEADER NAVIGATION BAR */}
-      <div className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 shadow-xs -mx-4 sm:-mx-8 md:-mx-12 lg:-mx-16 xl:-mx-20 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 py-3 mb-6">
-        <div className="w-full max-w-[1920px] mx-auto flex items-center justify-between gap-3">
+      <div className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 shadow-xs px-4 sm:px-6 lg:px-8 py-3 mb-6">
+        <div className="w-full max-w-7xl mx-auto flex items-center justify-between gap-3">
           
           <button
             onClick={onBack}
@@ -345,7 +345,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
       </div>
 
       {/* 2. MAIN CONTAINER */}
-      <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 pt-2">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2">
         
 
         {/* TITLE & SELLER BRIEF BANNER */}
@@ -469,12 +469,12 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
             {/* TABBED NAVIGATION MENU */}
             <div className="bg-white dark:bg-slate-900 rounded-2xl p-2 border border-slate-200/90 dark:border-slate-800 shadow-sm flex items-center gap-1.5 overflow-x-auto text-xs sm:text-sm font-black scrollbar-none">
               {[
-                { id: 'packages', label: 'প্যাকেজসমূহ' },
-                { id: 'overview', label: 'বিবরণ (Overview)' },
-                { id: 'portfolio', label: 'পোর্টফোলিও' },
-                { id: 'reviews', label: `রিভিউ (${gig.reviewsCount || 35})` },
-                { id: 'seller', label: 'সেলার বায়ো' },
-                { id: 'faqs', label: 'প্রশ্নোত্তর (FAQ)' }
+                { id: 'packages', label: t('প্যাকেজসমূহ', 'Packages') },
+                { id: 'overview', label: t('বিবরণ', 'Overview') },
+                { id: 'portfolio', label: t('পোর্টফোলিও', 'Portfolio') },
+                { id: 'reviews', label: `${t('রিভিউ', 'Reviews')} (${gig.reviewsCount || 35})` },
+                { id: 'seller', label: t('সেলার বায়ো', 'Seller Bio') },
+                { id: 'faqs', label: t('প্রশ্নোত্তর', 'FAQs') }
               ].map(tab => (
                 <button
                   key={tab.id}
@@ -784,7 +784,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 <div className="space-y-4 animate-fadeIn font-bengali">
                   <h3 className="text-base sm:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
                     <HelpCircle className="w-5 h-5 text-[#1DB954]" />
-                    <span>সাধারণ প্রশ্ন ও উত্তর (FAQs)</span>
+                    <span>{t('সাধারণ প্রশ্ন ও উত্তর', 'Frequently Asked Questions')}</span>
                   </h3>
 
                   <div className="space-y-3">

@@ -1824,10 +1824,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <LayoutDashboard className="w-6 h-6 text-[#1DB954]" /> ওভারভিউ স্ট্যাটিস্টিক্স (Analytics Dashboard)
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-[#1DB954]"></span>
-                    লাইভ সিস্টেম সিঙ্কড
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   আইটি ইনস্টিটিউটের সকল স্টুডেন্ট, কোর্স, সার্ভিস রিকোয়েস্ট, উইথড্রয়াল এবং পেমেন্ট আয়-ব্যয়ের লাইভ ওভারভিউ।
@@ -2072,10 +2068,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <Users className="w-6 h-6 text-[#1DB954]" /> টিচার ও এক্সপার্ট ড্যাশবোর্ড
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-[#1DB954]"></span>
-                    {users.filter(u => u.role === 'teacher' || u.role === 'instructor' || u.role === 'admin').length} জন ইনস্ট্রাক্টর সিঙ্কড
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   টিচার যুক্তকরণ, কার কত জন ছাত্র ও কাজের রিপোর্ট, বিল রিকুয়েস্ট অনুমোদন এবং সাপোর্ট নোটিশ প্রেরণের পূর্ণাঙ্গ প্যানেল।
@@ -2463,10 +2455,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <BookOpen className="w-6 h-6 text-[#1DB954]" /> কোর্স ম্যানেজমেন্ট ও অফারসমূহ ({courses.length})
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-[#1DB954]"></span>
-                    মডিউল & লাইভ ব্যাচ সিঙ্কড
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   একই বিষয়ের বেসিক, এডভান্সড বা প্রফেশনাল লেভেলের একাধিক কোর্স ট্রেইনার অফার দিয়ে লঞ্চ ও পরিচালনা করুন।
@@ -2836,10 +2824,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <Briefcase className="w-6 h-6 text-[#1DB954]" /> আইটি সার্ভিসেস প্রাক্টিস ও ক্লায়েন্ট সাপোর্ট ({services.length})
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-[#1DB954]"></span>
-                    আইটি সার্ভিসেস রেডি
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   ওয়েব ডেভেলপমেন্ট, অ্যাপস, গ্রাফিক্স ও ডিজিটাল মার্কেটিং ক্লায়েন্ট সার্ভিস প্যাকেজ ব্যবস্থাপনা।
@@ -2922,10 +2906,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <ShoppingBag className="w-6 h-6 text-[#1DB954]" /> এডমিন গিগ আপলোড & মেইন এডমিন অর্ডার রেফারেল
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#1DB954] animate-pulse"></span>
-                    মেইন এডমিন কন্ট্রোল
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   ৩টি প্যাকেজ ও ফুল ফিচার সহ যেকোনো ক্যাটাগরিতে গিগ পাবলিশ করুন, সরাসরি অর্ডার রিসিভ করুন এবং কেবল মেইন এডমিন হিসেবে ফ্রিল্যান্সারদের কাছে রেফার করুন।
@@ -3514,10 +3494,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                           'bg-purple-500/20 text-purple-400 border-purple-500/40';
 
                         const statusLabel = 
-                          ord.status === 'completed' ? 'সম্পন্ন (Completed)' :
-                          ord.status === 'in_progress' ? 'কাজ চলছে (In Progress)' :
-                          ord.status === 'in_review' ? 'ডেলিভারি জমা (In Review)' :
-                          ord.status === 'cancelled' ? 'বাতিলকৃত' : 'নতুন অর্ডার (Pending)';
+                          ord.status === 'completed' ? t('সম্পন্ন', 'Completed') :
+                          ord.status === 'in_progress' ? t('কাজ চলছে', 'In Progress') :
+                          ord.status === 'in_review' ? t('ডেলিভারি জমা', 'In Review') :
+                          ord.status === 'cancelled' ? t('বাতিলকৃত', 'Cancelled') : t('নতুন অর্ডার', 'Pending');
 
                         return (
                           <div key={ord.id} className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-3xl p-5 shadow-lg space-y-4 transition-all">
@@ -3587,7 +3567,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                               {/* Client & Assigned Staff Info */}
                               <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
                                 <div>
-                                  <span className="text-[11px] text-slate-400 font-bold block mb-1">গ্রাহকের তথ্য (Buyer Info):</span>
+                                  <span className="text-[11px] text-slate-400 font-bold block mb-1">{t('গ্রাহকের তথ্য:', 'Buyer Info:')}</span>
                                   <p className="text-xs font-bold text-white">{ord.buyerName}</p>
                                   {ord.buyerEmail && <p className="text-[11px] text-slate-400">{ord.buyerEmail}</p>}
                                   {ord.buyerPhone && <p className="text-[11px] text-sky-400 font-mono">{ord.buyerPhone}</p>}
@@ -4403,10 +4383,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <Zap className="w-6 h-6 text-[#1DB954]" /> ডিজিটাল প্রোডাক্টস ও সফটওয়্যার কন্ট্রোল ({digitalProducts.length})
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-[#1DB954]"></span>
-                    ১০০% কার্যকর ও পাবলিশযোগ্য
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   নতুন স্ক্রিপ্ট, থিম, প্লাগইন, মোবাইল অ্যাপ সোর্স কোড বা সফটওয়্যার যোগ করুন, ফ্রি/পেইড নির্ধারণ করুন এবং ডাউনলোড লিঙ্ক ম্যানেজ করুন।
@@ -4905,10 +4881,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <CreditCard className="w-6 h-6 text-[#1DB954]" /> পেমেন্ট অর্ডার ও মোবাইল ব্যাংকিং হিস্টোরি ({orders.length})
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-[#1DB954]"></span>
-                    বিকাশ/নগদ/রকেট সিঙ্কড
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   শিক্ষার্থীদের কোর্স পেমেন্ট ট্রানজেকশন যাচাই, মাল্টিপল অর্ডার সিলেক্ট করে বাল্ক স্ট্যাটাস আপডেট ও ফিল্টারিং।
@@ -5118,10 +5090,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     <ShieldCheck className="w-7 h-7 text-[#1DB954]" />
                     <span>প্রতিষ্ঠানের সকল বিল জমা & অটো-রিড ভেরিফিকেশন প্যানেল</span>
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                    <Zap className="w-3.5 h-3.5 text-amber-400" />
-                    ফ্রি অটো-রিড ইঞ্জি‌ন সক্রিয়
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   সকল বিকাশ, নগদ, রকেট ও ব্যাংক বিল জমা থাকবে। সিস্টেম নিজে থেকে TrxID রিড করে ভেরিফাই করতে পারে।
@@ -5350,10 +5318,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <Building2 className="w-6 h-6 text-[#1DB954]" /> ক্লায়েন্ট প্রজেক্টস & কর্পোরেট মিলস্টোনস
                   </h2>
-                  <span className="px-3 py-1 bg-sky-500/20 text-sky-300 text-xs font-black rounded-full border border-sky-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-sky-400"></span>
-                    B2B প্রজেক্ট ট্র্যাকার সক্রিয়
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   কর্পোরেট ক্লায়েন্টদের কাস্টম সফটওয়্যার, মোবাইল অ্যাপ এবং ই-কমার্স প্রজেক্টের মিলস্টোন, বাজেট ও চুক্তিনামা পরিচালনা করুন।
@@ -5491,10 +5455,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <ShoppingBag className="w-6 h-6 text-[#1DB954]" /> মার্কেটপ্লেস কন্ট্রোল সেন্টার & এজেন্সী হাব
                   </h2>
-                  <span className="px-3.5 py-1.5 bg-[#1DB954]/20 text-[#1DB954] text-xs sm:text-sm font-black rounded-full border border-[#1DB954]/40 flex items-center gap-1.5 animate-pulse">
-                    <Zap className="w-4 h-4 text-[#1DB954]" />
-                    {mktCommissionRate}% প্ল্যাটফর্ম কমিশন সক্রিয়
-                  </span>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-300 font-medium">
                   ফাইবারের মতো গিগ অ্যাপ্রুভাল, সেলার ট্রাস্ট ব্যাজ (Vetted Pro), এস্ক্রো ডিসপ্যুট রেজোলিউশন ও স্টাফ প্রজেক্ট ডেসপ্যাচ সম্পূর্ণ নিয়ন্ত্রণ করুন।
@@ -6040,10 +6000,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <ImageIcon className="w-6 h-6 text-[#1DB954]" /> গ্যালারি ও মিডিয়া ম্যানেজমেন্ট ({gallery.length})
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-[#1DB954]"></span>
-                    মিডিয়া লাইব্রেরি রেডি
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   আইটি একাডেমির ইভেন্ট, ল্যাব ফোটোগ্রাফি, প্রেজেন্টেশন এবং সফল শিক্ষার্থীদের রিভিউ পরিচালনা করুন।
@@ -6126,10 +6082,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <Settings className="w-6 h-6 text-[#1DB954]" /> ওয়েবসাইট কন্টেন্ট & ডাইনামিক সেটিংস
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-[#1DB954]"></span>
-                    গ্লোবাল কনফিগারেশন সিঙ্কড
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   ল্যান্ডিং পেইজের টেক্সট, কাউন্টার স্ট্যাটিস্টিক্স, যোগাযোগ নম্বর, ইমেইল ও অফিস ঠিকানা সেটিংস।
@@ -6747,10 +6699,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <FileText className="w-6 h-6 text-blue-400" /> সকল লিখিত কনটেন ম্যানেজমেন্ট (All Written Content)
                   </h2>
-                  <span className="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-black rounded-full border border-blue-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-blue-400"></span>
-                    ওয়েবসাইট ল্যান্ডিং & পলিসি কন্টেন্ট
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   হিরো নোটিশ ব্যানার, আমাদের সম্পর্কে, শর্তাবলী (Terms), প্রাইভেসি পলিসি, রিফান্ড পলিসি এবং ফুটার স্লোগান এডিট করুন।
@@ -6864,10 +6812,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <Monitor className="w-6 h-6 text-emerald-400" /> ১০০% রেসপন্সিভ & কন্টেইনার উইডথ কন্ট্রোল
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-[#1DB954]"></span>
-                    ১০০% রেসপন্সিভ ফিট মোড
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   মোবাইল, ট্যাবলেট, ল্যাপটপ এবং ডেক্সটপে ওয়েবসাইটের ১০০% লেআউট উইডথ, গ্রিড ডেনসিটি ও ভিউপোর্ট স্কেলিং কনফিগার করুন।
@@ -7032,10 +6976,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <Sparkles className="w-6 h-6 text-purple-400" /> পিক্সেল & অ্যানালিটিক্স কনফিগারেশন
                   </h2>
-                  <span className="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-black rounded-full border border-purple-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-purple-400"></span>
-                    ট্র্যাকিং & রি-টার্গেটিং রেডি
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   Meta / Facebook Pixel, Google Analytics (GA4), TikTok Pixel এবং Google Tag Manager আইডি সেটিংস করুন।
@@ -7138,10 +7078,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <Globe className="w-6 h-6 text-emerald-400" /> SEO & সার্চ ইঞ্জিন অপটিমাইজেশন (SEO Settings)
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    Google Indexing & Social OG Ready
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   Google, Bing, Facebook, Twitter (X) এবং WhatsApp শেয়ারিং মেটা ট্যাগ, ওপেনগ্রাফ ইমেজ ও স্কিমা স্ট্রাকচার্ড ডাটা সংজ্ঞায়িত করুন।
@@ -7429,10 +7365,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <CreditCard className="w-6 h-6 text-[#1DB954]" /> পেমেন্ট মেথড কনফিগারেশন
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-[#1DB954]"></span>
-                    bKash, Nagad, Rocket & Bank Ready
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   গ্রাহকদের কোর্স ও সেবা পেমেন্টের জন্য বিকাশ, নগদ, রকেট এবং ব্যাংক বিবরণ সেটিংস করুন।
@@ -7671,10 +7603,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                     <Percent className="w-6 h-6 text-[#1DB954]" /> কমিশন কন্ট্রোলার
                   </h2>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                    <Zap className="w-3.5 h-3.5" />
-                    সক্রিয় কমিশন: {mktCommissionRate}%
-                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
                   মার্কেটপ্লেস গিগ, প্রজেক্ট এস্ক্রো কমিশন, একাডেমি ট্রেইনার রেভিনিউ শেয়ার এবং উইথড্রয়াল প্রসেসিং ফি এর রিয়েল-টাইম কনফিগারেশন।
@@ -8000,10 +7928,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                       <DollarSign className="w-6 h-6 text-[#1DB954]" /> মার্কেটপ্লেস ফিনান্সিয়ালস & কাজের অগ্রগতি পার্সেন্টেজ (%)
                     </h2>
-                    <span className="px-3 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-full border border-emerald-500/40 flex items-center gap-1.5 animate-pulse">
-                      <span className="w-2 h-2 rounded-full bg-[#1DB954]"></span>
-                      স্বচ্ছ অটোমেটেড রেভিনিউ & কাজ ট্র্যাকার
-                    </span>
                   </div>
                   <p className="text-xs text-slate-300">
                     মার্কেটপ্লেসের সমস্ত প্রজেক্ট ও গিগ অর্ডারের কাজের সফলতার শতকরা হার (%), ১০% প্ল্যাটফর্ম কমিশন, ৯০% সেলার পেআউট ও এস্ক্রো লেজার রিপোর্ট।

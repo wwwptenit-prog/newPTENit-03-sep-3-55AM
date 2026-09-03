@@ -33,7 +33,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
   openAuthModal,
   onStartLearning
 }) => {
-  const { courses, currentUser, enrollments, enrollCourse } = useData();
+  const { courses, currentUser, enrollments, enrollCourse, t } = useData();
 
   const [activeTab, setActiveTab] = useState<'overview' | 'curriculum' | 'reviews'>('overview');
   const [openModuleId, setOpenModuleId] = useState<string>('');
@@ -167,7 +167,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                     : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white'
                 }`}
               >
-                ওভারভিউ (Overview)
+                {t('ওভারভিউ', 'Overview')}
               </button>
               <button
                 onClick={() => setActiveTab('curriculum')}
@@ -177,7 +177,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                     : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white'
                 }`}
               >
-                কারিকুলাম ও লেসনস ({course.modules?.reduce((acc, m) => acc + m.lessons.length, 0) || course.lessonsCount})
+                {t('কারিকুলাম', 'Curriculum')} ({course.modules?.reduce((acc, m) => acc + m.lessons.length, 0) || course.lessonsCount})
               </button>
             </div>
 
@@ -188,7 +188,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                 {/* Description */}
                 <div>
                   <h3 className="text-lg font-bold font-heading mb-2 text-slate-900 dark:text-white">
-                    কোর্স বিবরণী (Course Description)
+                    {t('কোর্স বিবরণী', 'Course Description')}
                   </h3>
                   <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-bengali whitespace-pre-line">
                     {course.description}
@@ -199,7 +199,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                 <div className="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 space-y-3">
                   <h3 className="text-base font-bold text-slate-900 dark:text-white font-bengali flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-[#1DB954]" />
-                    এই কোর্সে আপনি যা যা শিখবেন (What You Will Learn):
+                    {t('এই কোর্সে যা শিখবেন:', 'What You Will Learn:')}
                   </h3>
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-bengali">
                     {course.whatYouWillLearn?.map((item, i) => (
@@ -214,7 +214,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                 {/* Requirements */}
                 <div>
                   <h3 className="text-base font-bold font-heading mb-2 text-slate-900 dark:text-white">
-                    প্রয়োজনীয় রিকোয়ারমেন্টস (Requirements)
+                    {t('প্রয়োজনীয় যোগ্যতা', 'Requirements')}
                   </h3>
                   <ul className="list-disc list-inside text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-bengali space-y-1">
                     {course.requirements?.map((req, i) => (
@@ -372,12 +372,12 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                 {isEnrolled ? (
                   <>
                     <BookOpen className="w-5 h-5" />
-                    পড়াশোনা শুরু করুন
+                    {t('পড়াশোনা শুরু করুন', 'Start Learning')}
                   </>
                 ) : course.isFree ? (
-                  'Enroll Free (বিনামূল্যে যুক্ত হন)'
+                  t('বিনামূল্যে যুক্ত হন', 'Enroll Free')
                 ) : (
-                  'Buy / Enroll Now (এখনই এনরোল করুন)'
+                  t('এখনই এনরোল করুন', 'Enroll Now')
                 )}
               </button>
 

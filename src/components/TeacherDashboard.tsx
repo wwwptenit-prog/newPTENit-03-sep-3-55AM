@@ -39,6 +39,7 @@ import {
   DollarSign,
   Bell,
   Wallet,
+  Receipt,
   Target,
   Globe,
   LogOut,
@@ -1064,7 +1065,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
   return (
     <div className="min-h-screen bg-slate-100/90 dark:bg-slate-950 py-4 sm:py-8 transition-colors font-bengali">
-      <div className="max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Teacher Profile Header Banner & Menubar (Hidden when hideHeader is true) */}
         {!hideHeader && (
@@ -1832,18 +1833,14 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
         </div>
 
         {/* Full Dashboard Menubar with Header & Extensible Navigation Items */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md mb-6 sm:mb-8 overflow-hidden">
-          <div className="px-4 py-2.5 bg-slate-100/80 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md mb-6 sm:mb-8 overflow-hidden">
+          <div className="px-4 sm:px-5 py-3 bg-slate-100/80 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs sm:text-sm font-black text-slate-800 dark:text-slate-200">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
-              <span className="uppercase tracking-wider text-[11px] text-slate-500 dark:text-slate-400">ইনস্ট্রাক্টর ড্যাশবোর্ড মেনুবার (Instructor Menubar):</span>
+              <span className="uppercase tracking-wider text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-black">ইনস্ট্রাক্টর ড্যাশবোর্ড মেনুবার (Instructor Menubar)</span>
             </div>
-            <span className="text-[10px] text-teal-600 dark:text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full border border-teal-500/20 font-mono">
-              + মডিউল ও কোর্স ফ্রেমওয়ার্ক
-            </span>
           </div>
 
-          <div className="p-1.5 sm:p-2 flex items-center gap-1 sm:gap-1.5 overflow-x-auto scrollbar-none">
+          <div className="p-2 sm:p-3 flex items-center gap-2 sm:gap-2.5 overflow-x-auto scrollbar-none">
             {[
               { 
                 id: 'courses', 
@@ -1912,16 +1909,16 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                 <button
                   key={tab.id}
                   onClick={tab.onClick}
-                  className={`py-1.5 sm:py-2.5 px-2.5 sm:px-4 font-black text-[11px] sm:text-xs md:text-sm flex items-center gap-1 sm:gap-2 rounded-lg sm:rounded-xl transition-all shrink-0 cursor-pointer border ${
+                  className={`py-2 sm:py-2.5 px-3.5 sm:px-4 font-black text-xs sm:text-sm md:text-base flex items-center gap-2 rounded-xl sm:rounded-2xl transition-all shrink-0 cursor-pointer border ${
                     isActive
-                      ? `${tab.colorClass} text-white shadow-xs font-black`
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border-transparent'
+                      ? `${tab.colorClass} text-white shadow-md font-black ring-2 ring-white/20`
+                      : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border-slate-200/80 dark:border-slate-800'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
                   <span className="whitespace-nowrap">{tab.label}</span>
                   {!!tab.badge && (
-                    <span className={`px-1.5 py-0.2 sm:px-2 sm:py-0.5 text-[9px] sm:text-[10px] font-black rounded-full ${
+                    <span className={`px-2 py-0.5 text-xs font-black rounded-full ${
                       isActive ? 'bg-white text-slate-900' : 'bg-rose-600 text-white animate-pulse'
                     }`}>
                       {tab.badge}
@@ -1970,81 +1967,78 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
 
                       <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
-                        <span className="px-3 py-1 bg-emerald-500 text-white font-black text-[11px] rounded-full shadow-md">
+                        <span className="px-3.5 py-1 bg-emerald-500 text-white font-black text-xs sm:text-sm rounded-full shadow-md">
                           {course.category}
                         </span>
-                        <span className="px-2.5 py-1 bg-slate-900/90 backdrop-blur-md text-amber-300 font-bold text-[11px] rounded-full border border-amber-500/30 flex items-center gap-1">
-                          <Star className="w-3 h-3 text-amber-400 fill-amber-400" /> 4.9
+                        <span className="px-3 py-1 bg-slate-900/90 backdrop-blur-md text-amber-300 font-bold text-xs sm:text-sm rounded-full border border-amber-500/30 flex items-center gap-1.5">
+                          <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" /> 4.9
                         </span>
                       </div>
 
                       <div className="absolute bottom-3 left-3 right-3 text-white">
-                        <span className="text-[10px] text-teal-300 font-bold uppercase tracking-wider block mb-0.5">সক্রিয় রানিং কোর্স</span>
-                        <h3 className="font-extrabold text-sm sm:text-base leading-snug line-clamp-1">{course.title}</h3>
+                        <span className="text-xs text-teal-300 font-bold uppercase tracking-wider block mb-1">সক্রিয় রানিং কোর্স</span>
+                        <h3 className="font-black text-base sm:text-lg leading-snug line-clamp-1">{course.title}</h3>
                       </div>
                     </div>
 
                     {/* Progress & Target Section */}
                     <div className="p-4 sm:p-5 space-y-4 flex-1">
                       {/* Upload Target Tracker Box */}
-                      <div className="bg-gradient-to-br from-amber-500/10 via-teal-500/5 to-indigo-500/10 border border-amber-500/30 dark:border-amber-500/20 rounded-2xl p-3 sm:p-3.5 space-y-2.5">
+                      <div className="bg-gradient-to-br from-amber-500/10 via-teal-500/5 to-indigo-500/10 border border-amber-500/30 dark:border-amber-500/20 rounded-2xl p-3.5 sm:p-4 space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-black text-amber-700 dark:text-amber-300 flex items-center gap-1.5">
-                            <Target className="w-3.5 h-3.5 text-amber-500" />
+                          <span className="text-xs sm:text-sm font-black text-amber-700 dark:text-amber-300 flex items-center gap-2">
+                            <Target className="w-4 h-4 text-amber-500" />
                             <span>কোর্স আপলোড টার্গেট</span>
-                          </span>
-                          <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-500/20 text-amber-700 dark:text-amber-300 rounded-full border border-amber-500/30">
-                            ⏳ প্রোগ্রেস রানিং
                           </span>
                         </div>
 
                         {/* Module Progress */}
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-[11px] font-bold">
-                            <span className="text-slate-600 dark:text-slate-300">মডিউল টার্গেট: {currentModules} / {targetModules} টি</span>
-                            <span className="text-teal-600 dark:text-teal-400 font-mono">{modulePercentage}%</span>
+                        <div className="space-y-1.5">
+                          <div className="flex justify-between text-xs sm:text-sm font-bold">
+                            <span className="text-slate-700 dark:text-slate-200">মডিউল টার্গেট: {currentModules} / {targetModules} টি</span>
+                            <span className="text-teal-600 dark:text-teal-400 font-mono font-black">{modulePercentage}%</span>
                           </div>
-                          <div className="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                          <div className="h-2.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                             <div className="h-full bg-teal-500 rounded-full transition-all duration-500" style={{ width: `${modulePercentage}%` }} />
                           </div>
                         </div>
 
                         {/* Lessons / Videos Progress */}
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-[11px] font-bold">
-                            <span className="text-slate-600 dark:text-slate-300">লেসন/ভিডিও টার্গেট: {currentLessons} / {targetLessons} টি</span>
-                            <span className="text-emerald-600 dark:text-emerald-400 font-mono">{lessonPercentage}%</span>
+                        <div className="space-y-1.5">
+                          <div className="flex justify-between text-xs sm:text-sm font-bold">
+                            <span className="text-slate-700 dark:text-slate-200">লেসন/ভিডিও টার্গেট: {currentLessons} / {targetLessons} টি</span>
+                            <span className="text-emerald-600 dark:text-emerald-400 font-mono font-black">{lessonPercentage}%</span>
                           </div>
-                          <div className="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                          <div className="h-2.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                             <div className="h-full bg-emerald-500 rounded-full transition-all duration-500" style={{ width: `${lessonPercentage}%` }} />
                           </div>
                         </div>
 
                         {/* Assignment Progress */}
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-[11px] font-bold">
-                            <span className="text-slate-600 dark:text-slate-300">অ্যাসাইনমেন্ট টার্গেট: {currentAssignments} / {targetAssignments} টি</span>
-                            <span className="text-indigo-600 dark:text-indigo-400 font-mono">{asgnPercentage}%</span>
+                        <div className="space-y-1.5">
+                          <div className="flex justify-between text-xs sm:text-sm font-bold">
+                            <span className="text-slate-700 dark:text-slate-200">অ্যাসাইনমেন্ট টার্গেট: {currentAssignments} / {targetAssignments} টি</span>
+                            <span className="text-indigo-600 dark:text-indigo-400 font-mono font-black">{asgnPercentage}%</span>
                           </div>
-                          <div className="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                          <div className="h-2.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                             <div className="h-full bg-indigo-500 rounded-full transition-all duration-500" style={{ width: `${asgnPercentage}%` }} />
                           </div>
                         </div>
                       </div>
 
                       {/* Stats Overview */}
-                      <div className="grid grid-cols-3 gap-2 text-center text-xs pt-1 border-t border-slate-100 dark:border-slate-800">
-                        <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded-xl">
-                          <span className="text-[10px] text-slate-400 block">মোট টাস্ক</span>
-                          <span className="font-black text-slate-900 dark:text-white">{courseAsgns.length} টি</span>
+                      <div className="grid grid-cols-3 gap-2 text-center text-xs sm:text-sm pt-1 border-t border-slate-100 dark:border-slate-800">
+                        <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl">
+                          <span className="text-xs text-slate-500 dark:text-slate-400 block mb-0.5 font-semibold">মোট টাস্ক</span>
+                          <span className="font-black text-sm sm:text-base text-slate-900 dark:text-white">{courseAsgns.length} টি</span>
                         </div>
-                        <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded-xl">
-                          <span className="text-[10px] text-slate-400 block">জমা পড়া</span>
-                          <span className="font-black text-teal-500">{courseSubs.length} টি</span>
+                        <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl">
+                          <span className="text-xs text-slate-500 dark:text-slate-400 block mb-0.5 font-semibold">জমা পড়া</span>
+                          <span className="font-black text-sm sm:text-base text-teal-500">{courseSubs.length} টি</span>
                         </div>
-                        <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded-xl">
-                          <span className="text-[10px] text-slate-400 block">মূল্যায়ন বাকি</span>
-                          <span className="font-black text-rose-500">{pendingCount} টি</span>
+                        <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl">
+                          <span className="text-xs text-slate-500 dark:text-slate-400 block mb-0.5 font-semibold">মূল্যায়ন বাকি</span>
+                          <span className="font-black text-sm sm:text-base text-rose-500">{pendingCount} টি</span>
                         </div>
                       </div>
                     </div>
@@ -2062,9 +2056,9 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                             setLessonModuleId('new');
                           }
                         }}
-                        className="py-2.5 sm:py-3 px-3 bg-gradient-to-r from-[#1DB954] to-emerald-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.99] text-white font-extrabold text-xs sm:text-sm rounded-xl shadow-md transition cursor-pointer flex items-center justify-center gap-2"
+                        className="py-3 px-3.5 bg-gradient-to-r from-[#1DB954] to-emerald-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.99] text-white font-black text-xs sm:text-sm md:text-base rounded-xl shadow-md transition cursor-pointer flex items-center justify-center gap-2"
                       >
-                        <Video className="w-4 h-4 text-white shrink-0" />
+                        <Video className="w-4 h-4 sm:w-5 sm:h-5 text-white shrink-0" />
                         <span className="truncate">মডিউল আপলোড</span>
                       </button>
 
@@ -2074,9 +2068,9 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                           setSelectedPreviewCourse(course);
                           if (onViewCourse) onViewCourse(course.id);
                         }}
-                        className="py-2.5 sm:py-3 px-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-[0.99] text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm rounded-xl border border-slate-200 dark:border-slate-700 transition cursor-pointer flex items-center justify-center gap-1.5"
+                        className="py-3 px-3.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-[0.99] text-slate-700 dark:text-slate-200 font-black text-xs sm:text-sm md:text-base rounded-xl border border-slate-200 dark:border-slate-700 transition cursor-pointer flex items-center justify-center gap-2"
                       >
-                        <Eye className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" />
+                        <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-slate-500 dark:text-slate-400 shrink-0" />
                         <span className="truncate">প্রিভিউ দেখুন →</span>
                       </button>
                     </div>
@@ -2227,81 +2221,81 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                         return (
                           <div
                             key={sub.id}
-                            className={`relative overflow-hidden bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xs hover:shadow-xs transition-all p-2.5 sm:p-3 text-slate-800 dark:text-slate-100 flex flex-col justify-between gap-2 ${leftAccentBorder}`}
+                            className={`relative overflow-hidden bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all p-3.5 sm:p-4 text-slate-800 dark:text-slate-100 flex flex-col justify-between gap-3 ${leftAccentBorder}`}
                           >
                             {/* Row 1: Student Profile, ID & Status Badge */}
-                            <div className="flex items-center justify-between gap-1.5 pb-2 border-b border-slate-100 dark:border-slate-800/80">
-                              <div className="flex items-center gap-1.5 min-w-0">
+                            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800/80">
+                              <div className="flex items-center gap-2.5 min-w-0">
                                 <div className="relative shrink-0">
-                                  <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-teal-500 to-emerald-400 text-white font-black text-[11px] flex items-center justify-center ring-1.5 ring-teal-500 shadow-2xs">
+                                  <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-teal-500 to-emerald-400 text-white font-black text-sm flex items-center justify-center ring-2 ring-teal-500/30 shadow-2xs">
                                     {sub.studentName?.charAt(0) || 'S'}
                                   </div>
-                                  <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-500 rounded-full border border-white dark:border-slate-900" />
+                                  <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border border-white dark:border-slate-900" />
                                 </div>
                                 <div className="min-w-0">
-                                  <div className="flex items-center gap-1">
-                                    <span className="text-xs font-black text-slate-900 dark:text-white truncate">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate">
                                       {sub.studentName}
                                     </span>
-                                    <BadgeCheck className="w-3 h-3 text-emerald-600 dark:text-[#1DB954] shrink-0" />
+                                    <BadgeCheck className="w-4 h-4 text-emerald-600 dark:text-[#1DB954] shrink-0" />
                                   </div>
-                                  <span className="text-[9px] text-slate-500 dark:text-slate-400 font-medium block leading-none truncate">
+                                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium block truncate">
                                     {sub.studentEmail || 'শিক্ষার্থী'} • {sub.submittedAt || 'আজ'}
                                   </span>
                                 </div>
                               </div>
 
-                              <div className="flex items-center gap-1 shrink-0">
-                                <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-black border flex items-center gap-0.5 shadow-2xs ${badgeClasses}`}>
-                                  <StatusIcon className="w-2.5 h-2.5 shrink-0" />
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <span className={`px-2.5 py-1 rounded-full text-xs font-black border flex items-center gap-1 shadow-2xs ${badgeClasses}`}>
+                                  <StatusIcon className="w-3.5 h-3.5 shrink-0" />
                                   <span>{statusLabel}</span>
                                 </span>
                               </div>
                             </div>
 
-                            {/* Row 2: Lesson Number & Assigned Task Details (Compact) */}
-                            <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 space-y-1">
-                              <div className="flex items-center justify-between gap-1.5 flex-wrap">
-                                <div className="flex items-center gap-1 flex-wrap">
-                                  <span className="px-1.5 py-0.5 rounded-md bg-indigo-600 dark:bg-indigo-500 text-white text-[9px] font-black flex items-center gap-0.5 shadow-2xs">
-                                    <BookOpen className="w-2.5 h-2.5 shrink-0" />
+                            {/* Row 2: Lesson Number & Assigned Task Details */}
+                            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+                              <div className="flex items-center justify-between gap-2 flex-wrap">
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  <span className="px-2 py-0.5 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white text-xs font-black flex items-center gap-1 shadow-2xs">
+                                    <BookOpen className="w-3 h-3 shrink-0" />
                                     <span>{lessonInfo.lessonNo}</span>
                                   </span>
-                                  <span className="px-1.5 py-0.5 bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 rounded text-[9px] font-bold truncate max-w-[130px]">
+                                  <span className="px-2 py-0.5 bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 rounded-lg text-xs font-bold truncate max-w-[160px]">
                                     {asgn?.courseTitle || 'কোর্স'}
                                   </span>
                                 </div>
-                                <span className="px-1.5 py-0.5 bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 rounded text-[9px] font-black flex items-center gap-0.5 shrink-0">
-                                  <Award className="w-2.5 h-2.5 text-purple-600 dark:text-purple-400 shrink-0" />
+                                <span className="px-2 py-0.5 bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 rounded-lg text-xs font-black flex items-center gap-1 shrink-0">
+                                  <Award className="w-3 h-3 text-purple-600 dark:text-purple-400 shrink-0" />
                                   <span>{asgn?.totalPoints || 50} মার্কস</span>
                                 </span>
                               </div>
 
                               {/* Task Title & Description */}
-                              <div className="text-[11px] font-bold text-slate-900 dark:text-white leading-tight truncate">
+                              <div className="text-xs sm:text-sm font-black text-slate-900 dark:text-white leading-tight">
                                 {asgn?.title || lessonInfo.taskTitle}
                               </div>
-                              <p className="text-[10px] text-slate-600 dark:text-slate-300 leading-snug line-clamp-2 bg-white/80 dark:bg-slate-900/80 p-1.5 rounded-md border border-slate-100 dark:border-slate-800">
-                                <span className="font-bold text-indigo-600 dark:text-indigo-400">টাস্ক: </span>
+                              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-white/80 dark:bg-slate-900/80 p-2 rounded-lg border border-slate-100 dark:border-slate-800">
+                                <span className="font-black text-indigo-600 dark:text-indigo-400">টাস্ক: </span>
                                 {asgn?.description || lessonInfo.taskDesc}
                               </p>
                             </div>
 
-                            {/* Row 2.5: Task Completion Progress (Compact) */}
-                            <div className="px-2 py-1.5 rounded-lg bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50 space-y-1">
-                              <div className="flex items-center justify-between text-[9px] font-bold">
-                                <span className="text-slate-700 dark:text-slate-300 flex items-center gap-1">
-                                  <Layers className="w-3 h-3 text-teal-500 shrink-0" />
+                            {/* Row 2.5: Task Completion Progress */}
+                            <div className="px-3 py-2 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50 space-y-1.5">
+                              <div className="flex items-center justify-between text-xs font-bold">
+                                <span className="text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                                  <Layers className="w-3.5 h-3.5 text-teal-500 shrink-0" />
                                   <span>অগ্রগতি: {progress.completedTasks}/{progress.totalTasks}</span>
-                                  <span className="text-teal-600 dark:text-teal-400">({progress.progressPercent}%)</span>
+                                  <span className="text-teal-600 dark:text-teal-400 font-black">({progress.progressPercent}%)</span>
                                 </span>
-                                <span className={`text-[9px] font-black ${
+                                <span className={`text-xs font-black ${
                                   progress.isAllCompleted ? 'text-[#1DB954]' : 'text-amber-600 dark:text-amber-400'
                                 }`}>
                                   {progress.isAllCompleted ? '🎉 সম্পন্ন' : `⏳ ${progress.remainingTasks}টি বাকি`}
                                 </span>
                               </div>
-                              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1 overflow-hidden">
+                              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
                                 <div
                                   className={`h-full rounded-full transition-all duration-500 ${
                                     progress.isAllCompleted
@@ -2314,26 +2308,26 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                             </div>
 
                             {/* Row 3: Evaluation Score Box */}
-                            <div className="grid grid-cols-2 gap-1.5 p-1.5 rounded-lg bg-slate-50/90 dark:bg-slate-800/60 border border-dashed border-slate-300 dark:border-slate-700">
-                              <div className="flex items-center gap-1.5">
-                                <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 ${
+                            <div className="grid grid-cols-2 gap-2 p-2.5 rounded-xl bg-slate-50/90 dark:bg-slate-800/60 border border-dashed border-slate-300 dark:border-slate-700">
+                              <div className="flex items-center gap-2">
+                                <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
                                   isGraded ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600' : 'bg-purple-50 dark:bg-purple-950/40 text-purple-600'
                                 }`}>
-                                  <Award className="w-3.5 h-3.5" />
+                                  <Award className="w-4 h-4" />
                                 </div>
                                 <div className="min-w-0">
-                                  <span className="text-[8px] text-slate-500 dark:text-slate-400 font-bold block leading-none">
+                                  <span className="text-xs text-slate-500 dark:text-slate-400 font-bold block leading-none">
                                     {isGraded ? 'স্কোর' : 'মোট নম্বর'}
                                   </span>
-                                  <span className="text-[11px] font-black font-mono text-slate-800 dark:text-slate-200 leading-tight truncate block">
+                                  <span className="text-xs sm:text-sm font-black font-mono text-slate-900 dark:text-white leading-tight truncate block mt-0.5">
                                     {isGraded ? `${sub.points || 50}/${asgn?.totalPoints || 50}` : `${asgn?.totalPoints || 50} পয়েন্ট`}
                                   </span>
                                 </div>
                               </div>
-                              <div className="border-l border-dashed border-slate-300 dark:border-slate-700 pl-1.5 flex items-center justify-between">
+                              <div className="border-l border-dashed border-slate-300 dark:border-slate-700 pl-2 flex items-center justify-between">
                                 <div className="min-w-0">
-                                  <span className="text-[8px] text-slate-500 dark:text-slate-400 font-bold block leading-none">ফলাফল</span>
-                                  <span className={`text-[10px] font-black leading-tight truncate block ${
+                                  <span className="text-xs text-slate-500 dark:text-slate-400 font-bold block leading-none">ফলাফল</span>
+                                  <span className={`text-xs sm:text-sm font-black leading-tight truncate block mt-0.5 ${
                                     isGraded && progress.isAllCompleted
                                       ? 'text-emerald-700 dark:text-[#1DB954]'
                                       : isUnderReview || (isGraded && !progress.isAllCompleted)
@@ -2348,47 +2342,47 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
                             {/* Row 3.5: Student Solution / Note (if any) */}
                             {sub.submissionText && (
-                              <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 flex items-start gap-1.5 text-[10px] text-slate-700 dark:text-slate-300">
-                                <MessageSquare className="w-3 h-3 text-teal-500 shrink-0 mt-0.5" />
-                                <p className="italic line-clamp-2 leading-snug">"{sub.submissionText}"</p>
+                              <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 flex items-start gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                                <MessageSquare className="w-3.5 h-3.5 text-teal-500 shrink-0 mt-0.5" />
+                                <p className="italic line-clamp-2 leading-relaxed">"{sub.submissionText}"</p>
                               </div>
                             )}
                             
                             {/* If again requested or graded feedback */}
                             {(sub.status === 'returned' || sub.feedback?.includes('পুনরায়')) ? (
-                              <div className="p-1.5 rounded-lg bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/30 flex items-start gap-1.5 text-[10px]">
-                                <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                              <div className="p-2.5 rounded-xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/30 flex items-start gap-2 text-xs sm:text-sm">
+                                <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                                 <div className="min-w-0 flex-1">
-                                  <span className="font-bold text-amber-700 dark:text-amber-300 block text-[9px]">
+                                  <span className="font-bold text-amber-700 dark:text-amber-300 block text-xs">
                                     এগেইন নির্দেশিত:
                                   </span>
-                                  <p className="text-[10px] text-amber-800 dark:text-amber-200 leading-tight line-clamp-2">
+                                  <p className="text-xs sm:text-sm text-amber-800 dark:text-amber-200 leading-normal">
                                     {sub.feedback}
                                   </p>
                                 </div>
                               </div>
                             ) : isGraded && sub.feedback ? (
-                              <div className="p-1.5 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-500/20 flex items-start gap-1 text-[10px] text-emerald-800 dark:text-emerald-300">
-                                <Sparkles className="w-3 h-3 text-emerald-500 shrink-0 mt-0.5" />
-                                <p className="italic line-clamp-1 leading-tight font-medium">মন্তব্য: "{sub.feedback}"</p>
+                              <div className="p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-500/20 flex items-start gap-1.5 text-xs sm:text-sm text-emerald-800 dark:text-emerald-300">
+                                <Sparkles className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                                <p className="italic line-clamp-1 leading-normal font-medium">মন্তব্য: "{sub.feedback}"</p>
                               </div>
                             ) : null}
 
                             {/* Row 4: Attached Files/Links */}
                             {(sub.fileName || links.length > 0) && (
-                              <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                              <div className="flex flex-wrap items-center gap-1.5 pt-1">
                                 {(sub.fileName || (sub.fileUrl && !links.some(l => l.url === sub.fileUrl))) && (
                                   <a
                                     href={sub.fileUrl || '#'}
                                     download={sub.fileName || 'submission_file'}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded text-[9px] font-bold transition flex items-center gap-1 truncate max-w-[130px] border border-slate-200 dark:border-slate-700"
+                                    className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold transition flex items-center gap-1.5 truncate max-w-[160px] border border-slate-200 dark:border-slate-700"
                                     title={sub.fileName || 'ফাইল ডাউনলোড'}
                                   >
-                                    <Paperclip className="w-2.5 h-2.5 text-teal-500 shrink-0" />
+                                    <Paperclip className="w-3 h-3 text-teal-500 shrink-0" />
                                     <span className="truncate">{sub.fileName || 'ফাইল'}</span>
-                                    <Download className="w-2 h-2 ml-0.5 shrink-0 text-slate-400" />
+                                    <Download className="w-3 h-3 ml-0.5 shrink-0 text-slate-400" />
                                   </a>
                                 )}
 
@@ -2398,20 +2392,20 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                                     href={link.url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="px-2 py-0.5 bg-teal-50 dark:bg-teal-950/40 hover:bg-teal-100 dark:hover:bg-teal-900/50 text-teal-700 dark:text-teal-300 border border-teal-300 dark:border-teal-800 rounded text-[9px] font-bold transition flex items-center gap-1 truncate max-w-[140px]"
+                                    className="px-2.5 py-1 bg-teal-50 dark:bg-teal-950/40 hover:bg-teal-100 dark:hover:bg-teal-900/50 text-teal-700 dark:text-teal-300 border border-teal-300 dark:border-teal-800 rounded-lg text-xs font-bold transition flex items-center gap-1.5 truncate max-w-[160px]"
                                     title={link.url}
                                   >
-                                    <Globe className="w-2.5 h-2.5 text-teal-600 dark:text-teal-400 shrink-0" />
+                                    <Globe className="w-3 h-3 text-teal-600 dark:text-teal-400 shrink-0" />
                                     <span className="truncate">{link.title}</span>
-                                    <ExternalLink className="w-2 h-2 shrink-0 ml-0.5 text-teal-500" />
+                                    <ExternalLink className="w-3 h-3 shrink-0 ml-0.5 text-teal-500" />
                                   </a>
                                 ))}
                               </div>
                             )}
 
                             {/* Row 5: Action Buttons */}
-                            <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1.5">
-                              <span className="text-[9px] text-slate-400 font-medium truncate">
+                            <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2">
+                              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">
                                 জমা: {sub.submittedAt || 'আজ'}
                               </span>
 
@@ -2424,15 +2418,15 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                                     setLiveToastMsg('রিভিউ কাজটি মুছে ফেলা হয়েছে।');
                                     setTimeout(() => setLiveToastMsg(''), 3000);
                                   }}
-                                  className="px-3 py-1 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-bold text-[10px] sm:text-[11px] rounded-lg border border-rose-500/30 transition cursor-pointer flex items-center gap-1 active:scale-95"
+                                  className="px-3.5 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-black text-xs sm:text-sm rounded-xl border border-rose-500/30 transition cursor-pointer flex items-center gap-1.5 active:scale-95"
                                   title="এই কাজটি তালিকা থেকে মুছুন"
                                 >
-                                  <Trash2 className="w-3 h-3" />
+                                  <Trash2 className="w-3.5 h-3.5" />
                                   <span>ডিলেট</span>
                                 </button>
                               ) : (
                                 /* নতুন ট্যাবে মূল্যায়ন ও এগেইন বাটন */
-                                <div className="flex items-center gap-1.5 shrink-0">
+                                <div className="flex items-center gap-2 shrink-0">
                                   {/* 1. Evaluate / Edit Button */}
                                   <button
                                     type="button"
@@ -2442,10 +2436,10 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                                       setGradeFeedback(sub.feedback || 'কাজ খুব ভালো হয়েছে! নিয়মিত প্র্যাকটিস অব্যাহত রাখুন।');
                                       setGradeLinkUrl(sub.linkUrl || (links.length > 0 ? links[0].url : ''));
                                     }}
-                                    className="px-2.5 py-1 font-bold text-[10px] sm:text-[11px] rounded-lg border transition cursor-pointer flex items-center gap-1 active:scale-95 bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white border-transparent shadow-2xs font-black"
+                                    className="px-3.5 py-1.5 font-black text-xs sm:text-sm rounded-xl border transition cursor-pointer flex items-center gap-1.5 active:scale-95 bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white border-transparent shadow-xs"
                                     title="মূল্যায়ন করুন"
                                   >
-                                    <Pencil className="w-3 h-3" />
+                                    <Pencil className="w-3.5 h-3.5" />
                                     <span>মূল্যায়ন</span>
                                   </button>
 
@@ -2458,10 +2452,10 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                                       setAgainLessonNo(defaultLesson);
                                       setAgainReason('');
                                     }}
-                                    className="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold text-[10px] sm:text-[11px] rounded-lg border border-amber-500/30 transition cursor-pointer flex items-center gap-1 active:scale-95"
+                                    className="px-3.5 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-black text-xs sm:text-sm rounded-xl border border-amber-500/30 transition cursor-pointer flex items-center gap-1.5 active:scale-95"
                                     title="যে লেসনটি হয়নি সেটি আবার করার জন্য এগেইন পাঠান"
                                   >
-                                    <RotateCcw className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                                    <RotateCcw className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                                     <span>এগেইন</span>
                                   </button>
                                 </div>
@@ -2593,23 +2587,23 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                             <img
                               src={session.courseThumbnail || course?.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&auto=format&fit=crop&q=80'}
                               alt={session.courseTitle}
-                              className="w-12 h-12 rounded-2xl object-cover border border-slate-200 dark:border-slate-700 shrink-0 shadow-2xs"
+                              className="w-14 h-14 rounded-2xl object-cover border border-slate-200 dark:border-slate-700 shrink-0 shadow-xs"
                             />
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center justify-between gap-1 mb-1">
-                                <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 truncate max-w-[110px]">
+                                <span className="text-xs font-black uppercase px-2.5 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 truncate max-w-[130px]">
                                   {course?.category || 'কোর্স'}
                                 </span>
-                                <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 shrink-0 ${
+                                <span className={`text-xs font-black px-3 py-1 rounded-full flex items-center gap-1.5 shrink-0 ${
                                   isLive
-                                    ? 'bg-rose-500 text-white animate-pulse shadow-xs'
+                                    ? 'bg-rose-500 text-white animate-pulse shadow-sm'
                                     : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
                                 }`}>
-                                  <span className={`w-1.5 h-1.5 rounded-full ${isLive ? 'bg-white' : 'bg-emerald-500'}`} />
+                                  <span className={`w-2 h-2 rounded-full ${isLive ? 'bg-white' : 'bg-emerald-500'}`} />
                                   {isLive ? 'লাইভ চলছে' : 'শিডিউলড'}
                                 </span>
                               </div>
-                              <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white line-clamp-1">
+                              <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white line-clamp-1">
                                 {session.courseTitle}
                               </h3>
                             </div>
@@ -2617,44 +2611,44 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
                           {/* Module, Lesson & Serial Pills */}
                           <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-700 dark:text-purple-300 font-extrabold text-[11px]">
-                              <Layers className="w-3 h-3" />
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-700 dark:text-purple-300 font-black text-xs">
+                              <Layers className="w-3.5 h-3.5" />
                               <span>মডিউল {session.moduleNo}</span>
                             </span>
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-extrabold text-[11px]">
-                              <BookOpen className="w-3 h-3" />
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-black text-xs">
+                              <BookOpen className="w-3.5 h-3.5" />
                               <span>লেসন {session.lessonNo}</span>
                             </span>
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-[11px]">
+                            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 font-black text-xs">
                               <span>ক্লাস নং {session.classSerialNo}</span>
                             </span>
                           </div>
 
                           {/* Live Class Topic Box */}
-                          <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 space-y-2.5">
+                          <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 space-y-2.5">
                             <div>
-                              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
+                              <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
                                 ক্লাসের টপিক / বিষয়বস্তু
                               </span>
-                              <p className="text-xs font-black text-slate-800 dark:text-slate-100 line-clamp-2 mt-0.5">
+                              <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-slate-100 line-clamp-2 mt-1">
                                 {session.topic}
                               </p>
                             </div>
 
                             {/* Schedule Date, Time & Duration */}
-                            <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-[11px] font-bold">
-                              <div className="flex items-center gap-1.5 text-teal-700 dark:text-teal-400 truncate">
-                                <Calendar className="w-3.5 h-3.5 shrink-0" />
+                            <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-xs sm:text-sm font-bold">
+                              <div className="flex items-center gap-2 text-teal-700 dark:text-teal-400 truncate">
+                                <Calendar className="w-4 h-4 shrink-0" />
                                 <span className="truncate">{scheduleDisplay}</span>
                               </div>
-                              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold shrink-0 bg-white dark:bg-slate-900 px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                              <span className="text-xs text-slate-600 dark:text-slate-300 font-black shrink-0 bg-white dark:bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
                                 {session.durationMinutes || 90} মিনিট
                               </span>
                             </div>
 
                             {/* Link Row */}
-                            <div className="flex items-center justify-between gap-1.5 bg-white dark:bg-slate-900 p-1.5 px-2.5 rounded-xl text-[11px] font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
-                              <span className="truncate flex-1 text-teal-600 dark:text-teal-400 font-bold">
+                            <div className="flex items-center justify-between gap-2 bg-white dark:bg-slate-900 p-2 px-3 rounded-xl text-xs font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
+                              <span className="truncate flex-1 text-teal-600 dark:text-teal-400 font-bold text-xs">
                                 {link}
                               </span>
                               <div className="flex items-center gap-1 shrink-0">
@@ -3433,6 +3427,255 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB: TEACHER PAYMENTS & CASHOUT HUB */}
+        {activeTab === 'payments' && (
+          <div className="space-y-6 animate-fadeIn font-bengali">
+            {/* STAT CARDS */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-1 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 truncate">
+                    <DollarSign className="w-4 h-4 text-[#1DB954] shrink-0" /> মোট কোর্স আয়
+                  </span>
+                  <span className="text-[10px] text-teal-500 bg-teal-500/10 px-2 py-0.5 rounded-full font-black">আর্নড</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                  ৳{(courses.reduce((acc, c) => acc + ((c.price || 3500) * (c.studentsCount || 12)), 0) || 420000).toLocaleString('bn-BD')}
+                </div>
+                <div className="text-[11px] text-slate-400 font-bold truncate">কোর্স বিক্রয় ও স্টুডেন্ট এনরোলমেন্ট</div>
+              </div>
+
+              <div className="p-4 bg-emerald-500/10 dark:bg-emerald-950/30 border-2 border-[#1DB954] rounded-2xl space-y-1 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black text-emerald-800 dark:text-[#1DB954] flex items-center gap-1.5 truncate">
+                    <Wallet className="w-4 h-4 text-[#1DB954] shrink-0" /> ক্যাশআউট ব্যালেন্স
+                  </span>
+                  <span className="text-[10px] text-[#1DB954] bg-[#1DB954]/20 px-2 py-0.5 rounded-full font-black">রেডি</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-[#1DB954] tracking-tight">
+                  ৳{(345000).toLocaleString('bn-BD')}
+                </div>
+                <div className="text-[11px] text-emerald-700 dark:text-emerald-400 font-bold truncate">উইথড্র করার জন্য প্রস্তুত</div>
+              </div>
+
+              <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-1 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 truncate">
+                    <CheckCircle className="w-4 h-4 text-blue-400 shrink-0" /> মোট উত্তোলিত
+                  </span>
+                  <span className="text-[10px] text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full font-black">পেইড</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                  ৳{(75000).toLocaleString('bn-BD')}
+                </div>
+                <div className="text-[11px] text-slate-400 font-bold truncate">সফল ক্যাশআউট সম্পন্ন</div>
+              </div>
+
+              <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-1 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 truncate">
+                    <Clock className="w-4 h-4 text-amber-400 shrink-0" /> পেন্ডিং উইথড্র
+                  </span>
+                  <span className="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full font-black">প্রসেসিং</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                  ৳{(0).toLocaleString('bn-BD')}
+                </div>
+                <div className="text-[11px] text-slate-400 font-bold truncate">অপেক্ষমান আবেদন</div>
+              </div>
+            </div>
+
+            {/* CASHOUT FORM & HISTORY */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              {/* CASHOUT FORM */}
+              <div className="lg:col-span-5 bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-5">
+                <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                    <Wallet className="w-5 h-5 text-[#1DB954]" /> নতুন ক্যাশআউট আবেদন
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    বিকাশ, নগদ বা ব্যাংক একাউন্টে তাৎক্ষণিক আয় উত্তোলন করুন
+                  </p>
+                </div>
+
+                {withdrawSuccessMsg && (
+                  <div className="p-3.5 bg-emerald-500/15 border border-emerald-500/40 text-[#1DB954] text-xs font-bold rounded-xl flex items-center gap-2 animate-fadeIn">
+                    <CheckCircle className="w-4 h-4 shrink-0 fill-[#1DB954] text-slate-950" />
+                    <span>{withdrawSuccessMsg}</span>
+                  </div>
+                )}
+
+                <form onSubmit={handleWithdrawSubmit} className="space-y-4 text-xs font-bold">
+                  <div>
+                    <label className="block text-slate-700 dark:text-slate-300 mb-1.5">
+                      পেমেন্ট মেথড নির্বাচন করুন *
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { id: 'bkash', label: 'বিকাশ (bKash)', color: 'border-pink-500/50 hover:bg-pink-500/10 text-pink-500' },
+                        { id: 'nagad', label: 'নগদ (Nagad)', color: 'border-orange-500/50 hover:bg-orange-500/10 text-orange-500' },
+                        { id: 'bank', label: 'ব্যাংক (Bank)', color: 'border-blue-500/50 hover:bg-blue-500/10 text-blue-400' },
+                      ].map(m => (
+                        <button
+                          key={m.id}
+                          type="button"
+                          onClick={() => setWithdrawMethod(m.id as any)}
+                          className={`p-2.5 rounded-xl border text-center font-black transition cursor-pointer ${
+                            withdrawMethod === m.id
+                              ? 'bg-[#1DB954] text-white border-[#1DB954] shadow-sm'
+                              : `bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 ${m.color}`
+                          }`}
+                        >
+                          {m.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-700 dark:text-slate-300 mb-1.5">
+                      {withdrawMethod === 'bank' ? 'ব্যাংক একাউন্ট নম্বর ও শাখা *' : 'মোবাইল একাউন্ট নম্বর *'}
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={withdrawAccount}
+                      onChange={e => setWithdrawAccount(e.target.value)}
+                      placeholder={withdrawMethod === 'bank' ? 'যেমন: DBBL 205.120.xxxxx (ধানমন্ডি ব্রাঞ্চ)' : 'যেমন: 017xxxxxxxx'}
+                      className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-mono focus:outline-none focus:border-[#1DB954]"
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-slate-700 dark:text-slate-300">
+                        উত্তোলনের পরিমাণ (টাকা) *
+                      </label>
+                      <span className="text-[11px] text-slate-400">সর্বনিম্ন ৳৫০০</span>
+                    </div>
+                    <input
+                      type="number"
+                      required
+                      min={500}
+                      max={345000}
+                      value={withdrawAmount}
+                      onChange={e => setWithdrawAmount(e.target.value)}
+                      placeholder="যেমন: 5000"
+                      className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-mono text-base font-black focus:outline-none focus:border-[#1DB954]"
+                    />
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {[1000, 2500, 5000, 10000, 25000, 50000].map(amt => (
+                        <button
+                          key={amt}
+                          type="button"
+                          onClick={() => setWithdrawAmount(amt.toString())}
+                          className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-[#1DB954] hover:text-white text-slate-600 dark:text-slate-300 text-[11px] rounded-lg transition font-mono cursor-pointer"
+                        >
+                          ৳{amt.toLocaleString('bn-BD')}
+                        </button>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => setWithdrawAmount('345000')}
+                        className="px-2.5 py-1 bg-emerald-500/20 hover:bg-[#1DB954] text-[#1DB954] hover:text-white text-[11px] font-black rounded-lg transition font-mono cursor-pointer"
+                      >
+                        সব টাকা (Max)
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      className="w-full py-3 px-4 bg-gradient-to-r from-[#1DB954] to-emerald-600 hover:from-[#18a649] hover:to-emerald-700 text-white font-black text-sm rounded-xl transition flex items-center justify-center gap-2 shadow-md cursor-pointer active:scale-98"
+                    >
+                      <Send className="w-4 h-4 fill-white" />
+                      <span>ক্যাশআউট রিকোয়েস্ট পাঠান</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* PAYOUT HISTORY TABLE */}
+              <div className="lg:col-span-7 bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                  <div>
+                    <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                      <Receipt className="w-5 h-5 text-teal-500" /> ক্যাশআউট হিস্টোরি ও ট্রানজ্যাকশন
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      পূর্ববর্তী উইথড্রয়াল রেকর্ড ও অনুমোদনের অবস্থা
+                    </p>
+                  </div>
+                  <span className="text-xs font-black px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg">
+                    মোট {payoutsList.length}টি
+                  </span>
+                </div>
+
+                {/* Mobile Cards */}
+                <div className="block sm:hidden space-y-2.5">
+                  {payoutsList.map(item => (
+                    <div
+                      key={`mob-t-${item.id}`}
+                      className="p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-[11px] font-bold text-slate-500 bg-slate-200/70 dark:bg-slate-800 px-2 py-0.5 rounded-md">
+                          {item.id}
+                        </span>
+                        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-black bg-emerald-500/10 text-[#1DB954] border border-emerald-500/30">
+                          <CheckCircle className="w-3 h-3 fill-[#1DB954] text-slate-950" />
+                          {item.status === 'Approved' ? 'অনুমোদিত' : 'প্রক্রিয়াধীন'}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs text-slate-700 dark:text-slate-200 font-bold">
+                          <span>{item.method}</span>
+                          <span className="block text-[11px] text-slate-400 font-normal">{item.date}</span>
+                        </div>
+                        <span className="text-base font-black text-[#1DB954] font-mono">
+                          ৳{item.amount.toLocaleString('bn-BD')}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop Table */}
+                <div className="hidden sm:block overflow-x-auto">
+                  <table className="w-full text-left text-xs font-bold">
+                    <thead>
+                      <tr className="border-b border-slate-100 dark:border-slate-800 text-slate-400">
+                        <th className="py-2.5 px-3">আইডি</th>
+                        <th className="py-2.5 px-3">তারিখ</th>
+                        <th className="py-2.5 px-3">পরিমাণ</th>
+                        <th className="py-2.5 px-3">মেথড ও নম্বর</th>
+                        <th className="py-2.5 px-3 text-right">স্ট্যাটাস</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-200">
+                      {payoutsList.map(item => (
+                        <tr key={item.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition">
+                          <td className="py-3 px-3 font-mono text-slate-500">{item.id}</td>
+                          <td className="py-3 px-3 text-slate-500">{item.date}</td>
+                          <td className="py-3 px-3 text-[#1DB954] font-black font-mono">৳{item.amount.toLocaleString('bn-BD')}</td>
+                          <td className="py-3 px-3 font-mono">{item.method}</td>
+                          <td className="py-3 px-3 text-right">
+                            <span className="inline-flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full font-black bg-emerald-500/10 text-[#1DB954] border border-emerald-500/30">
+                              <CheckCircle className="w-3 h-3 fill-[#1DB954] text-slate-950" />
+                              {item.status === 'Approved' ? 'অনুমোদিত' : 'প্রক্রিয়াধীন'}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -5249,10 +5492,10 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                         onChange={e => setSettingsPayoutMethod(e.target.value)}
                         className="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-white font-bold focus:outline-none focus:border-[#1DB954]"
                       >
-                        <option value="bkash">বিকাশ (bKash Personal)</option>
-                        <option value="nagad">নগদ (Nagad Personal)</option>
-                        <option value="rocket">রকেট (Rocket Personal)</option>
-                        <option value="bank">ব্যাংক একাউন্ট (Bank Wire)</option>
+                        <option value="bkash">{t('বিকাশ পার্সোনাল', 'bKash Personal')}</option>
+                        <option value="nagad">{t('নগদ পার্সোনাল', 'Nagad Personal')}</option>
+                        <option value="rocket">{t('রকেট পার্সোনাল', 'Rocket Personal')}</option>
+                        <option value="bank">{t('ব্যাংক একাউন্ট', 'Bank Wire')}</option>
                       </select>
                     </div>
 
@@ -5487,9 +5730,9 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                     onChange={(e) => setEditPayoutMethod(e.target.value as any)}
                     className="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-[#1DB954]"
                   >
-                    <option value="bkash">bKash (বিকাশ পার্সোনাল)</option>
-                    <option value="nagad">Nagad (নগদ পার্সোনাল)</option>
-                    <option value="bank">Bank Transfer (ব্যাংক একাউন্ট)</option>
+                    <option value="bkash">{t('বিকাশ পার্সোনাল', 'bKash Personal')}</option>
+                    <option value="nagad">{t('নগদ পার্সোনাল', 'Nagad Personal')}</option>
+                    <option value="bank">{t('ব্যাংক একাউন্ট', 'Bank Transfer')}</option>
                   </select>
                 </div>
 

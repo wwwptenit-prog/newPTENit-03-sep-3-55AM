@@ -21,7 +21,7 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({
   onBack,
   isStandalonePage = false
 }) => {
-  const { courses, currentUser, enrollments, t } = useData();
+  const { courses, currentUser, enrollments, t, lang } = useData();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [pricingFilter, setPricingFilter] = useState<'All' | 'Enrolled' | 'Free' | 'Paid'>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -58,9 +58,9 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({
     // Search query
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      const matchTitle = course.title.toLowerCase().includes(q);
+      const matchTitle = course.title.toLowerCase().includes(q) || (course.titleEn && course.titleEn.toLowerCase().includes(q));
       const matchInstructor = course.instructor.toLowerCase().includes(q);
-      const matchTag = course.tags.some(t => t.toLowerCase().includes(q));
+      const matchTag = course.tags.some(tg => tg.toLowerCase().includes(q));
       if (!matchTitle && !matchInstructor && !matchTag) return false;
     }
 
@@ -69,14 +69,11 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({
 
   return (
     <section className="py-8 sm:py-12 bg-white dark:bg-slate-900 min-h-screen font-bengali">
-      <div className="max-w-[1920px] mx-auto px-3 sm:px-6 md:px-10 lg:px-12 xl:px-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Title Header - Centered on Mobile, Left-Right Split on Desktop */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8 border-b border-slate-200 dark:border-slate-800 pb-4">
           <div className="flex flex-col items-center sm:items-start text-center sm:text-left gap-1.5 max-w-2xl">
-            <span className="text-[#1DB954] font-bold text-xs uppercase tracking-widest bg-[#1DB954]/10 px-3 py-1 rounded-full border border-[#1DB954]/20 inline-flex items-center gap-1.5 w-fit">
-              <Sparkles className="w-3.5 h-3.5" /> {t('এলএমএস ক্যারিয়ার একাডেমি', 'LMS Career Academy')}
-            </span>
             <h2 className="text-2xl sm:text-3xl font-black font-bengali text-slate-900 dark:text-white leading-tight">
               {t('আমাদের কোর্সসমূহ', 'Our Courses')}
             </h2>
@@ -177,7 +174,7 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({
                     }`}
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>আমার কোর্স ({userEnrollments.length})</span>
+                    <span>{t(`আমার কোর্স (${userEnrollments.length})`, `My Courses (${userEnrollments.length})`)}</span>
                   </button>
                 )}
 
@@ -209,7 +206,7 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({
             {/* Categories Horizontal Tabs */}
             <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-2 border-t border-slate-100 dark:border-slate-700/60 no-scrollbar">
               <span className="text-xs font-bold text-slate-400 uppercase mr-2 flex items-center gap-1 shrink-0">
-                <Filter className="w-3.5 h-3.5" /> ক্যাটাগরি:
+                <Filter className="w-3.5 h-3.5" /> {t('ক্যাটাগরি:', 'Category:')}
               </span>
               {categories.map(cat => (
                 <button
@@ -221,7 +218,7 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({
                       : 'bg-slate-100 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
                   }`}
                 >
-                  {cat === 'All' ? 'সকল ক্যাটাগরি' : cat}
+                  {cat === 'All' ? t('সকল ক্যাটাগরি', 'All Categories') : cat}
                 </button>
               ))}
             </div>
@@ -262,12 +259,12 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({
           <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-8 space-y-4">
             <BookOpen className="w-12 h-12 text-slate-400 mx-auto" />
             <h3 className="text-lg font-bold text-slate-800 dark:text-white font-bengali">
-              {pricingFilter === 'Enrolled' ? 'আপনার কোনো এনরোল করা কোর্স পাওয়া যায়নি' : 'কোনো কোর্স পাওয়া যায়নি'}
+              {pricingFilter === 'Enrolled' ? t('আপনার কোনো এনরোল করা কোর্স পাওয়া যায়নি', 'No enrolled courses found') : t('কোনো কোর্স পাওয়া যায়নি', 'No courses found')}
             </h3>
             <p className="text-xs text-slate-500 font-bengali">
               {pricingFilter === 'Enrolled'
-                ? 'আপনি এখনও কোনো কোর্সে এনরোল করেননি। আমাদের কোর্স ক্যাটালগ থেকে কোর্স বেছে নিন।'
-                : 'আপনার ফিল্টার বা সার্চ কিওয়ার্ড পরিবর্তন করে দেখুন।'}
+                ? t('আপনি এখনও কোনো কোর্সে এনরোল করেননি। আমাদের কোর্স ক্যাটালগ থেকে কোর্স বেছে নিন।', "You haven't enrolled in any courses yet. Explore our courses to start learning.")
+                : t('আপনার ফিল্টার বা সার্চ কিওয়ার্ড পরিবর্তন করে দেখুন।', 'Try adjusting your filters or search terms.')}
             </p>
             <button
               onClick={() => {
@@ -277,7 +274,7 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({
               }}
               className="px-4 py-2 bg-[#1DB954] text-white text-xs font-bold rounded-xl cursor-pointer"
             >
-              {pricingFilter === 'Enrolled' ? 'সকল কোর্স দেখুন' : 'ফিল্টার রিসেট করুন'}
+              {pricingFilter === 'Enrolled' ? t('সকল কোর্স দেখুন', 'Browse All Courses') : t('ফিল্টার রিসেট করুন', 'Reset Filters')}
             </button>
           </div>
         )}

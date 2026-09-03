@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { MarketplaceGig, User as UserType } from "../types";
 import { useData } from "../context/DataContext";
+import { formatLocalizedPrice } from "../utils/localization";
 
 interface GigCardProps {
   gig: MarketplaceGig;
@@ -31,7 +32,7 @@ export const GigCard: React.FC<GigCardProps> = ({
   badgeTag,
   className = "",
 }) => {
-  const { marketplaceOrders, currentUser: contextUser } = useData();
+  const { marketplaceOrders, currentUser: contextUser, t, lang } = useData();
   const effectiveUser = currentUser || contextUser;
 
   // Check if current user has an active/completed order for this gig
@@ -143,11 +144,11 @@ export const GigCard: React.FC<GigCardProps> = ({
   return (
     <div
       onClick={onClick}
-      className={`group relative bg-white dark:bg-slate-900 border ${
+      className={`group relative bg-slate-50/80 dark:bg-slate-900/90 border ${
         userOrder
           ? "border-blue-500/70 ring-1 ring-blue-500/20 shadow-md"
           : "border-slate-200/90 dark:border-slate-800"
-      } rounded-2xl sm:rounded-3xl overflow-hidden shadow-none sm:shadow-sm hover:shadow-2xl hover:shadow-[#1DB954]/10 hover:border-[#1DB954] transition-all duration-300 cursor-pointer flex flex-col justify-between font-bengali ${className}`}
+      } rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs hover:shadow-2xl hover:shadow-[#1DB954]/10 hover:border-[#1DB954] transition-all duration-300 cursor-pointer flex flex-col justify-between font-bengali ${className}`}
     >
       <div>
         {/* Thumbnail Header with Left/Right Image Navigation Buttons (NO BORDER on < & > buttons) */}
@@ -167,13 +168,13 @@ export const GigCard: React.FC<GigCardProps> = ({
             {gig.offerBadge === "work_first" ||
             gig.offerBadge === "আগে কাজ শুরু" ? (
               <span className="bg-amber-500 text-slate-950 text-[9px] sm:text-[11px] font-bold font-bengali px-1.5 py-0.5 sm:px-2 rounded shadow-xs">
-                আগে কাজ শুরু
+                {lang === 'en' ? 'Start Work First' : 'আগে কাজ শুরু'}
               </span>
             ) : (
               <span className="bg-[#1DB954] text-white text-[9px] sm:text-[11px] font-bold font-bengali px-1.5 py-0.5 sm:px-2 rounded shadow-xs">
                 {gig.offerBadge === "৩০% ক্যাশব্যাক"
-                  ? "৩০% ছাড়"
-                  : gig.offerBadge || "৩০% ছাড়"}
+                  ? (lang === 'en' ? '30% Off' : '৩০% ছাড়')
+                  : (gig.offerBadge || (lang === 'en' ? '30% Off' : '৩০% ছাড়'))}
               </span>
             )}
 
@@ -181,7 +182,7 @@ export const GigCard: React.FC<GigCardProps> = ({
             {userOrder && (
               <span className="bg-blue-600 text-white text-[8px] sm:text-[9px] font-extrabold font-bengali px-1.5 py-0.5 rounded flex items-center gap-0.5 shadow-xs">
                 <CheckCircle2 className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-white shrink-0" />
-                <span>অর্ডারকৃত</span>
+                <span>{t('অর্ডারকৃত', 'Ordered')}</span>
               </span>
             )}
 
@@ -201,14 +202,16 @@ export const GigCard: React.FC<GigCardProps> = ({
                   e.stopPropagation();
                   if (
                     window.confirm(
-                      `আপনি কি নিশ্চিত যে "${gig.title}" গিগটি স্থায়ীভাবে ডিলেট করতে চান?`
+                      lang === 'en'
+                        ? `Are you sure you want to permanently delete "${gig.title}"?`
+                        : `আপনি কি নিশ্চিত যে "${gig.title}" গিগটি স্থায়ীভাবে ডিলেট করতে চান?`
                     )
                   ) {
                     deleteGig(gig.id);
                   }
                 }}
                 className="p-1 sm:p-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white shadow-md transition cursor-pointer"
-                title="গিগ ডিলেট করুন"
+                title={t('গিগ ডিলেট করুন', 'Delete Gig')}
               >
                 <Trash2 className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
               </button>
@@ -223,7 +226,7 @@ export const GigCard: React.FC<GigCardProps> = ({
                     ? "bg-rose-500 text-white shadow-lg scale-105"
                     : "bg-slate-950/70 text-white hover:text-rose-400 hover:bg-slate-950 shadow-md"
                 }`}
-                title={isFavorite ? "ফেভারিট থেকে সরান" : "ফেভারিটে যোগ করুন"}
+                title={isFavorite ? t('ফেভারিট থেকে সরান', 'Remove from Favorites') : t('ফেভারিটে যোগ করুন', 'Add to Favorites')}
               >
                 <Heart
                   className={`w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 ${
@@ -239,7 +242,7 @@ export const GigCard: React.FC<GigCardProps> = ({
             type="button"
             onClick={handlePrevImage}
             className="absolute left-1 sm:left-1.5 top-1/2 -translate-y-1/2 z-20 p-1 text-white/90 hover:text-white hover:scale-110 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all cursor-pointer active:scale-90"
-            title="পূর্ববর্তী ছবি"
+            title={t('পূর্ববর্তী ছবি', 'Previous Image')}
             aria-label="Previous Image"
           >
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -249,7 +252,7 @@ export const GigCard: React.FC<GigCardProps> = ({
             type="button"
             onClick={handleNextImage}
             className="absolute right-1 sm:right-1.5 top-1/2 -translate-y-1/2 z-20 p-1 text-white/90 hover:text-white hover:scale-110 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all cursor-pointer active:scale-90"
-            title="পরবর্তী ছবি"
+            title={t('পরবর্তী ছবি', 'Next Image')}
             aria-label="Next Image"
           >
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -279,7 +282,7 @@ export const GigCard: React.FC<GigCardProps> = ({
                   </span>
                   <CheckCircle2
                     className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#0084FF] fill-[#0084FF] text-white shrink-0"
-                    title="ভেরিফাইড প্রোফাইল"
+                    title={t('ভেরিফাইড প্রোফাইল', 'Verified Profile')}
                   />
                 </div>
                 <span className="text-[9px] sm:text-xs text-slate-500 dark:text-slate-400 block truncate font-medium">
@@ -300,7 +303,10 @@ export const GigCard: React.FC<GigCardProps> = ({
           </div>
 
           {/* Gig Title */}
-          <h3 className="text-xs sm:text-base font-black text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#1DB954] transition-colors min-h-[2rem] sm:min-h-[2.75rem]">
+          <h3 
+            title={gig.title}
+            className="text-xs sm:text-base font-black text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#1DB954] transition-colors min-h-[2rem] sm:min-h-[2.75rem] break-words"
+          >
             {gig.title}
           </h3>
 
@@ -324,11 +330,11 @@ export const GigCard: React.FC<GigCardProps> = ({
       <div className="p-2 sm:p-3.5 md:p-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1 bg-slate-50/70 dark:bg-slate-950/40 rounded-b-2xl sm:rounded-b-3xl">
         <div className="min-w-0">
           <span className="text-[9px] sm:text-xs text-slate-500 dark:text-slate-400 font-bold block leading-tight">
-            প্রথম শুরু
+            {t('শুরু', 'Starts at')}
           </span>
           <div className="flex items-baseline gap-0.5 sm:gap-1">
             <span className="text-xs sm:text-base md:text-lg font-black text-[#1DB954] block leading-tight">
-              ৳ {price.toLocaleString("bn-BD")}
+              {formatLocalizedPrice(price, lang)}
             </span>
           </div>
         </div>
@@ -340,7 +346,7 @@ export const GigCard: React.FC<GigCardProps> = ({
           }}
           className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold text-white bg-[#1DB954] hover:bg-emerald-600 shadow-xs sm:shadow-md sm:shadow-[#1DB954]/20 transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
         >
-          <span>বিস্তারিত</span>
+          <span>{t('বিস্তারিত', 'Details')}</span>
           <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
         </button>
       </div>

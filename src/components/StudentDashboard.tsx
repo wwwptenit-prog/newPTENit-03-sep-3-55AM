@@ -34,7 +34,8 @@ import {
   Copy,
   ExternalLink,
   Radio,
-  CheckCircle2
+  CheckCircle2,
+  ArrowLeft
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { Assignment } from '../types';
@@ -51,6 +52,7 @@ interface StudentDashboardProps {
   hideHeaderBanner?: boolean;
   hideMenubar?: boolean;
   initialSubTab?: 'my-courses' | 'live-classes' | 'certificates' | 'assignments' | 'payments' | 'profile';
+  onBack?: () => void;
 }
 
 export const StudentDashboard: React.FC<StudentDashboardProps> = ({
@@ -59,7 +61,8 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   setActiveTab,
   hideHeaderBanner = false,
   hideMenubar = false,
-  initialSubTab = 'my-courses'
+  initialSubTab = 'my-courses',
+  onBack
 }) => {
   const {
     lang,
@@ -235,7 +238,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
   return (
     <div className={`font-bengali transition-colors ${hideHeaderBanner ? '' : 'py-4 sm:py-8 bg-slate-100/90 dark:bg-slate-950 min-h-screen'}`}>
-      <div className={hideHeaderBanner ? 'w-full space-y-4' : 'max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20'}>
+      <div className={hideHeaderBanner ? 'w-full space-y-4' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'}>
         
         {/* Teacher-Style Rich Student Profile Header Banner */}
         {!hideHeaderBanner && (
@@ -291,9 +294,22 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 {darkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-indigo-400" />}
               </button>
 
+              {/* Back Button */}
+              {onBack && (
+                <button
+                  type="button"
+                  onClick={onBack}
+                  className="bg-slate-800/80 px-3 py-2.5 rounded-2xl border border-slate-700 hover:border-[#1DB954] text-xs font-bold text-slate-200 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer"
+                  title="পূর্ববর্তী পেজে ফিরে যান"
+                >
+                  <ArrowLeft className="w-4 h-4 text-[#1DB954]" />
+                  <span>{t('ফিরে যান', 'Back')}</span>
+                </button>
+              )}
+
               {/* Main Site Link */}
               <button
-                onClick={() => setActiveTab('home')}
+                onClick={() => setActiveTab ? setActiveTab('home') : onBack ? onBack() : undefined}
                 className="bg-slate-800/80 px-3 py-2.5 rounded-2xl border border-slate-700 hover:border-[#1DB954] text-xs font-bold text-emerald-400 transition-colors flex items-center gap-1.5 cursor-pointer"
                 title="মূল ওয়েবসাইটে যান"
               >
@@ -758,12 +774,8 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md mb-6 sm:mb-8 overflow-hidden">
             <div className="px-4 py-2.5 bg-slate-100/80 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#1DB954] animate-pulse" />
-                <span className="uppercase tracking-wider text-[11px] text-slate-500 dark:text-slate-400">ড্যাশবোর্ড মেনুবার (Student Menubar):</span>
+                <span className="uppercase tracking-wider text-[11px] text-slate-500 dark:text-slate-400">{t('ড্যাশবোর্ড মেনুবার', 'Student Menubar')}</span>
               </div>
-              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono">
-                + মডিউল ফ্রেমওয়ার্ক প্রস্তুত
-              </span>
             </div>
 
             <div className="p-2 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
@@ -1238,12 +1250,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                             {isLiveNow ? (
                               <span className="px-3 py-1 bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/40 text-xs font-black rounded-full flex items-center gap-1.5 animate-pulse shadow-sm">
                                 <span className="w-2.5 h-2.5 rounded-full bg-rose-600 animate-ping" />
-                                🔴 সরাসরি লাইভ চলছে (LIVE NOW)
+                                {t('🔴 সরাসরি লাইভ চলছে', '🔴 LIVE NOW')}
                               </span>
                             ) : (
                               <span className="px-3 py-1 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 text-xs font-extrabold rounded-full flex items-center gap-1.5">
                                 <Calendar className="w-3.5 h-3.5" />
-                                🗓️ নির্ধারিত শিডিউল (SCHEDULED)
+                                {t('🗓️ নির্ধারিত শিডিউল', '🗓️ SCHEDULED')}
                               </span>
                             )}
 
@@ -1345,8 +1357,8 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                             <Video className="w-4 h-4" />
                             <span>
                               {isLiveNow
-                                ? '🔴 সরাসরি লাইভ ক্লাসে জয়েন করুন (Google Meet)'
-                                : '🗓️ গুগল মিট রুম চেক করুন'}
+                                ? t('🔴 সরাসরি লাইভ ক্লাসে জয়েন করুন', '🔴 Join Live Class Now')
+                                : t('🗓️ গুগল মিট রুম চেক করুন', '🗓️ Check Google Meet Room')}
                             </span>
                             <ExternalLink className="w-3.5 h-3.5 ml-0.5" />
                           </a>
@@ -1730,7 +1742,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    পূর্ণ নাম (Full Name) *
+                    {t('পূর্ণ নাম *', 'Full Name *')}
                   </label>
                   <input
                     type="text"
@@ -1743,7 +1755,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
                 <div>
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    শিক্ষা প্রতিষ্ঠান / স্কুল / কলেজ / বিশ্ববিদ্যালয়
+                    {t('শিক্ষা প্রতিষ্ঠান / স্কুল / কলেজ / বিশ্ববিদ্যালয়', 'Educational Institution / School / College / University')}
                   </label>
                   <input
                     type="text"
@@ -1758,7 +1770,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    মোবাইল নম্বর (Phone Number)
+                    {t('মোবাইল নম্বর', 'Phone Number')}
                   </label>
                   <input
                     type="text"
@@ -1770,7 +1782,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
                 <div>
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    ইমেইল ঠিকানা (Email Address)
+                    {t('ইমেইল ঠিকানা', 'Email Address')}
                   </label>
                   <input
                     type="email"
@@ -1783,7 +1795,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
               <div>
                 <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  সংক্ষিপ্ত বায়ো ও আইটি ক্যারিয়ার লক্ষ্য (Bio & Goals)
+                  {t('সংক্ষিপ্ত বায়ো ও আইটি ক্যারিয়ার লক্ষ্য', 'Short Bio & IT Career Goals')}
                 </label>
                 <textarea
                   rows={3}

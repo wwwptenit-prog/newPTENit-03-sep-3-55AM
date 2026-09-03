@@ -28,6 +28,7 @@ import { Service, MarketplaceGig } from '../types';
 import { GigCard } from './GigCard';
 import { OrderCheckoutModal } from './OrderCheckoutModal';
 import { DigitalProductsSection } from './DigitalProductsSection';
+import { getLocalizedService } from '../utils/localization';
 
 const iconMap: Record<string, React.FC<{ className?: string }>> = {
   Code,
@@ -44,14 +45,16 @@ interface ServicesSectionProps {
   setActiveTab?: (tab: string, category?: string) => void;
   openAuthModal?: () => void;
   isStandalonePage?: boolean;
+  onBack?: () => void;
 }
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({
   setActiveTab,
   openAuthModal,
-  isStandalonePage = false
+  isStandalonePage = false,
+  onBack
 }) => {
-  const { currentUser, services, gigs, siteSettings, t } = useData();
+  const { currentUser, services, gigs, siteSettings, t, lang } = useData();
 
   // State for Service Detail Modal
   const [selectedService, setSelectedService] = useState<Service | null>(null);
@@ -64,8 +67,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const [mobileAgencyExpanded, setMobileAgencyExpanded] = useState<boolean>(false);
   const [mobileGigsExpanded, setMobileGigsExpanded] = useState<boolean>(false);
 
-  // Top Trending General Gigs
-  const featuredGigs = gigs.slice(0, 4);
+  // Top Trending General Gigs (2 rows on PC)
+  const featuredGigs = gigs.slice(0, 8);
 
   const navigateToGigDetail = (gig: MarketplaceGig) => {
     try {
@@ -99,23 +102,30 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
 
   // Helper to map an Agency Service into a Marketplace Gig format for GigCard rendering & detailed package ordering
   const mapServiceToGig = (service: Service): MarketplaceGig => {
+    const locService = getLocalizedService(service, lang);
+
     const matchedGig = gigs.find(
       g => g.id === service.id || g.title.toLowerCase() === service.title.toLowerCase()
     );
     if (matchedGig) {
       return {
         ...matchedGig,
+        title: locService.title,
+        category: locService.category,
+        description: locService.shortDescription,
         sellerName: 'PTENit Official Agency',
         sellerAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
         sellerLevel: 'Official Top Rated Agency',
         isAgencyStaff: true,
-        offerBadge: matchedGig.offerBadge || 'অফিশিয়াল গ্যারান্টি'
+        offerBadge: matchedGig.offerBadge || (lang === 'en' ? 'Official Guarantee' : 'অফিশিয়াল গ্যারান্টি')
       };
     }
 
-    const defaultFeatures = service.features && service.features.length > 0
-      ? service.features
-      : ['কাস্টম রেসপন্সিভ ডিজাইন', 'এসইও ফ্রেন্ডলি স্ট্রাকচার', 'টেকনিক্যাল সাপোর্ট', 'সোর্স ফাইল ডেলিভারি'];
+    const defaultFeatures = locService.features && locService.features.length > 0
+      ? locService.features
+      : (lang === 'en'
+        ? ['Custom Responsive Design', 'SEO Friendly Structure', 'Technical Support', 'Source Code Delivery']
+        : ['কাস্টম রেসপন্সিভ ডিজাইন', 'এসইও ফ্রেন্ডলি স্ট্রাকচার', 'টেকনিক্যাল সাপোর্ট', 'সোর্স ফাইল ডেলিভারি']);
 
     return {
       id: service.id,
@@ -124,39 +134,39 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       sellerAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
       sellerLevel: 'Official Top Rated Agency',
       isAgencyStaff: true,
-      title: service.title,
-      category: service.category,
-      description: service.fullDescription || service.shortDescription,
+      title: locService.title,
+      category: locService.category,
+      description: locService.fullDescription || locService.shortDescription,
       thumbnail: service.thumbnail || 'https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80',
       rating: service.rating || 5.0,
       reviewsCount: service.reviewsCount || 48,
       salesCount: 150,
       packages: {
         basic: {
-          name: service.packages?.basic?.name || 'বেসিক প্যাকেজ',
+          name: service.packages?.basic?.name || (lang === 'en' ? 'Basic Package' : 'বেসিক প্যাকেজ'),
           price: service.packages?.basic?.price ?? 5000,
           deliveryDays: service.packages?.basic?.deliveryDays ?? 3,
           revisions: (service.packages?.basic?.revisions as any) || '3',
           features: service.packages?.basic?.features || defaultFeatures.slice(0, 3)
         },
         standard: {
-          name: service.packages?.standard?.name || 'স্ট্যান্ডার্ড প্যাকেজ',
+          name: service.packages?.standard?.name || (lang === 'en' ? 'Standard Package' : 'স্ট্যান্ডার্ড প্যাকেজ'),
           price: service.packages?.standard?.price ?? 12000,
           deliveryDays: service.packages?.standard?.deliveryDays ?? 5,
           revisions: (service.packages?.standard?.revisions as any) || '5',
           features: service.packages?.standard?.features || defaultFeatures.slice(0, 4)
         },
         premium: {
-          name: service.packages?.premium?.name || 'প্রিমিয়াম প্যাকেজ',
+          name: service.packages?.premium?.name || (lang === 'en' ? 'Premium Package' : 'প্রিমিয়াম প্যাকেজ'),
           price: service.packages?.premium?.price ?? 25000,
           deliveryDays: service.packages?.premium?.deliveryDays ?? 7,
           revisions: (service.packages?.premium?.revisions as any) || 'Unlimited',
           features: service.packages?.premium?.features || defaultFeatures
         }
       },
-      tags: ['Official Agency', 'PTENit Guarantee', service.category],
+      tags: ['Official Agency', 'PTENit Guarantee', locService.category],
       status: 'active' as const,
-      offerBadge: 'অফিশিয়াল এজেন্সি'
+      offerBadge: lang === 'en' ? 'Official Agency' : 'অফিশিয়াল এজেন্সি'
     };
   };
 
@@ -182,8 +192,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       : allPublishedServices.slice(0, 4);
 
     return (
-      <div className="w-full min-h-screen bg-white dark:bg-slate-900 font-bengali text-slate-900 dark:text-slate-100 py-6 sm:py-8 px-3 sm:px-8 md:px-12 lg:px-16 animate-fadeIn">
-        <div className="max-w-[1920px] mx-auto space-y-8 sm:space-y-12">
+      <div className="w-full min-h-screen bg-white dark:bg-slate-900 font-bengali text-slate-900 dark:text-slate-100 py-6 sm:py-8 px-4 sm:px-6 lg:px-8 animate-fadeIn">
+        <div className="max-w-7xl mx-auto space-y-8 sm:space-y-12">
           
           {/* Top Header Bar - Centered on Mobile, Row on Desktop */}
           <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5 text-center sm:text-left">
@@ -196,13 +206,24 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                 {t('আমাদের অফিশিয়াল এজেন্সি প্যাকেজসমূহ', 'Our Official Agency Packages')}
               </h1>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl">
-                সরাসরি আমাদের এক্সপার্ট টিম থেকে প্রফেশনাল ওয়েব, মোবাইল অ্যাপ, এআই সফটওয়্যার ও সার্ভিস গ্রহণ করুন।
+                {t('সরাসরি আমাদের এক্সপার্ট টিম থেকে প্রফেশনাল ওয়েব, মোবাইল অ্যাপ, এআই সফটওয়্যার ও সার্ভিস গ্রহণ করুন।', 'Get professional web, mobile app, AI software, and custom digital services directly from our expert team.')}
               </p>
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
+              {onBack && (
+                <button
+                  type="button"
+                  onClick={onBack}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold text-xs transition cursor-pointer shadow-xs"
+                  title={t('পূর্ববর্তী স্থানে ফিরে যান', 'Go back to previous page')}
+                >
+                  <ArrowLeft className="w-4 h-4 text-[#1DB954]" />
+                  <span>{t('ফিরে যান', 'Back')}</span>
+                </button>
+              )}
               <span className="px-3.5 py-1.5 bg-[#1DB954]/10 text-[#1DB954] border border-[#1DB954]/20 rounded-full text-xs font-bold shadow-sm">
-                {allPublishedServices.length} টি প্রস্তুত সার্ভিস
+                {t(`${allPublishedServices.length} টি প্রস্তুত সার্ভিস`, `${allPublishedServices.length} Ready Services`)}
               </span>
             </div>
           </div>
@@ -371,25 +392,21 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     );
   }
 
-  // HOME PAGE SECTION VIEW - Show official agency packages (4 on PC for 1 row of 4)
-  const visibleAgencyServices = allPublishedServices.slice(0, 4);
+  // HOME PAGE SECTION VIEW - Show official agency packages (8 on PC for 2 rows of 4)
+  const visibleAgencyServices = allPublishedServices.slice(0, 8);
 
   return (
     <section className="py-8 sm:py-12 bg-slate-50 dark:bg-slate-900/80">
-      <div className="max-w-[1920px] mx-auto px-3 sm:px-8 md:px-12 lg:px-16 xl:px-20 space-y-10 sm:space-y-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
 
         {/* SECTION 1: Official Agency Packages */}
         <div className="space-y-6 sm:space-y-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-            <div className="space-y-1.5 text-center sm:text-left flex flex-col items-center sm:items-start">
-              <span className="inline-flex items-center gap-1.5 text-[#1DB954] font-bold text-xs uppercase tracking-widest bg-[#1DB954]/10 px-3 py-1 rounded-full border border-[#1DB954]/20">
-                <BadgeCheck className="w-4 h-4 text-[#1DB954]" />
-                {t('প্রফেশনাল আইটি সলিউশন', 'Professional IT Solutions')}
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black font-bengali text-slate-900 dark:text-white leading-tight">
+            <div className="space-y-1 text-center sm:text-left flex flex-col items-center sm:items-start max-w-xl">
+              <h2 className="text-xl sm:text-2xl font-black font-bengali text-slate-900 dark:text-white leading-snug line-clamp-2">
                 {t('আমাদের অফিশিয়াল এজেন্সি প্যাকেজসমূহ', 'Our Official Agency Packages')}
               </h2>
-              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-bengali">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-bengali line-clamp-2">
                 {t('PTENit এর গ্যারান্টিযুক্ত সার্ভিস প্যাকেজ।', 'Guaranteed official IT service packages.')}
               </p>
             </div>
@@ -409,7 +426,14 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                 ) : (
                   <button
                     type="button"
-                    onClick={() => setMobileAgencyExpanded(true)}
+                    onClick={() => {
+                      if (setActiveTab) {
+                        setActiveTab('marketplace', 'ptenit-services', true);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      } else {
+                        setMobileAgencyExpanded(true);
+                      }
+                    }}
                     className="sm:hidden inline-flex items-center gap-1 text-[#1DB954] hover:text-emerald-400 font-bold text-xs transition-all cursor-pointer font-bengali shrink-0 group"
                   >
                     <span>{t('সবগুলো দেখুন →', 'See All →')}</span>
@@ -421,7 +445,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   <button
                     type="button"
                     onClick={() => {
-                      setActiveTab('services');
+                      setActiveTab('marketplace', 'ptenit-services', true);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                     className="hidden sm:inline-flex items-center gap-1 text-[#1DB954] hover:text-emerald-400 font-bold text-sm hover:underline transition-all cursor-pointer font-bengali shrink-0 group"
@@ -472,15 +496,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
         {/* SECTION 3: Popular Freelance Gigs Row */}
         <div className="space-y-6 pt-8 border-t border-slate-200 dark:border-slate-800">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-            <div className="space-y-1.5 text-center sm:text-left flex flex-col items-center sm:items-start">
-              <span className="inline-flex items-center gap-1.5 text-[#1DB954] font-bold text-xs uppercase tracking-widest bg-[#1DB954]/10 px-3 py-1 rounded-full border border-[#1DB954]/20">
-                <Sparkles className="w-3.5 h-3.5" />
-                {t('পপুলার ফ্রিল্যান্সিং গিগস', 'Popular Freelance Gigs')}
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black font-bengali text-slate-900 dark:text-white leading-tight">
+            <div className="space-y-1 text-center sm:text-left flex flex-col items-center sm:items-start max-w-xl">
+              <h2 className="text-xl sm:text-2xl font-black font-bengali text-slate-900 dark:text-white leading-snug line-clamp-2">
                 {t('জনপ্রিয় গিগ ও ডিজিটাল সার্ভিসসমূহ', 'Popular Gigs & Digital Services')}
               </h2>
-              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-bengali">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-bengali line-clamp-2">
                 {t('PTENit ভেরিফায়েড স্পেশালিস্টদের জনপ্রিয় ফ্রিল্যান্সিং গিগস।', 'Popular freelance gigs and services by verified specialists.')}
               </p>
             </div>
@@ -499,7 +519,14 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
               ) : (
                 <button
                   type="button"
-                  onClick={() => setMobileGigsExpanded(true)}
+                  onClick={() => {
+                    if (setActiveTab) {
+                      setActiveTab('marketplace', 'All');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                      setMobileGigsExpanded(true);
+                    }
+                  }}
                   className="sm:hidden inline-flex items-center gap-1 text-[#1DB954] hover:text-emerald-400 font-bold text-xs transition-all cursor-pointer font-bengali shrink-0 group"
                 >
                   <span>{t('সবগুলো দেখুন →', 'See All →')}</span>

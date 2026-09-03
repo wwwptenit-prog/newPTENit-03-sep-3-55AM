@@ -64,13 +64,17 @@ export const Navbar: React.FC<NavbarProps> = ({
     markNotificationRead,
     markAllNotificationsRead,
     directMessages,
+    readConversationIds,
+    markConversationRead,
+    markAllConversationsRead,
     markDirectMessageRead,
     markAllDirectMessagesRead,
     sendDirectMessage,
     openChatWindow,
     createGoogleMeetCall,
     openMessengerInbox,
-    openNotificationCenter
+    openNotificationCenter,
+    marketplaceMode
   } = useData();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -84,12 +88,48 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [replyText, setReplyText] = useState<string>('');
   const [replySentSuccess, setReplySentSuccess] = useState<boolean>(false);
 
-  const unreadNavNotifCount = notifications.filter(n => !n.read).length > 0 
-    ? notifications.filter(n => !n.read).length 
-    : notifications.length;
-  const unreadMsgCount = directMessages.filter(m => !m.read).length > 0 
-    ? directMessages.filter(m => !m.read).length 
-    : directMessages.length;
+  const isSellerMode = marketplaceMode === 'selling';
+
+  const modeNotifications = notifications.filter(n => {
+    if (n.mode === 'selling') return isSellerMode;
+    if (n.mode === 'buying') return !isSellerMode;
+    if (n.mode === 'both') return true;
+
+    if (isSellerMode) {
+      if (n.recipientRole === 'seller' || n.category === 'seller' || n.category === 'payout') return true;
+      if (n.recipientRole === 'buyer' || n.category === 'buyer' || n.category === 'course') return false;
+      const t = (n.title || '').toLowerCase();
+      const m = (n.message || '').toLowerCase();
+      if (t.includes('অ্যাসাইনমেন্ট') || t.includes('কোর্স') || t.includes('মডিউল') || t.includes('ক্লাস') || m.includes('মডিউল')) return false;
+      return true;
+    } else {
+      if (n.recipientRole === 'buyer' || n.category === 'buyer' || n.category === 'course') return true;
+      if (n.recipientRole === 'seller' || n.category === 'seller' || n.category === 'payout') return false;
+      const t = (n.title || '').toLowerCase();
+      const m = (n.message || '').toLowerCase();
+      if (t.includes('ক্লাইন্ট') || t.includes('ক্লায়েন্ট') || t.includes('সেলিং') || t.includes('উইথড্র') || t.includes('পেআউট') || m.includes('পেআউট')) return false;
+      return true;
+    }
+  });
+
+  const modeMessages = directMessages.filter(m => {
+    if (m.mode === 'selling') return isSellerMode;
+    if (m.mode === 'buying') return !isSellerMode;
+    if (m.mode === 'both') return true;
+    if (isSellerMode) {
+      return m.senderRole?.includes('Buyer') || m.senderRole?.includes('বায়ার') || m.senderRole?.includes('ক্লায়েন্ট') || m.senderRole?.includes('Client') || m.orderId?.includes('ORD');
+    } else {
+      return !m.senderRole?.includes('Buyer') && !m.senderRole?.includes('বায়ার');
+    }
+  });
+
+  const unreadNavNotifCount = modeNotifications.filter(n => !n.read).length;
+  const unreadMsgCount = modeMessages.filter(m => {
+    if (m.read) return false;
+    if (m.unreadCount !== undefined && m.unreadCount <= 0) return false;
+    if (readConversationIds && readConversationIds.includes(m.id)) return false;
+    return true;
+  }).length;
   
   // Inline Search State
   const [inlineSearchOpen, setInlineSearchOpen] = useState(false);
@@ -152,7 +192,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className="sticky top-0 z-50 w-full transition-all duration-300">
       {/* Top Slim Header Bar - Hidden on mobile/phone screens */}
       <div className="hidden md:block bg-[#142B4D] text-white text-[11px] sm:text-xs py-1 sm:py-1.5 px-3 sm:px-4 border-b border-slate-700/50">
-        <div className="max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 flex justify-between items-center gap-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center gap-2">
           <div className="flex items-center gap-2 sm:gap-4 text-slate-300 font-medium text-[11px] sm:text-xs">
             <span className="flex items-center gap-1">
               <PhoneCall className="w-3.5 h-3.5 text-[#1DB954]" />
@@ -188,7 +228,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Main Navigation - Slim & Sleek */}
       <nav className="glass-nav border-b border-slate-700/60 text-white shadow-lg relative">
-        <div className="max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16 gap-2 sm:gap-3">
             
             {/* Logo */}
@@ -215,12 +255,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Desktop Navigation Links */}
             {!inlineSearchOpen && (
-              <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
+              <div className="hidden md:flex items-center space-x-1 lg:space-x-1.5">
                 {navItems.map(item => (
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
-                    className={`px-3.5 py-2 rounded-xl text-sm lg:text-[15px] xl:text-base font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                    className={`px-2.5 lg:px-3.5 py-1.5 lg:py-2 rounded-xl text-xs lg:text-sm xl:text-[15px] font-bold transition-all cursor-pointer flex items-center gap-1.5 lg:gap-2 whitespace-nowrap ${
                     activeTab === item.id
                       ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-black'
                       : item.highlight
@@ -241,7 +281,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
 
           {/* DESKTOP SEARCH BAR */}
-          <div className={`relative flex-1 ${inlineSearchOpen ? 'w-full max-w-none ml-2 mr-0' : 'max-w-md mx-2 hidden md:block'}`}>
+          <div className={`relative flex-1 ${inlineSearchOpen ? 'w-full max-w-none ml-2 mr-0' : 'max-w-xs lg:max-w-sm xl:max-w-md mx-2 hidden md:block'}`}>
             {inlineSearchOpen ? (
               <div className="relative flex items-center w-full animate-in fade-in zoom-in-95 duration-200">
                 <Search className="w-4 sm:w-5 h-4 sm:h-5 absolute left-3 text-[#1DB954]" />
@@ -352,7 +392,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className="w-full py-2 px-3 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs flex items-center justify-center gap-2 transition font-bengali cursor-pointer shadow"
                   >
                     <Search className="w-3.5 h-3.5" />
-                    <span>সকল গিগ ও মার্কেটপ্লেস ফলাফল দেখুন (See All)</span>
+                    <span>{t('সকল গিগ ও মার্কেটপ্লেস ফলাফল দেখুন', 'See All Marketplace Results')}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -467,8 +507,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* RIGHT ACTION CONTROLS & PROFILE HEADER SUITE */}
           <div className="hidden md:flex items-center space-x-2.5 lg:space-x-3 shrink-0">
               
-              {/* MESSAGES INBOX & NOTIFICATIONS BELL (ONLY FOR LOGGED IN USERS) */}
-              {currentUser && (
+              {/* MESSAGES INBOX & NOTIFICATIONS BELL (ONLY FOR LOGGED IN USERS IN MARKETPLACE VIEW) */}
+              {activeTab === 'marketplace' && currentUser && (
                 <>
                   {/* MESSENGER BUTTON */}
                   <button
@@ -514,7 +554,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </>
               )}
 
-              {/* 4. USER PROFILE AVATAR & DROPDOWN */}
+              {/* 4. USER PROFILE AVATAR & DROPDOWN (AVAILABLE ON ALL TABS) */}
               {currentUser ? (
                 <div className="relative">
                   <button
@@ -525,7 +565,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setUserDropdownOpen(!userDropdownOpen);
                     }}
                     className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-900/80 hover:bg-slate-900 border border-white/20 transition cursor-pointer shadow-sm"
-                    title="প্রোফাইল অ্যাকাউন্ট মেনু"
+                    title={t('প্রোফাইল অ্যাকাউন্ট মেনু', 'Profile Account Menu')}
                   >
                     <img
                       src={currentUser.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
@@ -638,6 +678,32 @@ export const Navbar: React.FC<NavbarProps> = ({
                           </span>
                         </button>
 
+                        {/* Language Switcher inside Profile Dropdown */}
+                        <div className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition">
+                          <span className="flex items-center gap-2.5">
+                            <Globe className="w-4 h-4 text-emerald-400" />
+                            <span>{lang === 'bn' ? 'ভাষা নির্বাচন' : 'Language'}</span>
+                          </span>
+                          <div className="flex items-center bg-slate-900 rounded-lg p-0.5 border border-slate-700">
+                            <button
+                              onClick={() => setLang('bn')}
+                              className={`px-2 py-0.5 text-[11px] font-black rounded transition cursor-pointer ${
+                                lang === 'bn' ? 'bg-[#1DB954] text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                              }`}
+                            >
+                              বাং
+                            </button>
+                            <button
+                              onClick={() => setLang('en')}
+                              className={`px-2 py-0.5 text-[11px] font-black rounded transition cursor-pointer ${
+                                lang === 'en' ? 'bg-[#1DB954] text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                              }`}
+                            >
+                              EN
+                            </button>
+                          </div>
+                        </div>
+
                         <button
                           onClick={() => {
                             setActiveTab('contact');
@@ -661,20 +727,108 @@ export const Navbar: React.FC<NavbarProps> = ({
                           className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-600 text-rose-300 hover:text-white font-black text-xs border border-rose-500/40 cursor-pointer transition-all shadow-md"
                         >
                           <LogOut className="w-4 h-4" />
-                          <span>লগআউট করুন (Logout)</span>
+                          <span>{t('লগআউট করুন', 'Logout')}</span>
                         </button>
                       </div>
                     </div>
                   )}
                 </div>
               ) : (
-                <button
-                  onClick={openAuthModal}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-slate-800 hover:bg-slate-700 rounded-lg border border-slate-600 transition-colors cursor-pointer font-bengali"
-                >
-                  <UserIcon className="w-4 h-4 text-[#1DB954]" />
-                  {t('লগইন / সাইনআপ', 'Login / Signup')}
-                </button>
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setRoleSwitcherOpen(false);
+                      setNavNotifOpen(false);
+                      setNavMsgOpen(false);
+                      setUserDropdownOpen(!userDropdownOpen);
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-white bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-600 transition cursor-pointer font-bengali shrink-0 shadow-xs"
+                    title={t('প্রোফাইল মেনু ও ভাষা পরিবর্তন', 'Profile Menu & Language')}
+                  >
+                    <UserIcon className="w-4 h-4 text-[#1DB954]" />
+                    <span>{t('প্রোফাইল', 'Profile')}</span>
+                    <ChevronDown className={`w-3.5 h-3.5 text-slate-300 transition-transform ${userDropdownOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {userDropdownOpen && (
+                    <div className="absolute right-0 mt-3 w-64 bg-[#0F172A] border border-[#1DB954]/50 rounded-2xl shadow-2xl p-3 z-50 text-slate-100 font-bengali space-y-2.5 divide-y divide-slate-800">
+                      <div className="p-3 bg-slate-900/90 rounded-xl border border-slate-800 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-slate-800 border-2 border-[#1DB954] flex items-center justify-center text-[#1DB954] shrink-0">
+                          <UserIcon className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-extrabold text-white text-xs truncate">{t('স্বাগতম অতিথি', 'Welcome Guest')}</p>
+                          <p className="text-[10px] text-slate-400 truncate">{t('লগইন করে ড্যাশবোর্ড দেখুন', 'Sign in to access dashboard')}</p>
+                        </div>
+                      </div>
+
+                      <div className="pt-2 space-y-1">
+                        <button
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            openAuthModal();
+                          }}
+                          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs transition cursor-pointer shadow-md"
+                        >
+                          <UserIcon className="w-4 h-4" />
+                          <span>{t('লগইন / রেজিস্টার', 'Login / Register')}</span>
+                        </button>
+                      </div>
+
+                      <div className="pt-2 space-y-1">
+                        {/* Language Switcher inside Profile Dropdown */}
+                        <div className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition">
+                          <span className="flex items-center gap-2.5">
+                            <Globe className="w-4 h-4 text-emerald-400" />
+                            <span>{lang === 'bn' ? 'ভাষা নির্বাচন' : 'Language'}</span>
+                          </span>
+                          <div className="flex items-center bg-slate-900 rounded-lg p-0.5 border border-slate-700">
+                            <button
+                              onClick={() => setLang('bn')}
+                              className={`px-2 py-0.5 text-[11px] font-black rounded transition cursor-pointer ${
+                                lang === 'bn' ? 'bg-[#1DB954] text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                              }`}
+                            >
+                              বাং
+                            </button>
+                            <button
+                              onClick={() => setLang('en')}
+                              className={`px-2 py-0.5 text-[11px] font-black rounded transition cursor-pointer ${
+                                lang === 'en' ? 'bg-[#1DB954] text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                              }`}
+                            >
+                              EN
+                            </button>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={toggleDarkMode}
+                          className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition cursor-pointer"
+                        >
+                          <span className="flex items-center gap-2.5">
+                            {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-300" />}
+                            <span>{darkMode ? t('লাইট মোড', 'Light Mode') : t('ডার্ক মোড', 'Dark Mode')}</span>
+                          </span>
+                          <span className="text-[10px] px-2 py-0.5 bg-slate-900 rounded font-black text-emerald-400">
+                            {darkMode ? 'DARK' : 'LIGHT'}
+                          </span>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setActiveTab('contact');
+                            setUserDropdownOpen(false);
+                          }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white font-bold cursor-pointer transition"
+                        >
+                          <HelpCircle className="w-4 h-4 text-sky-400" />
+                          <span>{t('সাহায্য ও সাপোর্ট', 'Help & Support')}</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
 
               {/* PRIMARY CTA ENROLL BUTTON */}
@@ -683,12 +837,57 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="px-4 py-2 rounded-xl text-xs font-black text-white bg-[#1DB954] hover:bg-emerald-500 shadow-md shadow-[#1DB954]/30 hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5 shrink-0 font-bengali"
               >
                 <BookOpen className="w-4 h-4" />
-                <span>কোর্সে জয়েন</span>
+                <span>{t('কোর্সে জয়েন', 'Join Courses')}</span>
               </button>
             </div>
 
-            {/* Mobile Actions: User Profile Avatar and Menu Drawer Button */}
+            {/* Mobile Actions: User Profile Avatar (Marketplace only) and Menu Drawer Button */}
             <div className="flex md:hidden items-center gap-1.5 shrink-0">
+              {/* Mobile Messenger & Notification Buttons */}
+              {activeTab === 'marketplace' && currentUser && (
+                <>
+                  <button
+                    onClick={() => {
+                      setUserDropdownOpen(false);
+                      setMobileMenuOpen(false);
+                      setRoleSwitcherOpen(false);
+                      setNavNotifOpen(false);
+                      setNavMsgOpen(false);
+                      openMessengerInbox();
+                    }}
+                    className="p-1.5 rounded-full bg-slate-800/90 border border-slate-700 text-slate-300 hover:text-white transition cursor-pointer relative"
+                    title="মেসেঞ্জার - ইনবক্স"
+                  >
+                    <MessageSquare className="w-4 h-4 text-[#1DB954]" />
+                    {unreadMsgCount > 0 && (
+                      <span className="absolute -top-1 -right-1 min-w-[17px] h-[17px] px-0.5 bg-[#1DB954] text-white font-black text-[9px] rounded-full flex items-center justify-center shadow-md border border-[#142B4D]">
+                        {unreadMsgCount}
+                      </span>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setUserDropdownOpen(false);
+                      setMobileMenuOpen(false);
+                      setRoleSwitcherOpen(false);
+                      setNavMsgOpen(false);
+                      setNavNotifOpen(false);
+                      openNotificationCenter();
+                    }}
+                    className="p-1.5 rounded-full bg-slate-800/90 border border-slate-700 text-slate-300 hover:text-white transition cursor-pointer relative"
+                    title="নোটিফিকেশন"
+                  >
+                    <Bell className="w-4 h-4 text-[#1DB954]" />
+                    {unreadNavNotifCount > 0 && (
+                      <span className="absolute -top-1 -right-1 min-w-[17px] h-[17px] px-0.5 bg-rose-600 text-white font-black text-[9px] rounded-full flex items-center justify-center shadow-md border border-[#142B4D]">
+                        {unreadNavNotifCount}
+                      </span>
+                    )}
+                  </button>
+                </>
+              )}
+
               {/* Mobile User Profile Avatar Trigger */}
               {currentUser ? (
                 <div className="relative">
@@ -847,6 +1046,32 @@ export const Navbar: React.FC<NavbarProps> = ({
                               </span>
                             </button>
 
+                            {/* Language Switcher inside Mobile Profile Dropdown */}
+                            <div className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition">
+                              <span className="flex items-center gap-2.5">
+                                <Globe className="w-4 h-4 text-emerald-400" />
+                                <span>{lang === 'bn' ? 'ভাষা নির্বাচন' : 'Language'}</span>
+                              </span>
+                              <div className="flex items-center bg-slate-900 rounded-lg p-0.5 border border-slate-700">
+                                <button
+                                  onClick={() => setLang('bn')}
+                                  className={`px-2 py-0.5 text-[11px] font-black rounded transition cursor-pointer ${
+                                    lang === 'bn' ? 'bg-[#1DB954] text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                                  }`}
+                                >
+                                  বাং
+                                </button>
+                                <button
+                                  onClick={() => setLang('en')}
+                                  className={`px-2 py-0.5 text-[11px] font-black rounded transition cursor-pointer ${
+                                    lang === 'en' ? 'bg-[#1DB954] text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                                  }`}
+                                >
+                                  EN
+                                </button>
+                              </div>
+                            </div>
+
                             <button
                               onClick={() => {
                                 setActiveTab('contact');
@@ -870,21 +1095,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                               className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-600 text-rose-300 hover:text-white font-black text-xs border border-rose-500/40 cursor-pointer transition-all shadow-md"
                             >
                               <LogOut className="w-4 h-4" />
-                              <span>লগআউট করুন (Logout)</span>
+                              <span>{t('লগআউট করুন', 'Logout')}</span>
                             </button>
                           </div>
                         </div>
                       </>
                     )}
                   </div>
-                ) : (
+                ) : activeTab === 'marketplace' && !currentUser ? (
                   <button
                     onClick={openAuthModal}
                     className="px-2.5 py-1 text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 rounded-lg border border-slate-600 transition cursor-pointer font-bengali"
                   >
-                    লগইন
+                    {t('লগইন', 'Login')}
                   </button>
-                )}
+                ) : null}
                 
                 {/* Menu Drawer Toggle Button */}
                 <button
@@ -903,6 +1128,32 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-[#142B4D] border-t border-slate-700 px-4 pt-3 pb-6 space-y-3 font-bengali">
+            {/* Top Quick Language Switcher Card */}
+            <div className="flex items-center justify-between p-2.5 bg-slate-900/90 rounded-2xl border border-slate-700/80 mb-2 shadow-inner">
+              <div className="flex items-center gap-2 text-xs font-black text-slate-200">
+                <Globe className="w-4 h-4 text-emerald-400" />
+                <span>{lang === 'bn' ? 'ভাষা নির্বাচন:' : 'Language:'}</span>
+              </div>
+              <div className="flex items-center bg-slate-800 rounded-xl p-0.5 border border-slate-700">
+                <button
+                  onClick={() => setLang('bn')}
+                  className={`px-3 py-1.5 text-xs font-black rounded-lg transition cursor-pointer ${
+                    lang === 'bn' ? 'bg-[#1DB954] text-white shadow' : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  বাংলা
+                </button>
+                <button
+                  onClick={() => setLang('en')}
+                  className={`px-3 py-1.5 text-xs font-black rounded-lg transition cursor-pointer ${
+                    lang === 'en' ? 'bg-[#1DB954] text-white shadow' : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  English
+                </button>
+              </div>
+            </div>
+
             {navItems.map(item => (
               <button
                 key={item.id}
@@ -928,7 +1179,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             ))}
 
-            {currentUser && (
+            {activeTab === 'marketplace' && currentUser && (
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
@@ -960,6 +1211,20 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <div className="pt-4 border-t border-slate-700 space-y-3">
+              {/* Language Switcher in Mobile Drawer */}
+              <button
+                onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')}
+                className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg bg-slate-800 text-emerald-300 font-bold border border-slate-700 cursor-pointer"
+              >
+                <span className="flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-emerald-400" />
+                  <span>{lang === 'bn' ? 'ভাষা পরিবর্তন (Language)' : 'Switch Language'}</span>
+                </span>
+                <span className="text-xs px-2.5 py-1 bg-emerald-600/30 border border-emerald-500/50 rounded-full text-emerald-300 font-extrabold">
+                  {lang === 'bn' ? 'English' : 'বাংলা'}
+                </span>
+              </button>
+
               {/* Theme Toggle in Mobile Drawer */}
               <button
                 onClick={toggleDarkMode}
@@ -967,76 +1232,80 @@ export const Navbar: React.FC<NavbarProps> = ({
               >
                 <span className="flex items-center gap-2">
                   {darkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-indigo-300" />}
-                  <span>{darkMode ? '☀️ লাইট মোড (Light Mode)' : '🌙 ডার্ক মোড (Dark Mode)'}</span>
+                  <span>{darkMode ? t('☀️ লাইট মোড', '☀️ Light Mode') : t('🌙 ডার্ক মোড', '🌙 Dark Mode')}</span>
                 </span>
                 <span className="text-xs px-2 py-0.5 bg-slate-900 rounded text-emerald-400 font-extrabold">
                   {darkMode ? 'DARK' : 'LIGHT'}
                 </span>
               </button>
 
-              {/* Role Switcher in Mobile Drawer */}
-              <div className="p-3 bg-slate-900/90 rounded-xl border border-emerald-500/40 space-y-2">
-                <p className="text-xs font-black text-emerald-400 flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4 text-amber-300" /> ড্যাশবোর্ড সুইচ:
-                </p>
-                <div className="grid grid-cols-3 gap-1.5">
-                  {[
-                    { role: 'admin' as const, label: 'এডমিন প্যানেল', tab: 'admin' },
-                    { role: 'customer' as const, label: 'গ্রাহক ড্যাশবোর্ড', tab: 'customer-dashboard' },
-                    { role: 'instructor' as const, label: 'স্পেশালিস্ট ড্যাশবোর্ড', tab: 'teacher-dashboard' },
-                  ].map(item => (
+              {/* Role Switcher & Auth in Mobile Drawer (Only in Marketplace View) */}
+              {activeTab === 'marketplace' && (
+                <>
+                  <div className="p-3 bg-slate-900/90 rounded-xl border border-emerald-500/40 space-y-2">
+                    <p className="text-xs font-black text-emerald-400 flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4 text-amber-300" /> ড্যাশবোর্ড সুইচ:
+                    </p>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {[
+                        { role: 'admin' as const, label: 'এডমিন প্যানেল', tab: 'admin' },
+                        { role: 'customer' as const, label: 'গ্রাহক ড্যাশবোর্ড', tab: 'customer-dashboard' },
+                        { role: 'instructor' as const, label: 'স্পেশালিস্ট ড্যাশবোর্ড', tab: 'teacher-dashboard' },
+                      ].map(item => (
+                        <button
+                          key={item.role}
+                          onClick={() => {
+                            demoLogin(item.role);
+                            setActiveTab(item.tab);
+                            setMobileMenuOpen(false);
+                          }}
+                          className={`py-2 px-1.5 text-[11px] font-bold rounded-lg border transition-all cursor-pointer text-center leading-tight ${
+                            currentUser?.role === item.role
+                              ? 'bg-[#1DB954] text-white border-[#1DB954] shadow-md'
+                              : 'bg-slate-800 text-slate-200 border-slate-700 hover:border-emerald-500'
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {currentUser ? (
+                    <>
+                      <button
+                        onClick={() => {
+                          setActiveTab(getDashboardTab(currentUser.role));
+                          setMobileMenuOpen(false);
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2.5 bg-[#1DB954] text-white rounded-lg font-bold"
+                      >
+                        {getRoleIcon(currentUser.role)}
+                        {getDashboardTitle(currentUser.role)}
+                      </button>
+                      <button
+                        onClick={() => {
+                          logout();
+                          setMobileMenuOpen(false);
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2.5 bg-rose-500/20 text-rose-300 rounded-lg font-semibold"
+                      >
+                        <LogOut className="w-5 h-5" />
+                        {t('লগআউট', 'Logout')}
+                      </button>
+                    </>
+                  ) : (
                     <button
-                      key={item.role}
                       onClick={() => {
-                        demoLogin(item.role);
-                        setActiveTab(item.tab);
+                        openAuthModal();
                         setMobileMenuOpen(false);
                       }}
-                      className={`py-2 px-1.5 text-[11px] font-bold rounded-lg border transition-all cursor-pointer text-center leading-tight ${
-                        currentUser?.role === item.role
-                          ? 'bg-[#1DB954] text-white border-[#1DB954] shadow-md'
-                          : 'bg-slate-800 text-slate-200 border-slate-700 hover:border-emerald-500'
-                      }`}
+                      className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold border border-slate-600 cursor-pointer"
                     >
-                      {item.label}
+                      {t('লগইন / একাউন্ট খুলুন', 'Login / Register')}
                     </button>
-                  ))}
-                </div>
-              </div>
-
-              {currentUser ? (
-                <>
-                  <button
-                    onClick={() => {
-                      setActiveTab(getDashboardTab(currentUser.role));
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full flex items-center gap-2 px-4 py-2.5 bg-[#1DB954] text-white rounded-lg font-bold"
-                  >
-                    {getRoleIcon(currentUser.role)}
-                    {getDashboardTitle(currentUser.role)}
-                  </button>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full flex items-center gap-2 px-4 py-2.5 bg-rose-500/20 text-rose-300 rounded-lg font-semibold"
-                  >
-                    <LogOut className="w-5 h-5" />
-                    {t('লগআউট', 'Logout')}
-                  </button>
+                  )}
                 </>
-              ) : (
-                <button
-                  onClick={() => {
-                    openAuthModal();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold border border-slate-600 cursor-pointer"
-                >
-                  {t('লগইন / একাউন্ট খুলুন', 'Login / Register')}
-                </button>
               )}
 
               <button

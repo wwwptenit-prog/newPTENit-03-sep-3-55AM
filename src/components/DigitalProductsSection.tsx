@@ -26,13 +26,14 @@ import {
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { DigitalProduct, MarketplaceOrder } from '../types';
+import { formatLocalizedPrice } from '../utils/localization';
 
 interface DigitalProductsSectionProps {
-  setActiveTab?: (tab: string) => void;
+  setActiveTab?: (tab: string, category?: string, pushHistory?: boolean) => void;
 }
 
 export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ setActiveTab }) => {
-  const { digitalProducts = [], currentUser, siteSettings, addMarketplaceOrder, t } = useData();
+  const { digitalProducts = [], currentUser, siteSettings, addMarketplaceOrder, t, lang } = useData();
 
   // Selected Product for Dedicated In-Page Landing View (Not a modal popup)
   const [selectedProduct, setSelectedProduct] = useState<DigitalProduct | null>(null);
@@ -622,16 +623,12 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
     <div className="space-y-6 pt-8 border-t border-slate-200 dark:border-slate-800 font-bengali">
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-        <div className="space-y-1 text-center sm:text-left flex flex-col items-center sm:items-start">
-          <span className="inline-flex items-center gap-1.5 text-[#1DB954] font-bold text-xs uppercase tracking-widest bg-[#1DB954]/10 px-3 py-1 rounded-full border border-[#1DB954]/20">
-            <Zap className="w-3.5 h-3.5" />
-            {t('ইনস্ট্যান্ট ডাউনলোড ও সোর্স কোড', 'Instant Download & Source Code')}
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight">
+        <div className="space-y-1 text-center sm:text-left flex flex-col items-center sm:items-start max-w-xl">
+          <h2 className="text-xl sm:text-2xl font-black font-bengali text-slate-900 dark:text-white leading-snug line-clamp-2">
             {t('ডিজিটাল প্রোডাক্টস ও সফটওয়্যার', 'Digital Products & Software Downloads')}
           </h2>
-          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
-            সম্পূর্ণ প্রস্তুত প্রিমিয়াম ও ফ্রি সোর্স কোড, স্ক্রিপ্ট, থিম ও সফটওয়্যার কালেকশন।
+          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-bengali line-clamp-2">
+            {t('সম্পূর্ণ প্রস্তুত প্রিমিয়াম ও ফ্রি সোর্স কোড, স্ক্রিপ্ট, থিম ও সফটওয়্যার কালেকশন।', 'Ready-to-use premium and free source codes, scripts, themes, and software collections.')}
           </p>
         </div>
 
@@ -649,7 +646,14 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
           ) : (
             <button
               type="button"
-              onClick={() => setMobileExpanded(true)}
+              onClick={() => {
+                if (setActiveTab) {
+                  setActiveTab('marketplace', 'digital-products', true);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  setMobileExpanded(true);
+                }
+              }}
               className="sm:hidden inline-flex items-center gap-1 text-[#1DB954] hover:text-emerald-400 font-bold text-xs transition-all cursor-pointer font-bengali shrink-0 group"
             >
               <span>{t('সবগুলো দেখুন →', 'See All →')}</span>
@@ -669,7 +673,14 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
           ) : (
             <button
               type="button"
-              onClick={() => setDesktopExpanded(true)}
+              onClick={() => {
+                if (setActiveTab) {
+                  setActiveTab('marketplace', 'digital-products', true);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  setDesktopExpanded(true);
+                }
+              }}
               className="hidden sm:inline-flex items-center gap-1 text-[#1DB954] hover:text-emerald-400 font-bold text-sm hover:underline transition-all cursor-pointer font-bengali shrink-0 group"
             >
               <span>{t('সবগুলো দেখুন →', 'See All →')}</span>
@@ -678,17 +689,17 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
         </div>
       </div>
 
-      {/* Grid: 4 columns on PC, 2 columns on Phone (Max 4 on mobile unless expanded) */}
+      {/* Grid: 4 columns on PC (2 rows = 8 items), 2 columns on Phone (Max 4 on mobile unless expanded) */}
       <div>
-        {/* Desktop: 1 row of 4 or expanded */}
+        {/* Desktop: 2 rows of 4 (8 items) or expanded */}
         <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 lg:gap-5">
-          {(desktopExpanded ? digitalProducts : digitalProducts.slice(0, 4)).map(product => {
+          {(desktopExpanded ? digitalProducts : digitalProducts.slice(0, 8)).map(product => {
             const isFree = product.price === 0;
 
             return (
               <div
                 key={product.id}
-                className="group relative bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-[#1DB954] transition-all duration-300 flex flex-col justify-between"
+                className="group relative bg-slate-50/80 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-[#1DB954] transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   {/* Thumbnail Image */}
@@ -708,17 +719,17 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                       {isFree ? (
                         <span className="bg-emerald-500 text-white text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
                           <Gift className="w-3 h-3 fill-white" />
-                          ১০০% ফ্রি
+                          {lang === 'en' ? '100% Free' : '১০০% ফ্রি'}
                         </span>
                       ) : product.deliveryType === 'auto' ? (
                         <span className="bg-[#1DB954] text-white text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
                           <Zap className="w-3 h-3 fill-white" />
-                          অটো ডেলিভারি
+                          {lang === 'en' ? 'Auto Delivery' : 'অটো ডেলিভারি'}
                         </span>
                       ) : (
                         <span className="bg-blue-600 text-white text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
                           <Mail className="w-3 h-3" />
-                          ম্যানুয়াল
+                          {lang === 'en' ? 'Manual' : 'ম্যানুয়াল'}
                         </span>
                       )}
                     </div>
@@ -785,11 +796,11 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                       <div className="flex flex-col">
                         {product.originalPrice && (
                           <span className="text-[10px] sm:text-xs text-slate-400 line-through block leading-tight truncate">
-                            ৳{product.originalPrice.toLocaleString('bn-BD')}
+                            {formatLocalizedPrice(product.originalPrice, lang)}
                           </span>
                         )}
                         <span className="text-xs sm:text-base md:text-lg font-black text-[#1DB954] block truncate leading-tight">
-                          ৳{product.price.toLocaleString('bn-BD')}
+                          {formatLocalizedPrice(product.price, lang)}
                         </span>
                       </div>
                     )}
@@ -817,7 +828,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
             return (
               <div
                 key={product.id}
-                className="group relative bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-[#1DB954] transition-all duration-300 flex flex-col justify-between"
+                className="group relative bg-slate-50/80 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-[#1DB954] transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   {/* Thumbnail Image */}
@@ -837,17 +848,17 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                       {isFree ? (
                         <span className="bg-emerald-500 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-xs">
                           <Gift className="w-2.5 h-2.5 fill-white" />
-                          সম্পূর্ণ ফ্রি
+                          {lang === 'en' ? '100% Free' : 'সম্পূর্ণ ফ্রি'}
                         </span>
                       ) : product.deliveryType === 'auto' ? (
                         <span className="bg-[#1DB954] text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-xs">
                           <Zap className="w-2.5 h-2.5 fill-white" />
-                          অটো
+                          {lang === 'en' ? 'Auto' : 'অটো'}
                         </span>
                       ) : (
                         <span className="bg-blue-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-xs">
                           <Mail className="w-2.5 h-2.5" />
-                          ম্যানুয়াল
+                          {lang === 'en' ? 'Manual' : 'ম্যানুয়াল'}
                         </span>
                       )}
                     </div>
@@ -897,11 +908,11 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                       <div className="flex flex-col">
                         {product.originalPrice && (
                           <span className="text-[9px] text-slate-400 line-through block leading-tight truncate">
-                            ৳{product.originalPrice.toLocaleString('bn-BD')}
+                            {formatLocalizedPrice(product.originalPrice, lang)}
                           </span>
                         )}
                         <span className="text-xs sm:text-sm font-black text-[#1DB954] block truncate leading-tight">
-                          ৳{product.price.toLocaleString('bn-BD')}
+                          {formatLocalizedPrice(product.price, lang)}
                         </span>
                       </div>
                     )}

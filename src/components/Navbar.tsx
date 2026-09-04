@@ -191,7 +191,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-50 w-full transition-all duration-300">
       {/* Top Slim Header Bar - Hidden on mobile/phone screens */}
-      <div className="hidden md:block bg-[#142B4D] text-white text-[11px] sm:text-xs py-1 sm:py-1.5 px-3 sm:px-4 border-b border-slate-700/50">
+      <div className="hidden md:block bg-[#142B4D] text-white text-[11px] sm:text-xs py-1 sm:py-1.5 px-3 sm:px-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center gap-2">
           <div className="flex items-center gap-2 sm:gap-4 text-slate-300 font-medium text-[11px] sm:text-xs">
             <span className="flex items-center gap-1">
@@ -226,8 +226,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Main Navigation - Slim & Sleek */}
-      <nav className="glass-nav border-b border-slate-700/60 text-white shadow-lg relative">
+      {/* Main Navigation - Slim, Sleek with subtle aesthetic border */}
+      <nav className="bg-[#142B4D] text-white border-b border-slate-700/40 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16 gap-2 sm:gap-3">
             
@@ -262,7 +262,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setActiveTab(item.id)}
                     className={`px-2.5 lg:px-3.5 py-1.5 lg:py-2 rounded-xl text-xs lg:text-sm xl:text-[15px] font-bold transition-all cursor-pointer flex items-center gap-1.5 lg:gap-2 whitespace-nowrap ${
                     activeTab === item.id
-                      ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 font-black'
+                      ? 'bg-[#1DB954] text-white shadow-md shadow-[#1DB954]/20 font-black'
                       : item.highlight
                       ? 'bg-slate-800/90 text-white border border-rose-500/50 hover:bg-slate-800 shadow-sm font-black'
                       : 'text-slate-100 hover:text-white hover:bg-slate-800/70'

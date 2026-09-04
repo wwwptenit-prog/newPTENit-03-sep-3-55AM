@@ -26,14 +26,15 @@ import {
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { DigitalProduct, MarketplaceOrder } from '../types';
-import { formatLocalizedPrice } from '../utils/localization';
 
 interface DigitalProductsSectionProps {
   setActiveTab?: (tab: string, category?: string, pushHistory?: boolean) => void;
+  isStandalonePage?: boolean;
+  onBack?: () => void;
 }
 
-export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ setActiveTab }) => {
-  const { digitalProducts = [], currentUser, siteSettings, addMarketplaceOrder, t, lang } = useData();
+export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ setActiveTab, isStandalonePage = false, onBack }) => {
+  const { digitalProducts = [], currentUser, siteSettings, addMarketplaceOrder, t } = useData();
 
   // Selected Product for Dedicated In-Page Landing View (Not a modal popup)
   const [selectedProduct, setSelectedProduct] = useState<DigitalProduct | null>(null);
@@ -47,12 +48,52 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
   const [paymentMethod, setPaymentMethod] = useState<'bKash' | 'Nagad' | 'Rocket' | 'Bank'>('bKash');
   const [trxId, setTrxId] = useState('');
   const [senderPhone, setSenderPhone] = useState('');
+  const [purchaseError, setPurchaseError] = useState<string | null>(null);
 
   // Confirmation & Instant Download State
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
   const [completedOrder, setCompletedOrder] = useState<MarketplaceOrder | null>(null);
   const [copiedKey, setCopiedKey] = useState(false);
   const [copiedShareLink, setCopiedShareLink] = useState(false);
+  const [copiedNumber, setCopiedNumber] = useState(false);
+
+  const fallbackCopyText = (text: string) => {
+    try {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const safeCopyText = (text: string) => {
+    try {
+      if (navigator?.clipboard?.writeText) {
+        navigator.clipboard.writeText(text).catch(() => {
+          fallbackCopyText(text);
+        });
+      } else {
+        fallbackCopyText(text);
+      }
+    } catch {
+      fallbackCopyText(text);
+    }
+  };
+
+  const handleCopyNumber = (num: string) => {
+    safeCopyText(num);
+    setCopiedNumber(true);
+    setTimeout(() => setCopiedNumber(false), 2000);
+  };
 
   const handleOpenDetail = (product: DigitalProduct) => {
     setSelectedProduct(product);
@@ -61,6 +102,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
     setCustomerPhone(currentUser?.mobile || '');
     setTrxId('');
     setSenderPhone('');
+    setPurchaseError(null);
     setIsOrderPlaced(false);
     setCompletedOrder(null);
     // Instant scroll to top
@@ -69,22 +111,24 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
 
   const handleBackToList = () => {
     setSelectedProduct(null);
+    setPurchaseError(null);
     setIsOrderPlaced(false);
     setCompletedOrder(null);
   };
 
   const handleConfirmPurchase = (e: React.FormEvent) => {
     e.preventDefault();
+    setPurchaseError(null);
     if (!selectedProduct) return;
 
     const isFree = selectedProduct.price === 0;
-    if (!customerEmail || !customerName) {
-      alert('অনুগ্রহ করে আপনার নাম ও ইমেইল অ্যাড্রেস প্রদান করুন।');
+    if (!customerEmail.trim() || !customerName.trim()) {
+      setPurchaseError('অনুগ্রহ করে আপনার নাম ও ইমেইল অ্যাড্রেস প্রদান করুন।');
       return;
     }
 
-    if (!isFree && !trxId) {
-      alert('অনুগ্রহ করে পেমেন্ট ট্রানজেকশন আইডি (TrxID) প্রদান করুন।');
+    if (!isFree && !trxId.trim()) {
+      setPurchaseError('অনুগ্রহ করে পেমেন্ট ট্রানজেকশন আইডি (TrxID) প্রদান করুন।');
       return;
     }
 
@@ -129,13 +173,13 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
   };
 
   const copyLicenseKey = (keyText: string) => {
-    navigator.clipboard.writeText(keyText);
+    safeCopyText(keyText);
     setCopiedKey(true);
     setTimeout(() => setCopiedKey(false), 3000);
   };
 
   const copyShareLink = () => {
-    navigator.clipboard.writeText(window.location.href);
+    safeCopyText(window.location.href);
     setCopiedShareLink(true);
     setTimeout(() => setCopiedShareLink(false), 3000);
   };
@@ -316,7 +360,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
               <div className="bg-white dark:bg-slate-900 p-5 sm:p-7 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
                 <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-amber-400" />
-                  প্রোডাক্টের বিশেষ সুবিধাসমূহ (Key Features)
+                  প্রোডাক্টের বিশেষ সুবিধাসমূহ
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {selectedProduct.features.map((feat, idx) => (
@@ -445,17 +489,37 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                     </div>
 
                     {/* Account Number Box */}
-                    <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-2xl space-y-1 text-xs">
-                      <span className="font-bold text-slate-700 dark:text-slate-300">
-                        {paymentMethod === 'bKash' ? 'বিকাশ সেন্ড মানি নম্বর (Personal):' : paymentMethod === 'Nagad' ? 'নগদ সেন্ড মানি নম্বর (Personal):' : paymentMethod === 'Rocket' ? 'রকেট নম্বর (Personal):' : 'ব্যাংক হিসাব নম্বর:'}
-                      </span>
-                      <div className="font-black text-[#1DB954] text-sm tracking-wider">
-                        {paymentMethod === 'bKash' ? (siteSettings.bkashNumber || '01712345678') : paymentMethod === 'Nagad' ? (siteSettings.nagadNumber || '01700000000') : paymentMethod === 'Rocket' ? (siteSettings.rocketNumber || '01900000000') : `${siteSettings.bankName || 'DBBL'} - ${siteSettings.bankAccountNumber || '2181100098765'}`}
-                      </div>
-                      <p className="text-[10px] text-slate-500">
-                        উপরোক্ত নম্বরে ৳{selectedProduct.price.toLocaleString('bn-BD')} টাকা সেন্ড মানি করে নিচে TrxID দিন।
-                      </p>
-                    </div>
+                    {(() => {
+                      const activeAccNum = paymentMethod === 'bKash' 
+                        ? (siteSettings.bkashNumber || '01712345678') 
+                        : paymentMethod === 'Nagad' 
+                        ? (siteSettings.nagadNumber || '01700000000') 
+                        : paymentMethod === 'Rocket' 
+                        ? (siteSettings.rocketNumber || '01900000000') 
+                        : (siteSettings.bankAccountNumber || '2181100098765');
+
+                      return (
+                        <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-between gap-2 text-xs">
+                          <div>
+                            <span className="font-bold text-slate-700 dark:text-slate-300 block text-[11px]">
+                              {paymentMethod === 'bKash' ? 'বিকাশ নম্বর (Personal/Pay)' : paymentMethod === 'Nagad' ? 'নগদ নম্বর (Personal/Pay)' : paymentMethod === 'Rocket' ? 'রকেট নম্বর (Personal/Pay)' : `${siteSettings.bankName || 'DBBL'} হিসাব নম্বর`}
+                            </span>
+                            <div className="font-mono font-black text-slate-900 dark:text-white text-base tracking-wider mt-0.5">
+                              {activeAccNum}
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => handleCopyNumber(activeAccNum)}
+                            className="px-3 py-1.5 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer transition shadow-xs active:scale-95 shrink-0"
+                          >
+                            {copiedNumber ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                            <span>{copiedNumber ? 'কপি হয়েছে!' : 'কপি করুন'}</span>
+                          </button>
+                        </div>
+                      );
+                    })()}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
@@ -472,7 +536,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                       </div>
                       <div>
                         <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                          ট্রানজেকশন আইডি (TrxID) *
+                          ট্রানজেকশন আইডি *
                         </label>
                         <input
                           type="text"
@@ -484,6 +548,14 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                         />
                       </div>
                     </div>
+                  </div>
+                )}
+
+                {/* Error Banner */}
+                {purchaseError && (
+                  <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 rounded-xl text-rose-600 dark:text-rose-400 text-xs font-bengali flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
+                    <span>{purchaseError}</span>
                   </div>
                 )}
 
@@ -617,89 +689,59 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
   }
 
   // =========================================================================
-  // 🛍️ DEFAULT PRODUCT GRID VIEW (5 cols on PC, 2 cols on Phone)
+  // 🛍️ DEFAULT PRODUCT GRID VIEW (4 cols on PC, 2 cols on Phone)
   // =========================================================================
-  return (
-    <div className="space-y-6 pt-8 border-t border-slate-200 dark:border-slate-800 font-bengali">
+  const sectionContent = (
+    <div className="space-y-4 sm:space-y-6 font-bengali">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-        <div className="space-y-1 text-center sm:text-left flex flex-col items-center sm:items-start max-w-xl">
-          <h2 className="text-xl sm:text-2xl font-black font-bengali text-slate-900 dark:text-white leading-snug line-clamp-2">
-            {t('ডিজিটাল প্রোডাক্টস ও সফটওয়্যার', 'Digital Products & Software Downloads')}
+      <div className="flex items-end justify-between gap-3">
+        <div className="space-y-0.5 text-left">
+          <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight">
+            {t('ডিজিটাল প্রোডাক্টস', 'Digital Products')}
           </h2>
-          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-bengali line-clamp-2">
-            {t('সম্পূর্ণ প্রস্তুত প্রিমিয়াম ও ফ্রি সোর্স কোড, স্ক্রিপ্ট, থিম ও সফটওয়্যার কালেকশন।', 'Ready-to-use premium and free source codes, scripts, themes, and software collections.')}
+          <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-medium">
+            {t('রেডিমেড সফটওয়্যার, স্ক্রিপ্ট ও থিম', 'Ready software, scripts & themes')}
           </p>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          {/* Mobile View Toggle */}
-          {mobileExpanded ? (
+          {isStandalonePage && onBack && (
             <button
               type="button"
-              onClick={() => setMobileExpanded(false)}
-              className="sm:hidden inline-flex items-center gap-1.5 px-3 py-1.5 text-slate-600 dark:text-slate-300 hover:text-[#1DB954] font-bold text-xs transition-colors cursor-pointer font-bengali shrink-0"
+              onClick={onBack}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition cursor-pointer"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4 text-[#1DB954]" />
               <span>{t('ফিরে যান', 'Back')}</span>
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => {
-                if (setActiveTab) {
-                  setActiveTab('marketplace', 'digital-products', true);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                } else {
-                  setMobileExpanded(true);
-                }
-              }}
-              className="sm:hidden inline-flex items-center gap-1 text-[#1DB954] hover:text-emerald-400 font-bold text-xs transition-all cursor-pointer font-bengali shrink-0 group"
-            >
-              <span>{t('সবগুলো দেখুন →', 'See All →')}</span>
             </button>
           )}
 
-          {/* Desktop View Navigation / Toggle */}
-          {desktopExpanded ? (
-            <button
-              type="button"
-              onClick={() => setDesktopExpanded(false)}
-              className="hidden sm:inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-300 hover:text-[#1DB954] font-bold text-sm transition-colors cursor-pointer font-bengali shrink-0"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>{t('কমিয়ে দেখুন', 'Show Less')}</span>
-            </button>
-          ) : (
+          {!isStandalonePage && setActiveTab && (
             <button
               type="button"
               onClick={() => {
-                if (setActiveTab) {
-                  setActiveTab('marketplace', 'digital-products', true);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                } else {
-                  setDesktopExpanded(true);
-                }
+                setActiveTab('digital-products');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="hidden sm:inline-flex items-center gap-1 text-[#1DB954] hover:text-emerald-400 font-bold text-sm hover:underline transition-all cursor-pointer font-bengali shrink-0 group"
+              className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#1DB954] hover:text-emerald-700 hover:underline cursor-pointer font-bengali transition-colors border-0"
             >
-              <span>{t('সবগুলো দেখুন →', 'See All →')}</span>
+              <span>{t('সব দেখুন →', 'See All →')}</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Grid: 4 columns on PC (2 rows = 8 items), 2 columns on Phone (Max 4 on mobile unless expanded) */}
+      {/* Grid: 4 columns on PC, 2 columns on Phone (Max 4 on mobile unless expanded) */}
       <div>
-        {/* Desktop: 2 rows of 4 (8 items) or expanded */}
+        {/* Desktop: 1 row of 4 or all on standalone page */}
         <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 lg:gap-5">
-          {(desktopExpanded ? digitalProducts : digitalProducts.slice(0, 8)).map(product => {
+          {(isStandalonePage ? digitalProducts : digitalProducts.slice(0, 4)).map(product => {
             const isFree = product.price === 0;
 
             return (
               <div
                 key={product.id}
-                className="group relative bg-slate-50/80 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-[#1DB954] transition-all duration-300 flex flex-col justify-between"
+                className="group relative bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-[#1DB954] transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   {/* Thumbnail Image */}
@@ -719,17 +761,17 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                       {isFree ? (
                         <span className="bg-emerald-500 text-white text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
                           <Gift className="w-3 h-3 fill-white" />
-                          {lang === 'en' ? '100% Free' : '১০০% ফ্রি'}
+                          ১০০% ফ্রি
                         </span>
                       ) : product.deliveryType === 'auto' ? (
                         <span className="bg-[#1DB954] text-white text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
                           <Zap className="w-3 h-3 fill-white" />
-                          {lang === 'en' ? 'Auto Delivery' : 'অটো ডেলিভারি'}
+                          অটো ডেলিভারি
                         </span>
                       ) : (
                         <span className="bg-blue-600 text-white text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
                           <Mail className="w-3 h-3" />
-                          {lang === 'en' ? 'Manual' : 'ম্যানুয়াল'}
+                          ম্যানুয়াল
                         </span>
                       )}
                     </div>
@@ -796,11 +838,11 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                       <div className="flex flex-col">
                         {product.originalPrice && (
                           <span className="text-[10px] sm:text-xs text-slate-400 line-through block leading-tight truncate">
-                            {formatLocalizedPrice(product.originalPrice, lang)}
+                            ৳{product.originalPrice.toLocaleString('bn-BD')}
                           </span>
                         )}
                         <span className="text-xs sm:text-base md:text-lg font-black text-[#1DB954] block truncate leading-tight">
-                          {formatLocalizedPrice(product.price, lang)}
+                          ৳{product.price.toLocaleString('bn-BD')}
                         </span>
                       </div>
                     )}
@@ -820,15 +862,15 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
           })}
         </div>
 
-        {/* Mobile: Max 4 unless expanded */}
+        {/* Mobile: 4 on home or all on standalone page */}
         <div className="grid grid-cols-2 gap-2.5 sm:hidden">
-          {(mobileExpanded ? digitalProducts : digitalProducts.slice(0, 4)).map(product => {
+          {(isStandalonePage ? digitalProducts : digitalProducts.slice(0, 4)).map(product => {
             const isFree = product.price === 0;
 
             return (
               <div
                 key={product.id}
-                className="group relative bg-slate-50/80 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-[#1DB954] transition-all duration-300 flex flex-col justify-between"
+                className="group relative bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-[#1DB954] transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   {/* Thumbnail Image */}
@@ -848,17 +890,17 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                       {isFree ? (
                         <span className="bg-emerald-500 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-xs">
                           <Gift className="w-2.5 h-2.5 fill-white" />
-                          {lang === 'en' ? '100% Free' : 'সম্পূর্ণ ফ্রি'}
+                          সম্পূর্ণ ফ্রি
                         </span>
                       ) : product.deliveryType === 'auto' ? (
                         <span className="bg-[#1DB954] text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-xs">
                           <Zap className="w-2.5 h-2.5 fill-white" />
-                          {lang === 'en' ? 'Auto' : 'অটো'}
+                          অটো
                         </span>
                       ) : (
                         <span className="bg-blue-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-xs">
                           <Mail className="w-2.5 h-2.5" />
-                          {lang === 'en' ? 'Manual' : 'ম্যানুয়াল'}
+                          ম্যানুয়াল
                         </span>
                       )}
                     </div>
@@ -908,11 +950,11 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                       <div className="flex flex-col">
                         {product.originalPrice && (
                           <span className="text-[9px] text-slate-400 line-through block leading-tight truncate">
-                            {formatLocalizedPrice(product.originalPrice, lang)}
+                            ৳{product.originalPrice.toLocaleString('bn-BD')}
                           </span>
                         )}
                         <span className="text-xs sm:text-sm font-black text-[#1DB954] block truncate leading-tight">
-                          {formatLocalizedPrice(product.price, lang)}
+                          ৳{product.price.toLocaleString('bn-BD')}
                         </span>
                       </div>
                     )}
@@ -934,4 +976,16 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
       </div>
     </div>
   );
+
+  if (isStandalonePage) {
+    return (
+      <div className="w-full min-h-screen bg-white dark:bg-slate-900 font-bengali text-slate-900 dark:text-slate-100 py-6 sm:py-8 px-4 sm:px-6 lg:px-8 animate-fadeIn">
+        <div className="max-w-7xl mx-auto">
+          {sectionContent}
+        </div>
+      </div>
+    );
+  }
+
+  return sectionContent;
 };

@@ -3385,7 +3385,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
             {/* ATTACHED BUYER 3-TAB QUICK-ACTION STRIP FOR PHONE VIEW (ওভারভিউ | প্রজেক্ট | কোর্স) */}
             {viewMode === 'buying' && (activeSubTab === 'my-orders' || activeSubTab === 'my-courses' || activeSubTab === 'overview') && !selectedGig && !isInboxModalOpen && !isNotificationsOpen && (
-              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-2 py-2 border-t border-slate-200 dark:border-slate-800 shadow-xs">
+              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-[#0B132B] text-white px-2 py-2 border-t border-slate-800 shadow-xs">
                 <div className="grid grid-cols-3 gap-1.5 w-full">
                   {/* 1. ওভারভিউ */}
                   <button
@@ -3396,11 +3396,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`py-1.5 px-1.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       orderHubTab === 'overview'
-                        ? 'bg-slate-900 text-white shadow-md'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/80'
+                        ? 'bg-slate-800 text-white shadow-md'
+                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/80'
                     }`}
                   >
-                    <LayoutDashboard className={`w-3.5 h-3.5 shrink-0 ${orderHubTab === 'overview' ? 'text-white' : 'text-slate-500'}`} />
+                    <LayoutDashboard className={`w-3.5 h-3.5 shrink-0 ${orderHubTab === 'overview' ? 'text-white' : 'text-slate-400'}`} />
                     <span className="truncate">ওভারভিউ</span>
                   </button>
 
@@ -3414,7 +3414,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     className={`py-1.5 px-1.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       orderHubTab === 'orders' && activeSubTab !== 'my-courses'
                         ? 'bg-[#1DB954] text-white shadow-md'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/80'
+                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/80'
                     }`}
                   >
                     <ShoppingBag className={`w-3.5 h-3.5 shrink-0 ${orderHubTab === 'orders' && activeSubTab !== 'my-courses' ? 'text-white' : 'text-[#1DB954]'}`} />
@@ -3431,10 +3431,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     className={`py-1.5 px-1.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       orderHubTab === 'courses' || activeSubTab === 'my-courses'
                         ? 'bg-blue-600 text-white shadow-md'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/80'
+                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/80'
                     }`}
                   >
-                    <BookOpen className={`w-3.5 h-3.5 shrink-0 ${orderHubTab === 'courses' || activeSubTab === 'my-courses' ? 'text-white' : 'text-blue-600'}`} />
+                    <BookOpen className={`w-3.5 h-3.5 shrink-0 ${orderHubTab === 'courses' || activeSubTab === 'my-courses' ? 'text-white' : 'text-blue-400'}`} />
                     <span className="truncate">কোর্স ({userEnrollments.length > 0 ? userEnrollments.length : 2})</span>
                   </button>
                 </div>
@@ -3443,7 +3443,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
             {/* ATTACHED SPECIALIST 3-TAB QUICK-ACTION STRIP FOR PHONE VIEW */}
             {viewMode === 'selling' && sellerSubTab !== 'gigs' && sellerSubTab !== 'overview' && !selectedGig && !isInboxModalOpen && !isNotificationsOpen && (
-              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-2 py-2 border-t border-slate-200 dark:border-slate-800 shadow-xs">
+              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-[#0B132B] text-white px-2 py-2 border-t border-slate-800 shadow-xs">
                 <div className="grid grid-cols-3 gap-1.5 w-full">
                   {/* 1. অর্ডার */}
                   <button
@@ -3455,7 +3455,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     className={`py-2 px-1.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       specialistMainTab === 'marketplace' && sellerSubTab === 'orders'
                         ? 'bg-[#1DB954] text-white shadow-md'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/80'
+                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/80'
                     }`}
                   >
                     <ShoppingBag className={`w-3.5 h-3.5 shrink-0 ${specialistMainTab === 'marketplace' && sellerSubTab === 'orders' ? 'text-white' : 'text-[#1DB954]'}`} />
@@ -3472,10 +3472,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     className={`py-2 px-1.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       specialistMainTab === 'payments'
                         ? 'bg-amber-500 text-white shadow-md'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/80'
+                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/80'
                     }`}
                   >
-                    <Wallet className={`w-3.5 h-3.5 shrink-0 ${specialistMainTab === 'payments' ? 'text-white' : 'text-amber-500'}`} />
+                    <Wallet className={`w-3.5 h-3.5 shrink-0 ${specialistMainTab === 'payments' ? 'text-white' : 'text-amber-400'}`} />
                     <span className="truncate">স্টেটমেন্ট</span>
                   </button>
 
@@ -3489,10 +3489,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     className={`py-2 px-1.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       specialistMainTab === 'mentor'
                         ? 'bg-teal-600 text-white shadow-md'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/80'
+                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/80'
                     }`}
                   >
-                    <GraduationCap className={`w-3.5 h-3.5 shrink-0 ${specialistMainTab === 'mentor' ? 'text-white' : 'text-teal-600'}`} />
+                    <GraduationCap className={`w-3.5 h-3.5 shrink-0 ${specialistMainTab === 'mentor' ? 'text-white' : 'text-teal-400'}`} />
                     <span className="truncate">মেন্টর</span>
                   </button>
                 </div>
@@ -3500,9 +3500,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             )}
 
             
-            {/* ATTACHED UNIFIED MESSENGER HEADER FOR PHONE VIEW (CLEAN WHITE FULL-WIDTH WITH SEARCH X & SETTINGS BUTTON) */}
+            {/* ATTACHED UNIFIED MESSENGER HEADER FOR PHONE VIEW */}
             {activeSubTab === 'messenger' && !selectedGig && !isInboxModalOpen && !isNotificationsOpen && (
-              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-3.5 py-2.5 border-t border-slate-200 dark:border-slate-800 shadow-xs">
+              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-[#0B132B] text-white px-3.5 py-2.5 border-t border-slate-800 shadow-xs">
                 {activeMessengerConversationId && activeMessengerUser ? (
                   <div className="flex items-center justify-between w-full animate-in fade-in duration-150 py-0.5">
                     <div className="flex items-center gap-2 min-w-0">
@@ -3513,25 +3513,25 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           setIsMessengerSearchActive(false);
                           setMessengerSearchQuery('');
                         }}
-                        className="p-1 -ml-1 rounded-lg text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer shrink-0"
+                        className="p-1 -ml-1 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer shrink-0"
                         title="ইনবক্সে ফিরে যান"
                       >
-                        <ChevronLeft className="w-5 h-5 text-slate-700 dark:text-slate-200 stroke-[2.5]" />
+                        <ChevronLeft className="w-5 h-5 text-slate-200 stroke-[2.5]" />
                       </button>
                       <div className="relative shrink-0 p-[2px] rounded-full bg-gradient-to-tr from-emerald-400 via-blue-500 to-cyan-400 shadow-xs">
                         <img
                           src={activeMessengerUser.avatar}
                           alt={activeMessengerUser.name}
-                          className="w-8 h-8 rounded-full object-cover border border-white dark:border-slate-800"
+                          className="w-8 h-8 rounded-full object-cover border border-slate-800"
                         />
-                        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#1DB954] border-2 border-white dark:border-slate-800" />
+                        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#1DB954] border-2 border-[#0B132B]" />
                       </div>
                       <div className="min-w-0 flex flex-col justify-center">
                         <div className="flex items-center gap-1">
-                          <h2 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white tracking-tight leading-tight truncate">
+                          <h2 className="text-xs sm:text-sm font-black text-white tracking-tight leading-tight truncate">
                             {activeMessengerUser.name}
                           </h2>
-                          <BadgeCheck className="w-3.5 h-3.5 text-blue-500 shrink-0 fill-blue-500/20" />
+                          <BadgeCheck className="w-3.5 h-3.5 text-blue-400 shrink-0 fill-blue-500/20" />
                         </div>
                         <p className="text-[10px] text-[#1DB954] font-bold leading-none mt-0.5 truncate">
                           Active now
@@ -3545,7 +3545,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           const meetBtn = document.getElementById('messenger-meet-trigger');
                           if (meetBtn) meetBtn.click();
                         }}
-                        className="p-1.5 rounded-full text-blue-600 dark:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1.5 rounded-full text-blue-400 hover:bg-slate-800 transition cursor-pointer"
                         title="ভিডিও কল"
                       >
                         <Video className="w-4.5 h-4.5" />
@@ -3556,7 +3556,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           const phoneBtn = document.getElementById('messenger-phone-trigger');
                           if (phoneBtn) phoneBtn.click();
                         }}
-                        className="p-1.5 rounded-full text-blue-600 dark:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1.5 rounded-full text-blue-400 hover:bg-slate-800 transition cursor-pointer"
                         title="ভয়েস কল"
                       >
                         <PhoneCall className="w-4.5 h-4.5" />
@@ -3573,7 +3573,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         onChange={(e) => setMessengerSearchQuery(e.target.value)}
                         placeholder="সেলার, ক্লায়েন্ট বা সার্ভিস খুঁজুন..."
                         autoFocus
-                        className="w-full pl-8 pr-8 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 rounded-full text-xs focus:outline-none focus:ring-1 focus:ring-[#1DB954]"
+                        className="w-full pl-8 pr-8 py-1.5 bg-slate-800/90 text-white placeholder-slate-400 border border-slate-700 rounded-full text-xs focus:outline-none focus:ring-1 focus:ring-[#1DB954]"
                       />
                       <button
                         type="button"
@@ -3581,7 +3581,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           setIsMessengerSearchActive(false);
                           setMessengerSearchQuery('');
                         }}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white flex items-center justify-center text-xs transition cursor-pointer"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition cursor-pointer"
                         title="সার্চ বন্ধ করুন"
                       >
                         <X className="w-3 h-3" />
@@ -3590,7 +3590,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <button
                       type="button"
                       onClick={() => setIsMessengerSettingsModalOpen(true)}
-                      className="p-1.5 rounded-full text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer shrink-0"
+                      className="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer shrink-0"
                       title="মেসেঞ্জার সেটিংস"
                     >
                       <Settings className="w-4.5 h-4.5" />
@@ -3602,24 +3602,24 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <button
                         type="button"
                         onClick={() => setActiveSubTab('gigs')}
-                        className="p-1 rounded-lg text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer"
                         title="ফিরে যান"
                       >
                         <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
                       </button>
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <h2 className="text-sm font-black text-slate-900 dark:text-white tracking-tight leading-none">Messages</h2>
+                          <h2 className="text-sm font-black text-white tracking-tight leading-none">Messages</h2>
                           <span className="w-2 h-2 rounded-full bg-[#1DB954]" />
                         </div>
-                        <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 tracking-wide leading-tight mt-0.5 font-sans">PTENit Marketplace Inbox</p>
+                        <p className="text-[10px] font-semibold text-slate-400 tracking-wide leading-tight mt-0.5 font-sans">PTENit Marketplace Inbox</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => setIsMessengerSearchActive(true)}
-                        className="p-1.5 rounded-full text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer"
                         title="সার্চ করুন"
                       >
                         <Search className="w-4.5 h-4.5" />
@@ -3627,7 +3627,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <button
                         type="button"
                         onClick={() => setIsMessengerSettingsModalOpen(true)}
-                        className="p-1.5 rounded-full text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer"
                         title="মেসেঞ্জার সেটিংস"
                       >
                         <Settings className="w-4.5 h-4.5" />
@@ -3637,9 +3637,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 )}
               </div>
             )}
-            {/* ATTACHED UNIFIED FAVORITES / SAVED GIGS HEADER FOR PHONE VIEW (CLEAN WHITE FULL-WIDTH WITH SETTINGS BUTTON) */}
+            {/* ATTACHED UNIFIED FAVORITES / SAVED GIGS HEADER FOR PHONE VIEW */}
             {activeSubTab === 'saved_gigs' && !selectedGig && !isInboxModalOpen && !isNotificationsOpen && (
-              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-3.5 py-2.5 border-t border-slate-200 dark:border-slate-800 shadow-xs">
+              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-[#0B132B] text-white px-3.5 py-2.5 border-t border-slate-800 shadow-xs">
                 {isSavedSearchActive ? (
                   <div className="flex items-center gap-2 animate-in fade-in duration-150">
                     <div className="relative flex-1">
@@ -3650,7 +3650,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         onChange={(e) => setSavedSearchQuery(e.target.value)}
                         placeholder="পছন্দের গিগ বা সার্ভিস খুঁজুন..."
                         autoFocus
-                        className="w-full pl-8 pr-8 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 rounded-full text-xs focus:outline-none focus:ring-1 focus:ring-[#1DB954]"
+                        className="w-full pl-8 pr-8 py-1.5 bg-slate-800/90 text-white placeholder-slate-400 border border-slate-700 rounded-full text-xs focus:outline-none focus:ring-1 focus:ring-[#1DB954]"
                       />
                       <button
                         type="button"
@@ -3658,7 +3658,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           setIsSavedSearchActive(false);
                           setSavedSearchQuery('');
                         }}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white flex items-center justify-center text-xs transition cursor-pointer"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition cursor-pointer"
                         title="বন্ধ করুন"
                       >
                         <X className="w-3 h-3" />
@@ -3667,7 +3667,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <button
                       type="button"
                       onClick={() => setIsSavedGigsSettingsModalOpen(true)}
-                      className="p-1.5 rounded-full text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer shrink-0"
+                      className="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer shrink-0"
                       title="সেটিংস ও প্রোফাইল"
                     >
                       <Settings className="w-4.5 h-4.5" />
@@ -3679,14 +3679,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <button
                         type="button"
                         onClick={() => setActiveSubTab('gigs')}
-                        className="p-1 rounded-lg text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer"
                         title="ফিরে যান"
                       >
                         <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
                       </button>
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <h2 className="text-sm font-black text-slate-900 dark:text-white tracking-tight leading-none font-english">Saved Gigs</h2>
+                          <h2 className="text-sm font-black text-white tracking-tight leading-none font-english">Saved Gigs</h2>
                           <span className="w-2 h-2 rounded-full bg-[#1DB954]" />
                           {savedGigIds && savedGigIds.length > 0 && (
                             <span className="min-w-4 h-4 px-1 bg-rose-500 text-white text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-xs">
@@ -3694,7 +3694,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             </span>
                           )}
                         </div>
-                        <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 tracking-wide leading-tight mt-0.5 font-english">
+                        <p className="text-[10px] font-semibold text-slate-400 tracking-wide leading-tight mt-0.5 font-english">
                           PTENit Favorites & Wishlist
                         </p>
                       </div>
@@ -3703,7 +3703,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <button
                         type="button"
                         onClick={() => setIsSavedSearchActive(true)}
-                        className="p-1.5 rounded-full text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer"
                         title="সার্চ করুন"
                       >
                         <Search className="w-4.5 h-4.5" />
@@ -3711,7 +3711,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <button
                         type="button"
                         onClick={() => setIsSavedGigsSettingsModalOpen(true)}
-                        className="p-1.5 rounded-full text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer"
                         title="সেটিংস ও প্রোফাইল"
                       >
                         <Settings className="w-4.5 h-4.5" />

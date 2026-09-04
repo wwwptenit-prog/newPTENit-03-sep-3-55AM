@@ -67,8 +67,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const [mobileAgencyExpanded, setMobileAgencyExpanded] = useState<boolean>(false);
   const [mobileGigsExpanded, setMobileGigsExpanded] = useState<boolean>(false);
 
-  // Top Trending General Gigs (2 rows on PC)
-  const featuredGigs = gigs.slice(0, 8);
+  // Top Trending General Gigs
+  const featuredGigs = gigs.slice(0, 4);
 
   const navigateToGigDetail = (gig: MarketplaceGig) => {
     try {
@@ -392,8 +392,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     );
   }
 
-  // HOME PAGE SECTION VIEW - Show official agency packages (8 on PC for 2 rows of 4)
-  const visibleAgencyServices = allPublishedServices.slice(0, 8);
+  // HOME PAGE SECTION VIEW - Show official agency packages (4 on PC for 1 row of 4)
+  const visibleAgencyServices = allPublishedServices.slice(0, 4);
 
   return (
     <section className="py-8 sm:py-12 bg-slate-50 dark:bg-slate-900/80">
@@ -402,11 +402,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
         {/* SECTION 1: Official Agency Packages */}
         <div className="space-y-6 sm:space-y-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-            <div className="space-y-1 text-center sm:text-left flex flex-col items-center sm:items-start max-w-xl">
-              <h2 className="text-xl sm:text-2xl font-black font-bengali text-slate-900 dark:text-white leading-snug line-clamp-2">
+            <div className="space-y-1.5 text-center sm:text-left flex flex-col items-center sm:items-start">
+              <h2 className="text-2xl sm:text-3xl font-black font-bengali text-slate-900 dark:text-white leading-tight">
                 {t('আমাদের অফিশিয়াল এজেন্সি প্যাকেজসমূহ', 'Our Official Agency Packages')}
               </h2>
-              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-bengali line-clamp-2">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-bengali">
                 {t('PTENit এর গ্যারান্টিযুক্ত সার্ভিস প্যাকেজ।', 'Guaranteed official IT service packages.')}
               </p>
             </div>
@@ -426,14 +426,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                 ) : (
                   <button
                     type="button"
-                    onClick={() => {
-                      if (setActiveTab) {
-                        setActiveTab('marketplace', 'ptenit-services', true);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      } else {
-                        setMobileAgencyExpanded(true);
-                      }
-                    }}
+                    onClick={() => setMobileAgencyExpanded(true)}
                     className="sm:hidden inline-flex items-center gap-1 text-[#1DB954] hover:text-emerald-400 font-bold text-xs transition-all cursor-pointer font-bengali shrink-0 group"
                   >
                     <span>{t('সবগুলো দেখুন →', 'See All →')}</span>
@@ -445,7 +438,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   <button
                     type="button"
                     onClick={() => {
-                      setActiveTab('marketplace', 'ptenit-services', true);
+                      setActiveTab('services');
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                     className="hidden sm:inline-flex items-center gap-1 text-[#1DB954] hover:text-emerald-400 font-bold text-sm hover:underline transition-all cursor-pointer font-bengali shrink-0 group"
@@ -496,11 +489,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
         {/* SECTION 3: Popular Freelance Gigs Row */}
         <div className="space-y-6 pt-8 border-t border-slate-200 dark:border-slate-800">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-            <div className="space-y-1 text-center sm:text-left flex flex-col items-center sm:items-start max-w-xl">
-              <h2 className="text-xl sm:text-2xl font-black font-bengali text-slate-900 dark:text-white leading-snug line-clamp-2">
+            <div className="space-y-1.5 text-center sm:text-left flex flex-col items-center sm:items-start">
+              <h2 className="text-2xl sm:text-3xl font-black font-bengali text-slate-900 dark:text-white leading-tight">
                 {t('জনপ্রিয় গিগ ও ডিজিটাল সার্ভিসসমূহ', 'Popular Gigs & Digital Services')}
               </h2>
-              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-bengali line-clamp-2">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-bengali">
                 {t('PTENit ভেরিফায়েড স্পেশালিস্টদের জনপ্রিয় ফ্রিল্যান্সিং গিগস।', 'Popular freelance gigs and services by verified specialists.')}
               </p>
             </div>
@@ -519,14 +512,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
               ) : (
                 <button
                   type="button"
-                  onClick={() => {
-                    if (setActiveTab) {
-                      setActiveTab('marketplace', 'All');
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    } else {
-                      setMobileGigsExpanded(true);
-                    }
-                  }}
+                  onClick={() => setMobileGigsExpanded(true)}
                   className="sm:hidden inline-flex items-center gap-1 text-[#1DB954] hover:text-emerald-400 font-bold text-xs transition-all cursor-pointer font-bengali shrink-0 group"
                 >
                   <span>{t('সবগুলো দেখুন →', 'See All →')}</span>

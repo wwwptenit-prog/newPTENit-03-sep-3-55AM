@@ -2,7 +2,6 @@ import React from 'react';
 import { Clock, BookOpen, Users, Star, ArrowRight, Tag, CheckCircle2, PlayCircle } from 'lucide-react';
 import { Course } from '../types';
 import { useData } from '../context/DataContext';
-import { getLocalizedCourse, formatLocalizedPrice, formatLocalizedNumber } from '../utils/localization';
 
 interface CourseCardProps {
   course: Course;
@@ -17,21 +16,22 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   onQuickEnroll,
   onStartLearning
 }) => {
-  const { t, currentUser, enrollments, lang } = useData();
-  const loc = getLocalizedCourse(course, lang);
+  const { t, currentUser, enrollments } = useData();
 
   const isEnrolled = currentUser
     ? enrollments.some(e => (e.userId === currentUser.id || (e as any).studentId === currentUser.id) && e.courseId === course.id)
     : false;
 
   return (
-    <div className={`bg-slate-50/80 dark:bg-slate-800/90 rounded-2xl sm:rounded-3xl border ${isEnrolled ? 'border-[#1DB954] shadow-md dark:border-[#1DB954]/60' : 'border-slate-200/90 dark:border-slate-700/80 shadow-xs'} hover:shadow-2xl hover:border-[#1DB954] transition-all duration-300 flex flex-col overflow-hidden group`}>
+    <div className={`bg-white dark:bg-slate-800 rounded-3xl border ${isEnrolled ? 'border-[#1DB954] shadow-md dark:border-[#1DB954]/60' : 'border-slate-200/90 dark:border-slate-700/80 shadow-sm'} hover:shadow-2xl hover:border-[#1DB954] transition-all duration-300 flex flex-col overflow-hidden group`}>
       
       {/* Thumbnail & Badges */}
       <div className="relative aspect-video sm:aspect-video w-full overflow-hidden bg-slate-900">
         <img
           src={course.thumbnail}
-          alt={loc.title}
+          alt={course.title}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
@@ -56,7 +56,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
         {/* Category Badge */}
         <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3">
           <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg bg-black/60 text-slate-200 text-[9px] sm:text-xs font-semibold backdrop-blur-md">
-            {loc.category}
+            {course.category}
           </span>
         </div>
 
@@ -68,11 +68,10 @@ export const CourseCard: React.FC<CourseCardProps> = ({
       </div>
 
       {/* Card Content */}
-      <div className="p-2.5 sm:p-4.5 md:p-5 flex-1 flex flex-col justify-between space-y-2 sm:space-y-3.5">
+      <div className="p-2.5 sm:p-4.5 md:p-5 flex-1 flex flex-col justify-between space-y-2 sm:space-y-4">
         
         <div className="space-y-1">
           <h3
-            title={loc.title}
             onClick={() => {
               if (isEnrolled && onStartLearning) {
                 onStartLearning(course.id);
@@ -80,13 +79,13 @@ export const CourseCard: React.FC<CourseCardProps> = ({
                 onOpenDetail(course.id);
               }
             }}
-            className="text-xs sm:text-sm md:text-base font-bold font-heading text-slate-900 dark:text-white hover:text-[#1DB954] transition-colors cursor-pointer line-clamp-2 leading-snug min-h-[2rem] sm:min-h-[2.5rem] break-words"
+            className="text-xs sm:text-base font-bold font-heading text-slate-900 dark:text-white hover:text-[#1DB954] transition-colors cursor-pointer line-clamp-2 leading-snug min-h-[2rem] sm:min-h-[2.5rem]"
           >
-            {loc.title}
+            {course.title}
           </h3>
 
           <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold font-bengali truncate">
-            {t('ইন্সট্রাক্টর:', 'Instructor:')} <span className="text-slate-700 dark:text-slate-200 font-bold inline-flex items-center gap-1"><span className="truncate">{loc.instructor}</span><CheckCircle2 className="w-3 h-3 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড ইনস্ট্রাক্টর" /></span>
+            {t('ইন্সট্রাক্টর:', 'Instructor:')} <span className="text-slate-700 dark:text-slate-200 font-bold flex items-center gap-1"><span className="truncate">{course.instructor}</span><CheckCircle2 className="w-3 h-3 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড ইনস্ট্রাক্টর" /></span>
           </p>
         </div>
 
@@ -94,15 +93,15 @@ export const CourseCard: React.FC<CourseCardProps> = ({
         <div className="grid grid-cols-3 gap-0.5 sm:gap-1 py-1.5 sm:py-2.5 border-y border-slate-100 dark:border-slate-700/60 text-[9px] sm:text-[11px] text-slate-600 dark:text-slate-300">
           <div className="flex items-center gap-0.5 sm:gap-1 min-w-0">
             <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#1DB954] shrink-0" />
-            <span className="truncate">{loc.duration}</span>
+            <span className="truncate">{course.duration}</span>
           </div>
           <div className="flex items-center gap-0.5 sm:gap-1 justify-center min-w-0">
             <BookOpen className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#1DB954] shrink-0" />
-            <span className="truncate">{formatLocalizedNumber(course.lessonsCount, lang)} {t('ক্লাস', 'Lessons')}</span>
+            <span className="truncate">{course.lessonsCount} {t('ক্লাস', 'L')}</span>
           </div>
           <div className="flex items-center gap-0.5 sm:gap-1 justify-end min-w-0">
             <Users className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#1DB954] shrink-0" />
-            <span className="truncate">{formatLocalizedNumber(course.enrolledCount, lang)}+</span>
+            <span className="truncate">{course.enrolledCount}+</span>
           </div>
         </div>
 
@@ -112,7 +111,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             {isEnrolled ? (
               <span className="text-[11px] sm:text-xs font-black text-[#1DB954] flex items-center gap-1 truncate">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#1DB954] shrink-0" />
-                <span>{t('অ্যাক্টিভ কোর্স', 'Active Course')}</span>
+                <span>অ্যাক্টিভ কোর্স</span>
               </span>
             ) : course.isFree ? (
               <span className="text-[11px] sm:text-base font-black text-emerald-500 dark:text-emerald-400 block truncate leading-tight">
@@ -122,11 +121,11 @@ export const CourseCard: React.FC<CourseCardProps> = ({
               <div className="flex flex-col">
                 {course.discountPrice && (
                   <span className="text-[9px] sm:text-xs text-slate-400 dark:text-slate-500 line-through block leading-tight truncate">
-                    {formatLocalizedPrice(course.price, lang)}
+                    ৳{course.price.toLocaleString('bn-BD')}
                   </span>
                 )}
-                <span className="text-xs sm:text-sm md:text-base font-black text-[#1DB954] block truncate leading-tight">
-                  {formatLocalizedPrice(course.discountPrice || course.price, lang)}
+                <span className="text-xs sm:text-base md:text-lg font-black text-[#1DB954] block truncate leading-tight">
+                  ৳{(course.discountPrice || course.price).toLocaleString('bn-BD')}
                 </span>
               </div>
             )}
@@ -143,7 +142,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
                     onOpenDetail(course.id);
                   }
                 }}
-                className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black text-white bg-[#1DB954] hover:bg-[#19a34a] shadow-xs sm:shadow-md sm:shadow-[#1DB954]/20 transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
+                className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black text-white bg-[#1DB954] hover:bg-[#19a34a] shadow-xs sm:shadow-md sm:shadow-[#1DB954]/20 transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
               >
                 <PlayCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 <span>{t('ক্লাসে যান →', 'Go to Class →')}</span>
@@ -152,7 +151,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
               <button
                 type="button"
                 onClick={() => onOpenDetail(course.id)}
-                className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold text-white bg-[#1DB954] hover:bg-emerald-600 shadow-xs sm:shadow-md sm:shadow-[#1DB954]/20 transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
+                className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold text-white bg-[#1DB954] hover:bg-emerald-600 shadow-xs sm:shadow-md sm:shadow-[#1DB954]/20 transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
               >
                 <span>{t('বিস্তারিত', 'Details')}</span>
                 <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />

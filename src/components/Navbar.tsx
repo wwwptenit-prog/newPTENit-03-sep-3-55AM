@@ -577,39 +577,55 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                   {/* USER PROFILE DROPDOWN MENU */}
                   {userDropdownOpen && (
-                    <div className="absolute right-0 mt-3 w-64 bg-[#0F172A] border border-[#1DB954]/50 rounded-2xl shadow-2xl p-3 z-50 text-slate-100 font-bengali space-y-2.5 divide-y divide-slate-800">
+                    <>
+                      <div 
+                        className="fixed inset-0 z-40 bg-transparent" 
+                        onClick={() => setUserDropdownOpen(false)}
+                      />
+                      <div className="absolute right-0 top-full mt-2 w-60 bg-[#0F172A] border border-slate-700/80 rounded-xl shadow-2xl p-2.5 z-50 text-slate-100 font-bengali space-y-1.5 divide-y divide-slate-800 text-xs">
+                        {/* Close 'X' button for profile menu */}
+                        <button
+                          type="button"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="absolute top-1.5 right-1.5 p-0.5 rounded-md bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700/50 transition cursor-pointer z-10"
+                          title="বন্ধ করুন"
+                          aria-label="Close profile menu"
+                        >
+                          <X className="w-3 h-3 text-slate-300 hover:text-white" />
+                        </button>
+
                       {/* Profile Header Box */}
-                      <div className="p-3 bg-slate-900/90 rounded-xl border border-slate-800 flex items-center gap-3">
+                      <div className="p-2 bg-slate-900/90 rounded-lg border border-slate-800 flex items-center gap-2 pr-6">
                         <img
                           src={currentUser.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
                           alt={currentUser.name}
-                          className="w-11 h-11 rounded-full object-cover border-2 border-[#1DB954] shrink-0"
+                          className="w-8 h-8 rounded-full object-cover border border-[#1DB954] shrink-0"
                         />
                         <div className="min-w-0 flex-1">
-                          <p className="font-extrabold text-white text-xs truncate">{currentUser.name}</p>
-                          <p className="text-[10px] text-slate-400 truncate font-mono">{currentUser.mobile || currentUser.email}</p>
-                          <div className="flex items-center gap-1.5 mt-1">
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/40">
-                              {currentUser.role === 'admin' ? '🛡️ এডমিন একাউন্ট' : currentUser.role === 'instructor' ? '🛠️ স্পেশালিস্ট একাউন্ট' : '💼 গ্রাহক একাউন্ট'}
+                          <p className="font-bold text-white text-xs truncate leading-tight">{currentUser.name}</p>
+                          <p className="text-[9px] text-slate-400 truncate font-mono">{currentUser.mobile || currentUser.email}</p>
+                          <div className="flex items-center gap-1 mt-0.5">
+                            <span className="inline-flex items-center px-1.5 py-0.2 rounded-full text-[8px] font-bold bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/40">
+                              {currentUser.role === 'admin' ? '🛡️ এডমিন' : currentUser.role === 'instructor' ? '🛠️ স্পেশালিস্ট' : '💼 গ্রাহক'}
                             </span>
                           </div>
                         </div>
                       </div>
 
                       {/* Primary Navigation Options */}
-                      <div className="pt-2 space-y-1">
+                      <div className="pt-1.5 space-y-0.5">
                         <button
                           onClick={() => {
                             setActiveTab(getDashboardTab(currentUser.role));
                             setUserDropdownOpen(false);
                           }}
-                          className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-xs font-bold text-slate-200 hover:text-white transition cursor-pointer"
+                          className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-800 text-xs font-semibold text-slate-200 hover:text-white transition cursor-pointer"
                         >
-                          <span className="flex items-center gap-2.5">
+                          <span className="flex items-center gap-2">
                             {getRoleIcon(currentUser.role)}
                             <span>{getDashboardTitle(currentUser.role)}</span>
                           </span>
-                          <span className="text-[10px] text-emerald-400 font-extrabold">ড্যাশবোর্ড</span>
+                          <span className="text-[9px] text-emerald-400 font-extrabold">ড্যাশবোর্ড</span>
                         </button>
 
                         <button
@@ -617,10 +633,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                             setActiveTab('marketplace');
                             setUserDropdownOpen(false);
                           }}
-                          className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-xs font-bold text-slate-200 hover:text-white transition cursor-pointer"
+                          className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-800 text-xs font-semibold text-slate-200 hover:text-white transition cursor-pointer"
                         >
-                          <span className="flex items-center gap-2.5">
-                            <ShoppingBag className="w-4 h-4 text-emerald-400" />
+                          <span className="flex items-center gap-2">
+                            <ShoppingBag className="w-3.5 h-3.5 text-emerald-400" />
                             <span>মার্কেটপ্লেস ও প্রজেক্টস</span>
                           </span>
                         </button>
@@ -630,25 +646,25 @@ export const Navbar: React.FC<NavbarProps> = ({
                             setActiveTab('courses');
                             setUserDropdownOpen(false);
                           }}
-                          className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-xs font-bold text-slate-200 hover:text-white transition cursor-pointer"
+                          className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-800 text-xs font-semibold text-slate-200 hover:text-white transition cursor-pointer"
                         >
-                          <span className="flex items-center gap-2.5">
-                            <BookOpen className="w-4 h-4 text-emerald-400" />
+                          <span className="flex items-center gap-2">
+                            <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
                             <span>আমার লার্নিং ও কোর্সসমূহ</span>
                           </span>
                         </button>
                       </div>
 
                       {/* Settings & Admin Controls */}
-                      <div className="pt-2 space-y-1">
+                      <div className="pt-1.5 space-y-0.5">
                         <button
                           onClick={() => {
                             setActiveTab(getDashboardTab(currentUser.role));
                             setUserDropdownOpen(false);
                           }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white font-bold cursor-pointer transition"
+                          className="w-full flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white font-medium cursor-pointer transition"
                         >
-                          <Settings className="w-4 h-4 text-slate-400" />
+                          <Settings className="w-3.5 h-3.5 text-slate-400" />
                           <span>অ্যাকাউন্ট সেটিংস</span>
                         </button>
 
@@ -658,36 +674,36 @@ export const Navbar: React.FC<NavbarProps> = ({
                               setActiveTab('admin');
                               setUserDropdownOpen(false);
                             }}
-                            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-extrabold border border-amber-500/40 cursor-pointer transition"
+                            className="w-full flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold border border-amber-500/40 cursor-pointer transition"
                           >
-                            <ShieldAlert className="w-4 h-4" />
+                            <ShieldAlert className="w-3.5 h-3.5" />
                             <span>এডমিন কন্ট্রোল সেন্টার</span>
                           </button>
                         )}
 
                         <button
                           onClick={toggleDarkMode}
-                          className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition cursor-pointer"
+                          className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-medium transition cursor-pointer"
                         >
-                          <span className="flex items-center gap-2.5">
-                            {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-300" />}
+                          <span className="flex items-center gap-2">
+                            {darkMode ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-indigo-300" />}
                             <span>{darkMode ? 'লাইট মোড অন করুন' : 'ডার্ক মোড অন করুন'}</span>
                           </span>
-                          <span className="text-[10px] px-2 py-0.5 bg-slate-900 rounded font-black text-emerald-400">
+                          <span className="text-[9px] px-1.5 py-0.2 bg-slate-900 rounded font-black text-emerald-400">
                             {darkMode ? 'DARK' : 'LIGHT'}
                           </span>
                         </button>
 
                         {/* Language Switcher inside Profile Dropdown */}
-                        <div className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition">
-                          <span className="flex items-center gap-2.5">
-                            <Globe className="w-4 h-4 text-emerald-400" />
-                            <span>{lang === 'bn' ? 'ভাষা নির্বাচন' : 'Language'}</span>
+                        <div className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-medium transition">
+                          <span className="flex items-center gap-2">
+                            <Globe className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>{lang === 'bn' ? 'ভাষা' : 'Language'}</span>
                           </span>
-                          <div className="flex items-center bg-slate-900 rounded-lg p-0.5 border border-slate-700">
+                          <div className="flex items-center bg-slate-900 rounded-md p-0.5 border border-slate-700">
                             <button
                               onClick={() => setLang('bn')}
-                              className={`px-2 py-0.5 text-[11px] font-black rounded transition cursor-pointer ${
+                              className={`px-1.5 py-0.2 text-[10px] font-bold rounded transition cursor-pointer ${
                                 lang === 'bn' ? 'bg-[#1DB954] text-white shadow-xs' : 'text-slate-400 hover:text-white'
                               }`}
                             >
@@ -695,7 +711,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             </button>
                             <button
                               onClick={() => setLang('en')}
-                              className={`px-2 py-0.5 text-[11px] font-black rounded transition cursor-pointer ${
+                              className={`px-1.5 py-0.2 text-[10px] font-bold rounded transition cursor-pointer ${
                                 lang === 'en' ? 'bg-[#1DB954] text-white shadow-xs' : 'text-slate-400 hover:text-white'
                               }`}
                             >
@@ -709,83 +725,100 @@ export const Navbar: React.FC<NavbarProps> = ({
                             setActiveTab('contact');
                             setUserDropdownOpen(false);
                           }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white font-bold cursor-pointer transition"
+                          className="w-full flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white font-medium cursor-pointer transition"
                         >
-                          <HelpCircle className="w-4 h-4 text-sky-400" />
+                          <HelpCircle className="w-3.5 h-3.5 text-sky-400" />
                           <span>সাহায্য ও সাপোর্ট</span>
                         </button>
                       </div>
 
                       {/* Logout Action */}
-                      <div className="pt-2">
+                      <div className="pt-1.5">
                         <button
                           onClick={() => {
                             logout();
                             setUserDropdownOpen(false);
                             setActiveTab('home');
                           }}
-                          className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-600 text-rose-300 hover:text-white font-black text-xs border border-rose-500/40 cursor-pointer transition-all shadow-md"
+                          className="w-full flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-600 text-rose-300 hover:text-white font-bold text-xs border border-rose-500/40 cursor-pointer transition-all shadow-xs"
                         >
-                          <LogOut className="w-4 h-4" />
+                          <LogOut className="w-3.5 h-3.5" />
                           <span>{t('লগআউট করুন', 'Logout')}</span>
                         </button>
                       </div>
                     </div>
-                  )}
-                </div>
-              ) : (
-                <div className="relative">
-                  <button
-                    onClick={() => {
-                      setRoleSwitcherOpen(false);
-                      setNavNotifOpen(false);
-                      setNavMsgOpen(false);
-                      setUserDropdownOpen(!userDropdownOpen);
-                    }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-white bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-600 transition cursor-pointer font-bengali shrink-0 shadow-xs"
-                    title={t('প্রোফাইল মেনু ও ভাষা পরিবর্তন', 'Profile Menu & Language')}
-                  >
-                    <UserIcon className="w-4 h-4 text-[#1DB954]" />
-                    <span>{t('প্রোফাইল', 'Profile')}</span>
-                    <ChevronDown className={`w-3.5 h-3.5 text-slate-300 transition-transform ${userDropdownOpen ? 'rotate-180' : ''}`} />
-                  </button>
+                  </>
+                )}
+              </div>
+            ) : (
+              <div className="relative">
+                <button
+                  onClick={() => {
+                    setRoleSwitcherOpen(false);
+                    setNavNotifOpen(false);
+                    setNavMsgOpen(false);
+                    setUserDropdownOpen(!userDropdownOpen);
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-white bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-600 transition cursor-pointer font-bengali shrink-0 shadow-xs"
+                  title={t('প্রোফাইল মেনু ও ভাষা পরিবর্তন', 'Profile Menu & Language')}
+                >
+                  <UserIcon className="w-4 h-4 text-[#1DB954]" />
+                  <span>{t('প্রোফাইল', 'Profile')}</span>
+                  <ChevronDown className={`w-3.5 h-3.5 text-slate-300 transition-transform ${userDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
 
-                  {userDropdownOpen && (
-                    <div className="absolute right-0 mt-3 w-64 bg-[#0F172A] border border-[#1DB954]/50 rounded-2xl shadow-2xl p-3 z-50 text-slate-100 font-bengali space-y-2.5 divide-y divide-slate-800">
-                      <div className="p-3 bg-slate-900/90 rounded-xl border border-slate-800 flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-slate-800 border-2 border-[#1DB954] flex items-center justify-center text-[#1DB954] shrink-0">
-                          <UserIcon className="w-5 h-5" />
+                {userDropdownOpen && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-40 bg-transparent" 
+                      onClick={() => setUserDropdownOpen(false)}
+                    />
+                    <div className="absolute right-0 top-full mt-2 w-60 bg-[#0F172A] border border-slate-700/80 rounded-xl shadow-2xl p-2.5 z-50 text-slate-100 font-bengali space-y-1.5 divide-y divide-slate-800 text-xs">
+                      {/* Close 'X' button */}
+                      <button
+                        type="button"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="absolute top-1.5 right-1.5 p-0.5 rounded-md bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700/50 transition cursor-pointer z-10"
+                        title="বন্ধ করুন"
+                        aria-label="Close profile menu"
+                      >
+                        <X className="w-3 h-3 text-slate-300 hover:text-white" />
+                      </button>
+
+                      <div className="p-2 bg-slate-900/90 rounded-lg border border-slate-800 flex items-center gap-2 pr-6">
+                        <div className="w-8 h-8 rounded-full bg-slate-800 border border-[#1DB954] flex items-center justify-center text-[#1DB954] shrink-0">
+                          <UserIcon className="w-4 h-4" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="font-extrabold text-white text-xs truncate">{t('স্বাগতম অতিথি', 'Welcome Guest')}</p>
-                          <p className="text-[10px] text-slate-400 truncate">{t('লগইন করে ড্যাশবোর্ড দেখুন', 'Sign in to access dashboard')}</p>
+                          <p className="font-bold text-white text-xs truncate">{t('স্বাগতম অতিথি', 'Welcome Guest')}</p>
+                          <p className="text-[9px] text-slate-400 truncate">{t('লগইন করে ড্যাশবোর্ড দেখুন', 'Sign in to access dashboard')}</p>
                         </div>
                       </div>
 
-                      <div className="pt-2 space-y-1">
+                      <div className="pt-1.5 space-y-0.5">
                         <button
                           onClick={() => {
                             setUserDropdownOpen(false);
                             openAuthModal();
                           }}
-                          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs transition cursor-pointer shadow-md"
+                          className="w-full flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs transition cursor-pointer shadow-xs"
                         >
-                          <UserIcon className="w-4 h-4" />
+                          <UserIcon className="w-3.5 h-3.5" />
                           <span>{t('লগইন / রেজিস্টার', 'Login / Register')}</span>
                         </button>
                       </div>
 
-                      <div className="pt-2 space-y-1">
+                      <div className="pt-1.5 space-y-0.5">
                         {/* Language Switcher inside Profile Dropdown */}
-                        <div className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition">
-                          <span className="flex items-center gap-2.5">
-                            <Globe className="w-4 h-4 text-emerald-400" />
-                            <span>{lang === 'bn' ? 'ভাষা নির্বাচন' : 'Language'}</span>
+                        <div className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-medium transition">
+                          <span className="flex items-center gap-2">
+                            <Globe className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>{lang === 'bn' ? 'ভাষা' : 'Language'}</span>
                           </span>
-                          <div className="flex items-center bg-slate-900 rounded-lg p-0.5 border border-slate-700">
+                          <div className="flex items-center bg-slate-900 rounded-md p-0.5 border border-slate-700">
                             <button
                               onClick={() => setLang('bn')}
-                              className={`px-2 py-0.5 text-[11px] font-black rounded transition cursor-pointer ${
+                              className={`px-1.5 py-0.2 text-[10px] font-bold rounded transition cursor-pointer ${
                                 lang === 'bn' ? 'bg-[#1DB954] text-white shadow-xs' : 'text-slate-400 hover:text-white'
                               }`}
                             >
@@ -793,7 +826,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             </button>
                             <button
                               onClick={() => setLang('en')}
-                              className={`px-2 py-0.5 text-[11px] font-black rounded transition cursor-pointer ${
+                              className={`px-1.5 py-0.2 text-[10px] font-bold rounded transition cursor-pointer ${
                                 lang === 'en' ? 'bg-[#1DB954] text-white shadow-xs' : 'text-slate-400 hover:text-white'
                               }`}
                             >
@@ -804,13 +837,13 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                         <button
                           onClick={toggleDarkMode}
-                          className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition cursor-pointer"
+                          className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-medium transition cursor-pointer"
                         >
-                          <span className="flex items-center gap-2.5">
-                            {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-300" />}
+                          <span className="flex items-center gap-2">
+                            {darkMode ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-indigo-300" />}
                             <span>{darkMode ? t('লাইট মোড', 'Light Mode') : t('ডার্ক মোড', 'Dark Mode')}</span>
                           </span>
-                          <span className="text-[10px] px-2 py-0.5 bg-slate-900 rounded font-black text-emerald-400">
+                          <span className="text-[9px] px-1.5 py-0.2 bg-slate-900 rounded font-black text-emerald-400">
                             {darkMode ? 'DARK' : 'LIGHT'}
                           </span>
                         </button>
@@ -820,15 +853,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                             setActiveTab('contact');
                             setUserDropdownOpen(false);
                           }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white font-bold cursor-pointer transition"
+                          className="w-full flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white font-medium cursor-pointer transition"
                         >
-                          <HelpCircle className="w-4 h-4 text-sky-400" />
+                          <HelpCircle className="w-3.5 h-3.5 text-sky-400" />
                           <span>{t('সাহায্য ও সাপোর্ট', 'Help & Support')}</span>
                         </button>
                       </div>
                     </div>
-                  )}
-                </div>
+                  </>
+                )}
+              </div>
               )}
 
               {/* PRIMARY CTA ENROLL BUTTON */}
@@ -908,44 +942,56 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                     {/* MOBILE USER PROFILE POPUP MODAL/DROPDOWN */}
                     {userDropdownOpen && (
-                      <>
+                      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 animate-in fade-in duration-150">
                         <div 
-                          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-2xs" 
+                          className="fixed inset-0 bg-black/60 backdrop-blur-xs" 
                           onClick={() => setUserDropdownOpen(false)}
                         />
-                        <div className="fixed top-14 right-2 left-2 sm:left-auto sm:right-4 z-50 sm:w-72 bg-[#0F172A] border border-[#1DB954]/60 rounded-2xl shadow-2xl p-3.5 text-slate-100 font-bengali space-y-2.5 divide-y divide-slate-800 animate-in fade-in slide-in-from-top-2 max-h-[85vh] overflow-y-auto">
+                        <div className="relative z-10 w-60 max-w-[88vw] bg-[#0F172A] border border-slate-700/80 rounded-xl shadow-2xl p-2 text-slate-100 font-bengali space-y-1.5 divide-y divide-slate-800 text-xs animate-in zoom-in-95 duration-150 max-h-[85vh] overflow-y-auto">
+                          {/* Close 'X' button for mobile profile popup */}
+                          <button
+                            id="mobile-profile-close-btn"
+                            type="button"
+                            onClick={() => setUserDropdownOpen(false)}
+                            className="absolute top-1.5 right-1.5 p-0.5 rounded-md bg-slate-800/90 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700/60 transition-all cursor-pointer z-10 active:scale-90"
+                            title="বন্ধ করুন"
+                            aria-label="Close profile menu"
+                          >
+                            <X className="w-3 h-3 text-slate-300 hover:text-white" />
+                          </button>
+
                           {/* Profile Header Box */}
-                          <div className="p-3 bg-slate-900/95 rounded-xl border border-slate-800 flex items-center gap-3">
+                          <div className="p-2 bg-slate-900/95 rounded-lg border border-slate-800 flex items-center gap-2 pr-6">
                             <img
                               src={currentUser.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
                               alt={currentUser.name}
-                              className="w-10 h-10 rounded-full object-cover border-2 border-[#1DB954] shrink-0"
+                              className="w-8 h-8 rounded-full object-cover border border-[#1DB954] shrink-0"
                             />
                             <div className="min-w-0 flex-1">
-                              <p className="font-extrabold text-white text-xs truncate">{currentUser.name}</p>
-                              <p className="text-[10px] text-slate-400 truncate font-mono">{currentUser.mobile || currentUser.email}</p>
-                              <div className="flex items-center gap-1.5 mt-1">
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/40">
-                                  {currentUser.role === 'admin' ? '🛡️ এডমিন একাউন্ট' : currentUser.role === 'instructor' ? '🛠️ স্পেশালিস্ট একাউন্ট' : '💼 গ্রাহক একাউন্ট'}
+                              <p className="font-bold text-white text-xs truncate leading-tight">{currentUser.name}</p>
+                              <p className="text-[9px] text-slate-400 truncate font-mono">{currentUser.mobile || currentUser.email}</p>
+                              <div className="flex items-center gap-1 mt-0.5">
+                                <span className="inline-flex items-center px-1.5 py-0.2 rounded-full text-[8px] font-bold bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/40">
+                                  {currentUser.role === 'admin' ? '🛡️ এডমিন' : currentUser.role === 'instructor' ? '🛠️ স্পেশালিস্ট' : '💼 গ্রাহক'}
                                 </span>
                               </div>
                             </div>
                           </div>
 
                           {/* Primary Navigation Options */}
-                          <div className="pt-2 space-y-1">
+                          <div className="pt-1.5 space-y-0.5">
                             <button
                               onClick={() => {
                                 setUserDropdownOpen(false);
                                 openMessengerInbox();
                               }}
-                              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-[#0084FF]/10 hover:bg-[#0084FF]/20 border border-[#0084FF]/30 text-xs font-bold text-sky-400 hover:text-white transition cursor-pointer"
+                              className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg bg-[#0084FF]/10 hover:bg-[#0084FF]/20 border border-[#0084FF]/30 text-xs font-semibold text-sky-400 hover:text-white transition cursor-pointer"
                             >
-                              <span className="flex items-center gap-2.5">
-                                <MessageSquare className="w-4 h-4 text-[#0084FF]" />
-                                <span>মেসেঞ্জার ও ইনবক্স (সকল বার্তা)</span>
+                              <span className="flex items-center gap-2">
+                                <MessageSquare className="w-3.5 h-3.5 text-[#0084FF]" />
+                                <span>মেসেঞ্জার ও ইনবক্স</span>
                               </span>
-                              <span className="text-[10px] bg-emerald-500 text-white font-black px-1.5 py-0.5 rounded-full">অনলাইন</span>
+                              <span className="text-[9px] bg-emerald-500 text-white font-bold px-1.5 py-0.2 rounded-full">অনলাইন</span>
                             </button>
 
                             <button
@@ -953,15 +999,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                                 setUserDropdownOpen(false);
                                 openNotificationCenter();
                               }}
-                              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-[#1DB954]/10 hover:bg-[#1DB954]/20 border border-[#1DB954]/30 text-xs font-bold text-[#1DB954] hover:text-white transition cursor-pointer"
+                              className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg bg-[#1DB954]/10 hover:bg-[#1DB954]/20 border border-[#1DB954]/30 text-xs font-semibold text-[#1DB954] hover:text-white transition cursor-pointer"
                             >
-                              <span className="flex items-center gap-2.5">
-                                <Bell className="w-4 h-4 text-[#1DB954]" />
-                                <span>নোটিফিকেশন সেন্টার (সকল নোটিশ)</span>
+                              <span className="flex items-center gap-2">
+                                <Bell className="w-3.5 h-3.5 text-[#1DB954]" />
+                                <span>নোটিফিকেশন</span>
                               </span>
                               {unreadNavNotifCount > 0 && (
-                                <span className="text-[10px] bg-[#1DB954] text-white font-black px-1.5 py-0.5 rounded-full">
-                                  {unreadNavNotifCount} টি নতুন
+                                <span className="text-[9px] bg-[#1DB954] text-white font-bold px-1.5 py-0.2 rounded-full">
+                                  {unreadNavNotifCount}
                                 </span>
                               )}
                             </button>
@@ -971,13 +1017,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                                 setActiveTab(getDashboardTab(currentUser.role));
                                 setUserDropdownOpen(false);
                               }}
-                              className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-xs font-bold text-slate-200 hover:text-white transition cursor-pointer"
+                              className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-800 text-xs font-semibold text-slate-200 hover:text-white transition cursor-pointer"
                             >
-                              <span className="flex items-center gap-2.5">
+                              <span className="flex items-center gap-2">
                                 {getRoleIcon(currentUser.role)}
                                 <span>{getDashboardTitle(currentUser.role)}</span>
                               </span>
-                              <span className="text-[10px] text-emerald-400 font-extrabold">ড্যাশবোর্ড</span>
+                              <span className="text-[9px] text-emerald-400 font-extrabold">ড্যাশবোর্ড</span>
                             </button>
 
                             <button
@@ -985,10 +1031,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                                 setActiveTab('marketplace');
                                 setUserDropdownOpen(false);
                               }}
-                              className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-xs font-bold text-slate-200 hover:text-white transition cursor-pointer"
+                              className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-800 text-xs font-semibold text-slate-200 hover:text-white transition cursor-pointer"
                             >
-                              <span className="flex items-center gap-2.5">
-                                <ShoppingBag className="w-4 h-4 text-emerald-400" />
+                              <span className="flex items-center gap-2">
+                                <ShoppingBag className="w-3.5 h-3.5 text-emerald-400" />
                                 <span>মার্কেটপ্লেস ও প্রজেক্টস</span>
                               </span>
                             </button>
@@ -998,25 +1044,25 @@ export const Navbar: React.FC<NavbarProps> = ({
                                 setActiveTab('courses');
                                 setUserDropdownOpen(false);
                               }}
-                              className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-xs font-bold text-slate-200 hover:text-white transition cursor-pointer"
+                              className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-800 text-xs font-semibold text-slate-200 hover:text-white transition cursor-pointer"
                             >
-                              <span className="flex items-center gap-2.5">
-                                <BookOpen className="w-4 h-4 text-emerald-400" />
+                              <span className="flex items-center gap-2">
+                                <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
                                 <span>আমার লার্নিং ও কোর্সসমূহ</span>
                               </span>
                             </button>
                           </div>
 
                           {/* Settings & Admin Controls */}
-                          <div className="pt-2 space-y-1">
+                          <div className="pt-1.5 space-y-0.5">
                             <button
                               onClick={() => {
                                 setActiveTab(getDashboardTab(currentUser.role));
                                 setUserDropdownOpen(false);
                               }}
-                              className="w-full flex items-center gap-2.5 px-3 py-2 text-xs rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white font-bold cursor-pointer transition"
+                              className="w-full flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white font-medium cursor-pointer transition"
                             >
-                              <Settings className="w-4 h-4 text-slate-400" />
+                              <Settings className="w-3.5 h-3.5 text-slate-400" />
                               <span>অ্যাকাউন্ট সেটিংস</span>
                             </button>
 
@@ -1026,36 +1072,36 @@ export const Navbar: React.FC<NavbarProps> = ({
                                   setActiveTab('admin');
                                   setUserDropdownOpen(false);
                                 }}
-                                className="w-full flex items-center gap-2.5 px-3 py-2 text-xs rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-extrabold border border-amber-500/40 cursor-pointer transition"
+                                className="w-full flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold border border-amber-500/40 cursor-pointer transition"
                               >
-                                <ShieldAlert className="w-4 h-4" />
+                                <ShieldAlert className="w-3.5 h-3.5" />
                                 <span>এডমিন কন্ট্রোল সেন্টার</span>
                               </button>
                             )}
 
                             <button
                               onClick={toggleDarkMode}
-                              className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition cursor-pointer"
+                              className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-medium transition cursor-pointer"
                             >
-                              <span className="flex items-center gap-2.5">
-                                {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-300" />}
+                              <span className="flex items-center gap-2">
+                                {darkMode ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-indigo-300" />}
                                 <span>{darkMode ? 'লাইট মোড অন করুন' : 'ডার্ক মোড অন করুন'}</span>
                               </span>
-                              <span className="text-[10px] px-2 py-0.5 bg-slate-900 rounded font-black text-emerald-400">
+                              <span className="text-[9px] px-1.5 py-0.2 bg-slate-900 rounded font-black text-emerald-400">
                                 {darkMode ? 'DARK' : 'LIGHT'}
                               </span>
                             </button>
 
                             {/* Language Switcher inside Mobile Profile Dropdown */}
-                            <div className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-bold transition">
-                              <span className="flex items-center gap-2.5">
-                                <Globe className="w-4 h-4 text-emerald-400" />
-                                <span>{lang === 'bn' ? 'ভাষা নির্বাচন' : 'Language'}</span>
+                            <div className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-medium transition">
+                              <span className="flex items-center gap-2">
+                                <Globe className="w-3.5 h-3.5 text-emerald-400" />
+                                <span>{lang === 'bn' ? 'ভাষা' : 'Language'}</span>
                               </span>
-                              <div className="flex items-center bg-slate-900 rounded-lg p-0.5 border border-slate-700">
+                              <div className="flex items-center bg-slate-900 rounded-md p-0.5 border border-slate-700">
                                 <button
                                   onClick={() => setLang('bn')}
-                                  className={`px-2 py-0.5 text-[11px] font-black rounded transition cursor-pointer ${
+                                  className={`px-1.5 py-0.2 text-[10px] font-bold rounded transition cursor-pointer ${
                                     lang === 'bn' ? 'bg-[#1DB954] text-white shadow-xs' : 'text-slate-400 hover:text-white'
                                   }`}
                                 >
@@ -1063,7 +1109,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                                 </button>
                                 <button
                                   onClick={() => setLang('en')}
-                                  className={`px-2 py-0.5 text-[11px] font-black rounded transition cursor-pointer ${
+                                  className={`px-1.5 py-0.2 text-[10px] font-bold rounded transition cursor-pointer ${
                                     lang === 'en' ? 'bg-[#1DB954] text-white shadow-xs' : 'text-slate-400 hover:text-white'
                                   }`}
                                 >
@@ -1077,29 +1123,29 @@ export const Navbar: React.FC<NavbarProps> = ({
                                 setActiveTab('contact');
                                 setUserDropdownOpen(false);
                               }}
-                              className="w-full flex items-center gap-2.5 px-3 py-2 text-xs rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white font-bold cursor-pointer transition"
+                              className="w-full flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white font-medium cursor-pointer transition"
                             >
-                              <HelpCircle className="w-4 h-4 text-sky-400" />
+                              <HelpCircle className="w-3.5 h-3.5 text-sky-400" />
                               <span>সাহায্য ও সাপোর্ট</span>
                             </button>
                           </div>
 
                           {/* Logout Action */}
-                          <div className="pt-2">
+                          <div className="pt-1.5">
                             <button
                               onClick={() => {
                                 logout();
                                 setUserDropdownOpen(false);
                                 setActiveTab('home');
                               }}
-                              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-600 text-rose-300 hover:text-white font-black text-xs border border-rose-500/40 cursor-pointer transition-all shadow-md"
+                              className="w-full flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-600 text-rose-300 hover:text-white font-bold text-xs border border-rose-500/40 cursor-pointer transition-all shadow-xs"
                             >
-                              <LogOut className="w-4 h-4" />
+                              <LogOut className="w-3.5 h-3.5" />
                               <span>{t('লগআউট করুন', 'Logout')}</span>
                             </button>
                           </div>
                         </div>
-                      </>
+                      </div>
                     )}
                   </div>
                 ) : activeTab === 'marketplace' && !currentUser ? (

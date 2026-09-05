@@ -545,12 +545,26 @@ export interface MarketplaceProposal {
   status: 'pending' | 'accepted' | 'rejected';
 }
 
+export type DigitalProductDeliveryType = 'canva_auto' | 'file_download' | 'email_whatsapp' | 'auto' | 'manual';
+
 export interface MarketplaceOrder {
   id: string;
   type: 'gig_order' | 'job_order' | 'custom_agency_order' | 'digital_product_order';
   digitalProductId?: string;
+  deliveryType?: DigitalProductDeliveryType;
+  canvaInviteLink?: string;
+  accessUsed?: boolean;
+  accessUsedAt?: string;
+  paymentStatus?: 'pending' | 'verified' | 'failed';
+  deliveryStatus?: 'pending' | 'delivered' | 'processing';
+  downloadToken?: string;
   downloadUrl?: string;
   licenseKey?: string;
+  accessGranted?: boolean;
+  accessGrantedAt?: string;
+  accessDeliveryMethod?: 'whatsapp' | 'email' | 'direct_download' | 'both';
+  customFileUrl?: string;
+  customFileName?: string;
   gigId?: string;
   jobId?: string;
   title: string;
@@ -619,7 +633,9 @@ export interface DigitalProduct {
   thumbnail: string;
   shortDescription: string;
   fullDescription?: string;
-  deliveryType: 'auto' | 'manual';
+  deliveryType: DigitalProductDeliveryType;
+  canvaInviteLink?: string;
+  canvaRules?: string;
   fileFormat: string;
   fileSize: string;
   rating: number;

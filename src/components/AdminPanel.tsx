@@ -62,8 +62,23 @@ import {
   HelpCircle,
   CheckCircle2,
   Sliders,
-  AlertTriangle
+  AlertTriangle,
+  Download,
+  Phone,
+  MessageCircle,
+  Link2,
+  FileUp,
+  Lock,
+  Unlock,
+  Key,
+  Crown
 } from 'lucide-react';
+
+const WhatsAppIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+  </svg>
+);
 
 interface CompanyBillItem {
   id: string;
@@ -79,7 +94,7 @@ interface CompanyBillItem {
   note?: string;
 }
 import { useData } from '../context/DataContext';
-import { MarketplaceOrder, Service } from '../types';
+import { MarketplaceOrder, Service, DigitalProductDeliveryType } from '../types';
 
 interface AdminPanelProps {
   setActiveTab?: (tab: string) => void;
@@ -243,6 +258,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
     deleteOrder,
     deleteJob,
     deleteMarketplaceOrder,
+    updateMarketplaceOrder,
     updateMarketplaceOrderStatus,
     deleteTeacherPayout,
     deleteTeacherNotice,
@@ -475,11 +491,34 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
   const [dpVersion, setDpVersion] = useState('v1.0.0');
   const [dpDownloadUrl, setDpDownloadUrl] = useState('https://drive.google.com');
   const [dpLicenseKey, setDpLicenseKey] = useState('PTEN-PRO-2026-KEY');
-  const [dpDeliveryType, setDpDeliveryType] = useState<'auto' | 'manual'>('auto');
+  const [dpDeliveryType, setDpDeliveryType] = useState<DigitalProductDeliveryType>('canva_auto');
+  const [dpCanvaInviteLink, setDpCanvaInviteLink] = useState('https://www.canva.com/brand/join?token=vip-ptenit-lifetime');
+  const [dpCanvaRules, setDpCanvaRules] = useState('১. আপনার ক্যানভা অ্যাকাউন্টে লগইন অবস্থায় Access Now বাটনে ক্লিক করুন।\n২. এই এক্সেস শুধুমাত্র আপনার ব্যবহারের জন্য বরাদ্দ।');
   const [dpFeaturesText, setDpFeaturesText] = useState('রেসপন্সিভ ডিজাইন, লাইফটাইম আপডেট, ডকুমেন্টেশন অন্তর্ভুক্ত');
   const [dpRequirementsText, setDpRequirementsText] = useState('Node.js 18+ অথবা PHP 8.0+, cPanel হোস্টিং');
   const [dpSearchFilter, setDpSearchFilter] = useState('');
   const [dpCategoryFilter, setDpCategoryFilter] = useState('All');
+
+  // Digital Product Orders & Access Delivery Management
+  const [dpActiveSubTab, setDpActiveSubTab] = useState<'products' | 'orders'>('products');
+  const [dpOrderFilter, setDpOrderFilter] = useState<'all' | 'pending' | 'granted'>('all');
+  const [dpDeliveryTypeFilter, setDpDeliveryTypeFilter] = useState<'all' | 'canva_auto' | 'file_download' | 'email_whatsapp'>('all');
+  const [dpPaymentStatusFilter, setDpPaymentStatusFilter] = useState<'all' | 'pending' | 'verified'>('all');
+  const [dpOrderSearch, setDpOrderSearch] = useState('');
+  const [dpAccessFileModalOrder, setDpAccessFileModalOrder] = useState<MarketplaceOrder | null>(null);
+  const [dpCustomDownloadUrl, setDpCustomDownloadUrl] = useState('');
+  const [dpCustomFileName, setDpCustomFileName] = useState('');
+  const [dpCustomLicenseKey, setDpCustomLicenseKey] = useState('');
+  const [dpCustomAdminNote, setDpCustomAdminNote] = useState('');
+
+  // Editable WhatsApp Message Modal State
+  const [dpWhatsAppModalOrder, setDpWhatsAppModalOrder] = useState<MarketplaceOrder | null>(null);
+  const [dpWhatsAppMessageText, setDpWhatsAppMessageText] = useState('');
+
+  // Editable Email Message Modal State
+  const [dpEmailModalOrder, setDpEmailModalOrder] = useState<MarketplaceOrder | null>(null);
+  const [dpEmailSubject, setDpEmailSubject] = useState('');
+  const [dpEmailBody, setDpEmailBody] = useState('');
 
   const [propClientName, setPropClientName] = useState('Mr. Rahat Karim');
   const [propProjectTitle, setPropProjectTitle] = useState('Social Media Ads & Sales Funnel');
@@ -4738,19 +4777,273 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
           </div>
         )}
 
-        {/* TAB: DIGITAL PRODUCTS & SOFTWARE MANAGEMENT (Admin can Publish, Edit, Delete, Toggle Free) */}
-        {activeAdminTab === 'digital_products' && (
+        {/* TAB: DIGITAL PRODUCTS & SOFTWARE MANAGEMENT (Admin can Publish, Edit, Delete, Toggle Free, Manage Orders & Deliver Access via WhatsApp/Email/File) */}
+        {activeAdminTab === 'digital_products' && (() => {
+          const digitalOrders = marketplaceOrders.filter(o => 
+            o.type === 'digital_product_order' || 
+            Boolean(o.digitalProductId) ||
+            digitalProducts.some(dp => dp.id === o.digitalProductId || dp.title === o.title)
+          );
+          const pendingDigitalOrders = digitalOrders.filter(o => !o.accessGranted && o.status !== 'completed');
+          const grantedDigitalOrders = digitalOrders.filter(o => o.accessGranted || o.status === 'completed');
+
+          const getCanvaInviteLinkForOrder = (order: MarketplaceOrder) => {
+            if (order.canvaInviteLink) return order.canvaInviteLink;
+            const matchedProd = digitalProducts.find(dp => dp.id === order.digitalProductId || dp.title === order.title);
+            return matchedProd?.canvaInviteLink || 'https://www.canva.com/brand/join?token=vip-ptenit-lifetime';
+          };
+
+          const handleOpenWhatsAppModal = (order: MarketplaceOrder) => {
+            const rawPhone = (order.buyerPhone || '').replace(/[^0-9]/g, '');
+            const cleanPhone = rawPhone.length === 11 && rawPhone.startsWith('01') ? '88' + rawPhone : rawPhone;
+            const downloadLink = order.customFileUrl || order.downloadUrl || order.deliveryFileUrl || 'https://drive.google.com';
+            const license = order.licenseKey || 'N/A';
+            const canvaLink = getCanvaInviteLinkForOrder(order);
+            const token = order.downloadToken || `SEC-${order.id.slice(-6).toUpperCase()}`;
+
+            let defaultMsg = '';
+            if (order.deliveryType === 'canva_auto' || order.title.toLowerCase().includes('canva')) {
+              defaultMsg = `আসসালামু আলাইকুম ${order.buyerName || 'সম্মানিত গ্রাহক'},
+PTENit ডিজিটাল স্টোর থেকে আপনার Canva VIP Access কনফার্ম করা হয়েছে!
+
+📦 প্রোডাক্ট: ${order.title}
+💰 ইনভয়েস আইডি: #${order.id}
+⚡ Canva VIP Invite Link: ${canvaLink}
+
+📌 ক্যানভা ব্যবহারের নিয়মাবলী:
+১. আপনার নিজস্ব ক্যানভা অ্যাকাউন্টে লগইন থাকা অবস্থায় উপরের লিংকে ক্লিক করে টিমে যুক্ত হোন।
+২. এই ইনভাইট লিংকটি শুধুমাত্র আপনার জন্য বরাদ্দ। 
+
+যেকোনো টেকনিক্যাল সাপোর্টে আমাদের সাথে এই হোয়াটসঅ্যাপেই কথা বলতে পারেন। ধন্যবাদ!
+PTENit Digital Store`;
+            } else if (order.deliveryType === 'file_download') {
+              defaultMsg = `আসসালামু আলাইকুম ${order.buyerName || 'সম্মানিত গ্রাহক'},
+PTENit ডিজিটাল স্টোর থেকে আপনার অর্ডারটি সফলভাবে ভেরিফাই করা হয়েছে!
+
+📦 প্রোডাক্ট: ${order.title}
+💰 ইনভয়েস আইডি: #${order.id}
+🔐 সিকিউর অ্যাক্সেস টোকেন: ${token}
+📥 সরাসরি ডাউনলোড লিঙ্ক: ${downloadLink}
+${license !== 'N/A' ? `🔑 লাইসেন্স / এক্টিভেশন কি: ${license}\n` : ''}
+ফাইলটি ডাউনলোড করে ব্যবহার শুরু করতে পারেন। যেকোনো প্রয়োজনে মেসেজ দিন।
+PTENit Digital Store`;
+            } else {
+              defaultMsg = `আসসালামু আলাইকুম ${order.buyerName || 'সম্মানিত গ্রাহক'},
+PTENit ডিজিটাল স্টোরে আপনার অর্ডারের অ্যাক্সেস প্রস্তুত করা হয়েছে!
+
+📦 প্রোডাক্ট: ${order.title}
+💰 ইনভয়েস আইডি: #${order.id}
+📥 এক্সেস ও ডাউনলোড লিঙ্ক: ${downloadLink}
+${license !== 'N/A' ? `🔑 লাইসেন্স / এক্টিভেশন কি: ${license}\n` : ''}
+আপনার এক্সেস কার্যকর হয়েছে। যেকোনো সহায়তায় আমাদের জানান। ধন্যবাদ!
+PTENit Digital Store`;
+            }
+
+            setDpWhatsAppModalOrder(order);
+            setDpWhatsAppMessageText(defaultMsg);
+          };
+
+          const handleSendWhatsAppSubmit = () => {
+            if (!dpWhatsAppModalOrder) return;
+            const rawPhone = (dpWhatsAppModalOrder.buyerPhone || '').replace(/[^0-9]/g, '');
+            const cleanPhone = rawPhone.length === 11 && rawPhone.startsWith('01') ? '88' + rawPhone : rawPhone;
+            const waUrl = cleanPhone
+              ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(dpWhatsAppMessageText)}`
+              : `https://wa.me/?text=${encodeURIComponent(dpWhatsAppMessageText)}`;
+
+            window.open(waUrl, '_blank');
+
+            updateMarketplaceOrder(dpWhatsAppModalOrder.id, {
+              accessGranted: true,
+              accessGrantedAt: new Date().toLocaleString('en-BD'),
+              accessDeliveryMethod: 'whatsapp',
+              deliveryStatus: 'delivered',
+              status: 'completed',
+              deliveryNote: `এডমিন কর্তৃক হোয়াটসঅ্যাপে কাস্টমাইজড মেসেজ ও এক্সেস লিংক পাঠানো হয়েছে (${new Date().toLocaleTimeString('en-BD')})`
+            });
+
+            setDpWhatsAppModalOrder(null);
+          };
+
+          const handleOpenEmailModal = (order: MarketplaceOrder) => {
+            const downloadLink = order.customFileUrl || order.downloadUrl || order.deliveryFileUrl || 'https://drive.google.com';
+            const license = order.licenseKey || 'N/A';
+            const canvaLink = getCanvaInviteLinkForOrder(order);
+            const token = order.downloadToken || `SEC-${order.id.slice(-6).toUpperCase()}`;
+
+            let subject = `[PTENit Digital Store] আপনার ডিজিটাল প্রোডাক্ট এক্সেস - #${order.id}`;
+            let body = '';
+
+            if (order.deliveryType === 'canva_auto' || order.title.toLowerCase().includes('canva')) {
+              subject = `[PTENit Digital] আপনার Canva VIP Access লিঙ্ক ও নিয়মাবলী - #${order.id}`;
+              body = `প্রিয় ${order.buyerName || 'গ্রাহক'},
+
+PTENit ডিজিটাল স্টোরে আপনার Canva Pro VIP Access অর্ডারটি সফল হয়েছে। আপনার ক্যানভা টিম এক্সেস লিঙ্ক নিচে দেওয়া হলো:
+
+📦 প্রোডাক্ট: ${order.title}
+🔖 ইনভয়েস আইডি: #${order.id}
+⚡ Canva VIP Invite Link: ${canvaLink}
+
+📌 এক্সেস নেওয়ার নিয়ম:
+১. আপনার ক্যানভা অ্যাকাউন্টে লগইন থাকা অবস্থায় উপরের লিংকে ক্লিক করে আমাদের টিমে জয়েন করুন।
+২. এটি আপনার নিজস্ব ব্যক্তিগত ব্যবহারের জন্য সংরক্ষিত।
+
+যেকোনো প্রয়োজনে আমাদের সাপোর্ট টিমের সাথে হোয়াটসঅ্যাপে বা ইমেইলে যোগাযোগ করতে পারেন।
+
+ধন্যবাদ,
+PTENit ডিজিটাল টিম`;
+            } else if (order.deliveryType === 'file_download') {
+              subject = `[PTENit Digital] আপনার ডাউনলোড ফাইল ও সিকিউর টোকেন - #${order.id}`;
+              body = `প্রিয় ${order.buyerName || 'গ্রাহক'},
+
+PTENit ডিজিটাল স্টোরে আপনার পেমেন্ট ভেরিফাই করা হয়েছে এবং ডাউনলোড লিংক প্রস্তুত রয়েছে:
+
+📦 প্রোডাক্ট: ${order.title}
+🔖 ইনভয়েস আইডি: #${order.id}
+🔐 সিকিউর টোকেন: ${token}
+📥 সরাসরি ডাউনলোড লিঙ্ক: ${downloadLink}
+${license !== 'N/A' ? `🔑 অ্যাক্টিভেশন কি: ${license}\n` : ''}
+
+ধন্যবাদ,
+PTENit ডিজিটাল টিম`;
+            } else {
+              subject = `[PTENit Digital Store] আপনার ডিজিটাল প্রোডাক্ট ডেলিভারি - #${order.id}`;
+              body = `প্রিয় ${order.buyerName || 'গ্রাহক'},
+
+PTENit ডিজিটাল স্টোরে আপনার অর্ডারের অ্যাক্সেস ফাইল ও বিস্তারিত তথ্য:
+
+📦 প্রোডাক্ট: ${order.title}
+🔖 ইনভয়েস আইডি: #${order.id}
+📥 সোর্স কোড / ড্রাইভ লিঙ্ক: ${downloadLink}
+${license !== 'N/A' ? `🔑 লাইসেন্স কি: ${license}\n` : ''}
+
+যেকোনো প্রয়োজনে আমাদের সাথে যোগাযোগ করুন।
+
+ধন্যবাদ,
+PTENit ডিজিটাল টিম`;
+            }
+
+            setDpEmailModalOrder(order);
+            setDpEmailSubject(subject);
+            setDpEmailBody(body);
+          };
+
+          const handleSendEmailSubmit = () => {
+            if (!dpEmailModalOrder) return;
+            const email = dpEmailModalOrder.buyerEmail || '';
+            const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent(dpEmailSubject)}&body=${encodeURIComponent(dpEmailBody)}`;
+            window.open(mailtoUrl, '_blank');
+
+            updateMarketplaceOrder(dpEmailModalOrder.id, {
+              accessGranted: true,
+              accessGrantedAt: new Date().toLocaleString('en-BD'),
+              accessDeliveryMethod: 'email',
+              deliveryStatus: 'delivered',
+              status: 'completed',
+              deliveryNote: `এডমিন কর্তৃক ইমেইলে কাস্টমাইজড এক্সেস তথ্য পাঠানো হয়েছে (${new Date().toLocaleTimeString('en-BD')})`
+            });
+
+            setDpEmailModalOrder(null);
+          };
+
+          const handleTogglePaymentStatus = (order: MarketplaceOrder) => {
+            const willVerify = order.paymentStatus !== 'verified';
+            updateMarketplaceOrder(order.id, {
+              paymentStatus: willVerify ? 'verified' : 'pending',
+              accessGranted: willVerify ? true : order.accessGranted,
+              deliveryNote: willVerify ? `এডমিন কর্তৃক পেমেন্ট ভেরিফাই করা হয়েছে (${new Date().toLocaleTimeString('en-BD')})` : 'পেমেন্ট স্ট্যাটাস পেন্ডিং করা হয়েছে।'
+            });
+          };
+
+          const handleResetCanvaLock = (order: MarketplaceOrder) => {
+            updateMarketplaceOrder(order.id, {
+              accessUsed: false,
+              accessUsedAt: undefined,
+              deliveryNote: `এডমিন কর্তৃক ক্যানভা এক্সেস লক রিসেট করা হয়েছে (${new Date().toLocaleTimeString('en-BD')})`
+            });
+          };
+
+          const handleOpenAccessFileModal = (order: MarketplaceOrder) => {
+            setDpAccessFileModalOrder(order);
+            setDpCustomDownloadUrl(order.customFileUrl || order.downloadUrl || order.deliveryFileUrl || '');
+            setDpCustomFileName(order.customFileName || order.deliveryFileName || `${order.title}.zip`);
+            setDpCustomLicenseKey(order.licenseKey || '');
+            setDpCustomAdminNote(order.deliveryNote || '');
+          };
+
+          const handleSaveOrderFileAndGrant = () => {
+            if (!dpAccessFileModalOrder) return;
+            updateMarketplaceOrder(dpAccessFileModalOrder.id, {
+              customFileUrl: dpCustomDownloadUrl,
+              downloadUrl: dpCustomDownloadUrl,
+              deliveryFileUrl: dpCustomDownloadUrl,
+              customFileName: dpCustomFileName,
+              licenseKey: dpCustomLicenseKey,
+              deliveryNote: dpCustomAdminNote || 'এডমিন ফাইল ও ডাউনলোড লিঙ্ক প্রদান করেছেন।',
+              accessGranted: true,
+              accessGrantedAt: new Date().toLocaleString('en-BD'),
+              status: 'completed'
+            });
+            setDpAccessFileModalOrder(null);
+          };
+
+          const handleToggleOrderAccess = (order: MarketplaceOrder) => {
+            const willGrant = !order.accessGranted;
+            updateMarketplaceOrder(order.id, {
+              accessGranted: willGrant,
+              accessGrantedAt: willGrant ? new Date().toLocaleString('en-BD') : undefined,
+              status: willGrant ? 'completed' : 'pending',
+              deliveryNote: willGrant ? 'এডমিন সরাসরি ডাউনলোড এক্সেস মঞ্জুর করেছেন।' : 'এডমিন কর্তৃক এক্সেস সাময়িকভাবে প্রত্যাহার করা হয়েছে।'
+            });
+          };
+
+          const filteredDigitalOrders = digitalOrders.filter(order => {
+            const matchesFilter = dpOrderFilter === 'all' 
+              ? true 
+              : dpOrderFilter === 'pending' 
+              ? (!order.accessGranted && order.status !== 'completed')
+              : (order.accessGranted || order.status === 'completed');
+
+            const matchesDelivery = dpDeliveryTypeFilter === 'all'
+              ? true
+              : order.deliveryType === dpDeliveryTypeFilter || 
+                (dpDeliveryTypeFilter === 'canva_auto' && order.title.toLowerCase().includes('canva'));
+
+            const matchesPayment = dpPaymentStatusFilter === 'all'
+              ? true
+              : dpPaymentStatusFilter === 'verified'
+              ? (order.paymentStatus === 'verified' || order.amount === 0)
+              : (order.paymentStatus !== 'verified' && order.amount !== 0);
+            
+            const q = dpOrderSearch.toLowerCase();
+            const matchesSearch = !q ||
+              order.id.toLowerCase().includes(q) ||
+              (order.buyerName && order.buyerName.toLowerCase().includes(q)) ||
+              (order.buyerEmail && order.buyerEmail.toLowerCase().includes(q)) ||
+              (order.buyerPhone && order.buyerPhone.includes(q)) ||
+              (order.title && order.title.toLowerCase().includes(q)) ||
+              (order.transactionId && order.transactionId.toLowerCase().includes(q));
+
+            return matchesFilter && matchesDelivery && matchesPayment && matchesSearch;
+          });
+
+          return (
           <div className="space-y-4 font-bengali">
             {/* Header Banner */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5 bg-slate-900 border border-slate-800 p-3.5 sm:p-5 rounded-2xl shadow-lg">
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <Zap className="w-5 h-5 text-[#1DB954]" /> ডিজিটাল প্রোডাক্ট ({digitalProducts.length})
+                    <Zap className="w-5 h-5 text-[#1DB954]" /> ডিজিটাল প্রোডাক্ট ও এক্সেস হাব ({digitalProducts.length})
                   </h2>
+                  {pendingDigitalOrders.length > 0 && (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500 text-slate-950 animate-pulse">
+                      {pendingDigitalOrders.length} টি এক্সেস বাকি!
+                    </span>
+                  )}
                 </div>
                 <p className="text-[11px] text-slate-400">
-                  সফটওয়্যার, স্ক্রিপ্ট ও সোর্স কোড।
+                  সফটওয়্যার, স্ক্রিপ্ট ও সোর্স কোড ক্যাটালগ এবং গ্রাহকদের হোয়াটসঅ্যাপ, ইমেইল বা ফাইলে এক্সেস কন্ট্রোল।
                 </p>
               </div>
 
@@ -4771,7 +5064,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     setDpVersion('v1.0.0');
                     setDpDownloadUrl('https://drive.google.com');
                     setDpLicenseKey('PTEN-PRO-2026-KEY');
-                    setDpDeliveryType('auto');
+                    setDpDeliveryType('canva_auto');
+                    setDpCanvaInviteLink('https://www.canva.com/brand/join?token=vip-ptenit-lifetime');
+                    setDpCanvaRules('১. আপনার ক্যানভা অ্যাকাউন্টে লগইন অবস্থায় Access Now বাটনে ক্লিক করুন।\n২. এই এক্সেস শুধুমাত্র আপনার ব্যবহারের জন্য বরাদ্দ।');
                     setDpFeaturesText('রেসপন্সিভ ডিজাইন, লাইফটাইম আপডেট, ডকুমেন্টেশন অন্তর্ভুক্ত');
                     setDpRequirementsText('Node.js 18+ অথবা PHP 8.0+, cPanel হোস্টিং');
                     setDpModalOpen(true);
@@ -4784,39 +5079,76 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               </div>
             </div>
 
-            {/* Filter & Search Bar */}
-            <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="relative w-full md:w-80">
-                <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="প্রোডাক্ট টাইটেল বা ক্যাটাগরি সার্চ..."
-                  value={dpSearchFilter}
-                  onChange={(e) => setDpSearchFilter(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
-                />
-              </div>
+            {/* Sub-Navigation Tabs */}
+            <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
+              <button
+                type="button"
+                onClick={() => setDpActiveSubTab('products')}
+                className={`px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 cursor-pointer ${
+                  dpActiveSubTab === 'products'
+                    ? 'bg-[#1DB954] text-white shadow-lg shadow-[#1DB954]/20'
+                    : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                }`}
+              >
+                <Zap className="w-4 h-4" />
+                <span>প্রোডাক্ট ক্যাটালগ ও সোর্স ফাইল ({digitalProducts.length})</span>
+              </button>
 
-              {/* Category Filter Chips */}
-              <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none">
-                {['All', 'Scripts & PHP', 'WordPress', 'HTML/React', 'Mobile App', 'Software', 'Plugins'].map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => setDpCategoryFilter(cat)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
-                      dpCategoryFilter === cat
-                        ? 'bg-[#1DB954] text-white shadow-md'
-                        : 'bg-slate-950 text-slate-300 hover:bg-slate-800 border border-slate-800'
-                    }`}
-                  >
-                    {cat === 'All' ? 'সকল আইটেম' : cat}
-                  </button>
-                ))}
-              </div>
+              <button
+                type="button"
+                onClick={() => setDpActiveSubTab('orders')}
+                className={`px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 cursor-pointer relative ${
+                  dpActiveSubTab === 'orders'
+                    ? 'bg-[#1DB954] text-white shadow-lg shadow-[#1DB954]/20'
+                    : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                }`}
+              >
+                <ShoppingBag className="w-4 h-4" />
+                <span>কাস্টমার অর্ডার ও এক্সেস কন্ট্রোল ({digitalOrders.length})</span>
+                {pendingDigitalOrders.length > 0 && (
+                  <span className="px-1.5 py-0.5 rounded-full text-[10px] font-black bg-amber-500 text-slate-950">
+                    {pendingDigitalOrders.length}
+                  </span>
+                )}
+              </button>
             </div>
 
-            {/* Digital Products Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            {/* SUB-TAB 1: PRODUCTS CATALOG & SOURCE CODE */}
+            {dpActiveSubTab === 'products' && (
+              <>
+                {/* Filter & Search Bar */}
+                <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div className="relative w-full md:w-80">
+                    <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
+                    <input
+                      type="text"
+                      placeholder="প্রোডাক্ট টাইটেল বা ক্যাটাগরি সার্চ..."
+                      value={dpSearchFilter}
+                      onChange={(e) => setDpSearchFilter(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                    />
+                  </div>
+
+                  {/* Category Filter Chips */}
+                  <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none">
+                    {['All', 'Scripts & PHP', 'WordPress', 'HTML/React', 'Mobile App', 'Software', 'Plugins'].map(cat => (
+                      <button
+                        key={cat}
+                        onClick={() => setDpCategoryFilter(cat)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                          dpCategoryFilter === cat
+                            ? 'bg-[#1DB954] text-white shadow-md'
+                            : 'bg-slate-950 text-slate-300 hover:bg-slate-800 border border-slate-800'
+                        }`}
+                      >
+                        {cat === 'All' ? 'সকল আইটেম' : cat}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Digital Products Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
               {digitalProducts
                 .filter(p => {
                   const matchCat = dpCategoryFilter === 'All' || p.category === dpCategoryFilter;
@@ -4918,7 +5250,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                           setDpVersion(product.version || 'v1.0.0');
                           setDpDownloadUrl(product.downloadUrl || '');
                           setDpLicenseKey(product.licenseKey || '');
-                          setDpDeliveryType(product.deliveryType || 'auto');
+                          setDpDeliveryType(product.deliveryType || 'canva_auto');
+                          setDpCanvaInviteLink(product.canvaInviteLink || 'https://www.canva.com/brand/join?token=vip-ptenit-lifetime');
+                          setDpCanvaRules(product.canvaRules || '১. আপনার ক্যানভা অ্যাকাউন্টে লগইন অবস্থায় Access Now বাটনে ক্লিক করুন।\n২. এই এক্সেস শুধুমাত্র আপনার ব্যবহারের জন্য বরাদ্দ।');
                           setDpFeaturesText(product.features ? product.features.join(', ') : '');
                           setDpRequirementsText(product.requirements ? product.requirements.join(', ') : '');
                           setDpModalOpen(true);
@@ -4943,7 +5277,512 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     </div>
                   </div>
                 ))}
-            </div>
+                </div>
+              </>
+            )}
+
+            {/* SUB-TAB 2: CUSTOMER ORDERS & ACCESS DELIVERY HUB */}
+            {dpActiveSubTab === 'orders' && (
+              <div className="space-y-4">
+                {/* Metrics Row */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl">
+                    <span className="text-[11px] text-slate-400 font-bold block">মোট ডিজিটাল অর্ডার</span>
+                    <span className="text-xl font-black text-white">{digitalOrders.length}</span>
+                  </div>
+                  <div className="bg-slate-900 border border-amber-500/30 p-3.5 rounded-2xl bg-amber-500/5">
+                    <span className="text-[11px] text-amber-400 font-bold block flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5" /> এক্সেস অপেক্ষমান
+                    </span>
+                    <span className="text-xl font-black text-amber-400">{pendingDigitalOrders.length}</span>
+                  </div>
+                  <div className="bg-slate-900 border border-emerald-500/30 p-3.5 rounded-2xl bg-emerald-500/5">
+                    <span className="text-[11px] text-emerald-400 font-bold block flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> এক্সেস দেওয়া হয়েছে
+                    </span>
+                    <span className="text-xl font-black text-emerald-400">{grantedDigitalOrders.length}</span>
+                  </div>
+                  <div className="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl">
+                    <span className="text-[11px] text-slate-400 font-bold block">মোট বিক্রয় ভলিউম</span>
+                    <span className="text-xl font-black text-[#1DB954]">
+                      ৳{digitalOrders.reduce((sum, o) => sum + (o.amount || 0), 0).toLocaleString('bn-BD')}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Filter & Search Bar */}
+                <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div className="relative w-full md:w-80">
+                    <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
+                    <input
+                      type="text"
+                      placeholder="নাম, ইমেইল, মোবাইল, ইনভয়েস আইডি বা সফটওয়্যার সার্চ..."
+                      value={dpOrderSearch}
+                      onChange={(e) => setDpOrderSearch(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                    />
+                  </div>
+
+                  {/* Status Filter Chips */}
+                  <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
+                    <button
+                      type="button"
+                      onClick={() => setDpOrderFilter('all')}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        dpOrderFilter === 'all'
+                          ? 'bg-[#1DB954] text-white shadow-md'
+                          : 'bg-slate-950 text-slate-300 hover:bg-slate-800 border border-slate-800'
+                      }`}
+                    >
+                      সকল অর্ডার ({digitalOrders.length})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDpOrderFilter('pending')}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        dpOrderFilter === 'pending'
+                          ? 'bg-amber-500 text-slate-950 shadow-md font-black'
+                          : 'bg-slate-950 text-slate-300 hover:bg-slate-800 border border-slate-800'
+                      }`}
+                    >
+                      ⏳ এক্সেস বাকি ({pendingDigitalOrders.length})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDpOrderFilter('granted')}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        dpOrderFilter === 'granted'
+                          ? 'bg-emerald-600 text-white shadow-md'
+                          : 'bg-slate-950 text-slate-300 hover:bg-slate-800 border border-slate-800'
+                      }`}
+                    >
+                      🟢 এক্সেস সম্পন্ন ({grantedDigitalOrders.length})
+                    </button>
+                  </div>
+                </div>
+
+                {/* Secondary Filters: Delivery System & Payment Verification */}
+                <div className="bg-slate-900 border border-slate-800 p-3 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[11px] text-slate-400 font-bold">ডেলিভারি মোড:</span>
+                    <button
+                      type="button"
+                      onClick={() => setDpDeliveryTypeFilter('all')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition ${
+                        dpDeliveryTypeFilter === 'all'
+                          ? 'bg-slate-800 text-white shadow'
+                          : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
+                      }`}
+                    >
+                      সকল ({digitalOrders.length})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDpDeliveryTypeFilter('canva_auto')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition flex items-center gap-1 ${
+                        dpDeliveryTypeFilter === 'canva_auto'
+                          ? 'bg-amber-500 text-slate-950 shadow font-black'
+                          : 'bg-slate-950 text-amber-400 hover:text-amber-300 border border-slate-800'
+                      }`}
+                    >
+                      <Crown className="w-3 h-3" /> Auto Canva
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDpDeliveryTypeFilter('file_download')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition flex items-center gap-1 ${
+                        dpDeliveryTypeFilter === 'file_download'
+                          ? 'bg-blue-600 text-white shadow font-black'
+                          : 'bg-slate-950 text-blue-400 hover:text-blue-300 border border-slate-800'
+                      }`}
+                    >
+                      <Download className="w-3 h-3" /> File Download
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDpDeliveryTypeFilter('email_whatsapp')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition flex items-center gap-1 ${
+                        dpDeliveryTypeFilter === 'email_whatsapp'
+                          ? 'bg-purple-600 text-white shadow font-black'
+                          : 'bg-slate-950 text-purple-400 hover:text-purple-300 border border-slate-800'
+                      }`}
+                    >
+                      <Mail className="w-3 h-3" /> Email + WA
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 flex-wrap sm:ml-auto">
+                    <span className="text-[11px] text-slate-400 font-bold">পেমেন্ট স্ট্যাটাস:</span>
+                    <button
+                      type="button"
+                      onClick={() => setDpPaymentStatusFilter('all')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition ${
+                        dpPaymentStatusFilter === 'all'
+                          ? 'bg-slate-800 text-white'
+                          : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
+                      }`}
+                    >
+                      সকল
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDpPaymentStatusFilter('pending')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition flex items-center gap-1 ${
+                        dpPaymentStatusFilter === 'pending'
+                          ? 'bg-amber-500 text-slate-950 font-black'
+                          : 'bg-slate-950 text-amber-400 border border-slate-800'
+                      }`}
+                    >
+                      <Clock className="w-3 h-3" /> পেন্ডিং
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDpPaymentStatusFilter('verified')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition flex items-center gap-1 ${
+                        dpPaymentStatusFilter === 'verified'
+                          ? 'bg-emerald-600 text-white font-black'
+                          : 'bg-slate-950 text-emerald-400 border border-slate-800'
+                      }`}
+                    >
+                      <CheckCircle2 className="w-3 h-3" /> ভেরিফাইড
+                    </button>
+                  </div>
+                </div>
+
+                {/* Orders List */}
+                {filteredDigitalOrders.length === 0 ? (
+                  <div className="p-8 text-center bg-slate-900 border border-slate-800 rounded-2xl text-slate-400 space-y-2">
+                    <ShoppingBag className="w-10 h-10 mx-auto text-slate-600" />
+                    <p className="text-sm font-bold">কোনো ডিজিটাল প্রোডাক্ট অর্ডার পাওয়া যায়নি</p>
+                    <p className="text-xs text-slate-500">গ্রাহকরা ডিজিটাল প্রোডাক্ট অর্ডার করলে তাদের তথ্য ও এক্সেস বোতাম এখানে প্রদর্শিত হবে।</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3.5">
+                    {filteredDigitalOrders.map((order) => {
+                      const activeDownloadUrl = order.customFileUrl || order.downloadUrl || order.deliveryFileUrl;
+                      const isCanva = order.deliveryType === 'canva_auto' || order.title.toLowerCase().includes('canva');
+                      const isVerified = order.paymentStatus === 'verified' || order.amount === 0;
+
+                      return (
+                        <div
+                          key={order.id}
+                          className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-4 shadow-lg hover:border-slate-700 transition"
+                        >
+                          {/* Card Header */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-mono font-bold text-xs bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 text-[#1DB954]">
+                                #{order.id}
+                              </span>
+
+                              {/* Delivery Type Badge */}
+                              {isCanva ? (
+                                <span className="text-[10px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                                  <Crown className="w-3 h-3" /> ⚡ Auto Canva
+                                </span>
+                              ) : order.deliveryType === 'file_download' ? (
+                                <span className="text-[10px] bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                                  <Download className="w-3 h-3" /> 📁 File Download
+                                </span>
+                              ) : (
+                                <span className="text-[10px] bg-purple-500/20 text-purple-400 border border-purple-500/30 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                                  <Mail className="w-3 h-3" /> ✉️ Email + WA
+                                </span>
+                              )}
+
+                              <span className="text-[11px] text-slate-400">
+                                তারিখ: {order.createdAt}
+                              </span>
+                              <span className="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-bold">
+                                {order.category}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-2 flex-wrap">
+                              {/* Payment Verification Status Toggle Button */}
+                              <button
+                                type="button"
+                                onClick={() => handleTogglePaymentStatus(order)}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer border ${
+                                  isVerified
+                                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30'
+                                    : 'bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30 animate-pulse'
+                                }`}
+                                title={isVerified ? 'পেমেন্ট ভেরিফাইড (পুনরায় পেন্ডিং করতে ক্লিক করুন)' : 'পেমেন্ট পেন্ডিং (ভেরিফাই করতে ক্লিক করুন)'}
+                              >
+                                {isVerified ? (
+                                  <>
+                                    <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                                    <span>ভেরিফাইড পেমেন্ট</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Clock className="w-3.5 h-3.5 text-amber-400" />
+                                    <span>ভেরিফাই করুন ⚡</span>
+                                  </>
+                                )}
+                              </button>
+
+                              <span className="text-sm font-black text-emerald-400">
+                                ৳{order.amount ? order.amount.toLocaleString('bn-BD') : 'ফ্রি'}
+                              </span>
+                              <span className="text-[11px] bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-slate-300 font-mono">
+                                {order.paymentMethod}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Info Grid */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            {/* Product Info */}
+                            <div className="space-y-2 bg-slate-950 p-3.5 rounded-xl border border-slate-800/80">
+                              <span className="text-[10px] font-bold text-slate-500 block uppercase tracking-wider">
+                                প্রোডাক্ট ও এক্সেস তথ্য
+                              </span>
+                              <h4 className="font-black text-white text-sm">
+                                {order.title}
+                              </h4>
+
+                              <div className="space-y-1 text-[11px]">
+                                {order.downloadToken && (
+                                  <div className="flex items-center justify-between gap-2">
+                                    <span className="text-slate-400">সিকিউর ডাউনলোড টোকেন:</span>
+                                    <code className="text-blue-400 font-mono text-[10px] bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                                      {order.downloadToken}
+                                    </code>
+                                  </div>
+                                )}
+
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-slate-400">ডাউনলোড ফাইল লিঙ্ক:</span>
+                                  {activeDownloadUrl ? (
+                                    <a
+                                      href={activeDownloadUrl}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="text-[#1DB954] hover:underline font-mono truncate max-w-[200px] flex items-center gap-1"
+                                      title={activeDownloadUrl}
+                                    >
+                                      <Download className="w-3.5 h-3.5 shrink-0" />
+                                      <span className="truncate">{order.customFileName || 'সরাসরি ড্রাইভ লিঙ্ক'}</span>
+                                      <ExternalLink className="w-3 h-3 shrink-0" />
+                                    </a>
+                                  ) : (
+                                    <span className="text-amber-400 font-bold flex items-center gap-1">
+                                      <AlertTriangle className="w-3 h-3" />
+                                      <span>ফাইল সেট করা হয়নি</span>
+                                    </span>
+                                  )}
+                                </div>
+
+                                {order.licenseKey && (
+                                  <div className="flex items-center justify-between gap-2">
+                                    <span className="text-slate-400">লাইসেন্স কি:</span>
+                                    <code className="text-amber-400 font-mono text-[10px] bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                                      {order.licenseKey}
+                                    </code>
+                                  </div>
+                                )}
+
+                                {order.deliveryNote && (
+                                  <div className="text-slate-400 pt-1 text-[10px] border-t border-slate-900">
+                                    নোট: <span className="text-slate-300">{order.deliveryNote}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Customer Info */}
+                            <div className="space-y-2 bg-slate-950 p-3.5 rounded-xl border border-slate-800/80">
+                              <span className="text-[10px] font-bold text-slate-500 block uppercase tracking-wider">
+                                গ্রাহক ও পেমেন্ট বিবরণ
+                              </span>
+                              <div className="space-y-1.5 text-[11px]">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-slate-400">গ্রাহকের নাম:</span>
+                                  <span className="text-white font-bold">{order.buyerName}</span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-slate-400">ইমেইল:</span>
+                                  <a
+                                    href={`mailto:${order.buyerEmail}`}
+                                    className="text-blue-400 hover:underline font-mono"
+                                  >
+                                    {order.buyerEmail}
+                                  </a>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-slate-400">মোবাইল / WhatsApp:</span>
+                                  <a
+                                    href={`https://wa.me/${(order.buyerPhone || '').replace(/[^0-9]/g, '')}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-[#25D366] hover:underline font-mono font-bold flex items-center gap-1"
+                                  >
+                                    <WhatsAppIcon className="w-3 h-3" />
+                                    <span>{order.buyerPhone || 'N/A'}</span>
+                                  </a>
+                                </div>
+                                {order.transactionId && (
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-slate-400">TrxID:</span>
+                                    <span className="text-emerald-400 font-mono font-bold">{order.transactionId}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Canva Specific Live Status Card */}
+                          {isCanva && (
+                            <div className="p-3 bg-gradient-to-r from-amber-500/10 via-slate-950 to-slate-900 border border-amber-500/30 rounded-xl space-y-2 text-xs">
+                              <div className="flex items-center justify-between gap-2 flex-wrap">
+                                <span className="text-amber-400 font-bold flex items-center gap-1.5">
+                                  <Crown className="w-4 h-4 text-amber-400" />
+                                  <span>Canva VIP Team Invite Link & Access Lock Status:</span>
+                                </span>
+
+                                {order.accessUsed ? (
+                                  <div className="flex items-center gap-2">
+                                    <span className="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold text-[10px] flex items-center gap-1">
+                                      <Lock className="w-3 h-3 text-rose-400" />
+                                      <span>Access Locked (১ বার ব্যবহৃত - {order.accessUsedAt || 'ক্লিক সম্পন্ন'})</span>
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleResetCanvaLock(order)}
+                                      className="px-2 py-0.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black rounded text-[10px] cursor-pointer flex items-center gap-1 transition active:scale-95"
+                                      title="গ্রাহকের জন্য এক্সেস লক রিসেট করুন যাতে সে আবার Access Now চাপতে পারে"
+                                    >
+                                      <RefreshCw className="w-3 h-3" /> আনলক / রিসেট
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold text-[10px] flex items-center gap-1">
+                                    <Unlock className="w-3 h-3 text-emerald-400" />
+                                    <span>Access Unlocked (১-ক্লিক ব্যবহারের অপেক্ষায়)</span>
+                                  </span>
+                                )}
+                              </div>
+
+                              <div className="flex items-center gap-2">
+                                <code className="text-[#1DB954] font-mono text-[11px] truncate flex-1 bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800">
+                                  {getCanvaInviteLinkForOrder(order)}
+                                </code>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(getCanvaInviteLinkForOrder(order));
+                                    alert('Canva Invite Link কপি করা হয়েছে!');
+                                  }}
+                                  className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-bold shrink-0 cursor-pointer flex items-center gap-1"
+                                >
+                                  <Copy className="w-3.5 h-3.5" /> কপি লিংক
+                                </button>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Access Status Banner */}
+                          {order.accessGranted ? (
+                            <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-between gap-2 text-xs flex-wrap">
+                              <div className="flex items-center gap-2 text-emerald-400 font-bold">
+                                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                                <span>
+                                  এক্সেস সক্রিয়! গ্রাহক ফাইলটি ডাউনলোড বা লিংক অ্যাক্সেস করতে পারবেন। (মাধ্যম: {
+                                    order.accessDeliveryMethod === 'whatsapp' ? 'হোয়াটসঅ্যাপ' : 
+                                    order.accessDeliveryMethod === 'email' ? 'ইমেইল' : 
+                                    order.accessDeliveryMethod === 'both' ? 'হোয়াটসঅ্যাপ ও ইমেইল' : 'ড্রাইভ / অটো এক্সেস'
+                                  })
+                                </span>
+                              </div>
+                              {order.accessGrantedAt && (
+                                <span className="text-[10px] text-slate-400 font-mono">
+                                  প্রদান: {order.accessGrantedAt}
+                                </span>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-between gap-2 text-xs animate-pulse">
+                              <div className="flex items-center gap-2 text-amber-400 font-bold">
+                                <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+                                <span>
+                                  এক্সেস অপেক্ষমান! নিচের বাটন দিয়ে হোয়াটসঅ্যাপ বা ইমেইলে মেসেজ সহ অ্যাক্সেস পাঠান।
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Action Buttons Hub */}
+                          <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-slate-800/80">
+                            {/* WhatsApp Access Button (Opens Editable WhatsApp Composer Modal) */}
+                            <button
+                              type="button"
+                              onClick={() => handleOpenWhatsAppModal(order)}
+                              className="py-2 px-3 rounded-xl bg-[#25D366] hover:bg-emerald-600 text-white font-black text-xs flex items-center gap-1.5 shadow-md transition active:scale-95 cursor-pointer"
+                              title="গ্রাহকের হোয়াটসঅ্যাপে এডিটেবল মেসেজ ও এক্সেস লিংক পাঠান"
+                            >
+                              <WhatsAppIcon className="w-3.5 h-3.5" />
+                              <span>হোয়াটসঅ্যাপে মেসেজ পাঠান</span>
+                            </button>
+
+                            {/* Email Access Button (Opens Editable Email Composer Modal) */}
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEmailModal(order)}
+                              className="py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs flex items-center gap-1.5 shadow-md transition active:scale-95 cursor-pointer"
+                              title="গ্রাহকের ইমেইলে এডিটেবল কাস্টম মেসেজ ও এক্সেস পাঠান"
+                            >
+                              <Mail className="w-3.5 h-3.5" />
+                              <span>ইমেইলে এক্সেস পাঠান</span>
+                            </button>
+
+                            {/* Attach File / Drive URL Button */}
+                            <button
+                              type="button"
+                              onClick={() => handleOpenAccessFileModal(order)}
+                              className="py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-md transition active:scale-95 cursor-pointer"
+                              title="এই অর্ডারের জন্য নির্দিষ্ট গুগল ড্রাইভ লিঙ্ক বা সোর্স ফাইল সেট করুন"
+                            >
+                              <Paperclip className="w-3.5 h-3.5" />
+                              <span>ফাইল বা ড্রাইভ লিঙ্ক দিন</span>
+                            </button>
+
+                            {/* Toggle Access Switch */}
+                            <button
+                              type="button"
+                              onClick={() => handleToggleOrderAccess(order)}
+                              className={`py-2 px-3 rounded-xl font-bold text-xs flex items-center gap-1.5 border transition cursor-pointer ${
+                                order.accessGranted
+                                  ? 'bg-slate-800 hover:bg-rose-950/40 text-rose-300 border-rose-500/30'
+                                  : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/40'
+                              }`}
+                            >
+                              {order.accessGranted ? <XCircle className="w-3.5 h-3.5" /> : <CheckCircle className="w-3.5 h-3.5" />}
+                              <span>{order.accessGranted ? 'এক্সেস বন্ধ করুন' : 'এক্সেস অনুমোদন করুন'}</span>
+                            </button>
+
+                            {/* Delete Order */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (window.confirm(`আপনি কি অর্ডার #${order.id} মুছে ফেলতে চান?`)) {
+                                  deleteMarketplaceOrder(order.id);
+                                }
+                              }}
+                              className="p-2 bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 rounded-xl border border-slate-700 transition cursor-pointer ml-auto"
+                              title="অর্ডার ডিলিট করুন"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Add / Edit Digital Product Modal */}
             {dpModalOpen && (
@@ -4987,6 +5826,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                           downloadUrl: dpDownloadUrl,
                           licenseKey: dpLicenseKey,
                           deliveryType: dpDeliveryType,
+                          canvaInviteLink: dpDeliveryType === 'canva_auto' ? dpCanvaInviteLink : undefined,
+                          canvaRules: dpDeliveryType === 'canva_auto' ? dpCanvaRules : undefined,
                           features: featArr,
                           requirements: reqArr
                         });
@@ -5005,6 +5846,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                           downloadUrl: dpDownloadUrl,
                           licenseKey: dpLicenseKey,
                           deliveryType: dpDeliveryType,
+                          canvaInviteLink: dpDeliveryType === 'canva_auto' ? dpCanvaInviteLink : undefined,
+                          canvaRules: dpDeliveryType === 'canva_auto' ? dpCanvaRules : undefined,
                           features: featArr,
                           requirements: reqArr,
                           rating: 5.0,
@@ -5022,7 +5865,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                         required
                         value={dpTitle}
                         onChange={(e) => setDpTitle(e.target.value)}
-                        placeholder="e.g. Courier & Parcel Delivery Web Portal Script"
+                        placeholder="e.g. Canva Pro VIP Team Access / Web Script"
                         className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
                       />
                     </div>
@@ -5045,17 +5888,63 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                       </div>
 
                       <div>
-                        <label className="text-xs font-bold text-slate-300 block mb-1">ইমেইল ডেলিভারি মোড</label>
+                        <label className="text-xs font-bold text-amber-400 block mb-1">ডেলিভারি সিস্টেম মোড (Delivery System) *</label>
                         <select
                           value={dpDeliveryType}
                           onChange={(e) => setDpDeliveryType(e.target.value as any)}
-                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-amber-500/50 rounded-xl text-xs text-white focus:outline-none focus:border-[#1DB954]"
                         >
-                          <option value="auto">⚡ অটোমেটিক ইনস্ট্যান্ট ইমেইল ডেলিভারি</option>
-                          <option value="manual">📩 ম্যানুয়াল কাস্টমার সাপোর্ট ডেলিভারি</option>
+                          <option value="canva_auto">⚡ Auto Canva Access (১-বার ব্যবহারযোগ্য লিংক)</option>
+                          <option value="file_download">📁 Information → File Download (ভেরিফাইড ডাউনলোড)</option>
+                          <option value="email_whatsapp">✉️ Email + WhatsApp Delivery (এডমিন মেসেজ সহ)</option>
                         </select>
                       </div>
                     </div>
+
+                    {/* Canva Setup Box (shown when deliveryType === 'canva_auto') */}
+                    {dpDeliveryType === 'canva_auto' && (
+                      <div className="p-4 bg-gradient-to-br from-amber-500/10 via-slate-900 to-emerald-500/10 rounded-2xl border border-amber-500/30 space-y-3">
+                        <div className="flex items-center gap-2 text-amber-400 font-bold text-xs">
+                          <Crown className="w-4 h-4 text-amber-400" />
+                          <span>⚡ Auto Canva Access কনফিগারেশন</span>
+                        </div>
+                        <p className="text-[11px] text-slate-300 leading-relaxed">
+                          পেমেন্ট সফল হওয়ার পর গ্রাহক থ্যাংক ইউ / রুলস পেজে যাবে এবং সেখানে থাকা <strong>"Access Now"</strong> বোতামটি <strong>শুধুমাত্র একবারই</strong> ক্লিক করে আপনার সংরক্ষিত ক্যানভা ইনভাইট লিংকে ঢুকতে পারবে। দ্বিতীয়বার বাটনটি <strong>Access Locked</strong> দেখাবে।
+                        </p>
+
+                        <div>
+                          <label className="text-xs font-bold text-amber-300 block mb-1">
+                            সংরক্ষিত Canva Invite Link (Save/Edit) *
+                          </label>
+                          <div className="relative">
+                            <input
+                              type="url"
+                              required={dpDeliveryType === 'canva_auto'}
+                              value={dpCanvaInviteLink}
+                              onChange={(e) => setDpCanvaInviteLink(e.target.value)}
+                              placeholder="https://www.canva.com/brand/join?token=..."
+                              className="w-full px-3.5 py-2.5 bg-slate-950 border border-amber-500/40 rounded-xl text-xs text-[#1DB954] font-mono focus:outline-none focus:border-[#1DB954]"
+                            />
+                          </div>
+                          <span className="text-[10px] text-slate-400 block mt-1">
+                            আপনার ক্যানভা ব্র্যান্ড/টিম ইনভাইট লিঙ্কটি এখানে দিন। এটি সিকিউরভাবে সেভ থাকবে।
+                          </span>
+                        </div>
+
+                        <div>
+                          <label className="text-xs font-bold text-slate-300 block mb-1">
+                            Canva Thank You / Rules গাইডলাইন
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={dpCanvaRules}
+                            onChange={(e) => setDpCanvaRules(e.target.value)}
+                            placeholder="১. ক্যানভায় লগইন করে Access Now বাটনে ক্লিক করুন..."
+                            className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                          />
+                        </div>
+                      </div>
+                    )}
 
                     {/* Pricing & Free Toggle */}
                     <div className="p-3.5 bg-slate-950 rounded-2xl border border-slate-800 space-y-3">
@@ -5233,8 +6122,325 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 </div>
               </div>
             )}
+
+            {/* Modal for Setting Custom Download File / Link for Digital Orders */}
+            {dpAccessFileModalOrder && (
+              <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+                <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-7 space-y-5 shadow-2xl animate-scaleUp font-bengali my-8">
+                  {/* Modal Header */}
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">
+                        <Paperclip className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-base sm:text-lg font-black text-white">
+                          ফাইল বা ড্রাইভ এক্সেস প্রদান
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          অর্ডার: <span className="font-mono font-bold text-purple-400">#{dpAccessFileModalOrder.id}</span> • {dpAccessFileModalOrder.buyerName}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setDpAccessFileModalOrder(null)}
+                      className="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition cursor-pointer"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {/* Product Highlight Banner */}
+                  <div className="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between gap-3 text-xs">
+                    <div>
+                      <span className="text-[10px] text-slate-400 block font-bold">অর্ডারকৃত সফটওয়্যার:</span>
+                      <span className="font-black text-white text-sm">{dpAccessFileModalOrder.title}</span>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="text-[10px] text-slate-400 block font-bold">অর্ডার মূল্য:</span>
+                      <span className="font-black text-emerald-400 text-sm">৳{dpAccessFileModalOrder.amount.toLocaleString('bn-BD')}</span>
+                    </div>
+                  </div>
+
+                  {/* Form */}
+                  <div className="space-y-4 text-xs">
+                    {/* Cloud Drive Download Link */}
+                    <div className="space-y-1.5">
+                      <label className="block text-slate-300 font-bold flex items-center justify-between">
+                        <span>১. গুগল ড্রাইভ / ক্লাউড ডাউনলোড লিঙ্ক (Google Drive Link)</span>
+                        <span className="text-[10px] text-[#1DB954] font-normal">সরাসরি লিঙ্ক দিন</span>
+                      </label>
+                      <div className="relative">
+                        <Link2 className="w-4 h-4 absolute left-3.5 top-3 text-slate-500" />
+                        <input
+                          type="url"
+                          value={dpCustomDownloadUrl}
+                          onChange={(e) => setDpCustomDownloadUrl(e.target.value)}
+                          placeholder="https://drive.google.com/file/d/.../view?usp=sharing"
+                          className="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Or Local File Selector */}
+                    <div className="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+                      <label className="block text-slate-300 font-bold flex items-center gap-1.5">
+                        <FileUp className="w-4 h-4 text-purple-400" />
+                        <span>২. অথবা কম্পিউটার থেকে লোকাল ফাইল সিলেক্ট করুন (ZIP, RAR, SQL)</span>
+                      </label>
+                      <input
+                        type="file"
+                        accept=".zip,.rar,.tar,.gz,.sql,.pdf,.json"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setDpCustomFileName(file.name);
+                            if (!dpCustomDownloadUrl) {
+                              setDpCustomDownloadUrl(`https://ptenit.store/downloads/${file.name}`);
+                            }
+                          }
+                        }}
+                        className="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white hover:file:bg-purple-700 cursor-pointer"
+                      />
+                    </div>
+
+                    {/* File Name & License Key Row */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="space-y-1.5">
+                        <label className="block text-slate-300 font-bold">
+                          ৩. প্রদর্শিত ফাইলের নাম (File Name)
+                        </label>
+                        <input
+                          type="text"
+                          value={dpCustomFileName}
+                          onChange={(e) => setDpCustomFileName(e.target.value)}
+                          placeholder="e.g. erp-software-source-v1.zip"
+                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 font-mono"
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <label className="block text-slate-300 font-bold">
+                            ৪. লাইসেন্স কি (License Key)
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const randKey = `PTEN-${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(1000 + Math.random() * 9000)}`;
+                              setDpCustomLicenseKey(randKey);
+                            }}
+                            className="text-[10px] text-purple-400 hover:underline cursor-pointer"
+                          >
+                            + জেনারেট করুন
+                          </button>
+                        </div>
+                        <input
+                          type="text"
+                          value={dpCustomLicenseKey}
+                          onChange={(e) => setDpCustomLicenseKey(e.target.value)}
+                          placeholder="e.g. PTEN-ERP-2026-KEY"
+                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Admin Instructions / Note */}
+                    <div className="space-y-1.5">
+                      <label className="block text-slate-300 font-bold">
+                        ৫. গ্রাহকের জন্য ডেলিভারি নির্দেশনা / নোট
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={dpCustomAdminNote}
+                        onChange={(e) => setDpCustomAdminNote(e.target.value)}
+                        placeholder="জিপ ফাইলটি ডাউনলোড করে readme.txt অনুসরণ করুন এবং database.sql ইমপোর্ট করুন..."
+                        className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Modal Footer */}
+                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+                    <button
+                      type="button"
+                      onClick={() => setDpAccessFileModalOrder(null)}
+                      className="px-4 py-2.5 bg-slate-800 text-slate-300 text-xs font-bold rounded-xl cursor-pointer hover:bg-slate-700"
+                    >
+                      বাতিল
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSaveOrderFileAndGrant}
+                      className="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs sm:text-sm rounded-xl cursor-pointer shadow-lg shadow-purple-500/20 flex items-center gap-1.5"
+                    >
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>সংরক্ষণ ও এক্সেস মঞ্জুর করুন ✓</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Modal for Composing & Sending WhatsApp Delivery Message */}
+            {dpWhatsAppModalOrder && (
+              <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+                <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-7 space-y-5 shadow-2xl animate-scaleUp font-bengali my-8">
+                  {/* Header */}
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-10 h-10 rounded-xl bg-[#25D366]/20 text-[#25D366] flex items-center justify-center font-bold">
+                        <WhatsAppIcon className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="text-base sm:text-lg font-black text-white">
+                          হোয়াটসঅ্যাপ মেসেজ ও এক্সেস পাঠান
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          অর্ডার: <span className="font-mono font-bold text-emerald-400">#{dpWhatsAppModalOrder.id}</span> • প্রাপক: <span className="text-white font-bold">{dpWhatsAppModalOrder.buyerName}</span> ({dpWhatsAppModalOrder.buyerPhone || 'ফোন নম্বর নেই'})
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setDpWhatsAppModalOrder(null)}
+                      className="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition cursor-pointer"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {/* Order Overview Banner */}
+                  <div className="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex items-center justify-between gap-3 text-xs">
+                    <div>
+                      <span className="text-[10px] text-slate-400 font-bold block">প্রোডাক্ট:</span>
+                      <span className="text-white font-black">{dpWhatsAppModalOrder.title}</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[10px] text-slate-400 font-bold block">ডেলিভারি ধরন:</span>
+                      <span className="font-bold text-amber-400">
+                        {dpWhatsAppModalOrder.deliveryType === 'canva_auto' ? '⚡ Auto Canva' : 
+                         dpWhatsAppModalOrder.deliveryType === 'file_download' ? '📁 File Download' : '✉️ Email + WA'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Message Editor */}
+                  <div className="space-y-2 text-xs">
+                    <div className="flex items-center justify-between">
+                      <label className="text-slate-300 font-bold">
+                        প্রাক-নির্ধারিত মেসেজ (প্রয়োজনে এডিট করুন):
+                      </label>
+                      <span className="text-[10px] text-[#25D366]">প্রি-ফিল্ড টেমপ্লেট প্রস্তুত</span>
+                    </div>
+                    <textarea
+                      rows={9}
+                      value={dpWhatsAppMessageText}
+                      onChange={(e) => setDpWhatsAppMessageText(e.target.value)}
+                      className="w-full p-3.5 bg-slate-950 border border-slate-800 rounded-2xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#25D366] font-sans leading-relaxed"
+                    />
+                    <p className="text-[11px] text-slate-500">
+                      💡 বোতাম চাপলে স্বয়ংক্রিয়ভাবে WhatsApp ওপেন হবে এবং এই মেসেজটি রেডি থাকবে। একই সাথে অর্ডারটি ডেলিভার্ড হিসেবে চিহ্নিত হবে।
+                    </p>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-800">
+                    <button
+                      type="button"
+                      onClick={() => setDpWhatsAppModalOrder(null)}
+                      className="px-4 py-2.5 bg-slate-800 text-slate-300 text-xs font-bold rounded-xl cursor-pointer hover:bg-slate-700"
+                    >
+                      বাতিল
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSendWhatsAppSubmit}
+                      className="px-6 py-2.5 bg-[#25D366] hover:bg-emerald-600 text-white font-black text-xs sm:text-sm rounded-xl cursor-pointer shadow-lg shadow-emerald-900/30 flex items-center gap-2 transition active:scale-95"
+                    >
+                      <WhatsAppIcon className="w-4 h-4" />
+                      <span>WhatsApp-এ মেসেজ পাঠান ✓</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Modal for Composing & Sending Email Delivery Message */}
+            {dpEmailModalOrder && (
+              <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+                <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-7 space-y-5 shadow-2xl animate-scaleUp font-bengali my-8">
+                  {/* Header */}
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
+                        <Mail className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-base sm:text-lg font-black text-white">
+                          ইমেইলে এক্সেস ও ডেলিভারি মেসেজ পাঠান
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          অর্ডার: <span className="font-mono font-bold text-blue-400">#{dpEmailModalOrder.id}</span> • প্রাপক: <span className="text-white font-bold">{dpEmailModalOrder.buyerName}</span> ({dpEmailModalOrder.buyerEmail || 'ইমেইল নেই'})
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setDpEmailModalOrder(null)}
+                      className="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition cursor-pointer"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {/* Subject Line */}
+                  <div className="space-y-1.5 text-xs">
+                    <label className="text-slate-300 font-bold block">ইমেইল সাবজেক্ট (Subject):</label>
+                    <input
+                      type="text"
+                      value={dpEmailSubject}
+                      onChange={(e) => setDpEmailSubject(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-medium"
+                    />
+                  </div>
+
+                  {/* Message Body */}
+                  <div className="space-y-1.5 text-xs">
+                    <label className="text-slate-300 font-bold block">ইমেইল বডি (Message Body):</label>
+                    <textarea
+                      rows={9}
+                      value={dpEmailBody}
+                      onChange={(e) => setDpEmailBody(e.target.value)}
+                      className="w-full p-3.5 bg-slate-950 border border-slate-800 rounded-2xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-sans leading-relaxed"
+                    />
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-800">
+                    <button
+                      type="button"
+                      onClick={() => setDpEmailModalOrder(null)}
+                      className="px-4 py-2.5 bg-slate-800 text-slate-300 text-xs font-bold rounded-xl cursor-pointer hover:bg-slate-700"
+                    >
+                      বাতিল
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSendEmailSubmit}
+                      className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs sm:text-sm rounded-xl cursor-pointer shadow-lg shadow-blue-900/30 flex items-center gap-2 transition active:scale-95"
+                    >
+                      <Mail className="w-4 h-4" />
+                      <span>ইমেইল ক্লায়েন্টে ওপেন করুন ও এক্সেস দিন ✓</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        )}
+          );
+        })()}
 
         {/* TAB 5: ORDERS & PAYMENTS */}
         {activeAdminTab === 'orders' && (

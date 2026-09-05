@@ -22,10 +22,25 @@ import {
   Award,
   Share2,
   MessageSquare,
-  HelpCircle
+  HelpCircle,
+  Clock,
+  Lock,
+  Unlock,
+  RefreshCw,
+  Crown,
+  Key,
+  AlertTriangle,
+  CheckCircle2,
+  Search
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { DigitalProduct, MarketplaceOrder } from '../types';
+
+const WhatsAppIcon: React.FC<{ className?: string }> = ({ className = "w-3.5 h-3.5" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+  </svg>
+);
 
 interface DigitalProductsSectionProps {
   setActiveTab?: (tab: string, category?: string, pushHistory?: boolean) => void;
@@ -34,12 +49,12 @@ interface DigitalProductsSectionProps {
 }
 
 export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ setActiveTab, isStandalonePage = false, onBack }) => {
-  const { digitalProducts = [], currentUser, siteSettings, addMarketplaceOrder, t } = useData();
+  const { digitalProducts = [], currentUser, siteSettings, addMarketplaceOrder, updateMarketplaceOrder, marketplaceOrders = [], t } = useData();
 
   // Selected Product for Dedicated In-Page Landing View (Not a modal popup)
   const [selectedProduct, setSelectedProduct] = useState<DigitalProduct | null>(null);
-  const [mobileExpanded, setMobileExpanded] = useState<boolean>(false);
-  const [desktopExpanded, setDesktopExpanded] = useState<boolean>(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   // In-Page Checkout / Download Form State
   const [customerEmail, setCustomerEmail] = useState(currentUser?.email || '');
@@ -95,6 +110,21 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
     setTimeout(() => setCopiedNumber(false), 2000);
   };
 
+  const getWhatsAppLink = (product: DigitalProduct) => {
+    const rawNum = siteSettings?.whatsapp || '+8801700000000';
+    const cleanNum = rawNum.replace(/[^0-9]/g, '');
+    const priceText = product.price === 0 ? 'বিনামূল্যে (১০০% ফ্রি)' : `৳${product.price.toLocaleString('bn-BD')}`;
+    const msg = `হ্যালো, আমি "${product.title}" ডিজিটাল প্রোডাক্টটি নিতে চাই।\nমূল্য: ${priceText}\nদয়া করে আমাকে হোয়াটসঅ্যাপ বা ইমেইলে এক্সেস ও সরাসরি ডাউনলোড লিঙ্ক দেওয়ার নিয়ম জানান।`;
+    return `https://wa.me/${cleanNum}?text=${encodeURIComponent(msg)}`;
+  };
+
+  const getOrderWhatsAppLink = (order: MarketplaceOrder) => {
+    const rawNum = siteSettings?.whatsapp || '+8801700000000';
+    const cleanNum = rawNum.replace(/[^0-9]/g, '');
+    const msg = `হ্যালো, আমি "${order.title}" ডিজিটাল প্রোডাক্টটির জন্য অর্ডার সম্পন্ন করেছি।\nঅর্ডার আইডি: ${order.id}\nআমার ইমেইল: ${customerEmail}\nদয়া করে আমার ইমেইল ও হোয়াটসঅ্যাপে ফাইল এক্সেস দিন।`;
+    return `https://wa.me/${cleanNum}?text=${encodeURIComponent(msg)}`;
+  };
+
   const handleOpenDetail = (product: DigitalProduct) => {
     setSelectedProduct(product);
     setCustomerEmail(currentUser?.email || '');
@@ -122,8 +152,13 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
     if (!selectedProduct) return;
 
     const isFree = selectedProduct.price === 0;
-    if (!customerEmail.trim() || !customerName.trim()) {
+    if (!customerName.trim() || !customerEmail.trim()) {
       setPurchaseError('অনুগ্রহ করে আপনার নাম ও ইমেইল অ্যাড্রেস প্রদান করুন।');
+      return;
+    }
+
+    if (!customerPhone.trim()) {
+      setPurchaseError('অনুগ্রহ করে আপনার সচল হোয়াটসঅ্যাপ নম্বর প্রদান করুন।');
       return;
     }
 
@@ -132,17 +167,29 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
       return;
     }
 
-    const orderId = isFree ? `FREE-DL-${Math.floor(100000 + Math.random() * 900000)}` : `DIGI-INV-${Math.floor(100000 + Math.random() * 900000)}`;
+    const rawDeliveryType = selectedProduct.deliveryType || 'file_download';
+    const isCanva = rawDeliveryType === 'canva_auto';
+    const isEmailWhatsApp = rawDeliveryType === 'email_whatsapp' || rawDeliveryType === 'manual';
+    const isFileDownload = rawDeliveryType === 'file_download' || rawDeliveryType === 'auto';
+
+    const orderId = isFree 
+      ? `FREE-DL-${Math.floor(100000 + Math.random() * 900000)}` 
+      : `DIGI-INV-${Math.floor(100000 + Math.random() * 900000)}`;
+
+    const generatedToken = `SEC-${Math.random().toString(36).substring(2, 8).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const effectiveCanvaLink = selectedProduct.canvaInviteLink || selectedProduct.downloadUrl || 'https://www.canva.com';
+
     const newOrder: MarketplaceOrder = {
       id: orderId,
       type: 'digital_product_order',
       digitalProductId: selectedProduct.id,
+      deliveryType: rawDeliveryType,
       title: selectedProduct.title,
       category: selectedProduct.category,
       buyerId: currentUser?.id || `buyer-${Date.now()}`,
-      buyerName: customerName,
-      buyerEmail: customerEmail,
-      buyerPhone: customerPhone,
+      buyerName: customerName.trim(),
+      buyerEmail: customerEmail.trim(),
+      buyerPhone: customerPhone.trim(),
       sellerId: 'ptenit-agency',
       sellerName: 'PTENit IT Digital Store',
       sellerAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
@@ -152,17 +199,29 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
       sellerPayout: selectedProduct.price,
       paymentMethod: isFree ? 'Free Instant Download' : `${paymentMethod} (TrxID: ${trxId})`,
       transactionId: isFree ? 'FREE_PROMO' : trxId,
-      status: 'completed',
+      paymentStatus: isFree ? 'verified' : (isCanva ? 'verified' : 'pending'),
+      deliveryStatus: isFree ? 'delivered' : (isCanva ? 'delivered' : 'pending'),
+      accessUsed: false,
+      canvaInviteLink: effectiveCanvaLink,
+      downloadToken: generatedToken,
+      status: (isFree || isCanva) ? 'completed' : 'pending',
       deliveryNote: isFree 
         ? `বিনামূল্যে ইনস্ট্যান্ট ডাউনলোড সম্পন্ন! ডাউনলোড লিঙ্ক: ${selectedProduct.downloadUrl}`
-        : (selectedProduct.deliveryType === 'auto'
-          ? `স্বয়ংক্রিয় ইমেইল ও ড্যাশবোর্ড ডেলিভারি সম্পন্ন! ডাউনলোড লিঙ্ক: ${selectedProduct.downloadUrl}`
-          : 'ম্যানুয়াল ভেরিফিকেশনের জন্য ইমেইল ও ড্যাশবোর্ডে ফাইল প্রসেসিং করা হচ্ছে।'),
+        : (isCanva
+          ? `অটো ক্যানভা এক্সেস প্রস্তুত! ক্যানভা লিঙ্ক: ${effectiveCanvaLink}`
+          : isFileDownload
+          ? `পেমেন্ট ভেরিফিকেশন সাপেক্ষে সিকিউর ফাইল ডাউনলোড আনলক হবে (টোকেন: ${generatedToken})`
+          : 'এডমিন প্যানেল থেকে হোয়াটসঅ্যাপ ও ইমেইলে কাস্টম মেসেজ সহ এক্সেস প্রদান করা হবে।'),
       downloadUrl: selectedProduct.downloadUrl,
       licenseKey: selectedProduct.licenseKey,
       deliveryFileUrl: selectedProduct.downloadUrl,
       deliveryFileName: `${selectedProduct.title}.zip`,
-      deliveredAt: new Date().toLocaleString('en-BD'),
+      accessGranted: isFree || isCanva,
+      accessGrantedAt: (isFree || isCanva) ? new Date().toLocaleString('en-BD') : undefined,
+      accessDeliveryMethod: isFree ? 'direct_download' : (isCanva ? 'both' : undefined),
+      customFileUrl: selectedProduct.downloadUrl,
+      customFileName: `${selectedProduct.title}.zip`,
+      deliveredAt: (isFree || isCanva) ? new Date().toLocaleString('en-BD') : undefined,
       createdAt: new Date().toISOString().split('T')[0],
       deadlineDate: new Date().toISOString().split('T')[0]
     };
@@ -170,6 +229,48 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
     addMarketplaceOrder(newOrder);
     setCompletedOrder(newOrder);
     setIsOrderPlaced(true);
+  };
+
+  // Single-use Canva Access Button Handler
+  const handleCanvaAccessNow = () => {
+    if (!completedOrder) return;
+    if (completedOrder.accessUsed) {
+      alert('সতর্কতা: এই ক্যানভা এক্সেস লিঙ্কটি ইতোমধ্যে ১ বার ব্যবহার করা হয়েছে। এটি আর ব্যবহারযোগ্য নয়।');
+      return;
+    }
+
+    const targetLink = completedOrder.canvaInviteLink || selectedProduct?.canvaInviteLink || selectedProduct?.downloadUrl || 'https://www.canva.com';
+    const usedTimestamp = new Date().toLocaleString('en-BD');
+
+    // Update Context and Local Storage
+    updateMarketplaceOrder(completedOrder.id, {
+      accessUsed: true,
+      accessUsedAt: usedTimestamp,
+      status: 'completed',
+      deliveryStatus: 'delivered',
+      deliveryNote: `গ্রাহক ওয়েবসাইট থেকে ১-বার ব্যবহারযোগ্য ক্যানভা ইনভাইট এক্সেস গ্রহণ করেছেন (${new Date().toLocaleTimeString('en-BD')})`
+    });
+
+    // Update local state immediately so button flips to "Access Locked"
+    setCompletedOrder(prev => prev ? {
+      ...prev,
+      accessUsed: true,
+      accessUsedAt: usedTimestamp,
+      status: 'completed',
+      deliveryStatus: 'delivered'
+    } : null);
+
+    // Open Canva invite link in new window
+    window.open(targetLink, '_blank');
+  };
+
+  // Status refresh for file download verification
+  const handleRefreshOrderStatus = () => {
+    if (!completedOrder) return;
+    const latest = marketplaceOrders.find(o => o.id === completedOrder.id);
+    if (latest) {
+      setCompletedOrder(latest);
+    }
   };
 
   const copyLicenseKey = (keyText: string) => {
@@ -332,7 +433,12 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
             <div>
               <span className="text-slate-500 block text-[11px]">ডেলিভারি মেথড</span>
               <strong className="text-slate-900 dark:text-white font-bold">
-                {isFree ? '১-ক্লিক ইনস্ট্যান্ট' : (selectedProduct.deliveryType === 'auto' ? 'অটোমেটিক ইমেইল ও ড্রাইভ' : 'ম্যানুয়াল সাপোর্ট')}
+                {isFree ? '১-ক্লিক ইনস্ট্যান্ট' : (
+                  selectedProduct.deliveryType === 'canva_auto' ? '⚡ Auto Canva Access' :
+                  selectedProduct.deliveryType === 'file_download' ? '📁 Secure File Download' :
+                  selectedProduct.deliveryType === 'email_whatsapp' ? '✉️ Email + WhatsApp' :
+                  selectedProduct.deliveryType === 'auto' ? 'অটো ড্রাইভ এক্সেস' : 'ম্যানুয়াল সাপোর্ট'
+                )}
               </strong>
             </div>
           </div>
@@ -402,26 +508,26 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
           </div>
 
           {/* Right Column: Integrated Order & Instant Download Form */}
-          <div className="lg:col-span-5 bg-white dark:bg-slate-900 p-5 sm:p-7 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-5 sticky top-6">
+          <div className="lg:col-span-5 bg-white dark:bg-slate-900 p-5 sm:p-7 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl space-y-4 sticky top-6">
             
             {/* Box Header */}
-            <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
               <span className="text-[10px] font-bold text-[#1DB954] uppercase tracking-wider block">
-                {isFree ? '🎁 ফ্রি ইনস্ট্যান্ট এক্সেস' : '💳 নিরাপদ অনলাইন অর্ডার ও ডেলিভারি'}
+                {isFree ? '🎁 ফ্রি ইনস্ট্যান্ট এক্সেস' : '⚡ ডিজিটাল ডেলিভারি ও ডাউনলোড'}
               </span>
               <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white mt-1">
-                {isFree ? 'বিনামূল্যে এখনই ডাউনলোড করুন' : 'অর্ডার ও বিল কনফার্ম করুন'}
+                {isFree ? 'বিনামূল্যে এখনই ডাউনলোড করুন' : 'অর্ডার করুন ও এক্সেস নিন'}
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
                 {isFree 
                   ? 'তথ্য দিয়ে সাবমিট করার সাথে সাথেই গুগল ড্রাইভ সরাসরি ডাউনলোড লিঙ্ক পেয়ে যাবেন।' 
-                  : 'পেমেন্ট সম্পন্ন করে TrxID দিলে স্বয়ংক্রিয়ভাবে সোর্স কোড লিঙ্ক ও অফিশিয়াল ইনভয়েস বিল দেওয়া হবে।'}
+                  : 'তথ্য দিয়ে সাবমিট করে বিকাশ, নগদ বা রকেটে পেমেন্ট সম্পন্ন করে ফাইল এক্সেস নিন।'}
               </p>
             </div>
 
             {!isOrderPlaced ? (
               /* IN-PAGE FORM */
-              <form onSubmit={handleConfirmPurchase} className="space-y-4">
+              <form onSubmit={handleConfirmPurchase} className="space-y-3.5">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                     আপনার নাম *
@@ -438,7 +544,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    আপনার ইমেইল অ্যাড্রেস *
+                    আপনার ইমেইল অ্যাড্রেস * <span className="text-[10px] font-normal text-slate-400">(এখানে ডাউনলোড এক্সেস পাঠানো হবে)</span>
                   </label>
                   <input
                     type="email"
@@ -452,7 +558,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    মোবাইল নম্বর (ঐচ্ছিক)
+                    হোয়াটসঅ্যাপ / মোবাইল নম্বর <span className="text-[10px] font-normal text-slate-400">(হোয়াটসঅ্যাপ এক্সেস পেতে)</span>
                   </label>
                   <input
                     type="tel"
@@ -586,70 +692,305 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                 </div>
               </form>
             ) : (
-              /* INSTANT SUCCESS & UNLOCKED ACCESS */
+              /* ========================================================================= */
+              /* 🌟 ORDER SUCCESS & MULTI-SYSTEM DELIVERY COMPLETION SCREEN               */
+              /* ========================================================================= */
               <div className="space-y-4 animate-fadeIn">
-                <div className="p-4 bg-emerald-500/10 border border-[#1DB954]/30 rounded-2xl text-center space-y-1.5">
-                  <div className="w-10 h-10 rounded-full bg-[#1DB954] text-white flex items-center justify-center mx-auto shadow-md">
-                    <CheckCircle className="w-6 h-6" />
-                  </div>
-                  <h4 className="text-base font-black text-slate-900 dark:text-white">
-                    {isFree ? '🎉 ফ্রি ডাউনলোড প্রস্তুত!' : '🎉 পেমেন্ট ও ইনভয়েস সফল হয়েছে!'}
-                  </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-300">
-                    ইনভয়েস নং: <span className="font-mono font-bold text-[#1DB954]">{completedOrder?.id}</span>
-                  </p>
-                </div>
-
-                {/* Direct Google Drive Link Box */}
-                <div className="p-4 bg-slate-950 text-white rounded-2xl border border-slate-800 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#1DB954] flex items-center gap-1">
-                      <Zap className="w-4 h-4 fill-[#1DB954]" />
-                      ডাউনলোড ফাইল ও এক্সেস
-                    </span>
-                    <span className="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-300">
-                      {selectedProduct.fileFormat} ({selectedProduct.fileSize})
-                    </span>
-                  </div>
-
-                  <a
-                    href={selectedProduct.downloadUrl || 'https://drive.google.com'}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-full py-3 px-4 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition active:scale-95 text-center"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>সরাসরি গুগল ড্রাইভে ডাউনলোড ফাইল ওপেন করুন</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-
-                  {selectedProduct.licenseKey && (
-                    <div className="p-2.5 bg-slate-900 rounded-xl border border-slate-800 space-y-1">
-                      <span className="text-[10px] text-slate-400 block font-bold">অ্যাক্টিভেশন / লাইসেন্স কি:</span>
-                      <div className="flex items-center justify-between gap-2 bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800">
-                        <code className="text-xs font-mono font-bold text-amber-400 truncate">
-                          {selectedProduct.licenseKey}
-                        </code>
-                        <button
-                          type="button"
-                          onClick={() => copyLicenseKey(selectedProduct.licenseKey || '')}
-                          className="text-slate-400 hover:text-white p-1 cursor-pointer"
-                          title="কি কপি করুন"
-                        >
-                          {copiedKey ? <Check className="w-3.5 h-3.5 text-[#1DB954]" /> : <Copy className="w-3.5 h-3.5" />}
-                        </button>
+                
+                {/* 1. AUTO CANVA ACCESS FLOW */}
+                {((completedOrder?.deliveryType === 'canva_auto') || (selectedProduct.deliveryType === 'canva_auto')) && (
+                  <div className="space-y-4">
+                    {/* Header Banner */}
+                    <div className="p-4 bg-emerald-500/10 border border-[#1DB954]/30 rounded-2xl text-center space-y-1.5">
+                      <div className="w-11 h-11 rounded-full bg-[#1DB954] text-white flex items-center justify-center mx-auto shadow-md">
+                        <Crown className="w-6 h-6 text-amber-300" />
+                      </div>
+                      <h4 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                        🎉 পেমেন্ট সফল হয়েছে! ধন্যবাদ আপনার ক্রয়ের জন্য
+                      </h4>
+                      <p className="text-xs text-slate-600 dark:text-slate-300">
+                        ইনভয়েস নং: <span className="font-mono font-bold text-[#1DB954]">#{completedOrder?.id}</span> • ক্রেতা: <strong className="text-slate-900 dark:text-white">{completedOrder?.buyerName}</strong>
+                      </p>
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-[#1DB954] text-[11px] font-bold mt-1">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>⚡ অটো ক্যানভা এক্সেস সিস্টেম (Auto Canva VIP Access)</span>
                       </div>
                     </div>
-                  )}
-                </div>
 
-                <div className="flex gap-2">
+                    {/* Canva Official Rules Card */}
+                    <div className="p-4 rounded-2xl bg-slate-900 text-white border border-slate-800 space-y-3">
+                      <div className="flex items-center gap-2 text-amber-400 font-black text-xs sm:text-sm border-b border-slate-800 pb-2">
+                        <ShieldCheck className="w-4 h-4 text-amber-400" />
+                        <span>📜 ক্যানভা ব্যবহারের অফিশিয়াল নিয়মাবলী (Access Rules)</span>
+                      </div>
+
+                      <div className="text-xs text-slate-300 space-y-2 leading-relaxed">
+                        <p className="flex items-start gap-2">
+                          <span className="w-5 h-5 rounded-full bg-slate-800 text-amber-400 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">১</span>
+                          <span>আপনার ব্যক্তিগত Canva একাউন্টে লগইন থাকা অবস্থায় নিচের <strong>"Access Now"</strong> বাটনে ক্লিক করুন।</span>
+                        </p>
+                        <p className="flex items-start gap-2">
+                          <span className="w-5 h-5 rounded-full bg-slate-800 text-amber-400 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">২</span>
+                          <span>লিংকে ক্লিক করার সাথে সাথে সরাসরি আপনার ক্যানভা একাউন্টে প্রিমিয়াম ব্র্যান্ড টিম যুক্ত হবে।</span>
+                        </p>
+                        <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-start gap-2 text-[11px]">
+                          <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                          <span>
+                            <strong>⚠️ সতর্কতা:</strong> নিচের <strong>"Access Now"</strong> বোতামটি এই ওয়েবসাইট থেকে <strong>শুধুমাত্র ১ বারই ব্যবহারযোগ্য</strong>! একবার ক্লিক করার সাথে সাথে লিংকটি স্বয়ংক্রিয়ভাবে লক হয়ে যাবে এবং দ্বিতীয়বার <strong>"Access Locked"</strong> দেখাবে।
+                          </span>
+                        </div>
+                        {selectedProduct.canvaRules && (
+                          <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-300 whitespace-pre-line">
+                            {selectedProduct.canvaRules}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Canva Single-Use Action Button / Locked State */}
+                      <div className="pt-2">
+                        {!completedOrder?.accessUsed ? (
+                          <div className="space-y-2">
+                            <button
+                              type="button"
+                              onClick={handleCanvaAccessNow}
+                              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#1DB954] via-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-xl hover:shadow-2xl transition-all cursor-pointer active:scale-95 group"
+                            >
+                              <Crown className="w-5 h-5 text-amber-300 group-hover:rotate-12 transition-transform" />
+                              <span>Access Now (ক্যানভা এক্সেস নিন)</span>
+                              <ExternalLink className="w-4 h-4 text-white/90" />
+                            </button>
+                            <p className="text-[11px] text-amber-400/90 font-medium text-center">
+                              ⚠️ দ্রষ্টব্য: এটি ১-বার ক্লিকযোগ্য বাটন। ক্লিক করার সাথে সাথেই লিংকটি লক হয়ে যাবে।
+                            </p>
+                          </div>
+                        ) : (
+                          /* Access Locked Banner */
+                          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/40 text-center space-y-2.5">
+                            <div className="w-10 h-10 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center mx-auto">
+                              <Lock className="w-5 h-5" />
+                            </div>
+                            <h5 className="text-sm sm:text-base font-black text-rose-400">
+                              🔒 Access Locked (এক্সেস লক করা হয়েছে)
+                            </h5>
+                            <p className="text-xs text-slate-300 leading-relaxed max-w-md mx-auto">
+                              এই ক্যানভা এক্সেস লিঙ্কটি ইতোমধ্যে <strong>১ বার ব্যবহার করা হয়েছে</strong> ({completedOrder.accessUsedAt || 'ব্যবহৃত'})। ওয়েবসাইটের নিরাপত্তা নীতি অনুসারে লিঙ্কটি এখন লক করা হয়েছে।
+                            </p>
+                            <button
+                              type="button"
+                              disabled
+                              className="w-full py-3 px-4 rounded-xl bg-slate-800 border border-slate-700 text-slate-500 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-not-allowed opacity-80"
+                            >
+                              <Lock className="w-4 h-4" />
+                              <span>Access Locked (পুনরায় ব্যবহার সম্ভব নয়)</span>
+                            </button>
+                            <div className="p-2 bg-slate-950/80 rounded-lg text-[11px] text-slate-400 text-left flex items-start gap-1.5">
+                              <HelpCircle className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                              <span>যদি আপনি লিংকটি সংরক্ষণ করতে না পারেন অথবা টেকনিক্যাল সমস্যায় পড়েন, এডমিনের সাথে যোগাযোগ করে সহায়তা নিতে পারেন।</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 2. INFORMATION → SECURE FILE DOWNLOAD FLOW */}
+                {((completedOrder?.deliveryType === 'file_download' || completedOrder?.deliveryType === 'auto') && (completedOrder?.deliveryType !== 'canva_auto') && (selectedProduct.deliveryType !== 'canva_auto')) && (
+                  <div className="space-y-4">
+                    {/* Header Banner */}
+                    <div className="p-4 bg-emerald-500/10 border border-[#1DB954]/30 rounded-2xl text-center space-y-1.5">
+                      <div className="w-10 h-10 rounded-full bg-[#1DB954] text-white flex items-center justify-center mx-auto shadow-md">
+                        <CheckCircle className="w-6 h-6" />
+                      </div>
+                      <h4 className="text-base font-black text-slate-900 dark:text-white">
+                        {isFree ? '🎉 ফ্রি ফাইল ডাউনলোড প্রস্তুত!' : '🎉 অর্ডার গ্রহণ করা হয়েছে!'}
+                      </h4>
+                      <p className="text-xs text-slate-600 dark:text-slate-300">
+                        ইনভয়েস নং: <span className="font-mono font-bold text-[#1DB954]">#{completedOrder?.id}</span>
+                      </p>
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-blue-500 text-[11px] font-bold mt-1">
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        <span>📁 সিকিউর ফাইল ডাউনলোড সিস্টেম (Information → File Download)</span>
+                      </div>
+                    </div>
+
+                    {/* Customer Information Summary */}
+                    <div className="bg-slate-100 dark:bg-slate-800/80 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs space-y-1.5">
+                      <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">গ্রাহকের সংরক্ষিত তথ্য</span>
+                      <div className="grid grid-cols-2 gap-2 text-slate-800 dark:text-slate-200 font-semibold">
+                        <div>নাম: <span className="font-normal text-slate-600 dark:text-slate-400">{completedOrder?.buyerName}</span></div>
+                        <div>হোয়াটসঅ্যাপ: <span className="font-mono font-normal text-slate-600 dark:text-slate-400">{completedOrder?.buyerPhone}</span></div>
+                        <div className="col-span-2 truncate">ইমেইল: <span className="font-mono font-normal text-slate-600 dark:text-slate-400">{completedOrder?.buyerEmail}</span></div>
+                      </div>
+                    </div>
+
+                    {/* Secure Token Box */}
+                    <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-between text-xs text-white">
+                      <div className="space-y-0.5">
+                        <span className="text-[10px] text-slate-400 block font-bold">সিকিউর ডাউনলোড টোকেন:</span>
+                        <code className="font-mono font-bold text-[#1DB954] text-xs sm:text-sm">
+                          {completedOrder?.downloadToken || `SEC-${completedOrder?.id.slice(-6)}`}
+                        </code>
+                      </div>
+                      <span className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-400 border border-slate-700">
+                        {completedOrder?.paymentStatus === 'verified' || isFree || completedOrder?.accessGranted ? '✅ ভেরিফাইড' : '⏳ ভেরিফিকেশন চলমান'}
+                      </span>
+                    </div>
+
+                    {/* Download Unlocked or Pending Verification Box */}
+                    {(isFree || completedOrder?.paymentStatus === 'verified' || completedOrder?.accessGranted) ? (
+                      <div className="p-4 bg-slate-950 text-white rounded-2xl border border-slate-800 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-[#1DB954] flex items-center gap-1">
+                            <Zap className="w-4 h-4 fill-[#1DB954]" />
+                            ডাউনলোড ফাইল প্রস্তুত
+                          </span>
+                          <span className="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-300">
+                            {selectedProduct.fileFormat} ({selectedProduct.fileSize})
+                          </span>
+                        </div>
+
+                        <a
+                          href={completedOrder?.customFileUrl || selectedProduct.downloadUrl || 'https://drive.google.com'}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="w-full py-3 px-4 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition active:scale-95 text-center"
+                        >
+                          <Download className="w-4 h-4" />
+                          <span>📥 সুরক্ষিত ফাইল ডাউনলোড করুন (Secure Download)</span>
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+
+                        {selectedProduct.licenseKey && (
+                          <div className="p-2.5 bg-slate-900 rounded-xl border border-slate-800 space-y-1">
+                            <span className="text-[10px] text-slate-400 block font-bold">লাইসেন্স / সিরিয়াল কি:</span>
+                            <div className="flex items-center justify-between gap-2 bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800">
+                              <code className="text-xs font-mono font-bold text-amber-400 truncate">
+                                {selectedProduct.licenseKey}
+                              </code>
+                              <button
+                                type="button"
+                                onClick={() => copyLicenseKey(selectedProduct.licenseKey || '')}
+                                className="text-slate-400 hover:text-white p-1 cursor-pointer"
+                                title="কি কপি করুন"
+                              >
+                                {copiedKey ? <Check className="w-3.5 h-3.5 text-[#1DB954]" /> : <Copy className="w-3.5 h-3.5 text-slate-400" />}
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      /* Payment Verification Pending */
+                      <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-left space-y-3">
+                        <div className="flex items-center gap-2 text-amber-500 dark:text-amber-400 font-bold text-sm">
+                          <Clock className="w-4 h-4 animate-spin shrink-0" />
+                          <span>পেমেন্ট ভেরিফিকেশন চলছে...</span>
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                          আপনার পেমেন্ট ট্রানজেকশন আইডি (<strong className="font-mono text-slate-900 dark:text-white">{completedOrder?.transactionId}</strong>) এডমিন প্যানেল থেকে যাচাই করা হচ্ছে। ভেরিফাই সম্পন্ন হওয়ার সাথে সাথেই এই পেজে সিকিউর ফাইল ডাউনলোড লিংক দৃশ্যমান হবে।
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                          <button
+                            type="button"
+                            onClick={handleRefreshOrderStatus}
+                            className="flex-1 py-2 px-3 rounded-xl bg-slate-900 text-white hover:bg-slate-800 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                          >
+                            <RefreshCw className="w-3.5 h-3.5" />
+                            <span>ভেরিফিকেশন স্ট্যাটাস রিফ্রেশ করুন</span>
+                          </button>
+
+                          {completedOrder && (
+                            <a
+                              href={getOrderWhatsAppLink(completedOrder)}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="py-2 px-3 rounded-xl bg-[#25D366] hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition text-center"
+                            >
+                              <WhatsAppIcon className="w-3.5 h-3.5" />
+                              <span>হোয়াটসঅ্যাপে এডমিনকে জানান</span>
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 3. EMAIL + WHATSAPP DELIVERY FLOW */}
+                {((completedOrder?.deliveryType === 'email_whatsapp' || completedOrder?.deliveryType === 'manual') && (completedOrder?.deliveryType !== 'canva_auto') && (selectedProduct.deliveryType !== 'canva_auto')) && (
+                  <div className="space-y-4">
+                    {/* Header Banner */}
+                    <div className="p-4 bg-purple-500/10 border border-purple-500/30 rounded-2xl text-center space-y-1.5">
+                      <div className="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center mx-auto shadow-md">
+                        <Mail className="w-5 h-5" />
+                      </div>
+                      <h4 className="text-base font-black text-slate-900 dark:text-white">
+                        ✅ আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে!
+                      </h4>
+                      <p className="text-xs text-slate-600 dark:text-slate-300">
+                        ইনভয়েস আইডি: <span className="font-mono font-bold text-purple-600 dark:text-purple-400">#{completedOrder?.id}</span>
+                      </p>
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-300 text-[11px] font-bold mt-1">
+                        <Send className="w-3.5 h-3.5" />
+                        <span>✉️ Email + WhatsApp Delivery সিস্টেম</span>
+                      </div>
+                    </div>
+
+                    {/* Dispatch Notice Card */}
+                    <div className="p-4 rounded-2xl bg-slate-900 text-white border border-slate-800 space-y-3 text-xs">
+                      <div className="flex items-center gap-2 text-emerald-400 font-bold border-b border-slate-800 pb-2">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        <span>এডমিন প্যানেল থেকে কাস্টম মেসেজ সহ ডেলিভারি পাঠানো হবে</span>
+                      </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        আপনার অর্ডারটি আমাদের এডমিন প্যানেলে জমা হয়েছে। এডমিন আপনার দেওয়া হোয়াটসঅ্যাপ নম্বর (<strong className="text-white font-mono">{completedOrder?.buyerPhone}</strong>) এবং ইমেইলে (<strong className="text-white font-mono">{completedOrder?.buyerEmail}</strong>) কাস্টমাইজড মেসেজ ও প্রয়োজনীয় এক্সেস / ইনভাইট লিঙ্ক খুব শীঘ্রই সেন্ড করবেন।
+                      </p>
+
+                      <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1 text-[11px] text-slate-400">
+                        <div className="flex justify-between">
+                          <span>প্রোডাক্ট:</span>
+                          <strong className="text-white">{completedOrder?.title}</strong>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>পেমেন্ট মেথড:</span>
+                          <span className="text-slate-300">{completedOrder?.paymentMethod}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>ডেলিভারি স্ট্যাটাস:</span>
+                          <span className="text-amber-400 font-bold">
+                            {completedOrder?.deliveryStatus === 'delivered' ? '✅ পাঠানো হয়েছে' : '⏳ প্রসেসিং চলমান'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {completedOrder && (
+                        <div className="pt-1">
+                          <a
+                            href={getOrderWhatsAppLink(completedOrder)}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-emerald-600 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition text-center"
+                          >
+                            <WhatsAppIcon className="w-4 h-4" />
+                            <span>হোয়াটসঅ্যাপে সরাসরি মেসেজ দিন (দ্রুত এক্সেস পেতে)</span>
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Return Button */}
+                <div className="flex gap-2 pt-2">
                   <button
                     type="button"
                     onClick={handleBackToList}
-                    className="flex-1 py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition cursor-pointer"
+                    className="flex-1 py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition cursor-pointer"
                   >
-                    সব প্রোডাক্টে ফিরে যান
+                    সব ডিজিটাল প্রোডাক্টে ফিরে যান
                   </button>
                 </div>
               </div>
@@ -689,22 +1030,52 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
   }
 
   // =========================================================================
-  // 🛍️ DEFAULT PRODUCT GRID VIEW (4 cols on PC, 2 cols on Phone)
+  // 🛍️ FILTERING & DISPLAYED PRODUCTS
+  // =========================================================================
+  const filteredProducts = digitalProducts.filter(product => {
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      const matches = 
+        product.title.toLowerCase().includes(q) ||
+        product.category.toLowerCase().includes(q) ||
+        (product.shortDescription && product.shortDescription.toLowerCase().includes(q));
+      if (!matches) return false;
+    }
+
+    if (selectedCategory === 'free') {
+      return product.price === 0;
+    }
+    if (selectedCategory === 'canva_auto' || selectedCategory === 'file_download' || selectedCategory === 'email_whatsapp') {
+      return product.deliveryType === selectedCategory;
+    }
+    return true;
+  });
+
+  const displayedProducts = isStandalonePage 
+    ? filteredProducts 
+    : digitalProducts.slice(0, 4);
+
+  // =========================================================================
+  // 🛍️ DEFAULT PRODUCT GRID VIEW (Unified Responsive Cards)
   // =========================================================================
   const sectionContent = (
     <div className="space-y-4 sm:space-y-6 font-bengali">
       {/* Header Bar */}
-      <div className="flex items-end justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
         <div className="space-y-0.5 text-left">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#1DB954]/10 text-[#1DB954] text-[11px] font-extrabold uppercase tracking-wider mb-1">
+            <Sparkles className="w-3 h-3" />
+            <span>ডিজিটাল প্রোডাক্ট মার্কেটপ্লেস</span>
+          </div>
           <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight">
             {t('ডিজিটাল প্রোডাক্টস', 'Digital Products')}
           </h2>
           <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-medium">
-            {t('রেডিমেড সফটওয়্যার, স্ক্রিপ্ট ও থিম', 'Ready software, scripts & themes')}
+            {t('রেডিমেড সফটওয়্যার, সোর্স কোড, স্ক্রিপ্ট ও ক্যানভা প্রো ভিআইপি বান্ডেল', 'Ready software, scripts, themes & Canva Pro VIP packages')}
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
           {isStandalonePage && onBack && (
             <button
               type="button"
@@ -723,256 +1094,189 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                 setActiveTab('digital-products');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#1DB954] hover:text-emerald-700 hover:underline cursor-pointer font-bengali transition-colors border-0"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1DB954]/10 hover:bg-[#1DB954] text-[#1DB954] hover:text-white text-xs sm:text-sm font-bold cursor-pointer font-bengali transition-all duration-200"
             >
-              <span>{t('সব দেখুন →', 'See All →')}</span>
+              <span>{t('সব প্রোডাক্ট দেখুন', 'Browse All Products')}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
       </div>
 
-      {/* Grid: 4 columns on PC, 2 columns on Phone (Max 4 on mobile unless expanded) */}
+      {/* Standalone Page: Search & Category Filter Pills */}
+      {isStandalonePage && (
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800/40 p-3 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+          {/* Category Filter Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+            {[
+              { id: 'all', label: `সকল (${digitalProducts.length})` },
+              { id: 'canva_auto', label: '⚡ Canva VIP' },
+              { id: 'file_download', label: '📁 সোর্স কোড' },
+              { id: 'email_whatsapp', label: '✉️ ইমেইল ও WA' },
+              { id: 'free', label: '🎁 সম্পূর্ণ ফ্রি' },
+            ].map(tab => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setSelectedCategory(tab.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                  selectedCategory === tab.id
+                    ? 'bg-[#1DB954] text-white shadow-xs'
+                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700/60'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Search Box */}
+          <div className="relative min-w-[200px] sm:w-64">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="প্রোডাক্ট বা টেমপ্লেট খুঁজুন..."
+              className="w-full pl-9 pr-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#1DB954]"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Grid: 4 columns on desktop, 2 columns on mobile */}
       <div>
-        {/* Desktop: 1 row of 4 or all on standalone page */}
-        <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 lg:gap-5">
-          {(isStandalonePage ? digitalProducts : digitalProducts.slice(0, 4)).map(product => {
-            const isFree = product.price === 0;
+        {displayedProducts.length === 0 ? (
+          <div className="text-center py-16 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 p-8 space-y-3">
+            <Package className="w-12 h-12 text-slate-400 mx-auto opacity-50" />
+            <p className="text-sm font-bold text-slate-600 dark:text-slate-400">
+              কোনো ডিজিটাল প্রোডাক্ট খুঁজে পাওয়া যায়নি।
+            </p>
+            <button
+              type="button"
+              onClick={() => { setSelectedCategory('all'); setSearchQuery(''); }}
+              className="px-4 py-2 bg-[#1DB954] text-white rounded-xl text-xs font-bold hover:bg-emerald-600 transition cursor-pointer"
+            >
+              সব প্রোডাক্ট দেখুন
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
+            {displayedProducts.map(product => {
+              const isFree = product.price === 0;
+              const hasDiscount = Boolean(product.originalPrice && product.originalPrice > product.price);
+              const discountPercent = hasDiscount 
+                ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100) 
+                : 0;
 
-            return (
-              <div
-                key={product.id}
-                className="group relative bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-[#1DB954] transition-all duration-300 flex flex-col justify-between"
-              >
-                <div>
-                  {/* Thumbnail Image */}
-                  <div 
-                    onClick={() => handleOpenDetail(product)}
-                    className="relative h-32 sm:h-40 overflow-hidden bg-slate-950 cursor-pointer"
-                  >
-                    <img
-                      src={product.thumbnail}
-                      alt={product.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+              return (
+                <div
+                  key={product.id}
+                  className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-[#1DB954]/5 hover:-translate-y-1.5 hover:border-[#1DB954]/70 dark:hover:border-[#1DB954]/60 transition-all duration-300 flex flex-col justify-between"
+                >
+                  <div>
+                    {/* Clean Cover Thumbnail without distracting text overlays */}
+                    <div
+                      onClick={() => handleOpenDetail(product)}
+                      className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-slate-950 cursor-pointer"
+                    >
+                      <img
+                        src={product.thumbnail}
+                        alt={product.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
+                      />
+                    </div>
 
-                    {/* Top Badges */}
-                    <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+                    {/* Card Body */}
+                    <div className="p-3 sm:p-3.5 space-y-2 flex-1 flex flex-col justify-between">
+                      {/* Product Title & Name */}
+                      <div className="pt-0.5">
+                        <h3
+                          onClick={() => handleOpenDetail(product)}
+                          className="text-xs sm:text-[14px] font-bold text-slate-900 dark:text-white line-clamp-2 sm:line-clamp-3 leading-snug group-hover:text-[#1DB954] transition-colors cursor-pointer min-h-[2.4rem] sm:min-h-[2.8rem]"
+                          title={product.title}
+                        >
+                          {product.title}
+                        </h3>
+                      </div>
+
+                      {/* Rating & Sales Micro Info */}
+                      <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-800/60">
+                        <div className="flex items-center gap-1 text-amber-500 font-bold">
+                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
+                          <span>{product.rating || 5.0}</span>
+                          <span className="text-slate-400 font-normal">({product.reviewsCount || 45})</span>
+                        </div>
+                        <span className="text-slate-400 dark:text-slate-500 flex items-center gap-1 text-[10px] sm:text-[11px]">
+                          <Download className="w-3 h-3 text-slate-400 shrink-0" />
+                          <span>{product.salesCount || 100}+ সেলস</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Footer: Clean Price & Single Action Button */}
+                  <div className="p-3 sm:p-3.5 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2">
+                    <div className="min-w-0">
                       {isFree ? (
-                        <span className="bg-emerald-500 text-white text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
-                          <Gift className="w-3 h-3 fill-white" />
-                          ১০০% ফ্রি
-                        </span>
-                      ) : product.deliveryType === 'auto' ? (
-                        <span className="bg-[#1DB954] text-white text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
-                          <Zap className="w-3 h-3 fill-white" />
-                          অটো ডেলিভারি
-                        </span>
+                        <div>
+                          <span className="text-[9px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-extrabold block leading-none mb-0.5 uppercase tracking-wider">
+                            স্পেশাল অফার
+                          </span>
+                          <span className="text-xs sm:text-sm font-black text-emerald-600 dark:text-emerald-400 block truncate">
+                            সম্পূর্ণ ফ্রি
+                          </span>
+                        </div>
                       ) : (
-                        <span className="bg-blue-600 text-white text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
-                          <Mail className="w-3 h-3" />
-                          ম্যানুয়াল
-                        </span>
+                        <div>
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-xs sm:text-base font-black text-slate-900 dark:text-white tracking-tight">
+                              ৳{product.price.toLocaleString('bn-BD')}
+                            </span>
+                            {product.originalPrice && product.originalPrice > product.price && (
+                              <span className="text-[10px] sm:text-xs text-slate-400 line-through">
+                                ৳{product.originalPrice.toLocaleString('bn-BD')}
+                              </span>
+                            )}
+                          </div>
+                          {hasDiscount && (
+                            <span className="text-[9px] text-rose-500 font-bold block leading-none mt-0.5">
+                              ৳{(product.originalPrice! - product.price).toLocaleString('bn-BD')} সাশ্রয়
+                            </span>
+                          )}
+                        </div>
                       )}
                     </div>
 
-                    <div className="absolute top-2 right-2 z-10">
-                      <span className="bg-slate-900/90 text-slate-200 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-md border border-slate-700">
-                        {product.fileFormat}
-                      </span>
-                    </div>
-
-                    {/* Bottom Specs Pill */}
-                    <div className="absolute bottom-2 left-2 right-2 z-10 flex items-center justify-between text-[10px] text-white font-bold">
-                      <span className="bg-slate-950/80 backdrop-blur-md px-2 py-0.5 rounded-full border border-slate-800 flex items-center gap-1">
-                        <Package className="w-3 h-3 text-[#1DB954]" />
-                        <span>{product.fileSize}</span>
-                      </span>
-                      <span className="bg-slate-950/80 backdrop-blur-md px-2 py-0.5 rounded-full border border-amber-500/30 text-amber-400 flex items-center gap-0.5">
-                        <Star className="w-3 h-3 fill-amber-400" />
-                        <span>{product.rating}</span>
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Card Body */}
-                  <div className="p-3 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold text-[#1DB954] uppercase tracking-wide block truncate">
-                        {product.category}
-                      </span>
-                    </div>
-
-                    <h3 
+                    <button
+                      type="button"
                       onClick={() => handleOpenDetail(product)}
-                      className="text-xs sm:text-sm font-black text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#1DB954] transition-colors cursor-pointer"
+                      className={`py-2 px-2.5 sm:px-3.5 rounded-xl font-black text-xs shadow-xs flex items-center gap-1 sm:gap-1.5 transition-all duration-200 active:scale-95 cursor-pointer shrink-0 ${
+                        isFree
+                          ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                          : 'bg-[#1DB954] hover:bg-emerald-600 text-white shadow-[#1DB954]/20'
+                      }`}
                     >
-                      {product.title}
-                    </h3>
-
-                    <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed hidden sm:block">
-                      {product.shortDescription}
-                    </p>
-
-                    {/* Features list bullet tags */}
-                    {product.features && product.features.length > 0 && (
-                      <div className="flex flex-wrap gap-1 pt-1">
-                        {product.features.slice(0, 2).map((feat, idx) => (
-                          <span key={idx} className="text-[9px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 truncate max-w-[110px]">
-                            ✓ {feat}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Card Footer: Clean Price and Details Button */}
-                <div className="p-2 sm:p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1 sm:gap-2">
-                  <div className="min-w-0">
-                    {isFree ? (
-                      <span className="text-xs sm:text-base font-black text-emerald-500 dark:text-emerald-400 block truncate leading-tight">
-                        {t('সম্পূর্ণ ফ্রি', 'Fully Free')}
-                      </span>
-                    ) : (
-                      <div className="flex flex-col">
-                        {product.originalPrice && (
-                          <span className="text-[10px] sm:text-xs text-slate-400 line-through block leading-tight truncate">
-                            ৳{product.originalPrice.toLocaleString('bn-BD')}
-                          </span>
-                        )}
-                        <span className="text-xs sm:text-base md:text-lg font-black text-[#1DB954] block truncate leading-tight">
-                          ৳{product.price.toLocaleString('bn-BD')}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handleOpenDetail(product)}
-                    className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold text-white bg-[#1DB954] hover:bg-emerald-600 shadow-xs sm:shadow-md sm:shadow-[#1DB954]/20 transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
-                  >
-                    <span>{t('বিস্তারিত', 'Details')}</span>
-                    <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Mobile: 4 on home or all on standalone page */}
-        <div className="grid grid-cols-2 gap-2.5 sm:hidden">
-          {(isStandalonePage ? digitalProducts : digitalProducts.slice(0, 4)).map(product => {
-            const isFree = product.price === 0;
-
-            return (
-              <div
-                key={product.id}
-                className="group relative bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-[#1DB954] transition-all duration-300 flex flex-col justify-between"
-              >
-                <div>
-                  {/* Thumbnail Image */}
-                  <div 
-                    onClick={() => handleOpenDetail(product)}
-                    className="relative h-28 overflow-hidden bg-slate-950 cursor-pointer"
-                  >
-                    <img
-                      src={product.thumbnail}
-                      alt={product.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-
-                    {/* Top Badges */}
-                    <div className="absolute top-1.5 left-1.5 z-10 flex flex-col gap-1">
                       {isFree ? (
-                        <span className="bg-emerald-500 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-xs">
-                          <Gift className="w-2.5 h-2.5 fill-white" />
-                          সম্পূর্ণ ফ্রি
-                        </span>
-                      ) : product.deliveryType === 'auto' ? (
-                        <span className="bg-[#1DB954] text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-xs">
-                          <Zap className="w-2.5 h-2.5 fill-white" />
-                          অটো
-                        </span>
+                        <>
+                          <Download className="w-3.5 h-3.5 shrink-0" />
+                          <span>ডাউনলোড</span>
+                        </>
                       ) : (
-                        <span className="bg-blue-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-xs">
-                          <Mail className="w-2.5 h-2.5" />
-                          ম্যানুয়াল
-                        </span>
+                        <>
+                          <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
+                          <span>কিনুন</span>
+                          <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                        </>
                       )}
-                    </div>
-
-                    <div className="absolute top-1.5 right-1.5 z-10">
-                      <span className="bg-slate-900/90 text-slate-200 text-[8px] font-bold px-1.5 py-0.5 rounded border border-slate-700">
-                        {product.fileFormat}
-                      </span>
-                    </div>
-
-                    {/* Bottom Specs Pill */}
-                    <div className="absolute bottom-1.5 left-1.5 right-1.5 z-10 flex items-center justify-between text-[9px] text-white font-bold">
-                      <span className="bg-slate-950/80 backdrop-blur-md px-1.5 py-0.5 rounded-full border border-slate-800 flex items-center gap-0.5">
-                        <Package className="w-2.5 h-2.5 text-[#1DB954]" />
-                        <span>{product.fileSize}</span>
-                      </span>
-                      <span className="bg-slate-950/80 backdrop-blur-md px-1.5 py-0.5 rounded-full border border-amber-500/30 text-amber-400 flex items-center gap-0.5">
-                        <Star className="w-2.5 h-2.5 fill-amber-400" />
-                        <span>{product.rating}</span>
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Card Body */}
-                  <div className="p-2 space-y-1">
-                    <span className="text-[9px] font-bold text-[#1DB954] uppercase tracking-wide block truncate">
-                      {product.category}
-                    </span>
-
-                    <h3 
-                      onClick={() => handleOpenDetail(product)}
-                      className="text-xs font-black text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#1DB954] transition-colors min-h-[2rem] cursor-pointer"
-                    >
-                      {product.title}
-                    </h3>
+                    </button>
                   </div>
                 </div>
-
-                {/* Card Footer: Clean Price and Details Button */}
-                <div className="p-2 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-1.5">
-                  <div className="min-w-0">
-                    {isFree ? (
-                      <span className="text-xs sm:text-sm font-black text-emerald-500 block truncate leading-tight">
-                        {t('সম্পূর্ণ ফ্রি', 'Fully Free')}
-                      </span>
-                    ) : (
-                      <div className="flex flex-col">
-                        {product.originalPrice && (
-                          <span className="text-[9px] text-slate-400 line-through block leading-tight truncate">
-                            ৳{product.originalPrice.toLocaleString('bn-BD')}
-                          </span>
-                        )}
-                        <span className="text-xs sm:text-sm font-black text-[#1DB954] block truncate leading-tight">
-                          ৳{product.price.toLocaleString('bn-BD')}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handleOpenDetail(product)}
-                    className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold text-white bg-[#1DB954] hover:bg-emerald-600 shadow-xs sm:shadow-md sm:shadow-[#1DB954]/20 transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
-                  >
-                    <span>{t('বিস্তারিত', 'Details')}</span>
-                    <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
   ChevronLeft,
   LayoutDashboard,
@@ -22,6 +23,7 @@ import {
   FileText,
   Paperclip,
   Pencil,
+  Camera,
   Check,
   Sparkles,
   ArrowRight,
@@ -98,8 +100,9 @@ import {
 } from 'lucide-react';
 import { useData, checkAndAutoCancelOverdueOrders } from '../context/DataContext';
 import { getLiveSessionDynamicStatus, formatBanglaLiveSchedule } from '../services/liveClassService';
-import { MarketplaceGig, MarketplaceJob, MarketplaceOrder } from '../types';
+import { MarketplaceGig, MarketplaceJob, MarketplaceOrder, Service } from '../types';
 import { GigDetailPage } from './GigDetailPage';
+import { ServiceDetailModal } from './ServiceDetailModal';
 import { GigCard } from './GigCard';
 import { StudentDashboard } from './StudentDashboard';
 import { CustomerDashboard } from './CustomerDashboard';
@@ -230,7 +233,7 @@ const AnimatedOverviewCounter: React.FC<{ value: string }> = ({ value }) => {
       return;
     }
 
-    const duration = 2500;
+    const duration = targetNum <= 10 ? 300 : 600;
     let animationFrameId: number;
     let startTime: number | null = null;
 
@@ -346,10 +349,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     closeMessengerInbox,
     marketplaceMode,
     setMarketplaceMode,
+    siteSettings,
     t,
     lang,
     setLang
   } = useData();
+
+  const marketplaceLogo = siteSettings?.marketplaceLogoUrl || siteSettings?.logoUrl;
 
   const pendingMentorSubmissionsCount = useMemo(() => {
     return (submissions || []).filter(s => s.status === "submitted" || s.status === "pending").length;
@@ -474,20 +480,6 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
   const currentUser = marketplaceUser || ptenitUser;
 
-  const hasSellerAccount = Boolean(
-    currentUser && (
-      currentUser.role === 'instructor' ||
-      currentUser.role === 'specialist' ||
-      currentUser.role === 'admin' ||
-      (currentUser as any).isSpecialist ||
-      (currentUser as any).isSeller ||
-      (currentUser as any).isMentor ||
-      (currentUser as any).mentorStatus === 'approved' ||
-      (currentUser as any).specialistStatus === 'approved' ||
-      currentUser.roles?.includes('instructor') ||
-      currentUser.roles?.includes('specialist')
-    )
-  );
   const offeredCourses = useMemo(() => {
     return (courses || []).filter(c => c.offerStatus === 'offered');
   }, [courses]);
@@ -496,6 +488,27 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     const matched = (enrollments || []).filter(e => e.userId === currentUser.id || e.studentId === currentUser.id);
     return matched.length > 0 ? matched : (enrollments || []);
   }, [enrollments, currentUser]);
+
+  const buyerDigitalOrders = useMemo(() => {
+    return (allBuyerOrders || []).filter(o => 
+      o.type === 'digital_product_order' || 
+      Boolean(o.digitalProductId) || 
+      Boolean(o.id?.startsWith('DIGI-')) ||
+      Boolean(o.deliveryType) ||
+      o.category?.toLowerCase().includes('canva') ||
+      o.category?.toLowerCase().includes('source code') ||
+      o.category?.toLowerCase().includes('script')
+    );
+  }, [allBuyerOrders]);
+
+  const buyerProjectOrders = useMemo(() => {
+    return (allBuyerOrders || []).filter(o => 
+      o.type !== 'digital_product_order' && 
+      !o.digitalProductId && 
+      !o.id?.startsWith('DIGI-') &&
+      !o.deliveryType
+    );
+  }, [allBuyerOrders]);
 
   const studentEnrolledCourses = useMemo(() => {
     const enrolledMap = new Map<string, any>();
@@ -917,12 +930,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
   const [newAssignmentText, setNewAssignmentText] = useState('');
   const [newAssignmentRepo, setNewAssignmentRepo] = useState('');
   const [newAssignmentCourseId, setNewAssignmentCourseId] = useState('course-mern-pro');
-  const [orderHubTab, setOrderHubTab] = useState<'overview' | 'orders' | 'courses'>(() => {
+  const [orderHubTab, setOrderHubTab] = useState<'overview' | 'orders' | 'courses' | 'products'>(() => {
     if (initialCategory === 'my-orders' || initialCategory === 'My Orders') return 'orders';
     if (initialCategory === 'overview') return 'overview';
-    return 'courses';
+    if (initialCategory === 'my-courses') return 'courses';
+    if (initialCategory === 'digital-products' || initialCategory === 'products') return 'products';
+    return 'overview';
   });
-  const [overviewInnerTab, setOverviewInnerTab] = useState<'all' | 'courses' | 'orders'>('all');
+  const [copiedLicenseKeyId, setCopiedLicenseKeyId] = useState<string | null>(null);
+  const [overviewInnerTab, setOverviewInnerTab] = useState<'all' | 'courses' | 'orders' | 'products'>('all');
   const [buyerOrderStatusFilter, setBuyerOrderStatusFilter] = useState<'all' | 'in_progress' | 'in_review' | 'completed' | 'cancelled' | 'public_projects'>('public_projects');
   const [messengerSubTabFilter, setMessengerSubTabFilter] = useState<'all' | 'sellers' | 'online' | 'orders'>('all');
   const [isMessengerSearchActive, setIsMessengerSearchActive] = useState(false);
@@ -1209,10 +1225,41 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
   const [outsourceCommPercent, setOutsourceCommPercent] = useState<number>(20);
   const [outsourceTargetName, setOutsourceTargetName] = useState('পাবলিক ফ্রিল্যান্সার হাব');
   const [outsourceNote, setOutsourceNote] = useState('');
+  const hasSellerAccount = Boolean(
+    currentUser && (
+      currentUser.role === 'instructor' ||
+      currentUser.role === 'specialist' ||
+      currentUser.role === 'admin' ||
+      (currentUser as any).isSpecialist ||
+      (currentUser as any).isSeller ||
+      (currentUser as any).isMentor ||
+      (currentUser as any).mentorStatus === 'approved' ||
+      (currentUser as any).specialistStatus === 'approved' ||
+      currentUser.roles?.includes('instructor') ||
+      currentUser.roles?.includes('specialist')
+    )
+  );
+
   const [viewMode, setViewModeState] = useState<'buying' | 'selling'>(() => {
+    const isSeller = Boolean(
+      currentUser && (
+        currentUser.role === 'instructor' ||
+        currentUser.role === 'specialist' ||
+        currentUser.role === 'admin' ||
+        (currentUser as any).isSpecialist ||
+        (currentUser as any).isSeller ||
+        (currentUser as any).isMentor ||
+        (currentUser as any).mentorStatus === 'approved' ||
+        (currentUser as any).specialistStatus === 'approved' ||
+        currentUser.roles?.includes('instructor') ||
+        currentUser.roles?.includes('specialist')
+      )
+    );
+    if (!isSeller) return 'buying';
+
     if (initialCategory === 'selling' || initialCategory === 'seller' || initialCategory === 'seller-orders' || initialCategory === 'seller-gigs' || initialCategory === 'seller-payout' || initialCategory === 'seller-assignments') return 'selling';
     if (initialCategory === 'buying' || initialCategory === 'buyer' || initialCategory === 'my-orders' || initialCategory === 'my-courses' || initialCategory === 'overview') return 'buying';
-    return marketplaceMode || 'buying';
+    return marketplaceMode === 'selling' ? 'selling' : 'buying';
   });
 
   const handleToggleMode = (targetMode?: 'buying' | 'selling') => {
@@ -1255,12 +1302,27 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     if (setMarketplaceMode) setMarketplaceMode(mode);
   };
 
-  // Keep viewMode state synchronized with global marketplaceMode
+  // Keep viewMode state synchronized with global marketplaceMode (with seller authorization check)
   useEffect(() => {
-    if (marketplaceMode && (marketplaceMode === 'selling' || marketplaceMode === 'buying')) {
-      setViewModeState(marketplaceMode);
+    if (marketplaceMode === 'selling') {
+      if (currentUser && hasSellerAccount) {
+        setViewModeState('selling');
+      } else {
+        setViewModeState('buying');
+        if (setMarketplaceMode) setMarketplaceMode('buying');
+      }
+    } else if (marketplaceMode === 'buying') {
+      setViewModeState('buying');
     }
-  }, [marketplaceMode]);
+  }, [marketplaceMode, currentUser, hasSellerAccount, setMarketplaceMode]);
+
+  // Guard: If user logs out or does not have a seller account, ensure viewMode is never 'selling'
+  useEffect(() => {
+    if ((!currentUser || !hasSellerAccount) && viewMode === 'selling') {
+      setViewModeState('buying');
+      if (setMarketplaceMode) setMarketplaceMode('buying');
+    }
+  }, [currentUser, hasSellerAccount, viewMode, setMarketplaceMode]);
 
   const isSellerMode = (viewMode === 'selling' || marketplaceMode === 'selling');
 
@@ -1370,6 +1432,18 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     }
   }, [searchQuery]);
   const [isMobileMarketplaceMenuOpen, setIsMobileMarketplaceMenuOpen] = useState(false);
+
+  // Prevent background scroll when mobile side drawer is open
+  useEffect(() => {
+    if (isMobileMarketplaceMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMarketplaceMenuOpen]);
   const [priceRangeFilter, setPriceRangeFilter] = useState<'all' | 'under3k' | '3k-10k' | '10k-30k' | 'over30k'>('all');
   const [deliveryFilter, setDeliveryFilter] = useState<'any' | '1day' | '3days' | '7days'>('any');
   const [ratingFilter, setRatingFilter] = useState<number>(0);
@@ -1687,7 +1761,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
         setActiveSubTab('gigs');
       } else {
         setViewMode('buying');
-        setActiveSubTab('overview');
+        setActiveSubTab('my-orders');
+        setOrderHubTab('overview');
       }
       setSelectedGig(null);
     } else if (initialCategory === 'my-courses') {
@@ -2435,27 +2510,20 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     }
   }, []);
 
-  // Toggle Offer Sound Function (Persists permanently in localStorage and syncs with global context)
-  const toggleOfferSound = useCallback(() => {
-    toggleContextOfferSound();
-    setIsToolkitSoundOn(!isOfferSoundEnabled);
-    if (isOfferSoundEnabled) {
-      stopOfferNotificationSound();
-    }
-  }, [toggleContextOfferSound, isOfferSoundEnabled, stopOfferNotificationSound]);
-
   // Web Audio Notification Sound Chime (Plays on new offer, NEVER plays if muted in state or localStorage)
-  const playOfferNotificationSound = useCallback(() => {
-    // 1. Strict localStorage check
-    try {
-      const saved = localStorage.getItem('ptenit_offer_sound_enabled');
-      if (saved !== null && JSON.parse(saved) === false) {
-        return;
-      }
-    } catch {}
+  const playOfferNotificationSound = useCallback((forcePlay?: boolean) => {
+    // 1. Strict localStorage check (unless forcePlay)
+    if (!forcePlay) {
+      try {
+        const saved = localStorage.getItem('ptenit_offer_sound_enabled');
+        if (saved !== null && JSON.parse(saved) === false) {
+          return;
+        }
+      } catch {}
 
-    // 2. React state check
-    if (!isOfferSoundEnabled) return;
+      // 2. React state check
+      if (!isOfferSoundEnabled) return;
+    }
 
     try {
       // Close previous audio if running
@@ -2510,6 +2578,19 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       // Audio autoplay policy fallback
     }
   }, [isOfferSoundEnabled]);
+
+  // Toggle Offer Sound Function (Persists permanently in localStorage and syncs with global context)
+  const toggleOfferSound = useCallback(() => {
+    if (typeof toggleContextOfferSound === 'function') {
+      toggleContextOfferSound();
+    }
+    setIsToolkitSoundOn(!isOfferSoundEnabled);
+    if (isOfferSoundEnabled) {
+      stopOfferNotificationSound();
+    } else {
+      playOfferNotificationSound(true);
+    }
+  }, [toggleContextOfferSound, isOfferSoundEnabled, stopOfferNotificationSound, playOfferNotificationSound]);
 
   // When active offer changes, reset countdown based on that offer's dynamic duration and play sound
   useEffect(() => {
@@ -2704,6 +2785,17 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     return null;
   });
 
+  const savedMarketplaceScrollPosRef = useRef<number>(0);
+
+  const openMarketplaceGigDetail = (gig: MarketplaceGig, packageTier: 'basic' | 'standard' | 'premium' = 'standard') => {
+    savedMarketplaceScrollPosRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+    setSelectedGig(gig);
+    setSelectedPackage(packageTier);
+  };
+
+  // Selected Official Agency Service Modal (Matching DigitalProductDetailModal!)
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+
   useEffect(() => {
     try {
       const savedGigData = localStorage.getItem('ptenit_selected_gig_data');
@@ -2744,6 +2836,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     }
   });
   const [showSavedOnly, setShowSavedOnly] = useState(false);
+  // Mobile Phone View Toggle: 'feed' (Facebook Style Feed) vs 'grid' (2-Column Compact)
+  const [mobileGigLayout, setMobileGigLayout] = useState<'feed' | 'grid'>('feed');
 
   const savedGigs = useMemo(() => {
     let list = gigs.filter(g => savedGigIds.includes(g.id));
@@ -3098,44 +3192,56 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             {(((activeSubTab === 'gigs' && viewMode === 'buying') || (viewMode === 'selling' && (sellerSubTab === 'gigs' || sellerSubTab === 'overview'))) && !isInboxModalOpen && !isNotificationsOpen) && (
               <div className="flex items-center justify-between gap-1.5 w-full">
                 {/* Left: PTENit Brand Logo */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedGig(null);
-                    if (viewMode === 'selling') {
-                      setSpecialistMainTab('marketplace');
-                      setSellerSubTab('gigs');
-                      setActiveSubTab('gigs');
-                    } else {
-                      setViewMode('buying');
-                      setActiveSubTab('gigs');
-                      setSelectedCategory('All');
-                    }
-                    setSearchQuery('');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="flex items-center gap-1.5 text-left cursor-pointer shrink-0 group"
-                  title="মার্কেটপ্লেস রিফ্রেশ"
-                >
-                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#1DB954] to-emerald-600 flex items-center justify-center font-bold text-base text-white shadow-md shadow-[#1DB954]/20 shrink-0">
-                    P
-                  </div>
-                  <span className="font-heading text-base font-black tracking-wider text-white">
-                    PTEN<span className="text-[#1DB954]">it</span>
-                  </span>
-                </button>
+                <div className="flex items-center justify-start shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedGig(null);
+                      if (viewMode === 'selling') {
+                        setSpecialistMainTab('marketplace');
+                        setSellerSubTab('gigs');
+                        setActiveSubTab('gigs');
+                      } else {
+                        setViewMode('buying');
+                        setActiveSubTab('gigs');
+                        setSelectedCategory('All');
+                      }
+                      setSearchQuery('');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="flex items-center gap-1.5 text-left cursor-pointer shrink-0 group"
+                    title="মার্কেটপ্লেস রিফ্রেশ"
+                  >
+                    {marketplaceLogo ? (
+                      <img
+                        src={marketplaceLogo}
+                        alt="PTENit Marketplace Logo"
+                        className="h-7 sm:h-8 w-auto max-w-[85px] xs:max-w-[95px] object-contain rounded-md"
+                      />
+                    ) : (
+                      <>
+                        <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-gradient-to-br from-[#1DB954] to-emerald-600 flex items-center justify-center font-bold text-xs sm:text-base text-white shadow-md shadow-[#1DB954]/20 shrink-0">
+                          P
+                        </div>
+                        <span className="font-heading text-sm sm:text-base font-black tracking-wider text-white">
+                          PTEN<span className="text-[#1DB954]">it</span>
+                        </span>
+                      </>
+                    )}
+                  </button>
+                </div>
 
-                {/* Mobile Inline Search Bar - UNIVERSAL FOR BOTH BUYER AND SELLER */}
-                <div className="flex-1 min-w-0 mx-1 relative items-center">
-                  <div className="relative w-full flex items-center">
+                {/* Mobile Inline Search Bar - CENTERED UNIVERSAL FOR BOTH BUYER AND SELLER */}
+                <div className="flex-1 flex justify-center items-center min-w-0 px-1 relative">
+                  <div className="relative w-full max-w-[210px] sm:max-w-[240px] flex items-center justify-center">
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder={viewMode === 'selling' ? "সার্ভিস বা অর্ডার সার্চ করুন..." : "সার্চ করুন..."}
-                      className="w-full pl-7 pr-6 py-1 bg-slate-900/90 border border-slate-700/80 text-white rounded-lg text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#1DB954] font-bengali shadow-inner"
+                      placeholder={viewMode === 'selling' ? "সার্ভিস বা অর্ডার..." : "সার্চ করুন..."}
+                      className="w-full text-center pl-7 pr-7 py-1 bg-slate-900/90 border border-slate-700/80 text-white rounded-lg text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#1DB954] font-bengali shadow-inner placeholder:text-center focus:placeholder:text-left focus:text-left"
                     />
-                    <Search className="w-3.5 h-3.5 text-[#1DB954] absolute left-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <Search className="w-3.5 h-3.5 text-[#1DB954] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                     {searchQuery && (
                       <button
                         onClick={() => setSearchQuery('')}
@@ -3148,7 +3254,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                   {/* LIVE FLOATING SEARCH RESULTS DROPDOWN (MOBILE MARKETPLACE) */}
                   {searchQuery.trim() && (
-                    <div className="absolute left-0 right-0 top-full mt-2 bg-[#142B4D] border border-slate-700 rounded-2xl shadow-2xl p-3 z-50 text-slate-200 max-h-80 overflow-y-auto">
+                    <div className="absolute left-1/2 -translate-x-1/2 w-[calc(100vw-24px)] max-w-sm top-full mt-2 bg-[#142B4D] border border-slate-700 rounded-2xl shadow-2xl p-3 z-50 text-slate-200 max-h-80 overflow-y-auto">
                       <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 border-b border-slate-700 pb-1 font-bengali flex items-center justify-between">
                         <span>মার্কেটপ্লেস গিগসমূহ ({filteredGigs.length})</span>
                         <span className="text-[9px] text-[#1DB954] font-normal">লাইভ ফলাফল</span>
@@ -3216,35 +3322,27 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 </div>
 
                 {/* Right Action Controls */}
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center justify-end gap-1 shrink-0">
                   {currentUser ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsProfileDropdownOpen(!isProfileDropdownOpen);
-                        setIsMobileMarketplaceMenuOpen(false);
-                      }}
-                      className="flex items-center p-0.5 rounded-full bg-slate-900 border-2 border-[#1DB954] cursor-pointer active:scale-95 transition"
-                      title="প্রোফাইল মেনু"
+                    <div
+                      className="w-7 h-7 rounded-full bg-slate-800 flex items-center justify-center cursor-default select-none shrink-0 overflow-hidden"
+                      title={`প্রোফাইল: ${currentUser.name}`}
                     >
                       <img
                         src={currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
                         alt={currentUser.name}
-                        className="w-6 h-6 rounded-full object-cover"
+                        className="w-full h-full object-cover"
                       />
-                    </button>
+                    </div>
                   ) : (
                     <button
                       type="button"
-                      onClick={() => {
-                        setIsProfileDropdownOpen(!isProfileDropdownOpen);
-                        setIsMobileMarketplaceMenuOpen(false);
-                      }}
-                      className="flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-600 transition cursor-pointer font-bengali active:scale-95"
-                      title="প্রোফাইল ও লগইন মেনু"
+                      onClick={openAuthModal}
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-slate-200 hover:text-white hover:bg-slate-800/60 active:scale-90 transition cursor-pointer"
+                      title="লগইন করুন"
+                      aria-label="লগইন"
                     >
-                      <User className="w-3.5 h-3.5 text-[#1DB954]" />
-                      <span>প্রোফাইল</span>
+                      <User className="w-5 h-5 text-[#1DB954]" />
                     </button>
                   )}
 
@@ -3252,10 +3350,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     type="button"
                     onClick={() => {
                       setIsMobileMarketplaceMenuOpen(!isMobileMarketplaceMenuOpen);
-                      setIsProfileDropdownOpen(false);
                     }}
-                    className="p-1 text-slate-200 hover:text-white cursor-pointer"
-                    title="মার্কেটপ্লেস মেনু"
+                    className="p-1.5 text-slate-200 hover:text-white cursor-pointer shrink-0 active:scale-95 touch-manipulation"
+                    title="মেনুবার"
                   >
                     {isMobileMarketplaceMenuOpen ? <X className="w-5 h-5 text-[#1DB954]" /> : <Menu className="w-5 h-5" />}
                   </button>
@@ -3429,10 +3526,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               </button>
             </div>
 
-            {/* ATTACHED BUYER 3-TAB QUICK-ACTION STRIP FOR PHONE VIEW (ওভারভিউ | প্রজেক্ট | কোর্স) */}
+            {/* ATTACHED BUYER 4-TAB QUICK-ACTION STRIP FOR PHONE VIEW (ওভারভিউ | প্রজেক্ট | কোর্স | প্রোডাক্ট) */}
             {viewMode === 'buying' && (activeSubTab === 'my-orders' || activeSubTab === 'my-courses' || activeSubTab === 'overview') && !selectedGig && !isInboxModalOpen && !isNotificationsOpen && (
-              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-[#0B132B] text-white px-2 py-2 border-t border-slate-800 shadow-xs">
-                <div className="grid grid-cols-3 gap-1.5 w-full">
+              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-[#0B132B] text-white px-1.5 py-1.5 border-t border-slate-800 shadow-xs">
+                <div className="grid grid-cols-4 gap-1 w-full">
                   {/* 1. ওভারভিউ */}
                   <button
                     type="button"
@@ -3440,13 +3537,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       setOrderHubTab('overview');
                       setActiveSubTab('my-orders');
                     }}
-                    className={`py-1.5 px-1.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
+                    className={`py-1.5 px-0.5 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       orderHubTab === 'overview'
-                        ? 'bg-slate-800 text-white shadow-md'
-                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/80'
+                        ? 'bg-slate-800 text-white shadow-xs'
+                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800'
                     }`}
                   >
-                    <LayoutDashboard className={`w-3.5 h-3.5 shrink-0 ${orderHubTab === 'overview' ? 'text-white' : 'text-slate-400'}`} />
+                    <LayoutDashboard className={`w-3 h-3 shrink-0 ${orderHubTab === 'overview' ? 'text-white' : 'text-slate-400'}`} />
                     <span className="truncate">ওভারভিউ</span>
                   </button>
 
@@ -3457,14 +3554,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       setOrderHubTab('orders');
                       setActiveSubTab('my-orders');
                     }}
-                    className={`py-1.5 px-1.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
-                      orderHubTab === 'orders' && activeSubTab !== 'my-courses'
-                        ? 'bg-[#1DB954] text-white shadow-md'
-                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/80'
+                    className={`py-1.5 px-0.5 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
+                      orderHubTab === 'orders'
+                        ? 'bg-[#1DB954] text-white shadow-xs'
+                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800'
                     }`}
                   >
-                    <ShoppingBag className={`w-3.5 h-3.5 shrink-0 ${orderHubTab === 'orders' && activeSubTab !== 'my-courses' ? 'text-white' : 'text-[#1DB954]'}`} />
-                    <span className="truncate">প্রজেক্ট ({allBuyerOrders.length})</span>
+                    <ShoppingBag className={`w-3 h-3 shrink-0 ${orderHubTab === 'orders' ? 'text-white' : 'text-[#1DB954]'}`} />
+                    <span className="truncate">প্রজেক্ট</span>
                   </button>
 
                   {/* 3. কোর্স */}
@@ -3472,16 +3569,33 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     type="button"
                     onClick={() => {
                       setOrderHubTab('courses');
-                      setActiveSubTab('my-courses');
+                      setActiveSubTab('my-orders');
                     }}
-                    className={`py-1.5 px-1.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
-                      orderHubTab === 'courses' || activeSubTab === 'my-courses'
-                        ? 'bg-blue-600 text-white shadow-md'
-                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/80'
+                    className={`py-1.5 px-0.5 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
+                      orderHubTab === 'courses'
+                        ? 'bg-blue-600 text-white shadow-xs'
+                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800'
                     }`}
                   >
-                    <BookOpen className={`w-3.5 h-3.5 shrink-0 ${orderHubTab === 'courses' || activeSubTab === 'my-courses' ? 'text-white' : 'text-blue-400'}`} />
-                    <span className="truncate">কোর্স ({userEnrollments.length > 0 ? userEnrollments.length : 2})</span>
+                    <BookOpen className={`w-3 h-3 shrink-0 ${orderHubTab === 'courses' ? 'text-white' : 'text-blue-400'}`} />
+                    <span className="truncate">কোর্স</span>
+                  </button>
+
+                  {/* 4. প্রোডাক্ট */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOrderHubTab('products');
+                      setActiveSubTab('my-orders');
+                    }}
+                    className={`py-1.5 px-0.5 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
+                      orderHubTab === 'products'
+                        ? 'bg-amber-600 text-white shadow-xs'
+                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800'
+                    }`}
+                  >
+                    <Package className={`w-3 h-3 shrink-0 ${orderHubTab === 'products' ? 'text-white' : 'text-amber-400'}`} />
+                    <span className="truncate">প্রোডাক্ট</span>
                   </button>
                 </div>
               </div>
@@ -3793,15 +3907,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               className="flex items-center gap-2 text-left cursor-pointer group"
               title="মার্কেটপ্লেস রিফ্রেশ করুন"
             >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1DB954] to-emerald-600 flex items-center justify-center font-bold text-xl text-white shadow-md shadow-[#1DB954]/20 transform group-hover:scale-105 transition-transform shrink-0">
-                P
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xl font-black text-white tracking-wider font-heading group-hover:opacity-90 transition">
-                    PTEN<span className="text-[#1DB954]">it</span>
-                  </span>
-                  <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shadow-xs ${
+              {marketplaceLogo ? (
+                <div className="flex items-center gap-2">
+                  <img
+                    src={marketplaceLogo}
+                    alt="PTENit Marketplace Logo"
+                    className="h-8 sm:h-9 md:h-10 w-auto max-w-[140px] sm:max-w-[170px] object-contain rounded-lg"
+                  />
+                  <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shadow-xs shrink-0 ${
                     viewMode === 'selling'
                       ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40'
                       : 'bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/40'
@@ -3809,10 +3922,30 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     {viewMode === 'selling' ? 'Seller' : 'Market'}
                   </span>
                 </div>
-                <span className="text-[9px] text-slate-300 font-medium tracking-tight">
-                  Marketplace & Services
-                </span>
-              </div>
+              ) : (
+                <>
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1DB954] to-emerald-600 flex items-center justify-center font-bold text-xl text-white shadow-md shadow-[#1DB954]/20 transform group-hover:scale-105 transition-transform shrink-0">
+                    P
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xl font-black text-white tracking-wider font-heading group-hover:opacity-90 transition">
+                        PTEN<span className="text-[#1DB954]">it</span>
+                      </span>
+                      <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shadow-xs ${
+                        viewMode === 'selling'
+                          ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40'
+                          : 'bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/40'
+                      }`}>
+                        {viewMode === 'selling' ? 'Seller' : 'Market'}
+                      </span>
+                    </div>
+                    <span className="text-[9px] text-slate-300 font-medium tracking-tight">
+                      Marketplace & Services
+                    </span>
+                  </div>
+                </>
+              )}
             </button>
 
             {/* Marketplace Home Button (Respects Seller / Buyer Mode) */}
@@ -4073,13 +4206,40 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             )}
 
             {/* Switch to Specialist Mode / Buying Mode */}
-            <button
-              onClick={() => handleToggleMode(viewMode === 'buying' ? 'selling' : 'buying')}
-              className="hidden sm:flex px-3.5 py-2 rounded-xl text-xs font-black text-white bg-[#1DB954] hover:bg-[#19a34a] transition-all cursor-pointer items-center gap-1.5 shadow-md shadow-[#1DB954]/20 border border-[#1DB954]"
-            >
-              <Zap className="w-3.5 h-3.5 text-slate-950 fill-slate-950" />
-              <span>{viewMode === 'buying' ? 'স্পেশালিস্ট মোড' : 'বায়ার মোড'}</span>
-            </button>
+            {!currentUser ? (
+              <button
+                type="button"
+                onClick={() => {
+                  if (openAuthModal) openAuthModal();
+                }}
+                className="hidden sm:flex px-3 py-1.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 transition-all cursor-pointer items-center gap-1.5 border border-slate-700/80 active:scale-95"
+                title="সেলার মোডে যেতে লগইন করুন"
+              >
+                <Zap className="w-3.5 h-3.5 text-amber-400" />
+                <span>সেলার মোড</span>
+              </button>
+            ) : !hasSellerAccount ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMentorAppModalOpen(true);
+                }}
+                className="hidden sm:flex px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-300 hover:text-white bg-emerald-950/60 hover:bg-emerald-900/80 transition-all cursor-pointer items-center gap-1.5 border border-emerald-500/30 active:scale-95"
+                title="সেলার হতে আবেদন করুন"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <span>সেলার হতে আবেদন</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => handleToggleMode(viewMode === 'buying' ? 'selling' : 'buying')}
+                className="hidden sm:flex px-3.5 py-2 rounded-xl text-xs font-black text-white bg-[#1DB954] hover:bg-[#19a34a] transition-all cursor-pointer items-center gap-1.5 shadow-md shadow-[#1DB954]/20 border border-[#1DB954] active:scale-95"
+              >
+                <Zap className="w-3.5 h-3.5 text-slate-950 fill-slate-950" />
+                <span>{viewMode === 'buying' ? 'স্পেশালিস্ট মোড' : 'বায়ার মোড'}</span>
+              </button>
+            )}
 
             {/* User Avatar & Profile Dropdown Trigger (Desktop) */}
             {currentUser ? (
@@ -4102,10 +4262,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               </button>
             ) : (
               <button
+                type="button"
                 onClick={openAuthModal}
-                className="px-4 py-2 bg-[#1DB954] hover:bg-emerald-400 text-white font-black text-xs rounded-xl shadow-md transition cursor-pointer"
+                className="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-slate-800/90 hover:bg-slate-700 transition cursor-pointer flex items-center gap-1.5 font-bengali active:scale-95"
+                title="লগইন করুন"
               >
-                Sign In
+                <User className="w-3.5 h-3.5 text-[#1DB954]" />
+                <span>লগইন</span>
               </button>
             )}
           </div>
@@ -4407,270 +4570,393 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
           </div>
         )}
 
-        {/* Mobile Slide-Over Navigation Menu with CATEGORIES & FILTERS INCLUDED */}
-        {isMobileMarketplaceMenuOpen && (
-          <div className="md:hidden bg-slate-900 text-white border-t border-emerald-500/40 p-4 space-y-4 shadow-2xl animate-in slide-in-from-top-2 duration-150 max-h-[85vh] overflow-y-auto">
-            {/* 0. Top Return to PTENit Main Website CTA (Requirement #3) */}
-            <button
-              type="button"
-              onClick={() => {
-                setIsMobileMarketplaceMenuOpen(false);
-                if (setActiveTab) setActiveTab('home');
-              }}
-              className="w-full flex items-center justify-between p-3 rounded-2xl bg-gradient-to-r from-emerald-950 via-slate-800 to-slate-850 border-2 border-[#1DB954] text-white hover:bg-slate-800 transition-all font-bengali shadow-xl cursor-pointer group active:scale-[0.99]"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#1DB954] text-white flex items-center justify-center font-black shadow-md shadow-[#1DB954]/30 group-hover:scale-105 transition-transform">
-                  <ArrowLeft className="w-5 h-5 text-slate-950 stroke-[2.5]" />
-                </div>
-                <div className="text-left">
-                  <div className="text-sm font-black text-white flex items-center gap-1.5 leading-tight">
-                    <span>Back PTENit</span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#1DB954]/20 text-[#1DB954] font-mono border border-[#1DB954]/40">মেইন সাইট</span>
+        {/* Mobile Slide-Over Navigation Drawer with Backdrop (Slides out from Right via Portal) */}
+        {isMobileMarketplaceMenuOpen && typeof document !== 'undefined' && createPortal(
+          <div className="fixed inset-0 z-[99999] md:hidden animate-in fade-in duration-200">
+            {/* Dark Backdrop Overlay */}
+            <div
+              className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
+              onClick={() => setIsMobileMarketplaceMenuOpen(false)}
+              aria-hidden="true"
+            />
+
+            {/* Side Drawer Panel (Slide-in from Right) - Completely Borderless */}
+            <div className="fixed inset-y-0 right-0 w-[85vw] max-w-[340px] bg-[#0B132B] text-white shadow-2xl flex flex-col z-[100000] animate-in slide-in-from-right duration-300 ease-out">
+              {/* Drawer Top Bar - Minimal & Clean (No Logo, No Badges) */}
+              <div className="flex items-center justify-between px-4 py-3 bg-[#0B132B] shrink-0">
+                <span className="text-xs font-bold text-slate-400">মেনু</span>
+                <button
+                  type="button"
+                  onClick={() => setIsMobileMarketplaceMenuOpen(false)}
+                  className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 hover:text-white transition cursor-pointer active:scale-95"
+                  aria-label="মেনু বন্ধ করুন"
+                >
+                  <X className="w-4 h-4 text-slate-300 hover:text-white" />
+                </button>
+              </div>
+
+              {/* Compact Menu Body - Profile at Top, Essential Links Middle, Logout at Bottom */}
+              <div className="flex-1 px-3.5 pb-3.5 space-y-2 font-bengali flex flex-col justify-between overflow-y-auto">
+                <div className="space-y-2">
+                  {/* 1. TOP: Buyer / Seller Profile with Full Details & Photo Edit */}
+                  {currentUser ? (
+                    <div className="p-3 rounded-2xl bg-slate-800/90 space-y-2.5">
+                      {/* Avatar + Details */}
+                      <div className="flex items-center gap-3">
+                        <div className="relative shrink-0">
+                          <img
+                            src={currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
+                            alt={currentUser.name}
+                            className="w-12 h-12 rounded-full object-cover border border-slate-700"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsMobileMarketplaceMenuOpen(false);
+                              setIsBuyerProfileModalOpen(true);
+                            }}
+                            className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-[#1DB954] hover:bg-emerald-500 text-white flex items-center justify-center shadow-md cursor-pointer transition active:scale-90"
+                            title="ছবি ও তথ্য এডিট করুন"
+                          >
+                            <Camera className="w-2.5 h-2.5" />
+                          </button>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-1">
+                            <h4 className="text-xs font-black text-white truncate leading-tight">{currentUser.name}</h4>
+                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 ${
+                              viewMode === 'selling'
+                                ? 'bg-amber-500/20 text-amber-300'
+                                : 'bg-emerald-500/20 text-[#1DB954]'
+                            }`}>
+                              {viewMode === 'selling' ? 'সেলার' : 'বায়ার'}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-slate-400 truncate mt-0.5">
+                            {currentUser.email || currentUser.mobile || 'user@ptenit.com'}
+                          </p>
+                          {(currentUser as any)?.balance !== undefined && (
+                            <p className="text-[10px] font-bold text-emerald-400 mt-0.5">
+                              ব্যালেন্স: ৳{(currentUser as any)?.balance || '0.00'}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Edit Profile Button (ছবি ও তথ্য আপডেট) */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMobileMarketplaceMenuOpen(false);
+                          setIsBuyerProfileModalOpen(true);
+                        }}
+                        className="w-full py-1.5 px-2.5 rounded-xl bg-slate-700/80 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer active:scale-95"
+                      >
+                        <Pencil className="w-3.5 h-3.5 text-[#1DB954]" />
+                        <span>প্রোফাইল ও ছবি এডিট করুন</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileMarketplaceMenuOpen(false);
+                        if (openAuthModal) openAuthModal();
+                        else setIsProfileDropdownOpen(true);
+                      }}
+                      className="w-full py-2.5 px-3 rounded-xl bg-[#1DB954] hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition active:scale-95 shadow-md"
+                    >
+                      <User className="w-4 h-4" />
+                      <span>লগইন</span>
+                    </button>
+                  )}
+
+                  {/* 2. PROMINENT RETURN TO MAIN PAGE (পিটেন মূল পেজে ফিরে যান - প্রোফাইলের কাছেই) */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMarketplaceMenuOpen(false);
+                      if (setActiveTab) setActiveTab('home');
+                    }}
+                    className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-750 text-slate-200 hover:text-white transition active:scale-95 text-xs font-bold cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2">
+                      <ArrowLeft className="w-4 h-4 text-[#1DB954]" />
+                      <span>পিটেন মূল পেইজে ফিরে যান</span>
+                    </span>
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                  </button>
+
+                  {/* 3. MODE SWITCH TOGGLE (সেলার/বায়ার মোড) */}
+                  {!currentUser ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileMarketplaceMenuOpen(false);
+                        if (openAuthModal) openAuthModal();
+                      }}
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl transition active:scale-95 text-xs font-bold bg-amber-950/40 hover:bg-amber-900/60 text-amber-300 border border-amber-500/20 cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Zap className="w-3.5 h-3.5 text-amber-400" />
+                        <span>সেলার মোড (লগইন প্রয়োজন)</span>
+                      </span>
+                      <span className="text-[10px] bg-amber-500/20 px-1.5 py-0.5 rounded text-amber-300 font-bold">লগইন</span>
+                    </button>
+                  ) : !hasSellerAccount ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileMarketplaceMenuOpen(false);
+                        setIsMentorAppModalOpen(true);
+                      }}
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl transition active:scale-95 text-xs font-bold bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-500/20 cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>সেলার হতে আবেদন করুন</span>
+                      </span>
+                      <span className="text-[10px] bg-emerald-500/20 px-1.5 py-0.5 rounded text-emerald-300 font-bold">আবেদন</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleToggleMode(viewMode === 'buying' ? 'selling' : 'buying');
+                        setIsMobileMarketplaceMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition active:scale-95 text-xs font-bold cursor-pointer ${
+                        viewMode === 'buying'
+                          ? 'bg-amber-950/60 hover:bg-amber-900/60 text-amber-300'
+                          : 'bg-emerald-950/60 hover:bg-emerald-900/60 text-emerald-300'
+                      }`}
+                    >
+                      <span className="flex items-center gap-2">
+                        <Zap className="w-3.5 h-3.5 text-amber-400" />
+                        <span>{viewMode === 'buying' ? 'সেলার মোডে যান' : 'বায়ার মোডে ফিরুন'}</span>
+                      </span>
+                      <ChevronRight className="w-3.5 h-3.5 opacity-70" />
+                    </button>
+                  )}
+
+                  {/* 3. Navigation Links for current Mode */}
+                  <div className="space-y-1">
+                    {viewMode === 'selling' ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setViewMode('selling');
+                            setSpecialistMainTab('marketplace');
+                            setSellerSubTab('gigs');
+                            setActiveSubTab('gigs');
+                            setSelectedGig(null);
+                            setIsMobileMarketplaceMenuOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                            sellerSubTab === 'gigs' && specialistMainTab === 'marketplace'
+                              ? 'bg-[#1DB954] text-white font-black'
+                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>আমার সার্ভিস ও গিগস</span>
+                          </span>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setViewMode('selling');
+                            setSellerSubTab('create_gig');
+                            setSelectedGig(null);
+                            setIsMobileMarketplaceMenuOpen(false);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                          className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                            sellerSubTab === 'create_gig'
+                              ? 'bg-[#1DB954] text-white font-black'
+                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <PlusCircle className="w-3.5 h-3.5 text-[#1DB954]" />
+                            <span>নতুন গিগ তৈরি করুন</span>
+                          </span>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setViewMode('selling');
+                            setSpecialistMainTab('marketplace');
+                            setSellerSubTab('orders');
+                            setSelectedGig(null);
+                            setIsMobileMarketplaceMenuOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                            sellerSubTab === 'orders'
+                              ? 'bg-[#1DB954] text-white font-black'
+                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <ShoppingBag className="w-3.5 h-3.5 text-amber-400" />
+                            <span>অর্ডার ও আর্নিং</span>
+                          </span>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsMobileMarketplaceMenuOpen(false);
+                            setActiveSubTab('messenger');
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                            activeSubTab === 'messenger'
+                              ? 'bg-[#1DB954] text-white font-black'
+                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />
+                            <span>মেসেঞ্জার ইনবক্স</span>
+                          </span>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setViewMode('buying');
+                            setActiveSubTab('gigs');
+                            setSelectedGig(null);
+                            setSelectedCategory('All');
+                            setShowSavedOnly(false);
+                            setIsMobileMarketplaceMenuOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                            activeSubTab === 'gigs' && !showSavedOnly
+                              ? 'bg-[#1DB954] text-white font-black'
+                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <Sparkles className="w-3.5 h-3.5 text-[#1DB954]" />
+                            <span>সকল সার্ভিস ও গিগস</span>
+                          </span>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setViewMode('buying');
+                            setActiveSubTab('my-orders');
+                            setSelectedGig(null);
+                            setIsMobileMarketplaceMenuOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                            activeSubTab === 'my-orders'
+                              ? 'bg-[#1DB954] text-white font-black'
+                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <ShoppingBag className="w-3.5 h-3.5 text-amber-400" />
+                            <span>আমার অর্ডারসমূহ</span>
+                          </span>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setViewMode('buying');
+                            setActiveSubTab('gigs');
+                            setShowSavedOnly(true);
+                            setSelectedGig(null);
+                            setIsMobileMarketplaceMenuOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                            activeSubTab === 'gigs' && showSavedOnly
+                              ? 'bg-[#1DB954] text-white font-black'
+                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <Heart className="w-3.5 h-3.5 text-rose-400" />
+                            <span>পছন্দের গিগসমূহ</span>
+                          </span>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsMobileMarketplaceMenuOpen(false);
+                            setActiveSubTab('messenger');
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                            activeSubTab === 'messenger'
+                              ? 'bg-[#1DB954] text-white font-black'
+                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />
+                            <span>মেসেঞ্জার ইনবক্স</span>
+                          </span>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setViewMode('buying');
+                            setIsPostProjectModalOpen(true);
+                            setSelectedGig(null);
+                            setIsMobileMarketplaceMenuOpen(false);
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold bg-slate-800/70 text-slate-200 hover:bg-slate-800 transition-all flex items-center justify-between cursor-pointer"
+                        >
+                          <span className="flex items-center gap-2">
+                            <PlusCircle className="w-3.5 h-3.5 text-teal-400" />
+                            <span>কাস্টম প্রজেক্ট পোস্ট</span>
+                          </span>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                        </button>
+                      </>
+                    )}
                   </div>
-                  <div className="text-[11px] text-slate-300 font-medium mt-0.5">পিটেনআইটি মূল ওয়েবসাইটে ফিরে যান</div>
+                </div>
+
+                {/* 4. BOTTOM: LOGOUT (সবার নিচে লগ আউট থাকবে) */}
+                <div className="pt-2 shrink-0">
+                  {currentUser ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileMarketplaceMenuOpen(false);
+                        logout();
+                      }}
+                      className="w-full py-2.5 px-3 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-300 font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer active:scale-95"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>লগআউট করুন</span>
+                    </button>
+                  ) : null}
                 </div>
               </div>
-              <ArrowLeft className="w-4 h-4 text-[#1DB954] group-hover:-translate-x-1 transition-transform" />
-            </button>
-
-            {/* Header */}
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <span className="text-xs font-black text-emerald-400 font-bengali flex items-center gap-1.5">
-                <SlidersHorizontal className="w-3.5 h-3.5 text-[#1DB954]" />
-                মার্কেটপ্লেস ক্যাটাগরি ও ফিল্টার
-              </span>
-              <button
-                onClick={() => setIsMobileMarketplaceMenuOpen(false)}
-                className="text-slate-400 hover:text-white p-1 cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
             </div>
-
-            {/* 1. Quick Navigation Shortcuts */}
-            <div className="grid grid-cols-2 gap-2 text-xs font-bold font-bengali">
-              {viewMode === 'selling' ? (
-                <>
-                  <button
-                    onClick={() => {
-                      setViewMode('selling');
-                      setSpecialistMainTab('marketplace');
-                      setSellerSubTab('gigs');
-                      setActiveSubTab('gigs');
-                      setSelectedGig(null);
-                      setIsMobileMarketplaceMenuOpen(false);
-                    }}
-                    className={`p-2.5 rounded-xl text-left flex items-center gap-2 border ${
-                      sellerSubTab === 'gigs' && specialistMainTab === 'marketplace'
-                        ? 'bg-[#1DB954] text-white border-[#1DB954] font-black'
-                        : 'bg-slate-800/80 text-slate-200 border-slate-700/80 hover:bg-slate-800'
-                    }`}
-                  >
-                    <Sparkles className="w-4 h-4 shrink-0 text-emerald-400" />
-                    <span className="truncate">আমার সার্ভিস ও গিগস</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setViewMode("selling");
-                      setSellerSubTab("create_gig");
-                      setSelectedGig(null);
-                      setIsMobileMarketplaceMenuOpen(false);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
-                    className={`p-2.5 rounded-xl text-left flex items-center gap-2 border ${
-                      sellerSubTab === "create_gig"
-                        ? "bg-[#1DB954] text-white border-[#1DB954] font-black"
-                        : "bg-emerald-950/40 text-emerald-300 border-emerald-500/50 hover:bg-emerald-900/50"
-                    }`}
-                  >
-                    <PlusCircle className="w-4 h-4 shrink-0 text-[#1DB954]" />
-                    <span className="truncate">Post a gig (৩টি প্যাকেজ)</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setViewMode('selling');
-                      setSpecialistMainTab('marketplace');
-                      setSellerSubTab('orders');
-                      setSelectedGig(null);
-                      setIsMobileMarketplaceMenuOpen(false);
-                    }}
-                    className={`p-2.5 rounded-xl text-left flex items-center gap-2 border ${
-                      sellerSubTab === 'orders'
-                        ? 'bg-[#1DB954] text-white border-[#1DB954] font-black'
-                        : 'bg-slate-800/80 text-slate-200 border-slate-700/80 hover:bg-slate-800'
-                    }`}
-                  >
-                    <ShoppingBag className="w-4 h-4 shrink-0 text-emerald-400" />
-                    <span className="truncate">ক্লায়েন্ট অর্ডার ({marketplaceOrders.length})</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setViewMode('selling');
-                      setSpecialistMainTab('marketplace');
-                      setSellerSubTab('payout');
-                      setSelectedGig(null);
-                      setIsMobileMarketplaceMenuOpen(false);
-                    }}
-                    className={`p-2.5 rounded-xl text-left flex items-center gap-2 border ${
-                      sellerSubTab === 'payout'
-                        ? 'bg-[#1DB954] text-white border-[#1DB954] font-black'
-                        : 'bg-slate-800/80 text-slate-200 border-slate-700/80 hover:bg-slate-800'
-                    }`}
-                  >
-                    <Wallet className="w-4 h-4 shrink-0 text-amber-400" />
-                    <span className="truncate">আয় ও উইথড্র</span>
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => {
-                      setViewMode('buying');
-                      setActiveSubTab('gigs');
-                      setSelectedGig(null);
-                      setSelectedCategory('All');
-                      setIsMobileMarketplaceMenuOpen(false);
-                    }}
-                    className={`p-2.5 rounded-xl text-left flex items-center gap-2 border ${
-                      activeSubTab === 'gigs' && viewMode === 'buying' && selectedCategory === 'All' && !showSavedOnly
-                        ? 'bg-[#1DB954] text-white border-[#1DB954] font-black'
-                        : 'bg-slate-800/80 text-slate-200 border-slate-700/80 hover:bg-slate-800'
-                    }`}
-                  >
-                    <Sparkles className="w-4 h-4 shrink-0" />
-                    <span className="truncate">সকল গিগ ও সার্ভিস</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setViewMode("selling");
-                      setSellerSubTab("create_gig");
-                      setSelectedGig(null);
-                      setIsMobileMarketplaceMenuOpen(false);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
-                    className={`p-2.5 rounded-xl text-left flex items-center gap-2 border ${
-                      viewMode === "selling" && sellerSubTab === "create_gig"
-                        ? "bg-[#1DB954] text-white border-[#1DB954] font-black"
-                        : "bg-emerald-950/40 text-emerald-300 border-emerald-500/50 hover:bg-emerald-900/50"
-                    }`}
-                  >
-                    <PlusCircle className="w-4 h-4 shrink-0 text-[#1DB954]" />
-                    <span className="truncate">Post a gig (৩টি প্যাকেজ)</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setViewMode('buying');
-                      setIsPostProjectModalOpen(true);
-                      setSelectedGig(null);
-                      setIsMobileMarketplaceMenuOpen(false);
-                    }}
-                    className={`p-2.5 rounded-xl text-left flex items-center gap-2 border ${
-                      activeSubTab === 'post-project'
-                        ? 'bg-[#1DB954] text-white border-[#1DB954] font-black'
-                        : 'bg-slate-800/80 text-slate-200 border-slate-700/80 hover:bg-slate-800'
-                    }`}
-                  >
-                    <PlusCircle className="w-4 h-4 shrink-0 text-emerald-400" />
-                    <span className="truncate">কাস্টম প্রজেক্ট পোস্ট</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setViewMode('buying');
-                      setActiveSubTab('my-orders');
-                      setSelectedGig(null);
-                      setIsMobileMarketplaceMenuOpen(false);
-                    }}
-                    className={`p-2.5 rounded-xl text-left flex items-center gap-2 border ${
-                      activeSubTab === 'my-orders'
-                        ? 'bg-[#1DB954] text-white border-[#1DB954] font-black'
-                        : 'bg-slate-800/80 text-slate-200 border-slate-700/80 hover:bg-slate-800'
-                    }`}
-                  >
-                    <ShoppingBag className="w-4 h-4 shrink-0 text-[#1DB954]" />
-                    <span className="truncate">আমার অর্ডারসমূহ ({marketplaceOrders.length})</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setShowSavedOnly(true);
-                      setActiveSubTab('gigs');
-                      setSelectedGig(null);
-                      setIsMobileMarketplaceMenuOpen(false);
-                    }}
-                    className={`p-2.5 rounded-xl text-left flex items-center gap-2 border ${
-                      showSavedOnly
-                        ? 'bg-rose-600 text-white border-rose-500 font-black'
-                        : 'bg-slate-800/80 text-slate-200 border-slate-700/80 hover:bg-slate-800'
-                    }`}
-                  >
-                    <Heart className="w-4 h-4 shrink-0 text-rose-400" />
-                    <span className="truncate">পছন্দের গিগ ({savedGigIds.length})</span>
-                  </button>
-                </>
-              )}
-            </div>
-
-            {/* 2. CATEGORY TYPES SELECTION (ক্যাটাগরি টাইপ) */}
-            <div className="space-y-2 pt-2 border-t border-slate-800 font-bengali">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-white">📂 ক্যাটাগরি টাইপ নির্বাচন করুন</span>
-                <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded">
-                  {selectedCategory === 'All' ? 'সব সার্ভিস' : selectedCategory}
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-1.5">
-                {[
-                  { id: 'All', label: 'সব সার্ভিস' },
-                  { id: 'AI Services', label: 'এআই ও সফটওয়্যার' },
-                  { id: 'Programming & Tech', label: 'প্রোগ্রামিং ও টেকনোলজি' },
-                  { id: 'Graphics & Design', label: 'গ্রাফিক্স ও ডিজাইন' },
-                  { id: 'Digital Marketing', label: 'ডিজিটাল মার্কেটিং' },
-                  { id: 'Video & Animation', label: 'ভিডিও ও অ্যানিমেশন' },
-                  { id: 'SEO & Growth', label: 'এসইও ও গ্রোথ' },
-                  { id: 'Education & Training', label: 'এডুকেশন ও ট্রেনিং' }
-                ].map(cat => (
-                  <button
-                    key={cat.id}
-                    onClick={() => {
-                      setActiveSubTab('gigs');
-                      setSelectedGig(null);
-                      setSelectedCategory(cat.id);
-                      setShowSavedOnly(false);
-                      setIsMobileMarketplaceMenuOpen(false);
-                    }}
-                    className={`px-2 py-1.5 rounded-lg font-bold text-[11px] text-left transition border truncate ${
-                      (selectedCategory === cat.id || (cat.id === 'AI Services' && selectedCategory === 'AI Development')) && activeSubTab === 'gigs' && !showSavedOnly
-                        ? 'bg-[#1DB954] text-white border-[#1DB954] font-black shadow-sm'
-                        : 'bg-slate-800/90 text-slate-300 border-slate-700/80 hover:bg-slate-800 hover:text-white'
-                    }`}
-                  >
-                    {cat.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Mode switch for specialists on mobile */}
-            <div className="pt-2 border-t border-slate-800">
-              <button
-                onClick={() => {
-                  handleToggleMode(viewMode === 'buying' ? 'selling' : 'buying');
-                  setIsMobileMarketplaceMenuOpen(false);
-                }}
-                className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black text-xs flex items-center justify-center gap-2 shadow-md cursor-pointer"
-              >
-                <Zap className="w-4 h-4 text-amber-300" />
-                <span>{viewMode === 'buying' ? 'স্পেশালিস্ট সেলার মোডে যান' : 'গ্রাহক বায়ার মোডে ফিরে যান'}</span>
-              </button>
-            </div>
-          </div>
+          </div>,
+          document.body
         )}
       </div>
       )}
@@ -4936,14 +5222,23 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
         </div>
       )}
 
-        {/* FREELANCER SELLER PROFILE WORKSPACE VS BUYER MARKETPLACE */}
+        {/* OFFICIAL SERVICE DETAIL MODAL (Matching DigitalProductDetailModal!) */}
+        {selectedService && (
+          <ServiceDetailModal
+            service={selectedService}
+            onClose={() => setSelectedService(null)}
+            setActiveTab={setActiveTab}
+            openAuthModal={openAuthModal}
+          />
+        )}
+
+        {/* FREELANCER SELLER PROFILE WORKSPACE VS BUYER MARKETPLACE - Rendered with ServiceDetailModal (পিটেন এর গিগ গুলার মত) */}
         {selectedGig ? (
-          <GigDetailPage
-            gig={selectedGig}
-            allGigs={gigs}
-            currentUser={currentUser}
-            onBack={() => {
+          <ServiceDetailModal
+            service={selectedGig}
+            onClose={() => {
               const returnTab = localStorage.getItem('ptenit_return_tab');
+              const targetY = savedMarketplaceScrollPosRef.current;
               setSelectedGig(null);
               if (returnTab) {
                 localStorage.removeItem('ptenit_return_tab');
@@ -4951,21 +5246,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   setActiveTab(returnTab);
                 }
               }
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              requestAnimationFrame(() => {
+                window.scrollTo({ top: targetY, behavior: 'instant' });
+                setTimeout(() => {
+                  window.scrollTo({ top: targetY, behavior: 'instant' });
+                }, 40);
+              });
             }}
-            onSelectGig={(g) => {
-              setSelectedGig(g);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            openAuthModal={openAuthModal}
-            createDirectGigOrder={createDirectGigOrder}
             setActiveTab={setActiveTab}
-            onOrderSuccess={() => {
-              setSelectedGig(null);
-              setActiveSubTab('my-orders');
-              setViewMode('buying');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            openAuthModal={openAuthModal}
           />
         ) : viewMode === 'selling' ? (
         /* SELLER WORKSPACE */
@@ -5103,18 +5392,34 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             </select>
                           </div>
 
-                          <div className="space-y-1 sm:col-span-2 md:col-span-1">
-                            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                              প্রজেক্ট টাইটেল <span className="text-rose-500">*</span>
-                            </label>
+                          <div className="space-y-1.5 sm:col-span-2 md:col-span-1">
+                            <div className="flex items-center justify-between">
+                              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                                {t('প্রজেক্ট টাইটেল', 'Project Title')} <span className="text-rose-500">*</span>
+                              </label>
+                              <span className={`text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                                newGigTitle.length > 90 
+                                  ? 'bg-rose-100 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400' 
+                                  : newGigTitle.length >= 45 && newGigTitle.length <= 90 
+                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400' 
+                                    : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
+                              }`}>
+                                {newGigTitle.length}/৯০ ক্যারেক্টার
+                              </span>
+                            </div>
                             <input
                               type="text"
                               required
-                              placeholder="যেমন: I will build a full stack AI web application..."
+                              maxLength={95}
+                              placeholder="যেমন: আমি আধুনিক ফুল-স্ট্যাক ওয়েব অ্যাপ্লিকেশন ডেভেলপ করবো"
                               value={newGigTitle}
                               onChange={(e) => setNewGigTitle(e.target.value)}
                               className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
                             />
+                            <div className="p-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/50 rounded-lg text-[11px] leading-relaxed text-amber-800 dark:text-amber-300 flex items-start gap-1.5">
+                              <span className="text-sm shrink-0">💡</span>
+                              <span><strong>হিন্ট:</strong> টাইটেল <strong>৫০ থেকে ৯০ ক্যারেক্টারের</strong> মধ্যে রাখা সবচেয়ে উপযুক্ত, যাতে ফোন ভিউতে সুন্দরভাবে ৩ লাইনে স্পষ্টভাবে দেখা যায়।</span>
+                            </div>
                           </div>
                         </div>
 
@@ -8661,7 +8966,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   {/* Card Content & Details */}
                                   <div className="p-2 sm:p-3 flex-1 flex flex-col justify-between space-y-2">
                                     <div>
-                                      <h4 className="text-[11px] sm:text-xs md:text-sm font-black text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#1DB954] transition-colors min-h-[1.9rem] sm:min-h-[2.2rem]">
+                                      <h4 className="text-[11px] sm:text-xs md:text-sm font-black text-slate-900 dark:text-white line-clamp-3 sm:line-clamp-2 leading-snug group-hover:text-[#1DB954] transition-colors min-h-[2.6rem] sm:min-h-[2.2rem]">
                                         {g.title}
                                       </h4>
                                       <div className="mt-1 flex items-center justify-between">
@@ -9655,19 +9960,22 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   </div>
 
                   {/* Right Column: Gig Cards Horizontal Grid */}
-                  <div className="lg:col-span-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5">
+                  <div className={`lg:col-span-4 grid ${
+                    mobileGigLayout === 'feed'
+                      ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-5'
+                      : 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5'
+                  }`}>
                     {filteredGigs.slice(0, 4).map(gig => (
                       <GigCard
                         key={gig.id}
                         gig={gig}
-                        onClick={() => {
-                          setSelectedGig(gig);
-                          setSelectedPackage('standard');
-                        }}
+                        onClick={() => openMarketplaceGigDetail(gig, 'standard')}
                         currentUser={currentUser}
                         savedGigIds={savedGigIds}
                         toggleFavorite={toggleFavorite}
                         deleteGig={deleteGig}
+                        layoutMode={mobileGigLayout}
+                        openAuthModal={openAuthModal}
                       />
                     ))}
                   </div>
@@ -9675,67 +9983,114 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 </div>
               </div>
 
+              {/* MOBILE PHONE VIEW BAR: FACEBOOK FEED VS 2-COLUMN GRID */}
+              <div className="sm:hidden flex items-center justify-between px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs font-bengali">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <div className="w-6 h-6 rounded-full bg-[#1877F2]/15 text-[#1877F2] flex items-center justify-center">
+                    <Globe className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
+                    মার্কেটপ্লেস ফিড
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-200/80 dark:border-slate-700">
+                  <button
+                    type="button"
+                    onClick={() => setMobileGigLayout('feed')}
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition flex items-center gap-1 cursor-pointer ${
+                      mobileGigLayout === 'feed'
+                        ? 'bg-[#1877F2] text-white shadow-xs font-extrabold'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                    }`}
+                  >
+                    <span>📱 ফেসবুক ফিড</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMobileGigLayout('grid')}
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition flex items-center gap-1 cursor-pointer ${
+                      mobileGigLayout === 'grid'
+                        ? 'bg-[#1877F2] text-white shadow-xs font-extrabold'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                    }`}
+                  >
+                    <span>🔲 ২-কলাম</span>
+                  </button>
+                </div>
+              </div>
+
               {/* SECTION 2: GIGS YOU MAY LIKE */}
               <div className="space-y-3 font-bengali">
-                <div className="flex justify-between items-center">
-                  <h2 className="text-xs sm:text-base md:text-lg font-bold text-slate-900 dark:text-white">
-                    আপনার পছন্দ হতে পারে এমন গিগসমূহ
-                  </h2>
+                <div className="flex items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-2.5">
+                  <div>
+                    <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                      পছন্দের গিগসমূহ ({filteredGigs.length})
+                    </h2>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium hidden sm:block">
+                      টপ ভেরিফায়েড ফ্রিল্যান্সার ও টিমদের সার্ভিস পোস্ট
+                    </p>
+                  </div>
                   <button
                     onClick={() => setActiveSubTab('gigs')}
-                    className="text-[11px] sm:text-xs font-bold text-[#1DB954] hover:underline cursor-pointer"
+                    className="text-[11px] sm:text-xs font-bold text-[#1DB954] hover:underline cursor-pointer shrink-0"
                   >
                     সবগুলো দেখুন →
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5">
+                <div className={`grid ${
+                  mobileGigLayout === 'feed'
+                    ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-5'
+                    : 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5'
+                }`}>
                   {filteredGigs.map(gig => (
                     <GigCard
                       key={gig.id}
                       gig={gig}
-                      onClick={() => {
-                        setSelectedGig(gig);
-                        setSelectedPackage('standard');
-                      }}
+                      onClick={() => openMarketplaceGigDetail(gig, 'standard')}
                       currentUser={currentUser}
                       savedGigIds={savedGigIds}
                       toggleFavorite={toggleFavorite}
                       deleteGig={deleteGig}
+                      layoutMode={mobileGigLayout}
+                      openAuthModal={openAuthModal}
                     />
                   ))}
                 </div>
               </div>
 
               {/* SECTION 3: VERIFIED PRO SERVICES */}
-              <div className="p-4 sm:p-8 bg-slate-900 text-white rounded-2xl sm:rounded-3xl space-y-4 sm:space-y-6 border border-slate-800 shadow-xl font-bengali">
-                <div className="flex justify-between items-end">
-                  <div>
-                    <h2 className="text-lg sm:text-2xl md:text-3xl font-black">ভেরিফায়েড প্রফেশনাল টিম ও সার্ভিসেস</h2>
-                    <p className="text-xs sm:text-sm text-slate-300 mt-1 font-medium">হাই-কোয়ালিটি প্রজেক্টের জন্য সেরা ভেরিফায়েড ডেভেলপার ও ডিজাইনার।</p>
+              <div className="p-3.5 sm:p-7 bg-slate-900 text-white rounded-2xl sm:rounded-3xl space-y-3.5 sm:space-y-6 border border-slate-800 shadow-xl font-bengali">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4 border-b border-slate-800 pb-2.5 sm:pb-3.5">
+                  <div className="space-y-0.5 text-center sm:text-left flex flex-col items-center sm:items-start">
+                    <h2 className="text-base sm:text-xl md:text-2xl font-black">ভেরিফায়েড টিম ও সার্ভিস</h2>
+                    <p className="text-[11px] sm:text-xs text-slate-300 font-medium">সেরা ভেরিফায়েড ডেভেলপার ও ডিজাইনার টিম।</p>
                   </div>
                   <button
                     onClick={() => setActiveSubTab('gigs')}
-                    className="text-xs sm:text-sm font-bold text-[#1DB954] hover:underline hidden sm:block cursor-pointer"
+                    className="text-[11px] sm:text-xs font-bold text-[#1DB954] hover:underline cursor-pointer shrink-0"
                   >
                     সবগুলো দেখুন →
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5">
+                <div className={`grid ${
+                  mobileGigLayout === 'feed'
+                    ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-5'
+                    : 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5'
+                }`}>
                   {filteredGigs.slice(0, 4).map(gig => (
                     <GigCard
                       key={gig.id}
                       gig={gig}
-                      onClick={() => {
-                        setSelectedGig(gig);
-                        setSelectedPackage('premium');
-                      }}
+                      onClick={() => openMarketplaceGigDetail(gig, 'premium')}
                       currentUser={currentUser}
                       savedGigIds={savedGigIds}
                       toggleFavorite={toggleFavorite}
                       deleteGig={deleteGig}
                       badgeTag="PTENit Pro ⭐"
+                      layoutMode={mobileGigLayout}
+                      openAuthModal={openAuthModal}
                     />
                   ))}
                 </div>
@@ -9820,29 +10175,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   <div
                     key={serv.id}
                     onClick={() => {
-                      const matchedGig: MarketplaceGig = gigs.find(
-                        g => g.id === serv.id || g.title.toLowerCase() === serv.title.toLowerCase()
-                      ) || {
-                        id: serv.id,
-                        sellerId: 'ptenit-agency',
-                        sellerName: 'PTENit Official Agency',
-                        sellerAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-                        sellerLevel: 'Top Rated Official Agency',
-                        title: serv.title,
-                        category: serv.category,
-                        description: serv.fullDescription || serv.shortDescription,
-                        thumbnail: serv.thumbnail || 'https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80',
-                        rating: serv.rating || 5.0,
-                        reviewsCount: serv.reviewsCount || 48,
-                        packages: serv.packages || {
-                          basic: { name: 'Basic Package', price: 10000, deliveryDays: 3, revisions: '3', features: serv.features || ['কাস্টম ডিজাইন'] },
-                          standard: { name: 'Standard Package', price: 20000, deliveryDays: 5, revisions: '5', features: serv.features || ['কাস্টম ডিজাইন', 'এসইও'] },
-                          premium: { name: 'Premium Package', price: 35000, deliveryDays: 7, revisions: 'Unlimited', features: serv.features || ['কাস্টম ডিজাইন', 'এসইও', 'সাপোর্ট'] }
-                        },
-                        tags: ['Official', 'PTENit', serv.category],
-                        status: 'active' as const
-                      };
-                      setSelectedGig(matchedGig);
+                      setSelectedService(serv);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                     className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 hover:border-[#1DB954] transition shadow-sm hover:shadow-md cursor-pointer flex flex-col justify-between space-y-4 group"
@@ -10008,20 +10341,22 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               )}
               {/* Gigs Grid (Minimum 2 Columns) or Empty State */}
               {savedGigs.length > 0 ? (
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6">
+                <div className={`grid ${
+                  mobileGigLayout === 'feed'
+                    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-6'
+                    : 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6'
+                }`}>
                   {savedGigs.map(gig => (
                     <GigCard
                       key={gig.id}
                       gig={gig}
-                      onClick={() => {
-                        setSelectedGig(gig);
-                        setSelectedPackage('standard');
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
+                      onClick={() => openMarketplaceGigDetail(gig, 'standard')}
                       currentUser={currentUser}
                       savedGigIds={savedGigIds}
                       toggleFavorite={toggleFavorite}
                       deleteGig={deleteGig}
+                      layoutMode={mobileGigLayout}
+                      openAuthModal={openAuthModal}
                     />
                   ))}
                 </div>
@@ -10620,10 +10955,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     </div>
                   </div>
 
-                  {/* ATTACHED BUYER 3-TAB QUICK-ACTION STRIP FOR DESKTOP (ওভারভিউ | প্রজেক্ট | কোর্স) - WHITE & FIXED WITH MENU */}
+                  {/* ATTACHED BUYER 4-TAB QUICK-ACTION STRIP FOR DESKTOP (ওভারভিউ | প্রজেক্ট | কোর্স | প্রোডাক্ট) - WHITE & FIXED WITH MENU */}
                   {(activeSubTab === 'my-orders' || activeSubTab === 'my-courses' || activeSubTab === 'overview') && (
                     <div className="-mx-2.5 sm:-mx-4 -mb-2.5 sm:-mb-3 mt-2.5 pt-2 pb-2 px-3 sm:px-4 bg-white dark:bg-slate-900 border-t border-slate-200/90 dark:border-slate-800 shadow-xs rounded-b-none sm:rounded-b-2xl">
-                      <div className="grid grid-cols-3 gap-2 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl w-full">
+                      <div className="grid grid-cols-4 gap-1.5 sm:gap-2 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl w-full">
                         {/* ১. ওভারভিউ */}
                         <button
                           type="button"
@@ -10631,13 +10966,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             setOrderHubTab('overview');
                             setActiveSubTab('my-orders');
                           }}
-                          className={`py-2 px-3 rounded-lg text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                          className={`py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition cursor-pointer ${
                             orderHubTab === 'overview'
                               ? 'bg-slate-900 text-white shadow-xs'
                               : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                           }`}
                         >
-                          <LayoutDashboard className={`w-4 h-4 shrink-0 ${orderHubTab === 'overview' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
+                          <LayoutDashboard className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${orderHubTab === 'overview' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
                           <span>ওভারভিউ</span>
                         </button>
 
@@ -10648,14 +10983,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             setOrderHubTab('orders');
                             setActiveSubTab('my-orders');
                           }}
-                          className={`py-2 px-3 rounded-lg text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition cursor-pointer ${
-                            orderHubTab === 'orders' && activeSubTab !== 'my-courses'
+                          className={`py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                            orderHubTab === 'orders'
                               ? 'bg-[#1DB954] text-white shadow-xs'
                               : 'text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/10'
                           }`}
                         >
-                          <ShoppingBag className={`w-4 h-4 shrink-0 ${orderHubTab === 'orders' && activeSubTab !== 'my-courses' ? 'text-white' : 'text-emerald-600 dark:text-emerald-400'}`} />
-                          <span>প্রজেক্ট ({allBuyerOrders.length})</span>
+                          <ShoppingBag className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${orderHubTab === 'orders' ? 'text-white' : 'text-emerald-600 dark:text-emerald-400'}`} />
+                          <span>প্রজেক্ট ({buyerProjectOrders.length})</span>
                         </button>
 
                         {/* ৩. কোর্স (নীল / Blue কালার) */}
@@ -10663,16 +10998,33 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           type="button"
                           onClick={() => {
                             setOrderHubTab('courses');
-                            setActiveSubTab('my-courses');
+                            setActiveSubTab('my-orders');
                           }}
-                          className={`py-2 px-3 rounded-lg text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition cursor-pointer ${
-                            orderHubTab === 'courses' || activeSubTab === 'my-courses'
+                          className={`py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                            orderHubTab === 'courses'
                               ? 'bg-blue-600 text-white shadow-xs'
                               : 'text-blue-600 dark:text-blue-400 hover:bg-blue-500/10'
                           }`}
                         >
-                          <BookOpen className={`w-4 h-4 shrink-0 ${orderHubTab === 'courses' || activeSubTab === 'my-courses' ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />
+                          <BookOpen className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${orderHubTab === 'courses' ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} />
                           <span>কোর্স ({userEnrollments.length > 0 ? userEnrollments.length : 2})</span>
+                        </button>
+
+                        {/* ৪. প্রোডাক্ট (অ্যাম্বার কালার) */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOrderHubTab('products');
+                            setActiveSubTab('my-orders');
+                          }}
+                          className={`py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-black flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                            orderHubTab === 'products'
+                              ? 'bg-amber-600 text-white shadow-xs'
+                              : 'text-amber-700 dark:text-amber-400 hover:bg-amber-500/10'
+                          }`}
+                        >
+                          <Package className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${orderHubTab === 'products' ? 'text-white' : 'text-amber-600 dark:text-amber-400'}`} />
+                          <span>প্রোডাক্ট ({buyerDigitalOrders.length})</span>
                         </button>
                       </div>
                     </div>
@@ -10815,13 +11167,32 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <p className="text-[11px] font-black uppercase tracking-wider text-slate-400 px-1">গ্রাহক নেভিগেশন মেনু</p>
                       
                       <div className="space-y-2">
-                        {/* 1. আমার কোর্স সমূহ (সদাসর্বদা দৃশ্যমান) */}
+                        {/* 1. ড্যাশবোর্ড ওভারভিউ */}
                         <button
                           onClick={() => {
-                            setActiveSubTab('my-courses');
+                            setActiveSubTab('my-orders');
+                            setOrderHubTab('overview');
                           }}
                           className={`w-full p-3.5 rounded-2xl text-left text-xs font-black transition flex items-center justify-between gap-2 cursor-pointer ${
-                            activeSubTab === 'my-courses'
+                            orderHubTab === 'overview'
+                              ? 'bg-slate-900 text-white shadow-md font-black dark:bg-white dark:text-slate-900'
+                              : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <LayoutDashboard className={`w-4.5 h-4.5 ${orderHubTab === 'overview' ? 'text-white dark:text-slate-900' : 'text-slate-500'}`} />
+                            <span className="text-sm">ড্যাশবোর্ড ওভারভিউ</span>
+                          </div>
+                        </button>
+
+                        {/* 2. আমার কোর্স সমূহ */}
+                        <button
+                          onClick={() => {
+                            setActiveSubTab('my-orders');
+                            setOrderHubTab('courses');
+                          }}
+                          className={`w-full p-3.5 rounded-2xl text-left text-xs font-black transition flex items-center justify-between gap-2 cursor-pointer ${
+                            orderHubTab === 'courses'
                               ? 'bg-blue-600 text-white shadow-md font-black'
                               : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                           }`}
@@ -10862,20 +11233,42 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         <button
                           onClick={() => {
                             setActiveSubTab('my-orders');
+                            setOrderHubTab('orders');
                             setBuyerOrderStatusFilter('all');
                           }}
                           className={`w-full p-3.5 rounded-2xl text-left text-xs font-black transition flex items-center justify-between gap-2 cursor-pointer ${
-                            activeSubTab === 'my-orders'
+                            activeSubTab === 'my-orders' && orderHubTab === 'orders'
                               ? 'bg-[#1DB954] text-white shadow-md font-black'
                               : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                           }`}
                         >
                           <div className="flex items-center gap-2.5">
                             <ShoppingBag className="w-4.5 h-4.5 text-slate-900 dark:text-white" />
-                            <span className="text-sm">মার্কেটপ্লেস প্রজেক্ট অর্ডার</span>
+                            <span className="text-sm">প্রজেক্ট অর্ডার</span>
                           </div>
                           <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-slate-900/15 dark:bg-slate-950/20 text-slate-900 dark:text-white">
-                            {allBuyerOrders.length}টি
+                            {buyerProjectOrders.length}টি
+                          </span>
+                        </button>
+
+                        {/* 4. ডিজিটাল প্রোডাক্ট */}
+                        <button
+                          onClick={() => {
+                            setActiveSubTab('my-orders');
+                            setOrderHubTab('products');
+                          }}
+                          className={`w-full p-3.5 rounded-2xl text-left text-xs font-black transition flex items-center justify-between gap-2 cursor-pointer ${
+                            activeSubTab === 'my-orders' && orderHubTab === 'products'
+                              ? 'bg-amber-600 text-white shadow-md font-black'
+                              : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <Package className="w-4.5 h-4.5 text-amber-500" />
+                            <span className="text-sm">ডিজিটাল প্রোডাক্ট</span>
+                          </div>
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-700 dark:text-amber-300">
+                            {buyerDigitalOrders.length}টি
                           </span>
                         </button>
 
@@ -10904,325 +11297,102 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 {/* Right Column: Main Content Area */}
                 <div className="lg:col-span-9 xl:col-span-9 space-y-5 font-bengali">
 
-                    {/* CENTRAL ALL-IN-ONE WELCOME BANNER (For Overview) */}
-                    {activeSubTab === 'overview' && (
-                      <div className="space-y-4">
-                        {/* Premium Hero Welcome Banner */}
-                        <div className="p-4 sm:p-5 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white rounded-2xl shadow-lg relative overflow-hidden border border-slate-800/80">
-                          <div className="absolute top-0 right-0 w-48 h-48 bg-[#1DB954]/10 rounded-full blur-2xl pointer-events-none" />
-                          <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1DB954] to-emerald-600 flex items-center justify-center font-black text-white text-lg shadow-md shrink-0">
-                                {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'G'}
-                              </div>
-                              <div className="space-y-0.5">
-                                <div className="flex items-center gap-2">
-                                  <h2 className="text-base font-black text-white">
-                                    স্বাগতম, {currentUser?.name || 'গ্রাহক'}!
-                                  </h2>
-                                  <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/30">
-                                    কাস্টমার ড্যাশবোর্ড
-                                  </span>
-                                </div>
-                                <p className="text-[11px] text-slate-300">
-                                  আপনার কোর্স শিক্ষা এবং প্রজেক্ট অর্ডারসমূহ এক নজরে ম্যানেজ করুন।
-                                </p>
-                              </div>
-                            </div>
-
-                            {/* Catalog Direct CTAs */}
-                            <div className="flex items-center gap-2 shrink-0">
-                              <button
-                                onClick={() => setActiveTab?.('courses')}
-                                className="px-3 py-1.5 rounded-xl text-xs font-black bg-blue-600/30 hover:bg-blue-600/50 text-blue-200 border border-blue-500/40 transition flex items-center gap-1.5 cursor-pointer"
-                              >
-                                <GraduationCap className="w-3.5 h-3.5 text-blue-400" />
-                                <span>কোর্স ব্রাউজ</span>
-                              </button>
-                              <button
-                                onClick={() => setActiveTab?.('gigs')}
-                                className="px-3 py-1.5 rounded-xl text-xs font-black bg-[#1DB954]/20 hover:bg-[#1DB954]/30 text-[#1DB954] border border-[#1DB954]/40 transition flex items-center gap-1.5 cursor-pointer"
-                              >
-                                <ShoppingBag className="w-3.5 h-3.5 text-[#1DB954]" />
-                                <span>আইটি সার্ভিস</span>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* ALL-IN-ONE PC-STYLE METRICS GRID (Responsive for Mobile and Desktop) */}
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
-                          {/* Stat 1: Wallet / Available Balance */}
-                          <div className="p-3 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-2xs hover:shadow-sm transition space-y-1 sm:space-y-1.5">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">ব্যালেন্স</span>
-                              <div className="p-1.5 rounded-lg bg-emerald-500/10 text-[#1DB954]">
-                                <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                              </div>
-                            </div>
-                            <div className="text-base sm:text-xl font-black text-slate-900 dark:text-white">
-                              ৳{(currentUser?.walletBalance || 0).toLocaleString('bn-BD')}
-                            </div>
-                            <span className="text-[9px] sm:text-[10px] text-slate-400 block font-medium">এস্ক্রো সুরক্ষিত ওয়ালেট</span>
-                          </div>
-
-                          {/* Stat 2: Active / Running Projects */}
-                          <div className="p-3 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-2xs hover:shadow-sm transition space-y-1 sm:space-y-1.5">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">চলমান অর্ডার</span>
-                              <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                                <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                              </div>
-                            </div>
-                            <div className="text-base sm:text-xl font-black text-blue-600 dark:text-blue-400">
-                              {allBuyerOrders.filter(o => o.status === 'in_progress' || o.status === 'in_review').length}টি
-                            </div>
-                            <span className="text-[9px] sm:text-[10px] text-slate-400 block font-medium">কাজ চলমান রয়েছে</span>
-                          </div>
-
-                          {/* Stat 3: Completed Projects */}
-                          <div className="p-3 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-2xs hover:shadow-sm transition space-y-1 sm:space-y-1.5">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">সম্পন্ন প্রজেক্ট</span>
-                              <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                              </div>
-                            </div>
-                            <div className="text-base sm:text-xl font-black text-emerald-600 dark:text-emerald-400">
-                              {allBuyerOrders.filter(o => o.status === 'completed').length}টি
-                            </div>
-                            <span className="text-[9px] sm:text-[10px] text-slate-400 block font-medium">১০০% সফল ডেলিভারি</span>
-                          </div>
-
-                          {/* Stat 4: Enrolled Courses */}
-                          <div className="p-3 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-2xs hover:shadow-sm transition space-y-1 sm:space-y-1.5">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400">লার্নিং কোর্স</span>
-                              <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400">
-                                <GraduationCap className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                              </div>
-                            </div>
-                            <div className="text-base sm:text-xl font-black text-purple-600 dark:text-purple-400">
-                              {userEnrollments.length}টি
-                            </div>
-                            <span className="text-[9px] sm:text-[10px] text-slate-400 block font-medium">অনলাইন সার্টিফিকেট কোর্স</span>
-                          </div>
-                        </div>
-
-                        {/* Quick Mobile Action Shortcuts Bar */}
-                        <div className="p-3 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-2xs flex items-center justify-between gap-2 overflow-x-auto whitespace-nowrap scrollbar-none">
-                          <button
-                            type="button"
-                            onClick={() => setIsPostProjectModalOpen(true)}
-                            className="px-3 py-1.5 rounded-xl bg-[#1DB954] text-white text-xs font-black flex items-center gap-1.5 hover:bg-emerald-500 transition shrink-0 cursor-pointer shadow-xs"
-                          >
-                            <PlusCircle className="w-3.5 h-3.5" />
-                            <span>+ নতুন জব আপলোড</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setActiveSubTab('my-orders');
-                              setBuyerOrderStatusFilter('all');
-                            }}
-                            className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold flex items-center gap-1.5 transition shrink-0 cursor-pointer"
-                          >
-                            <ShoppingBag className="w-3.5 h-3.5 text-[#1DB954]" />
-                            <span>সব অর্ডার দেখুন</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setActiveSubTab('my-courses')}
-                            className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold flex items-center gap-1.5 transition shrink-0 cursor-pointer"
-                          >
-                            <GraduationCap className="w-3.5 h-3.5 text-blue-500" />
-                            <span>কোর্স ক্লাসরুম</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setIsBuyerProfileModalOpen(true)}
-                            className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold flex items-center gap-1.5 transition shrink-0 cursor-pointer"
-                          >
-                            <User className="w-3.5 h-3.5 text-purple-500" />
-                            <span>প্রোফাইল সেটিংস</span>
-                          </button>
-                        </div>
-
-                        {/* 2 Compact Summary Cards with 'সব দেখুন' */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {/* Card 1: My Courses Summary */}
-                          <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col justify-between space-y-3 hover:border-blue-500/40 transition">
-                            <div className="space-y-2">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-black text-sm">
-                                  <GraduationCap className="w-4.5 h-4.5" />
-                                  <span>আমার কোর্স সমূহ</span>
-                                </div>
-                                <button
-                                  onClick={() => setActiveSubTab('my-courses')}
-                                  className="text-[11px] font-black text-blue-600 hover:underline flex items-center gap-0.5 cursor-pointer"
-                                >
-                                  <span>সব দেখুন</span>
-                                  <ChevronRight className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
-                              
-                              {userEnrollments.length > 0 ? (
-                                <div className="p-2.5 bg-blue-50/60 dark:bg-blue-950/20 rounded-xl border border-blue-100 dark:border-blue-900/40 space-y-1">
-                                  <p className="text-xs font-bold text-slate-900 dark:text-white line-clamp-1">
-                                    {courses.find(c => c.id === userEnrollments[0]?.courseId)?.title || 'সক্রিয় লার্নিং প্রোগ্রাম'}
-                                  </p>
-                                  <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                                    <span>মোট কোর্স: {userEnrollments.length}টি</span>
-                                    <span className="font-black text-blue-600 dark:text-blue-400">অগ্রগতি: {userEnrollments[0]?.progress || 0}%</span>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="p-2.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
-                                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                                    এখনো কোনো কোর্সে এনরোল করা হয়নি।
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-
-                            <button
-                              onClick={() => setActiveSubTab('my-courses')}
-                              className="w-full py-2 px-3 rounded-xl bg-blue-600 text-white font-black text-xs hover:bg-blue-700 transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
-                            >
-                              <span>কোর্স ক্লাসরুম বিস্তারিত (সব দেখুন)</span>
-                              <ChevronRight className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-
-                          {/* Card 2: My Orders Summary */}
-                          <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col justify-between space-y-3 hover:border-[#1DB954]/40 transition">
-                            <div className="space-y-2">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2 text-[#1DB954] font-black text-sm">
-                                  <ShoppingBag className="w-4.5 h-4.5" />
-                                  <span>মার্কেটপ্লেস প্রজেক্ট অর্ডার</span>
-                                </div>
-                                <button
-                                  onClick={() => {
-                                    setActiveSubTab('my-orders');
-                                    setBuyerOrderStatusFilter('all');
-                                  }}
-                                  className="text-[11px] font-black text-[#1DB954] hover:underline flex items-center gap-0.5 cursor-pointer"
-                                >
-                                  <span>সব দেখুন</span>
-                                  <ChevronRight className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
-
-                              {allBuyerOrders.length > 0 ? (
-                                <div className="p-2.5 bg-[#1DB954]/5 rounded-xl border border-[#1DB954]/20 space-y-1">
-                                  <p className="text-xs font-bold text-slate-900 dark:text-white line-clamp-1">
-                                    {allBuyerOrders[0]?.title || 'সক্রিয় প্রজেক্ট অর্ডার'}
-                                  </p>
-                                  <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                                    <span>মোট অর্ডার: {allBuyerOrders.length}টি</span>
-                                    <span className="font-black text-[#1DB954]">মূল্য: ৳{(allBuyerOrders[0]?.amount || 0).toLocaleString('bn-BD')}</span>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="p-2.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
-                                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                                    এখনো কোনো প্রজেক্ট অর্ডার নেই।
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-
-                            <button
-                              onClick={() => {
-                                setActiveSubTab('my-orders');
-                                setBuyerOrderStatusFilter('all');
-                              }}
-                              className="w-full py-2 px-3 rounded-xl bg-[#1DB954] text-white font-black text-xs hover:bg-[#19a34a] transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
-                            >
-                              <span>সব অর্ডার ও প্রগ্রেস দেখুন</span>
-                              <ChevronRight className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* UNIFIED HUB: MY ORDERS & COURSES (আমার অর্ডার ও কোর্স লার্নিং হাব) */}
-                    {(activeSubTab === 'my-orders' || activeSubTab === 'my-courses') && (
+                    {/* UNIFIED HUB: MY ORDERS, COURSES & OVERVIEW */}
+                    {(activeSubTab === 'my-orders' || activeSubTab === 'my-courses' || activeSubTab === 'overview') && (
                       <div className="space-y-4 font-bengali animate-fadeIn pt-1 sm:pt-0">
 
                         {/* VIEW 0: UNIFIED OVERVIEW (ওভারভিউ: একনজরে অর্ডার ও সকল পেমেন্ট হিস্টোরি) */}
                         {orderHubTab === 'overview' && (
-                          <div className="space-y-4 animate-fadeIn">
-                            {/* 4 Overview Quick Stats Cards (Matching StatsCounter Style & Animation) */}
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+                          <div className="space-y-4 sm:space-y-5 animate-fadeIn pt-1.5 sm:pt-2.5">
+                            {/* 4 Centered Overview Quick Stats Cards (Clean Centered Design, Mobile-Friendly, Clickable) */}
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 pt-1 sm:pt-2">
                               {/* 1. মোট প্রজেক্ট */}
-                              <div className="p-3.5 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2.5 sm:gap-3.5 hover:border-sky-500 transition-all transform hover:-translate-y-0.5 shadow-xs">
-                                <div className="p-2.5 sm:p-3.5 rounded-xl bg-sky-500/10 text-sky-500 shrink-0">
-                                  <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOrderHubTab('orders');
+                                  setActiveSubTab('my-orders');
+                                  setBuyerOrderStatusFilter('all');
+                                }}
+                                className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center hover:border-emerald-500/80 hover:shadow-sm transition-all transform hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer group"
+                              >
+                                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                                  <Briefcase className="w-5 h-5" />
                                 </div>
-                                <div className="min-w-0">
-                                  <h3 className="text-lg sm:text-2xl font-black font-heading text-slate-900 dark:text-white">
-                                    <AnimatedOverviewCounter value={`${allBuyerOrders.length > 0 ? allBuyerOrders.length : 6}টি`} />
-                                  </h3>
-                                  <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 font-bengali leading-snug">
-                                    মোট প্রজেক্ট
-                                  </p>
-                                </div>
-                              </div>
+                                <h3 className="text-lg sm:text-2xl font-black font-heading text-slate-900 dark:text-white leading-none">
+                                  <AnimatedOverviewCounter value={`${buyerProjectOrders.length > 0 ? buyerProjectOrders.length : 6}টি`} />
+                                </h3>
+                                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1.5">
+                                  মোট প্রজেক্ট
+                                </p>
+                              </button>
 
                               {/* 2. এনরোল্ড কোর্স */}
-                              <div className="p-3.5 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2.5 sm:gap-3.5 hover:border-amber-500 transition-all transform hover:-translate-y-0.5 shadow-xs">
-                                <div className="p-2.5 sm:p-3.5 rounded-xl bg-amber-500/10 text-amber-500 shrink-0">
-                                  <BookOpen className="w-5 h-5 sm:w-6 sm:h-6" />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOrderHubTab('courses');
+                                  setActiveSubTab('my-orders');
+                                }}
+                                className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center hover:border-blue-500/80 hover:shadow-sm transition-all transform hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer group"
+                              >
+                                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                                  <BookOpen className="w-5 h-5" />
                                 </div>
-                                <div className="min-w-0">
-                                  <h3 className="text-lg sm:text-2xl font-black font-heading text-slate-900 dark:text-white">
-                                    <AnimatedOverviewCounter value={`${userEnrollments.length > 0 ? userEnrollments.length : 3}টি`} />
-                                  </h3>
-                                  <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 font-bengali leading-snug">
-                                    এনরোল্ড কোর্স
-                                  </p>
-                                </div>
-                              </div>
+                                <h3 className="text-lg sm:text-2xl font-black font-heading text-slate-900 dark:text-white leading-none">
+                                  <AnimatedOverviewCounter value={`${userEnrollments.length > 0 ? userEnrollments.length : 3}টি`} />
+                                </h3>
+                                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1.5">
+                                  এনরোল্ড কোর্স
+                                </p>
+                              </button>
 
-                              {/* 3. মোট পরিশোধিত */}
-                              <div className="p-3.5 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2.5 sm:gap-3.5 hover:border-purple-500 transition-all transform hover:-translate-y-0.5 shadow-xs">
-                                <div className="p-2.5 sm:p-3.5 rounded-xl bg-purple-500/10 text-purple-500 shrink-0">
-                                  <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" />
+                              {/* 3. ৪টি পাবলিক পোস্ট */}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOrderHubTab('orders');
+                                  setActiveSubTab('my-orders');
+                                  setBuyerOrderStatusFilter('public_projects');
+                                }}
+                                className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center hover:border-purple-500/80 hover:shadow-sm transition-all transform hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer group"
+                              >
+                                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                                  <Send className="w-5 h-5" />
                                 </div>
-                                <div className="min-w-0">
-                                  <h3 className="text-lg sm:text-2xl font-black font-heading text-purple-600 dark:text-purple-400">
-                                    <AnimatedOverviewCounter value={`৳${((allBuyerOrders.reduce((acc, o) => acc + (o.amount || 0), 0) + 10000) || 149500).toLocaleString('bn-BD')}`} />
-                                  </h3>
-                                  <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 font-bengali leading-snug">
-                                    মোট পরিশোধিত
-                                  </p>
-                                </div>
-                              </div>
+                                <h3 className="text-lg sm:text-2xl font-black font-heading text-purple-600 dark:text-purple-400 leading-none">
+                                  <AnimatedOverviewCounter value={`${allBuyerOrders.filter(o => o.isPublicOffer || o.type === 'custom_agency_order' || o.status === 'pending_approval' || o.status === 'pending' || !o.sellerId || o.sellerId === 'unassigned' || o.sellerId === 'pending_expert').length || 4}টি`} />
+                                </h3>
+                                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1.5">
+                                  পাবলিক পোস্ট
+                                </p>
+                              </button>
 
-                              {/* 4. এসক্রো ব্যালেন্স */}
-                              <div className="p-3.5 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2.5 sm:gap-3.5 hover:border-[#1DB954] transition-all transform hover:-translate-y-0.5 shadow-xs">
-                                <div className="p-2.5 sm:p-3.5 rounded-xl bg-[#1DB954]/10 text-[#1DB954] shrink-0">
-                                  <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
+                              {/* 4. ৪টি প্রোডাক্ট */}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOrderHubTab('products');
+                                  setActiveSubTab('my-orders');
+                                }}
+                                className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center hover:border-amber-500/80 hover:shadow-sm transition-all transform hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer group"
+                              >
+                                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                                  <Package className="w-5 h-5" />
                                 </div>
-                                <div className="min-w-0">
-                                  <h3 className="text-lg sm:text-2xl font-black font-heading text-[#1DB954]">
-                                    <AnimatedOverviewCounter value={`৳${((allBuyerOrders.filter(o => o.status !== 'completed').reduce((acc, o) => acc + (o.amount || 0), 0)) || 133000).toLocaleString('bn-BD')}`} />
-                                  </h3>
-                                  <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 font-bengali leading-snug">
-                                    এসক্রো ব্যালেন্স
-                                  </p>
-                                </div>
-                              </div>
+                                <h3 className="text-lg sm:text-2xl font-black font-heading text-amber-600 dark:text-amber-400 leading-none">
+                                  <AnimatedOverviewCounter value={`${buyerDigitalOrders.length > 0 ? buyerDigitalOrders.length : 4}টি`} />
+                                </h3>
+                                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1.5">
+                                  প্রোডাক্ট
+                                </p>
+                              </button>
                             </div>
 
-                            {/* COMPREHENSIVE PAYMENT & TRANSACTION HISTORY (পেমেন্ট বিবরণী) */}
-                            <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-xs space-y-3">
-                              {/* Header & Filter Section */}
-                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800">
+                            {/* COMPREHENSIVE PAYMENT & TRANSACTION HISTORY (প্লেইন ডিজাইন: ক্লিন সিমলেস লিস্ট লেআউট) */}
+                            <div className="pt-2 sm:pt-4 space-y-3 font-bengali">
+                              {/* Header & Filter Section (Plain border-b layout) */}
+                              <div className="pb-3 border-b border-slate-200/90 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                                 <div className="space-y-0.5">
                                   <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-1.5">
                                     <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-[#1DB954]" />
@@ -11237,7 +11407,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <button
                                     type="button"
                                     onClick={() => setOverviewInnerTab('all')}
-                                    className={`px-2.5 py-1 rounded-lg text-xs font-black transition cursor-pointer shrink-0 ${
+                                    className={`px-3 py-1 rounded-full text-xs font-black transition cursor-pointer shrink-0 ${
                                       overviewInnerTab === 'all'
                                         ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-950 shadow-xs'
                                         : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
@@ -11249,7 +11419,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <button
                                     type="button"
                                     onClick={() => setOverviewInnerTab('orders')}
-                                    className={`px-2.5 py-1 rounded-lg text-xs font-black transition cursor-pointer shrink-0 ${
+                                    className={`px-3 py-1 rounded-full text-xs font-black transition cursor-pointer shrink-0 ${
                                       overviewInnerTab === 'orders'
                                         ? 'bg-emerald-600 text-white shadow-xs'
                                         : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/80 hover:bg-emerald-100'
@@ -11261,7 +11431,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <button
                                     type="button"
                                     onClick={() => setOverviewInnerTab('courses')}
-                                    className={`px-2.5 py-1 rounded-lg text-xs font-black transition cursor-pointer shrink-0 ${
+                                    className={`px-3 py-1 rounded-full text-xs font-black transition cursor-pointer shrink-0 ${
                                       overviewInnerTab === 'courses'
                                         ? 'bg-blue-600 text-white shadow-xs'
                                         : 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/80 hover:bg-blue-100'
@@ -11269,32 +11439,59 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   >
                                     কোর্স
                                   </button>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => setOverviewInnerTab('products')}
+                                    className={`px-3 py-1 rounded-full text-xs font-black transition cursor-pointer shrink-0 ${
+                                      overviewInnerTab === 'products'
+                                        ? 'bg-amber-600 text-white shadow-xs'
+                                        : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/80 hover:bg-amber-100'
+                                    }`}
+                                  >
+                                    প্রডাক্ট
+                                  </button>
                                 </div>
                               </div>
 
-                              {/* Transaction List Items */}
-                              <div className="space-y-2.5">
+                              {/* Transaction List Items (Colorful Individual Cards) */}
+                              <div className="space-y-2.5 sm:space-y-3">
                                 {(() => {
-                                  // Combined payment records
-                                  const orderTransactions = allBuyerOrders.map((ord, idx) => ({
-                                    id: `TRX-${ord.id ? ord.id.replace('ord-mkt-', '').substring(0, 6).toUpperCase() : `ORD-${idx + 1}`}`,
-                                    invId: `INV-${idx + 101}`,
-                                    type: 'orders',
-                                    typeName: 'সার্ভিস',
+                                  // 1. Projects payment records
+                                  const projectTransactions = buyerProjectOrders.map((ord, idx) => ({
+                                    id: `TRX-${ord.id ? ord.id.replace('ord-mkt-', '').substring(0, 8).toUpperCase() : `PRJ-${idx + 1}`}`,
+                                    type: 'orders' as const,
+                                    typeName: 'প্রজেক্ট',
                                     title: ord.title || 'কাস্টম ফুল-স্ট্যাক ওয়েবসাইট ডেভেলপমেন্ট',
                                     amount: ord.amount || 12000,
-                                    method: idx % 2 === 0 ? 'bKash' : 'Nagad',
+                                    method: ord.paymentMethod || (idx % 2 === 0 ? 'bKash' : 'Nagad'),
                                     date: ord.createdAt ? new Date(ord.createdAt).toLocaleDateString('bn-BD') : '১৮/০৮/২৬',
                                     status: ord.status === 'completed' ? 'পরিশোধিত' : 'হোল্ড (এসক্রো)',
                                     isEscrow: ord.status !== 'completed',
-                                    seller: ord.sellerName || 'এক্সপার্ট'
+                                    party: ord.sellerName || 'এক্সপার্ট ফ্রিল্যান্সার',
+                                    rawDate: ord.createdAt ? new Date(ord.createdAt).getTime() : 1723900000000 - idx * 86400000
                                   }));
 
+                                  // 2. Digital Products payment records
+                                  const productTransactions = buyerDigitalOrders.map((ord, idx) => ({
+                                    id: `TRX-${ord.id ? ord.id.replace('ord-', '').substring(0, 8).toUpperCase() : `PRD-${idx + 1}`}`,
+                                    type: 'products' as const,
+                                    typeName: 'প্রডাক্ট',
+                                    title: ord.title || 'ডিজিটাল প্রোডাক্ট ও রিসোর্স',
+                                    amount: ord.amount || 750,
+                                    method: ord.paymentMethod || (idx % 2 === 0 ? 'bKash' : 'Nagad'),
+                                    date: ord.createdAt ? new Date(ord.createdAt).toLocaleDateString('bn-BD') : '২৪/০৮/২৬',
+                                    status: ord.status === 'completed' ? 'পরিশোধিত' : 'পরিশোধিত',
+                                    isEscrow: false,
+                                    party: ord.deliveryType === 'canva_link' || ord.canvaInviteLink ? 'Canva VIP টেমপ্লেট' : 'সোর্স কোড ও ফাইল',
+                                    rawDate: ord.createdAt ? new Date(ord.createdAt).getTime() : 1724400000000 - idx * 86400000
+                                  }));
+
+                                  // 3. Courses payment records
                                   const courseTransactions = [
                                     {
                                       id: 'TRX-CRS-01',
-                                      invId: 'INV-881',
-                                      type: 'courses',
+                                      type: 'courses' as const,
                                       typeName: 'কোর্স',
                                       title: 'Full-Stack Web Development (MERN + AI)',
                                       amount: 4500,
@@ -11302,12 +11499,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       date: '১২/০৮/২৬',
                                       status: 'পরিশোধিত',
                                       isEscrow: false,
-                                      seller: 'PTENit Academy'
+                                      party: 'PTENit Academy',
+                                      rawDate: 1723400000000
                                     },
                                     {
                                       id: 'TRX-CRS-02',
-                                      invId: 'INV-712',
-                                      type: 'courses',
+                                      type: 'courses' as const,
                                       typeName: 'কোর্স',
                                       title: 'Python Django & AI Backend Engineering',
                                       amount: 5500,
@@ -11315,12 +11512,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       date: '০৫/০৭/২৬',
                                       status: 'পরিশোধিত',
                                       isEscrow: false,
-                                      seller: 'PTENit Academy'
+                                      party: 'PTENit Academy',
+                                      rawDate: 1720100000000
                                     },
                                     {
                                       id: 'TRX-CRS-03',
-                                      invId: 'INV-604',
-                                      type: 'courses',
+                                      type: 'courses' as const,
                                       typeName: 'কোর্স',
                                       title: 'Next.js 14 & Tailwind Pro Masterclass',
                                       amount: 3200,
@@ -11328,127 +11525,122 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       date: '২৮/০৬/২৬',
                                       status: 'পরিশোধিত',
                                       isEscrow: false,
-                                      seller: 'PTENit Academy'
+                                      party: 'PTENit Academy',
+                                      rawDate: 1719500000000
                                     }
                                   ];
 
                                   const combined = overviewInnerTab === 'orders'
-                                    ? orderTransactions
+                                    ? projectTransactions
                                     : overviewInnerTab === 'courses'
                                     ? courseTransactions
-                                    : [...orderTransactions, ...courseTransactions];
+                                    : overviewInnerTab === 'products'
+                                    ? productTransactions
+                                    : [...projectTransactions, ...courseTransactions, ...productTransactions].sort((a, b) => b.rawDate - a.rawDate);
 
                                   if (combined.length === 0) {
                                     return (
-                                      <div className="p-6 text-center bg-slate-50 dark:bg-slate-800/40 rounded-xl">
-                                        <Receipt className="w-6 h-6 text-slate-400 mx-auto mb-1 opacity-60" />
+                                      <div className="p-8 text-center bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+                                        <Receipt className="w-7 h-7 text-slate-400 mx-auto mb-1.5 opacity-60" />
                                         <p className="text-xs text-slate-500 font-bold">কোনো পেমেন্ট রেকর্ড নেই</p>
                                       </div>
                                     );
                                   }
 
-                                  return combined.map((trx, idx) => (
-                                    <div
-                                      key={idx}
-                                      className={`p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 transition space-y-1.5 border-l-4 ${
-                                        trx.type === 'orders'
-                                          ? 'border-l-emerald-500 hover:border-emerald-500/80'
-                                          : 'border-l-blue-500 hover:border-blue-500/80'
-                                      }`}
-                                    >
-                                      {/* Row 1: ID, Type, Date, Status, Amount */}
-                                      <div className="flex items-center justify-between gap-2">
-                                        <div className="flex items-center gap-1.5 flex-wrap">
-                                          <span className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-[10px] font-mono font-bold">
-                                            {trx.id}
-                                          </span>
-                                          <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
-                                            trx.type === 'orders'
-                                              ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-                                              : 'bg-blue-500/10 text-blue-600 dark:text-blue-400'
-                                          }`}>
-                                            {trx.typeName}
-                                          </span>
-                                          <span className="text-[10px] text-slate-400">
-                                            • {trx.date}
-                                          </span>
+                                  return combined.map((trx, idx) => {
+                                    const isProject = trx.type === 'orders';
+                                    const isCourse = trx.type === 'courses';
+
+                                    const cardThemeClass = isProject
+                                      ? 'bg-white dark:bg-slate-900 border-emerald-200/90 dark:border-emerald-800/60 hover:border-emerald-500/80 hover:bg-emerald-50/10 dark:hover:bg-emerald-950/20'
+                                      : isCourse
+                                      ? 'bg-white dark:bg-slate-900 border-blue-200/90 dark:border-blue-800/60 hover:border-blue-500/80 hover:bg-blue-50/10 dark:hover:bg-blue-950/20'
+                                      : 'bg-white dark:bg-slate-900 border-amber-200/90 dark:border-amber-800/60 hover:border-amber-500/80 hover:bg-amber-50/10 dark:hover:bg-amber-950/20';
+
+                                    const iconBgClass = isProject
+                                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                                      : isCourse
+                                      ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400'
+                                      : 'bg-amber-500/10 text-amber-600 dark:text-amber-400';
+
+                                    const typeBadgeClass = isProject
+                                      ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-800/60'
+                                      : isCourse
+                                      ? 'bg-blue-500/15 text-blue-700 dark:text-blue-300 border border-blue-300/60 dark:border-blue-800/60'
+                                      : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300/60 dark:border-amber-800/60';
+
+                                    const serialBadgeClass = isProject
+                                      ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-mono font-black'
+                                      : isCourse
+                                      ? 'bg-blue-500/10 text-blue-700 dark:text-blue-300 font-mono font-black'
+                                      : 'bg-amber-500/10 text-amber-700 dark:text-amber-300 font-mono font-black';
+
+                                    return (
+                                      <div
+                                        key={idx}
+                                        className={`p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border transition-all hover:shadow-xs flex items-center justify-between gap-2.5 sm:gap-3.5 text-xs ${cardThemeClass}`}
+                                      >
+                                        {/* Left Column: Icon + Serial, Type Badge, Title & Details */}
+                                        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+                                          <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 ${iconBgClass}`}>
+                                            {isProject ? (
+                                              <Briefcase className="w-4 h-4 sm:w-5 sm:h-5" />
+                                            ) : isCourse ? (
+                                              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
+                                            ) : (
+                                              <Package className="w-4 h-4 sm:w-5 sm:h-5" />
+                                            )}
+                                          </div>
+
+                                          <div className="min-w-0 flex-1 space-y-1">
+                                            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                                              <span className={`text-[10px] sm:text-[11px] px-1.5 py-0.5 rounded-md ${serialBadgeClass}`}>
+                                                #{(idx + 1).toString().padStart(2, '0')}
+                                              </span>
+                                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${typeBadgeClass}`}>
+                                                {trx.typeName}
+                                              </span>
+                                              <p className="font-bold text-slate-900 dark:text-slate-100 text-xs sm:text-sm truncate">
+                                                {trx.title}
+                                              </p>
+                                            </div>
+
+                                            <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 flex-wrap">
+                                              <span className="font-mono text-slate-600 dark:text-slate-300 font-semibold">{trx.id}</span>
+                                              <span>•</span>
+                                              <span>{trx.date}</span>
+                                              <span>•</span>
+                                              <span>{trx.party}</span>
+                                              <span>•</span>
+                                              <span className="text-slate-700 dark:text-slate-300 font-medium">{trx.method}</span>
+                                            </div>
+                                          </div>
                                         </div>
 
-                                        <div className="flex items-center gap-2 shrink-0">
-                                          <span className={`px-2 py-0.2 rounded-full text-[9px] font-bold ${
+                                        {/* Right Column: Status & Amount */}
+                                        <div className="flex flex-col items-end shrink-0 gap-1 pl-1">
+                                          <span className="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-none">
+                                            ৳{trx.amount.toLocaleString('bn-BD')}
+                                          </span>
+                                          <span className={`px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold ${
                                             trx.isEscrow
-                                              ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30'
-                                              : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                                              ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300/60 dark:border-amber-700/60'
+                                              : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-700/60'
                                           }`}>
                                             {trx.status}
                                           </span>
-                                          <span className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
-                                            ৳{trx.amount.toLocaleString('bn-BD')}
-                                          </span>
                                         </div>
                                       </div>
-
-                                      {/* Row 2: Title & Details */}
-                                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 pt-1 border-t border-slate-200/50 dark:border-slate-700/50 text-xs">
-                                        <div className="min-w-0 pr-1">
-                                          <p className="font-bold text-slate-800 dark:text-slate-200 text-xs truncate">
-                                            {trx.title}
-                                          </p>
-                                          <p className="text-[10px] text-slate-500 dark:text-slate-400">
-                                            {trx.seller} • <span className="text-slate-700 dark:text-slate-300 font-medium">{trx.method}</span>
-                                          </p>
-                                        </div>
-
-                                        {/* Action buttons */}
-                                        <div className="flex items-center gap-1 shrink-0 pt-0.5 sm:pt-0">
-                                          <button
-                                            type="button"
-                                            onClick={() => {
-                                              navigator.clipboard?.writeText(trx.id);
-                                              alert(`আইডি ${trx.id} কপি হয়েছে!`);
-                                            }}
-                                            className="px-2 py-1 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 rounded-lg text-[10px] font-bold flex items-center gap-1 border border-slate-200 dark:border-slate-600 transition cursor-pointer"
-                                            title="আইডি কপি"
-                                          >
-                                            <Copy className="w-2.5 h-2.5" />
-                                            <span>আইডি</span>
-                                          </button>
-
-                                          <button
-                                            type="button"
-                                            onClick={() => alert(`✓ ইনভয়েস (${trx.invId}) PDF ডাউনলোড সম্পন্ন!`)}
-                                            className="px-2.5 py-1 bg-[#1DB954] hover:bg-emerald-500 text-white font-bold rounded-lg text-[10px] flex items-center gap-1 transition cursor-pointer shadow-xs"
-                                          >
-                                            <Download className="w-2.5 h-2.5 text-white" />
-                                            <span>রসিদ</span>
-                                          </button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  ));
+                                    );
+                                  });
                                 })()}
-                              </div>
-
-                              {/* Bottom Action / Guarantee Note */}
-                              <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-800/50 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-[11px] text-emerald-800 dark:text-emerald-300">
-                                <div className="flex items-center gap-1.5">
-                                  <ShieldCheck className="w-3.5 h-3.5 text-[#1DB954] shrink-0" />
-                                  <span>এসক্রো দ্বারা ১০০% সুরক্ষিত লেনদেন।</span>
-                                </div>
-                                <button
-                                  type="button"
-                                  onClick={() => alert('স্টেটমেন্ট রিপোর্ট প্রস্তুত হচ্ছে...')}
-                                  className="font-bold text-[#1DB954] hover:underline whitespace-nowrap cursor-pointer text-left sm:text-right"
-                                >
-                                  স্টেটমেন্ট রিপোর্ট →
-                                </button>
                               </div>
                             </div>
                           </div>
                         )}
 
                         {/* VIEW 1: MY COURSES & ACADEMY FEATURE SUITE */}
-                        {(orderHubTab === 'courses' || activeSubTab === 'my-courses') && (
+                        {orderHubTab === 'courses' && (
                           <div className="space-y-4 animate-fadeIn">
 
                         {/* EXACT STUDENT HUB MENU BAR (স্টুডেন্ট মেনুবার) */}
@@ -13408,7 +13600,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 )}
 
                         {/* VIEW 2: MY ORDERS (আমার অর্ডারসমূহ ও লাইভ প্রগ্রেস) */}
-                        {orderHubTab === 'orders' && activeSubTab !== 'my-courses' && (
+                        {orderHubTab === 'orders' && (
                           <div className="space-y-4 font-bengali animate-fadeIn">
                             {/* Filter Row */}
                             <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-xs space-y-3">
@@ -13877,6 +14069,172 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         })()}
                       </div>
                     )}
+
+                    {/* VIEW 3: MY DIGITAL PRODUCTS (আমার ডিজিটাল প্রোডাক্ট ও ডাউনলোড হাব) */}
+                    {orderHubTab === 'products' && (
+                      <div className="space-y-4 font-bengali animate-fadeIn">
+                        {/* Header Banner */}
+                        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3 sm:p-3.5 shadow-xs flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 font-black text-slate-800 dark:text-slate-100 text-xs sm:text-sm">
+                            <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                              <Package className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0" />
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <span>ডিজিটাল প্রোডাক্ট</span>
+                              <span className="px-2 py-0.2 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300">
+                                {buyerDigitalOrders.length}টি
+                              </span>
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (setActiveTab) {
+                                setActiveTab('digital-products');
+                              }
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                            className="text-amber-600 dark:text-amber-400 hover:text-amber-500 font-bold text-xs flex items-center gap-1 transition cursor-pointer hover:underline underline-offset-2 shrink-0"
+                          >
+                            <span>+ নতুন প্রোডাক্ট</span>
+                          </button>
+                        </div>
+
+                        {/* Digital Products List */}
+                        {buyerDigitalOrders.length === 0 ? (
+                          <div className="p-6 text-center bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2.5">
+                            <div className="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 mx-auto flex items-center justify-center">
+                              <Package className="w-5 h-5" />
+                            </div>
+                            <h3 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
+                              কোনো ডিজিটাল প্রোডাক্ট নেই
+                            </h3>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
+                              কেনা প্রোডাক্টের ফাইল ও লাইসেন্স এখানে দেখা যাবে।
+                            </p>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (setActiveTab) {
+                                  setActiveTab('digital-products');
+                                }
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                              }}
+                              className="py-1.5 px-3.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition cursor-pointer inline-flex items-center gap-1 shadow-xs"
+                            >
+                              <span>+ প্রোডাক্ট খুঁজুন</span>
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                            {buyerDigitalOrders.map((ord) => {
+                              const isCanva = ord.deliveryType === 'canva_link' || ord.deliveryType === 'canva_auto' || Boolean(ord.canvaInviteLink) || ord.title?.toLowerCase().includes('canva');
+                              const effectiveCanva = ord.canvaInviteLink || 'https://www.canva.com';
+                              const effectiveDownload = ord.downloadUrl || ord.deliveryFileUrl || 'https://drive.google.com';
+                              const isCopied = copiedLicenseKeyId === ord.id;
+
+                              return (
+                                <div
+                                  key={ord.id}
+                                  className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 p-3.5 space-y-2.5 shadow-xs hover:border-amber-500/50 transition-all flex flex-col justify-between"
+                                >
+                                  <div className="space-y-2">
+                                    <div className="flex items-center justify-between gap-2">
+                                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">
+                                        {isCanva ? 'Canva VIP' : 'সোর্স কোড'}
+                                      </span>
+                                      <button
+                                        type="button"
+                                        onClick={() => setViewingOrderDetails(ord)}
+                                        className="text-[10px] font-mono text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer"
+                                        title="অর্ডারের বিবরণ ও রিসিপ্ট"
+                                      >
+                                        #{ord.id}
+                                      </button>
+                                    </div>
+
+                                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug">
+                                      {ord.title}
+                                    </h4>
+
+                                    <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-100 dark:border-slate-800/80">
+                                      <span className="text-slate-500 dark:text-slate-400 text-[11px]">
+                                        মূল্য: <strong className="text-slate-800 dark:text-slate-200">৳{(ord.amount || 0).toLocaleString('bn-BD')}</strong>
+                                      </span>
+                                      <span className={`px-2 py-0.2 rounded-full text-[10px] font-bold ${
+                                        ord.status === 'completed'
+                                          ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                                          : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                                      }`}>
+                                        {ord.status === 'completed' ? '✓ রেডি' : 'অপেক্ষমাণ'}
+                                      </span>
+                                    </div>
+
+                                    {/* License Key box if present */}
+                                    {ord.licenseKey && (
+                                      <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between gap-2 text-xs">
+                                        <div className="min-w-0">
+                                          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">লাইসেন্স কি:</p>
+                                          <p className="font-mono text-[11px] font-bold text-slate-800 dark:text-slate-200 truncate">
+                                            {ord.licenseKey}
+                                          </p>
+                                        </div>
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            if (ord.licenseKey) {
+                                              navigator.clipboard.writeText(ord.licenseKey);
+                                              setCopiedLicenseKeyId(ord.id);
+                                              setTimeout(() => setCopiedLicenseKeyId(null), 2000);
+                                            }
+                                          }}
+                                          className="p-1 rounded-lg bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition cursor-pointer shrink-0 border border-slate-200 dark:border-slate-600"
+                                          title="লাইসেন্স কি কপি করুন"
+                                        >
+                                          {isCopied ? (
+                                            <span className="text-[10px] font-bold text-emerald-600 flex items-center gap-0.5">
+                                              <Check className="w-3 h-3" /> কপিড
+                                            </span>
+                                          ) : (
+                                            <Copy className="w-3.5 h-3.5" />
+                                          )}
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* Full-width primary action button */}
+                                  <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                                    {isCanva ? (
+                                      <a
+                                        href={effectiveCanva}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs transition cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
+                                      >
+                                        <span>ক্যানভাতে ওপেন করুন</span>
+                                        <ExternalLink className="w-3 h-3" />
+                                      </a>
+                                    ) : (
+                                      <a
+                                        href={effectiveDownload}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-full py-2 px-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
+                                      >
+                                        <Package className="w-3.5 h-3.5" />
+                                        <span>ফাইল ডাউনলোড করুন</span>
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -14280,11 +14638,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 <Package className="w-3 h-3 text-[#1DB954]" />
                 <span>{t('ভিউ নির্বাচন', 'View Selection')}</span>
               </label>
-              <div className="grid grid-cols-3 gap-1 text-[11px]">
+              <div className="grid grid-cols-4 gap-1 text-[11px]">
                 {[
                   { id: 'all', label: 'সবগুলো' },
-                  { id: 'orders', label: '📦 অর্ডার' },
+                  { id: 'orders', label: '💼 প্রজেক্ট' },
                   { id: 'courses', label: '🎓 কোর্স' },
+                  { id: 'products', label: '📦 প্রডাক্ট' },
                 ].map(tab => (
                   <button
                     key={tab.id}
@@ -14843,14 +15202,30 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
             <form onSubmit={handleSaveEditGig} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">{t('গিগ টাইটেল', 'Gig Title')}</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">{t('গিগ টাইটেল', 'Gig Title')} <span className="text-rose-500">*</span></label>
+                  <span className={`text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                    editGigTitle.length > 90 
+                      ? 'bg-rose-100 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400' 
+                      : editGigTitle.length >= 45 && editGigTitle.length <= 90 
+                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400' 
+                        : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
+                  }`}>
+                    {editGigTitle.length}/৯০ ক্যারেক্টার
+                  </span>
+                </div>
                 <input
                   type="text"
                   required
+                  maxLength={95}
                   value={editGigTitle}
                   onChange={(e) => setEditGigTitle(e.target.value)}
                   className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
                 />
+                <div className="mt-1.5 p-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/50 rounded-lg text-[11px] leading-relaxed text-amber-800 dark:text-amber-300 flex items-start gap-1.5">
+                  <span className="text-sm shrink-0">💡</span>
+                  <span><strong>হিন্ট:</strong> টাইটেল <strong>৫০ থেকে ৯০ ক্যারেক্টারের</strong> মধ্যে রাখা সবচেয়ে উপযুক্ত, যাতে ফোন ভিউতে সুন্দরভাবে ৩ লাইনে স্পষ্টভাবে দেখা যায়।</span>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

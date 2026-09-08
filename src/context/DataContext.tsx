@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import {
   User,
   Course,
@@ -212,6 +212,8 @@ interface DataContextType {
   
   // Shared Audio Synthesizer for Distinct Alerts
   playAppSound: (type?: 'notification' | 'message' | 'order' | 'success') => void;
+  isOfferSoundEnabled: boolean;
+  toggleOfferSound: () => void;
 
   // Mentorship Application & Role Actions
   applyForMentorship: (data: { expertise: string[]; experienceYears: string; bio: string; portfolioUrl?: string; proposedCourseTopic?: string; phone?: string }) => void;
@@ -458,6 +460,32 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Offer & Alert Sound Enablement State (Persisted in localStorage)
+  const [isOfferSoundEnabled, setIsOfferSoundEnabled] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('ptenit_offer_sound_enabled');
+      return saved !== null ? JSON.parse(saved) : true;
+    } catch {
+      return true;
+    }
+  });
+
+  const toggleOfferSound = useCallback(() => {
+    setIsOfferSoundEnabled(prev => {
+      const next = !prev;
+      try {
+        localStorage.setItem('ptenit_offer_sound_enabled', JSON.stringify(next));
+      } catch {}
+      if (next) {
+        // Provide immediate audible feedback that sound is enabled
+        try {
+          playAppSound('notification');
+        } catch {}
+      }
+      return next;
+    });
+  }, [playAppSound]);
+
   // Load state from localStorage or initialData
   const [siteSettings, setSiteSettings] = useState<SiteSettings>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_settings`);
@@ -508,29 +536,47 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // PTENit IT Academy / Services User Account
   const [ptenitUser, setPtenitUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_ptenit_user`);
+    const isLoggedOut = localStorage.getItem(`${STORAGE_KEY}_logged_out`) === 'true';
+    if (isLoggedOut) return null;
+    const saved = localStorage.getItem(`${STORAGE_KEY}_current_user`) || localStorage.getItem(`${STORAGE_KEY}_ptenit_user`);
     if (saved) {
       try {
         return JSON.parse(saved);
       } catch {}
     }
-    return initialUsers.find(u => u.id === 'student-1') || initialUsers[2];
+    return null;
   });
 
-  // Marketplace Freelancing Platform User Account (Buyer or Seller)
+  // Marketplace Freelancing Platform User Account (Buyer or Seller) - Unified with ptenitUser
   const [marketplaceUser, setMarketplaceUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_marketplace_user`);
+    const isLoggedOut = localStorage.getItem(`${STORAGE_KEY}_logged_out`) === 'true';
+    if (isLoggedOut) return null;
+    const saved = localStorage.getItem(`${STORAGE_KEY}_current_user`) || localStorage.getItem(`${STORAGE_KEY}_marketplace_user`);
     if (saved) {
       try {
         return JSON.parse(saved);
       } catch {}
     }
-    return initialUsers.find(u => u.id === 'mkt-seller-1') || initialUsers[4];
+    return null;
   });
 
-  // Legacy/Default currentUser synced with PTENit user
-  const currentUser = ptenitUser;
-  const setCurrentUser = (u: User | null) => setPtenitUser(u);
+  // Unified currentUser across PTENit and Marketplace
+  const currentUser = ptenitUser || marketplaceUser;
+  const setCurrentUser = (u: User | null) => {
+    setPtenitUser(u);
+    setMarketplaceUser(u);
+    if (u) {
+      localStorage.removeItem(`${STORAGE_KEY}_logged_out`);
+      localStorage.setItem(`${STORAGE_KEY}_current_user`, JSON.stringify(u));
+      localStorage.setItem(`${STORAGE_KEY}_ptenit_user`, JSON.stringify(u));
+      localStorage.setItem(`${STORAGE_KEY}_marketplace_user`, JSON.stringify(u));
+    } else {
+      localStorage.setItem(`${STORAGE_KEY}_logged_out`, 'true');
+      localStorage.removeItem(`${STORAGE_KEY}_current_user`);
+      localStorage.removeItem(`${STORAGE_KEY}_ptenit_user`);
+      localStorage.removeItem(`${STORAGE_KEY}_marketplace_user`);
+    }
+  };
 
   const [enrollments, setEnrollments] = useState<Enrollment[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_enrollments`);
@@ -1297,73 +1343,43 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return true;
   };
 
-  // Marketplace Auth Functions
-  const loginMarketplace = (emailOrPhone: string, _pass: string): boolean => {
-    const cleanInput = emailOrPhone.trim().toLowerCase();
-    let user = users.find(
-      u => (u.email.toLowerCase() === cleanInput || u.mobile === emailOrPhone) && (u.id.startsWith('mkt-') || cleanInput.includes('seller') || cleanInput.includes('buyer'))
-    );
-
-    if (!user && (cleanInput.includes('seller') || cleanInput.includes('sohag') || cleanInput.includes('freelancer'))) {
-      user = users.find(u => u.id === 'mkt-seller-1') || initialUsers[4];
-    } else if (!user && (cleanInput.includes('buyer') || cleanInput.includes('tanjil') || cleanInput.includes('client'))) {
-      user = users.find(u => u.id === 'mkt-buyer-1') || initialUsers[5];
-    } else if (!user) {
-      user = users.find(u => u.email.toLowerCase() === cleanInput || u.mobile === emailOrPhone);
-    }
-
-    if (user) {
-      setMarketplaceUser(user);
-      return true;
-    }
-
-    const newMktUser: User = {
-      id: `mkt-usr-${Date.now()}`,
-      name: emailOrPhone.split('@')[0] || "Marketplace User",
-      email: emailOrPhone.includes('@') ? emailOrPhone : `${emailOrPhone}@marketplace.com`,
-      mobile: emailOrPhone,
-      role: 'customer',
-      createdAt: new Date().toISOString().split('T')[0]
-    };
-    setUsers(prev => [...prev, newMktUser]);
-    setMarketplaceUser(newMktUser);
-    return true;
+  // Marketplace Auth Functions - Fully unified with PTENit
+  const loginMarketplace = (emailOrPhone: string, pass: string): boolean => {
+    return login(emailOrPhone, pass);
   };
 
-  const signupMarketplace = (userData: Omit<User, 'id' | 'createdAt'>, _pass: string): boolean => {
-    const newMktUser: User = {
-      ...userData,
-      id: `mkt-usr-${Date.now()}`,
-      createdAt: new Date().toISOString().split('T')[0]
-    };
-    setUsers(prev => [...prev, newMktUser]);
-    setMarketplaceUser(newMktUser);
-    return true;
-  };
-
-  const logoutMarketplace = () => {
-    setMarketplaceUser(null);
+  const signupMarketplace = (userData: Omit<User, 'id' | 'createdAt'>, pass: string): boolean => {
+    return signup(userData, pass);
   };
 
   const logout = () => {
-    setPtenitUser(null);
+    setCurrentUser(null);
+  };
+
+  const logoutMarketplace = () => {
+    setCurrentUser(null);
   };
 
   const demoLoginMarketplace = (role: 'customer' | 'instructor') => {
     if (role === 'instructor') {
       const seller = users.find(u => u.id === 'mkt-seller-1') || initialUsers.find(u => u.id === 'mkt-seller-1') || initialUsers[4];
-      setMarketplaceUser(seller);
+      setCurrentUser(seller);
     } else {
       const buyer = users.find(u => u.id === 'mkt-buyer-1') || initialUsers.find(u => u.id === 'mkt-buyer-1') || initialUsers[5];
-      setMarketplaceUser(buyer);
+      setCurrentUser(buyer);
     }
   };
 
-  const updateMarketplaceProfile = (data: Partial<User>) => {
-    if (!marketplaceUser) return;
-    const updated = { ...marketplaceUser, ...data };
-    setMarketplaceUser(updated);
+  const updateProfile = (data: Partial<User>) => {
+    const active = ptenitUser || marketplaceUser;
+    if (!active) return;
+    const updated = { ...active, ...data };
+    setCurrentUser(updated);
     setUsers(prev => prev.map(u => u.id === updated.id ? updated : u));
+  };
+
+  const updateMarketplaceProfile = (data: Partial<User>) => {
+    updateProfile(data);
   };
 
   const demoLogin = (role: 'student' | 'instructor' | 'customer' | 'admin') => {
@@ -1372,21 +1388,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       target = initialUsers.find(u => u.role === role) || initialUsers[0];
     }
     setCurrentUser(target);
-    
-    // Synchronize marketplace user appropriately
-    if (role === 'instructor') {
-      const seller = users.find(u => u.id === 'mkt-seller-1') || initialUsers.find(u => u.id === 'mkt-seller-1') || initialUsers[4];
-      setMarketplaceUser(seller);
-    } else if (role === 'customer') {
-      const buyer = users.find(u => u.id === 'mkt-buyer-1') || initialUsers.find(u => u.id === 'mkt-buyer-1') || initialUsers[5];
-      setMarketplaceUser(buyer);
-    } else if (role === 'admin') {
-      const adminMkt = users.find(u => u.role === 'admin') || initialUsers[0];
-      setMarketplaceUser(adminMkt);
-    } else {
-      const studentBuyer = users.find(u => u.id === 'mkt-buyer-1') || initialUsers.find(u => u.id === 'mkt-buyer-1') || initialUsers[5];
-      setMarketplaceUser(studentBuyer);
-    }
   };
 
   const switchRole = (newRole: 'customer' | 'specialist' | 'instructor' | 'admin' | 'student') => {
@@ -2114,14 +2115,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       },
       ...prev
     ]);
-  };
-
-  // Profile Update Function
-  const updateProfile = (data: Partial<User>) => {
-    if (!currentUser) return;
-    const updatedUser: User = { ...currentUser, ...data };
-    setCurrentUser(updatedUser);
-    setUsers(prev => prev.map(u => u.id === updatedUser.id ? updatedUser : u));
   };
 
   // Assignment Functions
@@ -2856,7 +2849,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         sendChatMessage,
         createGoogleMeetCall,
         toggleUserBlock,
-        playAppSound
+        playAppSound,
+        isOfferSoundEnabled,
+        toggleOfferSound
       }}
     >
       {children}

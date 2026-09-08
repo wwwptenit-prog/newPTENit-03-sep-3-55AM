@@ -198,6 +198,9 @@ export interface Service {
     standard: MarketplaceGigPackage;
     premium: MarketplaceGigPackage;
   };
+  demoImages?: string[];
+  galleryImages?: string[];
+  demoUrl?: string;
 }
 
 export interface Enrollment {
@@ -207,9 +210,10 @@ export interface Enrollment {
   progress: number; // 0 to 100
   completedLessons: string[]; // lessonIds
   enrolledAt: string;
-  status: 'active' | 'completed';
+  status: 'active' | 'completed' | 'pending' | 'cancelled';
   certificateIssued: boolean;
   certificateId?: string;
+  orderId?: string;
 }
 
 export interface Certificate {
@@ -277,7 +281,7 @@ export interface PaymentOrder {
   paymentMethod: 'bKash' | 'Nagad' | 'Rocket' | 'SSLCommerz';
   transactionId: string;
   senderPhone: string;
-  status: 'Pending' | 'Paid' | 'Failed' | 'Cancelled';
+  status: 'Pending' | 'Paid' | 'Approved' | 'Failed' | 'Cancelled' | 'Rejected';
   createdAt: string;
 }
 
@@ -316,7 +320,23 @@ export interface SiteSettings {
   instagramUrl: string;
   linkedinUrl: string;
   logoUrl?: string;
+  marketplaceLogoUrl?: string;
+  // Logo & Branding Settings
+  logoMode?: 'box_text' | 'text_only' | 'image';
+  showLogoBox?: boolean;
+  logoBoxLetter?: string;
+  logoTextMain?: string;
+  logoTextHighlight?: string;
+  logoSubtitle?: string;
+  marketplaceLogoSubtitle?: string;
   heroBannerUrl?: string;
+  // Hero Visual Customization (Code Mockup vs Glowing Photo Showcase)
+  heroVisualType?: 'photo' | 'code_mockup';
+  heroPhotoUrl?: string;
+  heroPhotoTitle?: string;
+  heroPhotoSubtitle?: string;
+  heroPhotoBadge?: string;
+  heroPhotoGlowColor?: 'emerald' | 'cyan' | 'purple' | 'amber';
   bkashNumber?: string;
   nagadNumber?: string;
   rocketNumber?: string;
@@ -325,6 +345,20 @@ export interface SiteSettings {
   bankAccountNumber?: string;
   bankBranch?: string;
   paymentLogos?: PaymentMethodItem[];
+  // Payment Automation Gateway Settings
+  paymentAutomationMode?: 'manual' | 'automated'; // 'manual' = Admin TrxID verification, 'automated' = Instant Gateway API
+  selectedGateway?: 'bkash_pgw' | 'sslcommerz' | 'aamarpay' | 'shurjopay';
+  gatewaySandboxMode?: boolean; // true = testing/sandbox, false = live production
+  // bKash Merchant PGW API
+  bkashAppKey?: string;
+  bkashAppSecret?: string;
+  bkashUsername?: string;
+  bkashPassword?: string;
+  // SSLCommerz / AamarPay / Shurjopay
+  gatewayStoreId?: string;
+  gatewayStorePassword?: string;
+  // Automation Preferences
+  autoApproveOnGatewaySuccess?: boolean; // auto-activate course immediately on gateway success
   enableMoneyBackGuarantee?: boolean;
   moneyBackGuaranteeDays?: number;
   moneyBackGuaranteeText?: string;
@@ -383,7 +417,8 @@ export interface NotificationItem {
   time: string;
   read: boolean;
   type: 'info' | 'success' | 'warning' | 'error';
-  category?: 'seller' | 'mentor' | 'message' | 'payout' | 'system';
+  category?: 'seller' | 'mentor' | 'message' | 'payout' | 'system' | 'buyer' | 'course';
+  recipientRole?: 'seller' | 'buyer' | 'all';
   targetTab?: string;
   targetId?: string;
   senderName?: string;
@@ -405,7 +440,7 @@ export interface DirectMessageItem {
   senderName: string;
   senderRole?: string;
   senderAvatar?: string;
-  recipientRole?: 'customer' | 'instructor' | 'admin' | 'all';
+  recipientRole?: 'customer' | 'instructor' | 'admin' | 'all' | 'seller' | 'buyer';
   text: string;
   time: string;
   read: boolean;
@@ -505,6 +540,8 @@ export interface MarketplaceGig {
   status: 'active' | 'paused';
   offerBadge?: 'cashback' | 'work_first' | string;
   tags?: string[];
+  demoImages?: string[];
+  demoUrl?: string;
   createdAt?: string;
 }
 
@@ -545,26 +582,12 @@ export interface MarketplaceProposal {
   status: 'pending' | 'accepted' | 'rejected';
 }
 
-export type DigitalProductDeliveryType = 'canva_auto' | 'file_download' | 'email_whatsapp' | 'auto' | 'manual';
-
 export interface MarketplaceOrder {
   id: string;
   type: 'gig_order' | 'job_order' | 'custom_agency_order' | 'digital_product_order';
   digitalProductId?: string;
-  deliveryType?: DigitalProductDeliveryType;
-  canvaInviteLink?: string;
-  accessUsed?: boolean;
-  accessUsedAt?: string;
-  paymentStatus?: 'pending' | 'verified' | 'failed';
-  deliveryStatus?: 'pending' | 'delivered' | 'processing';
-  downloadToken?: string;
   downloadUrl?: string;
   licenseKey?: string;
-  accessGranted?: boolean;
-  accessGrantedAt?: string;
-  accessDeliveryMethod?: 'whatsapp' | 'email' | 'direct_download' | 'both';
-  customFileUrl?: string;
-  customFileName?: string;
   gigId?: string;
   jobId?: string;
   title: string;
@@ -622,7 +645,21 @@ export interface MarketplaceOrder {
   offerType?: string;
   isWorkFirst?: boolean;
   requirements?: string;
+  deliveryType?: 'canva_auto' | 'file_download' | 'email_whatsapp' | 'auto' | 'manual' | string;
+  canvaInviteLink?: string;
+  customFileUrl?: string;
+  customFileName?: string;
+  downloadToken?: string;
+  paymentStatus?: 'pending' | 'verified' | 'rejected' | string;
+  accessGranted?: boolean;
+  deliveryStatus?: string;
+  accessUsed?: boolean;
+  accessGrantedAt?: string;
+  accessUsedAt?: string;
+  accessDeliveryMethod?: string;
 }
+
+export type DigitalProductDeliveryType = 'canva_auto' | 'file_download' | 'email_whatsapp' | 'auto' | 'manual' | string;
 
 export interface DigitalProduct {
   id: string;
@@ -634,8 +671,6 @@ export interface DigitalProduct {
   shortDescription: string;
   fullDescription?: string;
   deliveryType: DigitalProductDeliveryType;
-  canvaInviteLink?: string;
-  canvaRules?: string;
   fileFormat: string;
   fileSize: string;
   rating: number;
@@ -645,6 +680,8 @@ export interface DigitalProduct {
   downloadUrl: string;
   licenseKey?: string;
   demoUrl?: string;
+  canvaInviteLink?: string;
+  canvaRules?: string | string[];
   createdAt?: string;
 }
 

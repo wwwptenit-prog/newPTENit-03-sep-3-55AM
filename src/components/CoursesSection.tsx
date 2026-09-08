@@ -68,16 +68,16 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({
   });
 
   return (
-    <section className="py-8 sm:py-12 bg-white dark:bg-slate-900 min-h-screen font-bengali">
+    <section className={`py-8 sm:py-12 bg-white dark:bg-slate-900 ${isStandalonePage ? 'min-h-screen' : ''} font-bengali`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Title Header - Clean Modern Layout */}
-        <div className="flex items-end justify-between gap-3 mb-6 sm:mb-8">
-          <div className="space-y-0.5 text-left">
-            <h2 className="text-xl sm:text-3xl font-black font-bengali text-slate-900 dark:text-white leading-tight">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4 mb-6 sm:mb-8">
+          <div className="space-y-1.5 text-center sm:text-left flex flex-col items-center sm:items-start">
+            <h2 className="text-lg sm:text-2xl md:text-3xl font-black font-bengali text-slate-900 dark:text-white leading-tight">
               {t('প্রফেশনাল কোর্স', 'Professional Courses')}
             </h2>
-            <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-bengali font-medium">
+            <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-bengali">
               {t('স্কিল গড়ুন, ক্যারিয়ার গড়ুন', 'Build skills, advance career')}
             </p>
           </div>
@@ -103,9 +103,9 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({
                   setActiveTab('courses');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#1DB954] hover:text-emerald-700 hover:underline cursor-pointer font-bengali transition-colors border-0"
+                className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#1DB954] hover:text-emerald-600 hover:underline cursor-pointer font-bengali transition-colors border-0"
               >
-                <span>{t('সব দেখুন →', 'See All →')}</span>
+                <span>{t('সবগুলো দেখুন →', 'See All →')}</span>
               </button>
             )}
           </div>

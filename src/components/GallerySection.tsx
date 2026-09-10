@@ -51,10 +51,10 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onBack }) => {
               </button>
             </div>
           )}
-          <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black font-bengali text-slate-900 dark:text-white leading-tight">
+          <h2 className="text-sm sm:text-lg md:text-2xl font-bold font-bengali text-slate-900 dark:text-white leading-tight">
             {t('ছবি গ্যালারি', 'Photo Gallery')}
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-sm font-bengali">
+          <p className="text-slate-600 dark:text-slate-400 text-[11px] sm:text-xs md:text-sm font-bengali">
             {t('PTENit এর অফিসিয়াল ক্লাসরুম কার্যক্রম, ইভেন্ট, সার্টিফিকেট প্রদান ও সফল মুহূর্তসমূহ।', 'Official classroom activities, events, certificate presentations, and memorable moments.')}
           </p>
         </div>

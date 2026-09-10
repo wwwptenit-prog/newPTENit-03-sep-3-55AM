@@ -52,10 +52,10 @@ export const PromotionalOfferBanner: React.FC<PromotionalOfferBannerProps> = ({ 
             <Tag className="w-3.5 h-3.5" />
             {t('অফার চলমান রয়েছে...', 'Limited Time Offer...')}
           </div>
-          <h2 className="text-lg sm:text-2xl md:text-3xl font-black font-bengali">
+          <h2 className="text-sm sm:text-xl md:text-2xl font-bold font-bengali">
             {activeOffer.title}
           </h2>
-          <p className="text-sm sm:text-base text-emerald-100 font-bengali max-w-2xl">
+          <p className="text-xs sm:text-base text-emerald-100 font-bengali max-w-2xl">
             {activeOffer.subtitle || t("আপনার পছন্দের সার্ভিস বা কোর্সটি আজই অর্ডার/এনরোল করুন", "Enroll or order your desired service/course today")}
           </p>
         </div>

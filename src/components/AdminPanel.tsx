@@ -74,6 +74,13 @@ import {
   Crown
 } from 'lucide-react';
 
+import { UserManagementHub } from './admin/UserManagementHub';
+import { AIMarketplaceCore } from './admin/AIMarketplaceCore';
+import { StaffAccessControl } from './admin/StaffAccessControl';
+import { AdminTaskTabs, TaskTabItem, AVAILABLE_TASKS } from './admin/AdminTaskTabs';
+import { AdminCommandPalette } from './admin/AdminCommandPalette';
+import { AdminFloatingHub } from './admin/AdminFloatingHub';
+
 const WhatsAppIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
@@ -195,6 +202,48 @@ const AdminLoginGate: React.FC<AdminLoginGateProps> = ({ onLogin, onGoHome }) =>
           <p>পাসওয়ার্ড: <code className="text-emerald-400 font-mono">123456</code></p>
         </div>
 
+        {/* RBAC Team Member Quick Test Login */}
+        <div className="pt-2 border-t border-slate-800 text-left space-y-2">
+          <p className="text-[11px] font-bold text-slate-300 flex items-center gap-1.5">
+            <Users className="w-3.5 h-3.5 text-sky-400" />
+            <span>টিম সদস্য হিসেবে সরাসরি টেস্ট লগইন (RBAC Roles):</span>
+          </p>
+          <div className="grid grid-cols-2 gap-1.5">
+            <button
+              type="button"
+              onClick={() => onLogin('farhana.ops@ptenit.com', '123456')}
+              className="p-2 rounded-xl bg-slate-800/90 hover:bg-slate-750 text-slate-200 text-left text-[10px] font-bold border border-slate-700/60 transition flex flex-col cursor-pointer"
+            >
+              <span className="text-white">💼 ফারহানা (অপারেশনস)</span>
+              <span className="text-[9px] text-sky-400 font-normal">ইউজার, গিগ ও এআই কন্ট্রোল</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onLogin('shafiq.finance@ptenit.com', '123456')}
+              className="p-2 rounded-xl bg-slate-800/90 hover:bg-slate-750 text-slate-200 text-left text-[10px] font-bold border border-slate-700/60 transition flex flex-col cursor-pointer"
+            >
+              <span className="text-white">💰 শফিকুল (ফাইন্যান্স)</span>
+              <span className="text-[9px] text-emerald-400 font-normal">পেমেন্ট বিল ভেরিফাই & লেজার</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onLogin('tanvir.market@ptenit.com', '123456')}
+              className="p-2 rounded-xl bg-slate-800/90 hover:bg-slate-750 text-slate-200 text-left text-[10px] font-bold border border-slate-700/60 transition flex flex-col cursor-pointer"
+            >
+              <span className="text-white">🛒 তানভীর (মার্কেটপ্লেস)</span>
+              <span className="text-[9px] text-purple-400 font-normal">গিগ ও স্পেশালিস্ট মডারেশন</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onLogin('rafia.academy@ptenit.com', '123456')}
+              className="p-2 rounded-xl bg-slate-800/90 hover:bg-slate-750 text-slate-200 text-left text-[10px] font-bold border border-slate-700/60 transition flex flex-col cursor-pointer"
+            >
+              <span className="text-white">🎓 রাফিয়া (একাডেমি)</span>
+              <span className="text-[9px] text-amber-400 font-normal">কোর্স ও টিচার যাচাই</span>
+            </button>
+          </div>
+        </div>
+
         {onGoHome && (
           <div>
             <button
@@ -285,7 +334,165 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
   } = useData();
 
   const [activeAdminTab, setActiveAdminTab] = useState<string>('dashboard');
-  const [activeMainModule, setActiveMainModule] = useState<'dashboard' | 'academy' | 'marketplace' | 'settings' | 'system'>('dashboard');
+  const [activeMainModule, setActiveMainModule] = useState<'dashboard' | 'academy' | 'marketplace' | 'settings' | 'system' | 'users' | 'ai_core' | 'staff'>('dashboard');
+  
+  // RBAC Role Simulator for Super Admin testing
+  const [simulatedStaffRole, setSimulatedStaffRole] = useState<string | null>(null);
+
+  const getEffectivePermissions = () => {
+    if (simulatedStaffRole === 'farhana_ops') {
+      return {
+        canManageUsers: true,
+        canApproveTeachers: false,
+        canVerifyPayments: false,
+        canManageCourses: false,
+        canModerateGigs: true,
+        canIssueRestrictions: true,
+        canAccessLedger: false,
+        canModifySettings: false,
+        canControlAI: true
+      };
+    }
+    if (simulatedStaffRole === 'shafiq_fin') {
+      return {
+        canManageUsers: false,
+        canApproveTeachers: false,
+        canVerifyPayments: true,
+        canManageCourses: false,
+        canModerateGigs: false,
+        canIssueRestrictions: false,
+        canAccessLedger: true,
+        canModifySettings: false,
+        canControlAI: false
+      };
+    }
+    if (simulatedStaffRole === 'tanvir_market') {
+      return {
+        canManageUsers: false,
+        canApproveTeachers: false,
+        canVerifyPayments: false,
+        canManageCourses: false,
+        canModerateGigs: true,
+        canIssueRestrictions: false,
+        canAccessLedger: false,
+        canModifySettings: false,
+        canControlAI: true
+      };
+    }
+    if (simulatedStaffRole === 'rafia_acad') {
+      return {
+        canManageUsers: false,
+        canApproveTeachers: true,
+        canVerifyPayments: false,
+        canManageCourses: true,
+        canModerateGigs: false,
+        canIssueRestrictions: false,
+        canAccessLedger: false,
+        canModifySettings: false,
+        canControlAI: false
+      };
+    }
+    return (currentUser as any)?.staffPermissions || null;
+  };
+
+  const checkTabPermission = (tabId: string): { allowed: boolean; requiredRoleName?: string } => {
+    const perms = getEffectivePermissions();
+    if (!perms) return { allowed: true }; // Super Admin has unrestricted access
+
+    if (['users', 'users_manage', 'users_teacher_seller', 'users_just_seller', 'users_trainees', 'users_buyers', 'users_applications'].includes(tabId)) {
+      if (!perms.canManageUsers && !perms.canApproveTeachers) {
+        return { allowed: false, requiredRoleName: 'ইউজার ও মেম্বার ম্যানেজমেন্ট পারমিশন' };
+      }
+    }
+    if (['financials', 'fee_commission'].includes(tabId)) {
+      if (!perms.canVerifyPayments && !perms.canAccessLedger) {
+        return { allowed: false, requiredRoleName: 'ফাইন্যান্স ও বিল ভেরিফিকেশন পারমিশন' };
+      }
+    }
+    if (['courses', 'academy'].includes(tabId)) {
+      if (!perms.canManageCourses) {
+        return { allowed: false, requiredRoleName: 'একাডেমি ও কোর্স ম্যানেজমেন্ট পারমিশন' };
+      }
+    }
+    if (['gigs_manage', 'digital_products', 'marketplace'].includes(tabId)) {
+      if (!perms.canModerateGigs) {
+        return { allowed: false, requiredRoleName: 'মার্কেটপ্লেস ও গিগ মডারেশন পারমিশন' };
+      }
+    }
+    if (['settings', 'sub_admins', 'pixel_setup', 'seo_setup', 'written_content', 'responsive_setup'].includes(tabId)) {
+      if (!perms.canModifySettings) {
+        return { allowed: false, requiredRoleName: 'সাইট সেটিংস ও আরব্যাক কন্ট্রোল পারমিশন' };
+      }
+    }
+    if (['ai_core'].includes(tabId)) {
+      if (!perms.canControlAI) {
+        return { allowed: false, requiredRoleName: 'এআই মার্কেটপ্লেস কোর কন্ট্রোল পারমিশন' };
+      }
+    }
+    return { allowed: true };
+  };
+
+  // Multitasking Workspace Open Tabs State
+  const [openTaskTabs, setOpenTaskTabs] = useState<TaskTabItem[]>([
+    { id: 'dashboard', label: 'ড্যাশবোর্ড', closable: false },
+    { id: 'users_teacher_seller', label: 'ইউজার ও কমপ্লেইন হাব', closable: true },
+    { id: 'ai_core', label: 'ফাইন্যান্সিয়াল ও বিলিং কোর', closable: true },
+    { id: 'sub_admins', label: 'সাব-এডমিন রোল (RBAC)', closable: true }
+  ]);
+
+  // Command Palette State
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+
+  // Global Ctrl+K or Cmd+K listener
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
+
+  // Open or switch task seamlessly
+  const handleOpenOrSwitchTask = (incomingTabId: string) => {
+    const tabId = incomingTabId === 'billing_verify' ? 'ai_core' : incomingTabId;
+    setActiveAdminTab(tabId);
+
+    // Synchronize main module
+    if (tabId === 'dashboard') setActiveMainModule('dashboard');
+    else if (tabId === 'ai_core') setActiveMainModule('ai_core');
+    else if (tabId === 'sub_admins') setActiveMainModule('staff');
+    else if (tabId.startsWith('users')) setActiveMainModule('users');
+    else if (['courses', 'teachers'].includes(tabId)) setActiveMainModule('academy');
+    else if (['gigs_manage', 'digital_products', 'agency_clients', 'financials'].includes(tabId)) setActiveMainModule('marketplace');
+    else if (['settings', 'payment_methods', 'fee_commission'].includes(tabId)) setActiveMainModule('settings');
+    else if (['gallery', 'pixel_setup', 'seo_setup', 'written_content', 'responsive_setup'].includes(tabId)) setActiveMainModule('system');
+
+    // Ensure tab exists in openTaskTabs
+    setOpenTaskTabs(prev => {
+      if (prev.some(t => t.id === tabId)) return prev;
+      const found = AVAILABLE_TASKS.find(t => t.id === tabId);
+      const newTab: TaskTabItem = {
+        id: tabId,
+        label: found ? found.label : tabId,
+        closable: true
+      };
+      return [...prev, newTab];
+    });
+  };
+
+  const handleCloseTaskTab = (tabId: string) => {
+    setOpenTaskTabs(prev => {
+      const filtered = prev.filter(t => t.id !== tabId);
+      if (activeAdminTab === tabId && filtered.length > 0) {
+        setActiveAdminTab(filtered[filtered.length - 1].id);
+      }
+      return filtered;
+    });
+  };
+
   const [methodSubTab, setMethodSubTab] = useState<'all' | 'pixel' | 'payment' | 'tax'>('all');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -929,23 +1136,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
     const targetBill = companyBills.find(b => b.id === billId);
     if (!targetBill) return;
 
-    setIsAutoReading(true);
-    setAutoVerifyLog(`[Auto-Read Engine] MFS TrxID "${targetBill.transactionId}" রিড করা হচ্ছে...`);
-
-    setTimeout(() => {
-      setAutoVerifyLog(`[Auto-Read Engine] ✓ ${targetBill.gateway} SMS/API ম্যাচড! TrxID: ${targetBill.transactionId} | পরিমাণ: ৳${targetBill.amount} | পেয়ার: ${targetBill.payerName}`);
-      setCompanyBills(prev => prev.map(b => {
-        if (b.id === billId) {
-          return {
-            ...b,
-            status: 'verified',
-            verifiedAt: new Date().toLocaleTimeString('bn-BD')
-          };
-        }
-        return b;
-      }));
-      setIsAutoReading(false);
-    }, 1000);
+    setCompanyBills(prev => prev.map(b => {
+      if (b.id === billId) {
+        return {
+          ...b,
+          status: 'verified',
+          verifiedAt: new Date().toLocaleTimeString('bn-BD')
+        };
+      }
+      return b;
+    }));
   };
 
   const handleAutoVerifyAllPendingBills = () => {
@@ -955,24 +1155,17 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
       return;
     }
 
-    setIsAutoReading(true);
-    setAutoVerifyLog(`[Auto-Read Batch] মোট ${pendingList.length} টি পেন্ডিং বিলের TrxID অটো-স্ক্যান করা হচ্ছে...`);
-
-    setTimeout(() => {
-      const nowTime = new Date().toLocaleTimeString('bn-BD');
-      setCompanyBills(prev => prev.map(b => {
-        if (b.status === 'pending') {
-          return {
-            ...b,
-            status: 'verified',
-            verifiedAt: nowTime
-          };
-        }
-        return b;
-      }));
-      setIsAutoReading(false);
-      setAutoVerifyLog(`[Auto-Read Batch] ⚡ সফলভাবে ${pendingList.length} টি প্রতিষ্ঠানের পেমেন্ট বিলের TrxID অটো-রিড ও ভেরিফাই সম্পন্ন হয়েছে!`);
-    }, 1500);
+    const nowTime = new Date().toLocaleTimeString('bn-BD');
+    setCompanyBills(prev => prev.map(b => {
+      if (b.status === 'pending') {
+        return {
+          ...b,
+          status: 'verified',
+          verifiedAt: nowTime
+        };
+      }
+      return b;
+    }));
   };
 
   // Job Creation Form State
@@ -1449,8 +1642,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
     setTestimonialText('');
   };
 
-  const handleSaveSettings = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveSettings = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     updateSiteSettings(settingsForm);
     setSettingsSaved(true);
     setTimeout(() => setSettingsSaved(false), 3000);
@@ -1565,17 +1758,23 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   {activeMainModule === 'dashboard' ? 'ড্যাশবোর্ড' :
                    activeMainModule === 'academy' ? 'একাডেমি' :
                    activeMainModule === 'marketplace' ? 'মার্কেটপ্লেস' :
-                   activeMainModule === 'settings' ? 'সেটিংস' : 'সিস্টেম'}
+                   activeMainModule === 'settings' ? 'সেটিংস' :
+                   activeMainModule === 'system' ? 'সিস্টেম' : 'ইউজার কন্ট্রোল'}
                 </span>
                 <span>/</span>
                 <span className="text-slate-300">
                   {activeAdminTab === 'dashboard' ? 'ওভারভিউ' :
                    activeAdminTab === 'courses' ? 'কোর্সসমূহ' :
                    activeAdminTab === 'teachers' ? 'টিচারস' :
-                   activeAdminTab === 'students' ? 'স্টুডেন্টস' :
                    activeAdminTab === 'billing_verify' ? 'বিল ভেরিফাই' :
                    activeAdminTab === 'gigs_manage' ? 'গিগ আপলোড' :
-                   activeAdminTab === 'settings' ? 'সাইট সেটিংস' : activeAdminTab}
+                   activeAdminTab === 'settings' ? 'সাইট সেটিংস' :
+                   activeAdminTab === 'users_teacher_seller' ? 'টিচার ও সেলার' :
+                   activeAdminTab === 'users_just_seller' ? 'যাস্ট সেলার' :
+                   activeAdminTab === 'users_trainees' ? 'প্রশিক্ষণার্থী' :
+                   activeAdminTab === 'users_buyers' ? 'বায়ার' :
+                   activeAdminTab === 'users_applications' ? 'নতুন আবেদনপত্র' :
+                   activeAdminTab === 'users_manage' ? 'ইউজার ম্যানেজমেন্ট' : activeAdminTab}
                 </span>
               </p>
             </div>
@@ -1655,6 +1854,34 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               )}
             </div>
 
+            {/* RBAC Role Indicator & Simulator */}
+            {!(currentUser as any)?.staffMember ? (
+              <div className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 text-xs shadow-xs">
+                <span className="text-[10px] text-amber-400 font-bold hidden md:inline">রোল সিমুলেটর:</span>
+                <select
+                  value={simulatedStaffRole || 'super_admin'}
+                  onChange={e => {
+                    const val = e.target.value;
+                    setSimulatedStaffRole(val === 'super_admin' ? null : val);
+                  }}
+                  className="bg-transparent text-[11px] font-bold text-slate-200 focus:outline-none cursor-pointer"
+                >
+                  <option value="super_admin" className="bg-slate-900 text-white">🛡️ সুপার এডমিন (Full Access)</option>
+                  <option value="farhana_ops" className="bg-slate-900 text-white">💼 ফারহানা (অপারেশনস ভিউ)</option>
+                  <option value="shafiq_fin" className="bg-slate-900 text-white">💰 শফিকুল (ফাইন্যান্স ভিউ)</option>
+                  <option value="tanvir_market" className="bg-slate-900 text-white">🛒 তানভীর (মার্কেটপ্লেস ভিউ)</option>
+                  <option value="rafia_acad" className="bg-slate-900 text-white">🎓 রাফিয়া (একাডেমি ভিউ)</option>
+                </select>
+              </div>
+            ) : (
+              <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[11px] text-amber-300 font-bold">
+                  {(currentUser as any).staffMember.name} ({(currentUser as any).staffMember.department})
+                </span>
+              </div>
+            )}
+
             {/* Logout Button */}
             <button
               onClick={() => {
@@ -1686,7 +1913,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     {activeMainModule === 'dashboard' ? 'ড্যাশবোর্ড' :
                      activeMainModule === 'academy' ? 'একাডেমি' :
                      activeMainModule === 'marketplace' ? 'মার্কেট' :
-                     activeMainModule === 'settings' ? 'সেটিংস' : 'সিস্টেম'}
+                     activeMainModule === 'settings' ? 'সেটিংস' :
+                     activeMainModule === 'system' ? 'সিস্টেম' : 'ইউজার'}
                   </span>
                 </div>
               </div>
@@ -1730,10 +1958,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
             </div>
           </div>
 
-          {/* Mobile Horizontal 5-Module Navigation Pills */}
+          {/* Mobile Horizontal Module Navigation Pills */}
           <div className="flex items-center gap-1 overflow-x-auto pb-0.5 scrollbar-none bg-slate-900/60 p-1 rounded-xl border border-slate-800/60">
             {[
               { id: 'dashboard', label: '📊 ড্যাশবোর্ড', tab: 'dashboard' },
+              { id: 'users', label: '👥 ইউজার', tab: 'users_teacher_seller', badge: users.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication?.status === 'pending').length },
+              { id: 'ai_core', label: '💳 ফাইন্যান্সিয়াল', tab: 'ai_core', badge: (companyBills.filter(b => b.status === 'pending').length + payouts.filter(p => p.status === 'Pending').length) || undefined },
+              { id: 'staff', label: '🛡️ সাব-এডমিন', tab: 'sub_admins' },
               { id: 'academy', label: '🎓 একাডেমি', tab: 'courses', badge: payouts.filter(p => p.status === 'Pending').length },
               { id: 'marketplace', label: '💼 মার্কেট', tab: 'gigs_manage', badge: gigs.length },
               { id: 'settings', label: '⚙️ সেটিংস', tab: 'settings' },
@@ -1744,8 +1975,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 <button
                   key={m.id}
                   onClick={() => {
-                    setActiveMainModule(m.id as any);
-                    setActiveAdminTab(m.tab);
+                    handleOpenOrSwitchTask(m.tab);
                   }}
                   className={`px-2.5 py-1.5 rounded-lg text-[11px] font-black flex items-center gap-1 shrink-0 transition-all border cursor-pointer ${
                     isActive
@@ -1771,25 +2001,29 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
             <div className="flex items-center gap-1 overflow-x-auto pb-0.5 scrollbar-none bg-slate-900/90 p-1 rounded-lg border border-slate-800">
               {(() => {
                 let currentSubTabs: { id: string; label: string; badge?: number }[] = [];
-                if (activeMainModule === 'academy') {
+                if (activeMainModule === 'ai_core') {
+                  currentSubTabs = [
+                    { id: 'ai_core', label: 'ফাইন্যান্সিয়াল ও পেমেন্ট কোর', badge: companyBills.filter(b => b.status === 'pending').length }
+                  ];
+                } else if (activeMainModule === 'staff') {
+                  currentSubTabs = [
+                    { id: 'sub_admins', label: 'সাব-এডমিন রোল ও এক্সেস' }
+                  ];
+                } else if (activeMainModule === 'academy') {
                   currentSubTabs = [
                     { id: 'courses', label: 'কোর্সসমূহ' },
-                    { id: 'teachers', label: 'টিচারস', badge: payouts.filter(p => p.status === 'Pending').length },
-                    { id: 'students', label: 'স্টুডেন্ট', badge: totalStudents },
-                    { id: 'billing_verify', label: 'বিল ভেরিফাই', badge: companyBills.filter(b => b.status === 'pending').length }
+                    { id: 'teachers', label: 'টিচারস', badge: payouts.filter(p => p.status === 'Pending').length }
                   ];
                 } else if (activeMainModule === 'marketplace') {
                   currentSubTabs = [
                     { id: 'gigs_manage', label: 'গিগ আপলোড', badge: gigs.length },
                     { id: 'digital_products', label: 'ডিজিটাল প্রোডাক্ট' },
                     { id: 'agency_clients', label: 'ক্লায়েন্টস' },
-                    { id: 'billing_verify', label: 'বিল ভেরিফাই', badge: companyBills.filter(b => b.status === 'pending').length },
                     { id: 'financials', label: 'ফিনান্সিয়াল' }
                   ];
                 } else if (activeMainModule === 'settings') {
                   currentSubTabs = [
                     { id: 'settings', label: 'সাইট সেটিংস' },
-                    { id: 'sub_admins', label: 'সাব-এডমিন' },
                     { id: 'payment_methods', label: 'পেমেন্ট মেথড' },
                     { id: 'fee_commission', label: 'কমিশন' }
                   ];
@@ -1800,6 +2034,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     { id: 'seo_setup', label: 'SEO' },
                     { id: 'written_content', label: 'কনটেন্ট' },
                     { id: 'responsive_setup', label: 'লেআউট' }
+                  ];
+                } else if (activeMainModule === 'users') {
+                  const pendingCount = users.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication?.status === 'pending').length;
+                  currentSubTabs = [
+                    { id: 'users_teacher_seller', label: 'টিচার ও সেলার' },
+                    { id: 'users_just_seller', label: 'যাস্ট সেলার' },
+                    { id: 'users_trainees', label: 'প্রশিক্ষণার্থী' },
+                    { id: 'users_buyers', label: 'বায়ার' },
+                    { id: 'users_applications', label: 'আবেদনপত্র', badge: pendingCount }
                   ];
                 }
 
@@ -1863,7 +2106,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     { id: 'academy', label: 'একাডেমি', sub: 'কোর্স, স্টুডেন্ট & টিচার', icon: BookOpen, tab: 'courses', badge: payouts.filter(p => p.status === 'Pending').length },
                     { id: 'marketplace', label: 'মার্কেটপ্লেস', sub: 'গিগ, সার্ভিস & ক্লায়েন্ট', icon: ShoppingBag, tab: 'gigs_manage', badge: gigs.length },
                     { id: 'settings', label: 'সেটিংস', sub: 'সাইট কনফিগ & পেমেন্ট', icon: Settings, tab: 'settings' },
-                    { id: 'system', label: 'সিস্টেম', sub: 'গ্যালারি, SEO & লেআউট', icon: Cpu, tab: 'gallery' }
+                    { id: 'system', label: 'সিস্টেম', sub: 'গ্যালারি, SEO & লেআউট', icon: Cpu, tab: 'gallery' },
+                    { id: 'users', label: 'ইউজার কন্ট্রোল', sub: 'টিচার, সেলার, শিক্ষার্থী & বায়ার', icon: Users, tab: 'users_teacher_seller', badge: users.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication?.status === 'pending').length }
                   ].map(item => {
                     const Icon = item.icon;
                     const isActive = activeMainModule === item.id;
@@ -1951,7 +2195,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               </div>
 
-              {/* 5 Main Modules */}
+              {/* Enterprise Main Modules */}
               <div className="space-y-1.5">
                 {[
                   {
@@ -1961,8 +2205,39 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     icon: LayoutDashboard,
                     isActive: activeMainModule === 'dashboard',
                     onClick: () => {
-                      setActiveMainModule('dashboard');
-                      setActiveAdminTab('dashboard');
+                      handleOpenOrSwitchTask('dashboard');
+                    }
+                  },
+                  {
+                    id: 'users',
+                    label: 'ইউজার কন্ট্রোল',
+                    subText: 'টিচার, সেলার & বায়ার',
+                    icon: Users,
+                    badge: users.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication?.status === 'pending').length || undefined,
+                    isActive: activeMainModule === 'users',
+                    onClick: () => {
+                      handleOpenOrSwitchTask('users_teacher_seller');
+                    }
+                  },
+                  {
+                    id: 'ai_core',
+                    label: 'ফাইন্যান্সিয়াল কোর',
+                    subText: 'সকল পেমেন্ট, বিল ও হিসাব',
+                    icon: CreditCard,
+                    badge: (companyBills.filter(b => b.status === 'pending').length + payouts.filter(p => p.status === 'Pending').length) || undefined,
+                    isActive: activeMainModule === 'ai_core',
+                    onClick: () => {
+                      handleOpenOrSwitchTask('ai_core');
+                    }
+                  },
+                  {
+                    id: 'staff',
+                    label: 'সাব-এডমিন রোল',
+                    subText: 'RBAC পারমিশন টিম',
+                    icon: ShieldCheck,
+                    isActive: activeMainModule === 'staff',
+                    onClick: () => {
+                      handleOpenOrSwitchTask('sub_admins');
                     }
                   },
                   {
@@ -1973,10 +2248,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     badge: payouts.filter(p => p.status === 'Pending').length,
                     isActive: activeMainModule === 'academy',
                     onClick: () => {
-                      setActiveMainModule('academy');
-                      if (!['courses', 'teachers', 'students', 'billing_verify'].includes(activeAdminTab)) {
-                        setActiveAdminTab('courses');
-                      }
+                      handleOpenOrSwitchTask('courses');
                     }
                   },
                   {
@@ -1987,10 +2259,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     badge: gigs.length > 0 ? gigs.length : undefined,
                     isActive: activeMainModule === 'marketplace',
                     onClick: () => {
-                      setActiveMainModule('marketplace');
-                      if (!['gigs_manage', 'digital_products', 'agency_clients', 'financials'].includes(activeAdminTab)) {
-                        setActiveAdminTab('gigs_manage');
-                      }
+                      handleOpenOrSwitchTask('gigs_manage');
                     }
                   },
                   {
@@ -2000,10 +2269,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     icon: Settings,
                     isActive: activeMainModule === 'settings',
                     onClick: () => {
-                      setActiveMainModule('settings');
-                      if (!['settings', 'sub_admins', 'payment_methods', 'fee_commission'].includes(activeAdminTab) && !activeAdminTab.startsWith('custom_')) {
-                        setActiveAdminTab('settings');
-                      }
+                      handleOpenOrSwitchTask('settings');
                     }
                   },
                   {
@@ -2013,10 +2279,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     icon: Cpu,
                     isActive: activeMainModule === 'system',
                     onClick: () => {
-                      setActiveMainModule('system');
-                      if (!['gallery', 'pixel_setup', 'seo_setup', 'written_content', 'responsive_setup'].includes(activeAdminTab)) {
-                        setActiveAdminTab('gallery');
-                      }
+                      handleOpenOrSwitchTask('gallery');
                     }
                   }
                 ].map(nav => {
@@ -2096,9 +2359,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 categoryColor = 'text-[#1DB954]';
                 subTabs = [
                   { id: 'courses', label: 'কোর্সসমূহ', icon: BookOpen },
-                  { id: 'teachers', label: 'টিচারস', icon: Users, badge: payouts.filter(p => p.status === 'Pending').length },
-                  { id: 'students', label: 'স্টুডেন্টস', icon: Users, badge: totalStudents },
-                  { id: 'billing_verify', label: '⚡ বিল লেজার & ভেরিফাই', icon: ShieldCheck, badge: companyBills.filter(b => b.status === 'pending').length }
+                  { id: 'teachers', label: 'টিচারস', icon: Users, badge: payouts.filter(p => p.status === 'Pending').length }
                 ];
               } else if (activeMainModule === 'marketplace') {
                 categoryTitle = '💼 মার্কেটপ্লেস:';
@@ -2107,7 +2368,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   { id: 'gigs_manage', label: 'গিগ আপলোড', icon: ShoppingBag, badge: gigs.length },
                   { id: 'digital_products', label: 'ডিজিটাল প্রোডাক্ট', icon: Zap, badge: digitalProducts.length },
                   { id: 'agency_clients', label: 'ক্লায়েন্টস', icon: Building2 },
-                  { id: 'billing_verify', label: '⚡ বিল ভেরিফাই', icon: ShieldCheck, badge: companyBills.filter(b => b.status === 'pending').length },
                   { id: 'financials', label: 'ফিনান্সিয়ালস', icon: DollarSign }
                 ];
               } else if (activeMainModule === 'settings') {
@@ -2115,7 +2375,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 categoryColor = 'text-amber-400';
                 subTabs = [
                   { id: 'settings', label: 'সাইট সেটিংস', icon: Settings },
-                  { id: 'sub_admins', label: 'সাব-এডমিন', icon: Users, badge: (settingsForm.subAdminMembers && settingsForm.subAdminMembers.length > 0) ? settingsForm.subAdminMembers.length : undefined },
                   { id: 'payment_methods', label: 'পেমেন্ট মেথড', icon: CreditCard },
                   { id: 'fee_commission', label: 'কমিশন কন্ট্রোল', icon: Percent },
                   ...customAdminPages.filter(cp => cp.category !== 'system').map(cp => ({
@@ -2139,6 +2398,29 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     icon: FileText
                   }))
                 ];
+              } else if (activeMainModule === 'users') {
+                const pendingCount = users.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication?.status === 'pending').length;
+                categoryTitle = '👥 ইউজার হাব:';
+                categoryColor = 'text-emerald-400';
+                subTabs = [
+                  { id: 'users_teacher_seller', label: 'টিচার ও সেলার', icon: GraduationCap },
+                  { id: 'users_just_seller', label: 'যাস্ট সেলার', icon: ShoppingBag },
+                  { id: 'users_trainees', label: 'প্রশিক্ষণার্থী', icon: BookOpen },
+                  { id: 'users_buyers', label: 'বায়ার', icon: Users },
+                  { id: 'users_applications', label: 'নতুন আবেদনপত্র', icon: ShieldCheck, badge: pendingCount }
+                ];
+              } else if (activeMainModule === 'ai_core') {
+                categoryTitle = '💳 ফাইন্যান্সিয়াল ও পেমেন্ট কোর:';
+                categoryColor = 'text-emerald-400';
+                subTabs = [
+                  { id: 'ai_core', label: 'সকল পেমেন্ট লেজার, ভাউচার ও বিল ভেরিফাই', icon: CreditCard, badge: companyBills.filter(b => b.status === 'pending').length + payouts.filter(p => p.status === 'Pending').length }
+                ];
+              } else if (activeMainModule === 'staff') {
+                categoryTitle = '🛡️ সাব-এডমিন টিম (RBAC):';
+                categoryColor = 'text-sky-400';
+                subTabs = [
+                  { id: 'sub_admins', label: 'পদবী ও টিম পারমিশন কন্ট্রোল', icon: ShieldCheck }
+                ];
               }
 
               return (
@@ -2154,7 +2436,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                       return (
                         <button
                           key={st.id}
-                          onClick={() => setActiveAdminTab(st.id)}
+                          onClick={() => handleOpenOrSwitchTask(st.id)}
                           className={`py-1.5 px-3 rounded-lg font-bold text-xs flex items-center gap-1.5 transition cursor-pointer border shrink-0 ${
                             isActive
                               ? 'bg-amber-500 text-slate-950 border-amber-400 font-black shadow-xs'
@@ -2178,49 +2460,148 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               );
             })()}
 
-            {/* CUSTOM DYNAMIC PAGE VIEW */}
-            {activeAdminTab.startsWith('custom_') && (
-              <div className="space-y-4 font-bengali">
-                {(() => {
-                  const pageInfo = customAdminPages.find(p => p.id === activeAdminTab);
-                  return (
-                    <div className="bg-slate-900 border border-slate-800 p-4 sm:p-6 rounded-2xl shadow space-y-4">
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 font-mono font-bold text-[10px] rounded border border-amber-500/30">
-                              মডিউল #{pageInfo?.serial || '12'}
-                            </span>
-                            <h2 className="text-base sm:text-lg font-black text-white">{pageInfo?.label || 'কাস্টম এডমিন পেইজ'}</h2>
-                          </div>
-                          <p className="text-[11px] text-slate-400 mt-0.5">{pageInfo?.desc || 'কাস্টম ফিচার ও ডাটা ফ্রেম।'}</p>
-                        </div>
-                        <button
-                          onClick={() => {
-                            setCustomAdminPages(prev => prev.filter(p => p.id !== activeAdminTab));
-                            setActiveAdminTab('dashboard');
-                          }}
-                          className="px-2.5 py-1.5 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold text-xs rounded-lg border border-rose-500/30 cursor-pointer flex items-center gap-1 transition"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                          <span>রিমুভ করুন</span>
-                        </button>
+            {/* RBAC PERMISSION GUARD BANNER */}
+            {(() => {
+              const permStatus = checkTabPermission(activeAdminTab);
+              if (!permStatus.allowed) {
+                return (
+                  <div className="bg-slate-900 border border-slate-800 p-6 sm:p-10 rounded-3xl text-center space-y-5 max-w-2xl mx-auto my-8 shadow-2xl font-bengali">
+                    <div className="w-16 h-16 rounded-2xl bg-rose-500/15 text-rose-400 border border-rose-500/30 flex items-center justify-center mx-auto">
+                      <ShieldCheck className="w-8 h-8 text-rose-400" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <h3 className="text-xl font-bold text-white">অ্যাক্সেস সীমাবদ্ধ (Access Restricted)</h3>
+                      <p className="text-xs text-slate-400">
+                        আপনার বর্তমান টিম মেম্বার রোল এই মডিউলটিতে প্রবেশের অনুমতি দেয় না।
+                      </p>
+                    </div>
+                    <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800/80 text-left text-xs space-y-2">
+                      <div className="flex justify-between items-center text-slate-300">
+                        <span className="text-slate-400">আপনার পদবী:</span>
+                        <span className="font-bold text-amber-400">
+                          {(currentUser as any)?.staffMember?.designation || (simulatedStaffRole ? 'টিম মেম্বার রোল' : 'কর্মকর্তা')}
+                        </span>
                       </div>
-
-                      <div className="p-6 rounded-xl bg-slate-950 border border-slate-800 text-center space-y-2">
-                        <div className="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl border border-amber-500/20 flex items-center justify-center mx-auto text-lg font-bold">
-                          ⚡
-                        </div>
-                        <h3 className="text-sm font-black text-white">কাস্টম মডিউল লেআউট রেডি</h3>
-                        <p className="text-[11px] text-slate-400 max-w-sm mx-auto">
-                          ভবিষ্যতে যেকোনো এপিআই ও কাস্টম উইজেট এখানে সংযুক্ত করতে পারবেন।
-                        </p>
+                      <div className="flex justify-between items-center text-slate-300">
+                        <span className="text-slate-400">প্রয়োজনীয় পারমিশন:</span>
+                        <span className="font-bold text-rose-400 font-mono text-[11px]">{permStatus.requiredRoleName}</span>
                       </div>
                     </div>
-                  );
-                })()}
-              </div>
+                    <div className="flex flex-wrap gap-2 justify-center pt-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const perms = getEffectivePermissions();
+                          if (perms?.canVerifyPayments) setActiveAdminTab('billing_verify');
+                          else if (perms?.canManageUsers) setActiveAdminTab('users_teacher_seller');
+                          else if (perms?.canManageCourses) setActiveAdminTab('courses');
+                          else if (perms?.canModerateGigs) setActiveAdminTab('gigs_manage');
+                          else setActiveAdminTab('dashboard');
+                        }}
+                        className="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl transition cursor-pointer shadow"
+                      >
+                        আমার অনুমোদিত ড্যাশবোর্ডে যান
+                      </button>
+                      {simulatedStaffRole && (
+                        <button
+                          type="button"
+                          onClick={() => setSimulatedStaffRole(null)}
+                          className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl border border-slate-700 transition cursor-pointer"
+                        >
+                          সুপার এডমিন ভিউতে ফিরে যান
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              }
+              return null;
+            })()}
+
+            {/* SINGLE PANE WORKSPACE */}
+            {checkTabPermission(activeAdminTab).allowed && (
+              <>
+            {/* FINANCIAL MANAGEMENT CORE MODULE */}
+            {activeAdminTab === 'ai_core' && (
+              <AIMarketplaceCore
+                companyBills={companyBills}
+                setCompanyBills={setCompanyBills}
+                onVerifySingleBill={handleAutoVerifySingleBill}
+                onVerifyAllBills={handleAutoVerifyAllPendingBills}
+                onCreateBill={(newBill) => setCompanyBills(prev => [newBill, ...prev])}
+                onRejectBill={(billId) => {
+                  setCompanyBills(prev => prev.map(b => b.id === billId ? { ...b, status: 'rejected' } : b));
+                }}
+                onApproveAllMentors={() => {
+                  const pendingUsers = users.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication?.status === 'pending');
+                  if (pendingUsers.length === 0) {
+                    alert('কোনো পেন্ডিং মেন্টর বা স্পেশালিস্ট আবেদন নেই!');
+                    return;
+                  }
+                  pendingUsers.forEach(u => approveMentorApplication(u.id));
+                  alert(`সফলভাবে ${pendingUsers.length} জন আবেদনকারীকে মেন্টর ও স্পেশালিস্ট হিসেবে অনুমোদন দেওয়া হয়েছে!`);
+                }}
+              />
             )}
+
+                {/* CUSTOM DYNAMIC PAGE VIEW */}
+                {activeAdminTab.startsWith('custom_') && (
+                  <div className="space-y-4 font-bengali">
+                    {(() => {
+                      const pageInfo = customAdminPages.find(p => p.id === activeAdminTab);
+                      return (
+                        <div className="bg-slate-900 border border-slate-800 p-4 sm:p-6 rounded-2xl shadow space-y-4">
+                          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 font-mono font-bold text-[10px] rounded border border-amber-500/30">
+                                  মডিউল #{pageInfo?.serial || '12'}
+                                </span>
+                                <h2 className="text-base sm:text-lg font-black text-white">{pageInfo?.label || 'কাস্টম এডমিন পেইজ'}</h2>
+                              </div>
+                              <p className="text-[11px] text-slate-400 mt-0.5">{pageInfo?.desc || 'কাস্টম ফিচার ও ডাটা ফ্রেম।'}</p>
+                            </div>
+                            <button
+                              onClick={() => {
+                                setCustomAdminPages(prev => prev.filter(p => p.id !== activeAdminTab));
+                                setActiveAdminTab('dashboard');
+                              }}
+                              className="px-2.5 py-1.5 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold text-xs rounded-lg border border-rose-500/30 cursor-pointer flex items-center gap-1 transition"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              <span>রিমুভ করুন</span>
+                            </button>
+                          </div>
+
+                          <div className="p-6 rounded-xl bg-slate-950 border border-slate-800 text-center space-y-2">
+                            <div className="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl border border-amber-500/20 flex items-center justify-center mx-auto text-lg font-bold">
+                              ⚡
+                            </div>
+                            <h3 className="text-sm font-black text-white">কাস্টম মডিউল লেআউট রেডি</h3>
+                            <p className="text-[11px] text-slate-400 max-w-sm mx-auto">
+                              ভবিষ্যতে যেকোনো এপিআই ও কাস্টম উইজেট এখানে সংযুক্ত করতে পারবেন।
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                )}
+
+                {/* TAB: USERS MANAGEMENT CONTROL & RESTRICTION HUB */}
+                {(activeAdminTab === 'users' ||
+                  activeAdminTab === 'users_manage' ||
+                  activeAdminTab === 'users_teacher_seller' ||
+                  activeAdminTab === 'users_just_seller' ||
+                  activeAdminTab === 'users_trainees' ||
+                  activeAdminTab === 'users_buyers' ||
+                  activeAdminTab === 'users_applications') && (
+                  <UserManagementHub
+                    activeTab={activeAdminTab}
+                    initialTab={activeAdminTab}
+                    onSelectTab={(tabId) => handleOpenOrSwitchTask(tabId)}
+                  />
+                )}
 
             {/* TAB 1: DASHBOARD STATS */}
             {activeAdminTab === 'dashboard' && (
@@ -2454,8 +2835,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
 
                   <div
                     onClick={() => {
-                      setActiveMainModule('academy');
-                      setActiveAdminTab('students');
+                      handleOpenOrSwitchTask('users_trainees');
                     }}
                     className="bg-slate-900 border border-slate-800 p-3 rounded-xl hover:border-purple-500 transition cursor-pointer space-y-1 shadow-xs group"
                   >
@@ -2464,8 +2844,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                         <GraduationCap className="w-4 h-4" />
                       </div>
                       <div>
-                        <h4 className="font-bold text-white text-xs">স্টুডেন্ট ডাটাবেজ</h4>
-                        <p className="text-[10px] text-slate-400">শিক্ষার্থী ও সার্টিফিকেট</p>
+                        <h4 className="font-bold text-white text-xs">শিক্ষার্থী ও প্রশিক্ষণার্থী</h4>
+                        <p className="text-[10px] text-slate-400">ইউজার কন্ট্রোল ডাটাবেজ</p>
                       </div>
                     </div>
                   </div>
@@ -2928,7 +3308,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               ];
 
               return (
-                <div className="bg-slate-100 dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+                <div className="bg-slate-100 dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-800 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
                   {categoryTabs.map(st => (
                     <button
                       key={st.id}
@@ -2955,7 +3335,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   (c.title && c.title.toLowerCase().includes(courseSubTab.toLowerCase()))
                 );
               }).map(course => (
-                <div key={course.id} className="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 space-y-3 flex flex-col justify-between relative shadow-sm hover:shadow-md transition-all">
+                <div key={course.id} className="bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3 flex flex-col justify-between relative shadow-sm hover:shadow-md transition-all">
                   <div className="space-y-3">
                     <div className="relative">
                       <img src={course.thumbnail} alt={course.title} className="w-full h-36 object-cover rounded-2xl" />
@@ -2970,7 +3350,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     </div>
 
                     <div>
-                      <h3 className="font-bold text-slate-900 dark:text-white line-clamp-2 text-sm leading-snug">{course.title}</h3>
+                      <h3 className="font-bold text-white line-clamp-2 text-sm leading-snug">{course.title}</h3>
                       <div className="flex justify-between items-center text-xs text-slate-600 dark:text-slate-300 mt-1">
                         <span className="bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-md font-semibold text-[11px] text-slate-700 dark:text-slate-200">{course.category}</span>
                         <span className="font-black text-[#1DB954]">{course.isFree ? 'Free' : `৳${course.discountPrice || course.price}`}</span>
@@ -2978,9 +3358,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     </div>
 
                     {/* Instructor & Offer Status Card */}
-                    <div className="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-2xl text-[11px] space-y-2 border border-slate-200/80 dark:border-slate-700/60 font-bengali">
+                    <div className="bg-slate-950/60 p-3 rounded-2xl text-[11px] space-y-2 border border-slate-200/80 dark:border-slate-700/60 font-bengali">
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-500 dark:text-slate-400 text-[10px] font-medium">অফার স্ট্যাটাস:</span>
+                        <span className="text-slate-400 text-[10px] font-medium">অফার স্ট্যাটাস:</span>
                         <span className={`px-2 py-0.5 text-[10px] font-extrabold rounded-md ${
                           course.isPublicOffer || course.assignedInstructorId === 'public'
                             ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30'
@@ -2999,7 +3379,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                         👤 {course.instructor || 'পাবলিক অফার (উন্মুক্ত)'}
                       </p>
 
-                      <div className="flex justify-between font-bold text-slate-700 dark:text-slate-300 pt-1.5 border-t border-slate-200 dark:border-slate-800 text-[11px]">
+                      <div className="flex justify-between font-bold text-slate-300 pt-1.5 border-t border-slate-800 text-[11px]">
                         <span>🎯 {course.targetModules || 4} মডিউল | 📹 {course.targetLessons || 16} ক্লাস</span>
                         <span className="text-[#1DB954] font-black">{course.teacherCommissionRate || 30}% কমিশন</span>
                       </div>
@@ -3042,190 +3422,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
           </div>
         )}
 
-        {/* TAB 3: STUDENTS MANAGEMENT */}
-        {activeAdminTab === 'students' && (
-          <div className="space-y-4 font-bengali">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5 bg-slate-900 border border-slate-800 p-3.5 sm:p-5 rounded-2xl shadow-lg">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <Users className="w-5 h-5 text-[#1DB954]" /> স্টুডেন্ট ও ইউজার ({users.length})
-                  </h2>
-                </div>
-                <p className="text-[11px] text-slate-400">
-                  শিক্ষার্থী ও ইউজার তালিকা।
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="text-xs text-slate-300 font-bold bg-slate-800 px-2.5 py-1.5 rounded-xl border border-slate-700">
-                  ইউজার: <strong className="text-emerald-400 font-mono">{users.length}</strong> জন
-                </span>
-              </div>
-            </div>
-
-            {/* SPECIALIST APPLICATIONS REVIEW HUB */}
-            <div className="bg-slate-900/90 border-2 border-emerald-500/50 rounded-3xl p-5 sm:p-6 shadow-xl space-y-4">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3">
-                <div>
-                  <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
-                    <ShieldCheck className="w-5 h-5 text-[#1DB954]" />
-                    <span>স্পেশালিস্ট ও মেন্টরশিপ নতুন আবেদনপত্র</span>
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                      {users.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication?.status === 'pending').length} টি অপেক্ষমান
-                    </span>
-                  </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    আবেদনকারীদের স্কিল, অভিজ্ঞতা ও পোর্টফোলিও বিস্তারিত পর্যালোচনা করে অনুমোদন বা বাতিল করুন।
-                  </p>
-                </div>
-              </div>
-
-              {/* Applicant Cards Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {users.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication || u.role === 'instructor' || u.isSpecialist).length === 0 ? (
-                  <div className="col-span-full py-8 text-center bg-slate-800/40 rounded-2xl border border-dashed border-slate-700 text-slate-400 text-xs">
-                    বর্তমানে কোনো নতুন অপেক্ষমান আবেদন নেই।
-                  </div>
-                ) : (
-                  users.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication || u.role === 'instructor' || u.isSpecialist).map(u => {
-                    const isPending = u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication?.status === 'pending';
-                    const isApproved = u.role === 'instructor' || u.mentorStatus === 'approved' || u.specialistStatus === 'approved';
-
-                    return (
-                      <div key={u.id} className={`p-4 rounded-2xl border transition-all space-y-3 ${
-                        isPending
-                          ? 'bg-amber-950/20 border-amber-500/50 text-slate-200'
-                          : isApproved
-                          ? 'bg-emerald-950/20 border-emerald-500/40 text-slate-200'
-                          : 'bg-slate-800/60 border-slate-700 text-slate-300'
-                      }`}>
-                        <div className="flex justify-between items-start gap-2">
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={u.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
-                              alt={u.name}
-                              className="w-10 h-10 rounded-full object-cover border-2 border-[#1DB954]"
-                            />
-                            <div>
-                              <h4 className="font-extrabold text-sm text-white">{u.name}</h4>
-                              <p className="text-xs text-slate-400 font-mono">{u.email} • {u.mobile}</p>
-                            </div>
-                          </div>
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${
-                            isPending ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse' :
-                            isApproved ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' :
-                            'bg-rose-500/20 text-rose-300 border border-rose-500/40'
-                          }`}>
-                            {isPending ? 'অপেক্ষমান (Pending)' : isApproved ? 'অনুমোদিত (Specialist)' : 'বাতিল (Rejected)'}
-                          </span>
-                        </div>
-
-                        {u.mentorApplication && (
-                          <div className="bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-xs space-y-1">
-                            <p className="font-bold text-emerald-400">
-                              বিশেষজ্ঞতা: <span className="text-white">{u.mentorApplication.expertise?.join(', ') || 'Web Development, Design'}</span>
-                            </p>
-                            <p className="text-slate-300">
-                              অভিজ্ঞতা: <span className="font-bold text-white">{u.mentorApplication.experienceYears || '3'} বছর</span>
-                            </p>
-                            {u.mentorApplication.portfolioUrl && (
-                              <p className="text-slate-400 truncate">
-                                পোর্টফোলিও: <a href={u.mentorApplication.portfolioUrl} target="_blank" rel="noreferrer" className="text-[#1DB954] underline">{u.mentorApplication.portfolioUrl}</a>
-                              </p>
-                            )}
-                          </div>
-                        )}
-
-                        <div className="flex items-center justify-end gap-2 pt-1 border-t border-slate-800/60">
-                          {isPending && (
-                            <>
-                              <button
-                                onClick={() => {
-                                  approveMentorApplication(u.id);
-                                  alert(`${u.name}-কে সফলভাবে স্পেশালিস্ট ও মেন্টর হিসেবে গ্রহণ ও অনুমোদন দেওয়া হয়েছে!`);
-                                }}
-                                className="px-3 py-1.5 rounded-xl bg-[#1DB954] hover:bg-emerald-500 text-white font-bold text-xs shadow cursor-pointer transition flex items-center gap-1"
-                              >
-                                <CheckCircle className="w-3.5 h-3.5" />
-                                <span>গ্রহণ ও অনুমোদন</span>
-                              </button>
-                              <button
-                                onClick={() => {
-                                  rejectMentorApplication(u.id, "তথ্য অসম্পূর্ণ থাকার কারণে বাতিল করা হলো।");
-                                  alert(`${u.name}-এর আবেদন বাতিল করা হয়েছে।`);
-                                }}
-                                className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow cursor-pointer transition flex items-center gap-1"
-                              >
-                                <XCircle className="w-3.5 h-3.5" />
-                                <span>বাতিল করুন</span>
-                              </button>
-                            </>
-                          )}
-                          {isApproved && (
-                            <span className="text-[11px] text-emerald-400 font-bold flex items-center gap-1">
-                              <CheckCircle className="w-3.5 h-3.5" /> একটিভ স্পেশালিস্ট প্রোফাইল
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs sm:text-sm">
-                  <thead className="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 uppercase font-bold border-b border-slate-200 dark:border-slate-700">
-                    <tr>
-                      <th className="p-4">নাম</th>
-                      <th className="p-4">ইমেইল</th>
-                      <th className="p-4">মোবাইল</th>
-                      <th className="p-4">রোল</th>
-                      <th className="p-4">অ্যাকশন</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-                    {users.map(u => (
-                      <tr key={u.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                        <td className="p-4 font-bold text-slate-900 dark:text-white">{u.name}</td>
-                        <td className="p-4 text-slate-600 dark:text-slate-300 font-mono">{u.email}</td>
-                        <td className="p-4 font-mono text-slate-700 dark:text-slate-300">{u.mobile}</td>
-                        <td className="p-4 font-bold uppercase text-[#1DB954]">{u.role}</td>
-                        <td className="p-4">
-                          {u.role !== 'admin' && (
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() => toggleUserBlock(u.id)}
-                                className={`px-3 py-1 rounded-lg text-xs font-bold cursor-pointer ${
-                                  u.blocked ? 'bg-emerald-600 text-white' : 'bg-rose-500/20 text-rose-500 hover:bg-rose-500/30'
-                                }`}
-                              >
-                                {u.blocked ? 'আনব্লক করুন' : 'ব্লক করুন'}
-                              </button>
-                              <button
-                                onClick={() => {
-                                  deleteUser(u.id);
-                                }}
-                                className="p-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold cursor-pointer transition"
-                                title="ইউজার ডিলেট করুন"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* TAB 4: SERVICES MANAGEMENT */}
         {activeAdminTab === 'services' && (
           <div className="space-y-4 font-bengali">
@@ -3261,7 +3457,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {services.map(s => (
-                <div key={s.id} className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 overflow-hidden space-y-2 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
+                <div key={s.id} className="bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden space-y-2 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
                   <div>
                     <div className="relative h-36 overflow-hidden bg-slate-900">
                       <img
@@ -3274,7 +3470,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                       </div>
                     </div>
                     <div className="p-4 space-y-1">
-                      <h3 className="font-bold text-slate-900 dark:text-white text-base leading-snug">{s.title}</h3>
+                      <h3 className="font-bold text-white text-base leading-snug">{s.title}</h3>
                       <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 mt-1">{s.shortDescription}</p>
                       <span className="text-xs font-bold text-[#1DB954] block mt-2">{s.priceText}</span>
                     </div>
@@ -3290,7 +3486,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                         setServiceThumbnail(s.thumbnail || 'https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80');
                         setServiceModalOpen(true);
                       }}
-                      className="flex-1 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold rounded-lg flex items-center justify-center gap-1 cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-600"
+                      className="flex-1 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-200 text-xs font-bold rounded-lg flex items-center justify-center gap-1 cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-600"
                     >
                       <Edit className="w-3.5 h-3.5" /> এডিট
                     </button>
@@ -5529,7 +5725,7 @@ PTENit ডিজিটাল টিম`;
                                 ) : (
                                   <>
                                     <Clock className="w-3.5 h-3.5 text-amber-400" />
-                                    <span>ভেরিফাই করুন ⚡</span>
+                                    <span>অনুমোদন করুন</span>
                                   </>
                                 )}
                               </button>
@@ -6617,10 +6813,10 @@ PTENit ডিজিটাল টিম`;
             )}
 
             {/* Orders Table */}
-            <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+            <div className="bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs sm:text-sm">
-                  <thead className="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 uppercase font-bold border-b border-slate-200 dark:border-slate-700">
+                  <thead className="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 uppercase font-bold border-b border-slate-800">
                     <tr>
                       <th className="p-4 w-12 text-center">
                         <input
@@ -6667,16 +6863,16 @@ PTENit ডিজিটাল টিম`;
                                 className="w-4 h-4 rounded cursor-pointer accent-[#1DB954]"
                               />
                             </td>
-                            <td className="p-4 font-mono font-bold text-slate-900 dark:text-white">{o.id}</td>
-                            <td className="p-4 text-slate-800 dark:text-slate-200">{o.userName} ({o.userMobile})</td>
-                            <td className="p-4 text-slate-800 dark:text-slate-200">{o.courseTitle}</td>
-                            <td className="p-4 font-medium text-slate-700 dark:text-slate-300">{o.paymentMethod} - {o.transactionId}</td>
+                            <td className="p-4 font-mono font-bold text-white">{o.id}</td>
+                            <td className="p-4 text-slate-200">{o.userName} ({o.userMobile})</td>
+                            <td className="p-4 text-slate-200">{o.courseTitle}</td>
+                            <td className="p-4 font-medium text-slate-300">{o.paymentMethod} - {o.transactionId}</td>
                             <td className="p-4 font-bold text-[#1DB954]">৳{o.amount}</td>
                             <td className="p-4">
                               <select
                                 value={o.status}
                                 onChange={e => updateOrderStatus(o.id, e.target.value as any)}
-                                className="bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white p-1.5 rounded-lg border border-slate-300 dark:border-slate-700 text-xs font-bold cursor-pointer"
+                                className="bg-slate-100 dark:bg-slate-900 text-white p-1.5 rounded-lg border border-slate-800 text-xs font-bold cursor-pointer"
                               >
                                 <option value="Paid">Paid (অনুমোদিত)</option>
                                 <option value="Pending">Pending</option>
@@ -6699,236 +6895,6 @@ PTENit ডিজিটাল টিম`;
                         );
                       })
                     )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB: COMPANY BILLS & AUTOMATED PAYMENT VERIFICATION */}
-        {activeAdminTab === 'billing_verify' && (
-          <div className="space-y-4 font-bengali">
-            {/* Top Banner */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5 bg-slate-900 border border-slate-800 p-3.5 sm:p-5 rounded-2xl shadow-lg">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <ShieldCheck className="w-5 h-5 text-[#1DB954]" />
-                    <span>বিল জমা ও অটো-ভেরিফিকেশন ({companyBills.length})</span>
-                  </h2>
-                </div>
-                <p className="text-[11px] text-slate-400">
-                  বিকাশ, নগদ, রকেট ও ব্যাংক বিল ট্রানজেকশন অটো-রিড ও অনুমোদন।
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 flex-wrap shrink-0">
-                <button
-                  onClick={() => setAddBillModalOpen(true)}
-                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer border border-slate-700 transition shrink-0"
-                >
-                  <Plus className="w-3.5 h-3.5 text-[#1DB954]" />
-                  <span>+ নতুন বিল</span>
-                </button>
-
-                <button
-                  onClick={handleAutoVerifyAllPendingBills}
-                  disabled={isAutoReading}
-                  className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow transition shrink-0"
-                >
-                  <Zap className="w-3.5 h-3.5 fill-slate-950" />
-                  <span>⚡ অটো-ভেরিফাই</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Stats Overview */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                <p className="text-[11px] text-slate-400 font-bold">মোট নিবন্ধিত বিল</p>
-                <p className="text-xl font-black text-white mt-1">{companyBills.length} টি</p>
-              </div>
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                <p className="text-[11px] text-amber-400 font-bold">ভেরিফিকেশন অপেক্ষমান</p>
-                <p className="text-xl font-black text-amber-400 mt-1">
-                  {companyBills.filter(b => b.status === 'pending').length} টি
-                </p>
-              </div>
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                <p className="text-[11px] text-[#1DB954] font-bold">অটো-ভেরিফাইড বিল (Verified)</p>
-                <p className="text-xl font-black text-[#1DB954] mt-1">
-                  {companyBills.filter(b => b.status === 'verified').length} টি
-                </p>
-              </div>
-              <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                <p className="text-[11px] text-sky-400 font-bold">মোট বিল কালেকশন</p>
-                <p className="text-xl font-black text-sky-300 mt-1">
-                  ৳{companyBills.reduce((acc, b) => acc + b.amount, 0).toLocaleString('bn-BD')}
-                </p>
-              </div>
-            </div>
-
-            {/* Live Auto-Read Engine Log */}
-            {autoVerifyLog && (
-              <div className="p-4 bg-slate-950 border border-emerald-500/40 rounded-2xl shadow-xl font-mono text-xs space-y-1">
-                <div className="flex items-center justify-between text-emerald-400 font-bold">
-                  <span className="flex items-center gap-2">
-                    <RefreshCw className={`w-3.5 h-3.5 ${isAutoReading ? 'animate-spin' : ''}`} />
-                    অটো-রিড ও ট্রানজেকশন ভেরিফিকেশন কন্সোল
-                  </span>
-                  <button onClick={() => setAutoVerifyLog(null)} className="text-slate-500 hover:text-white cursor-pointer">✕</button>
-                </div>
-                <p className="text-slate-200">{autoVerifyLog}</p>
-              </div>
-            )}
-
-            {/* Filter & Search Toolbar */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-              <div className="relative w-full sm:w-80">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-                <input
-                  type="text"
-                  placeholder="TrxID, নাম বা মোবাইল নম্বর দিয়ে খুঁজুন..."
-                  value={billSearchFilter}
-                  onChange={(e) => setBillSearchFilter(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
-                />
-              </div>
-
-              <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
-                <span className="text-xs text-slate-400 font-bold shrink-0">ফিল্টার:</span>
-                {(['all', 'pending', 'verified', 'rejected'] as const).map(st => (
-                  <button
-                    key={st}
-                    onClick={() => setBillStatusFilter(st)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer shrink-0 ${
-                      billStatusFilter === st
-                        ? 'bg-[#1DB954] text-white'
-                        : 'bg-slate-800 text-slate-300 hover:text-white'
-                    }`}
-                  >
-                    {st === 'all' ? 'সকল বিল' : st === 'pending' ? 'পেন্ডিং' : st === 'verified' ? 'ভেরিফাইড' : 'বাতিল'}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Bills Table */}
-            <div className="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-950 text-slate-400 uppercase font-black border-b border-slate-800">
-                    <tr>
-                      <th className="p-4">বিল ID & ক্যাটাগরি</th>
-                      <th className="p-4">পেয়ারের নাম & মোবাইল</th>
-                      <th className="p-4">মেথড & TrxID</th>
-                      <th className="p-4">পরিমাণ (৳)</th>
-                      <th className="p-4">ভেরিফিকেশন স্ট্যাটাস</th>
-                      <th className="p-4 text-right">অটো-রিড & অ্যাকশন</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800/60">
-                    {companyBills
-                      .filter(b => {
-                        if (billStatusFilter !== 'all' && b.status !== billStatusFilter) return false;
-                        if (billSearchFilter.trim()) {
-                          const query = billSearchFilter.toLowerCase();
-                          return (
-                            b.transactionId.toLowerCase().includes(query) ||
-                            b.payerName.toLowerCase().includes(query) ||
-                            b.payerPhone.toLowerCase().includes(query) ||
-                            b.id.toLowerCase().includes(query)
-                          );
-                        }
-                        return true;
-                      })
-                      .map(bill => (
-                        <tr key={bill.id} className="hover:bg-slate-800/40 transition">
-                          <td className="p-4">
-                            <p className="font-mono font-black text-amber-400">{bill.id}</p>
-                            <p className="text-[11px] font-bold text-slate-300 mt-0.5">{bill.category}</p>
-                            <p className="text-[10px] text-slate-500 mt-0.5">{bill.date}</p>
-                          </td>
-
-                          <td className="p-4">
-                            <p className="font-bold text-white text-sm">{bill.payerName}</p>
-                            <p className="text-xs font-mono text-slate-400">{bill.payerPhone}</p>
-                            {bill.note && <p className="text-[10px] text-slate-500 italic mt-0.5">{bill.note}</p>}
-                          </td>
-
-                          <td className="p-4">
-                            <div className="flex items-center gap-2">
-                              <span className={`px-2 py-0.5 text-[10px] font-black rounded-md ${
-                                bill.gateway === 'bKash' ? 'bg-pink-500/20 text-pink-300 border border-pink-500/30' :
-                                bill.gateway === 'Nagad' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' :
-                                bill.gateway === 'Rocket' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' :
-                                'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                              }`}>
-                                {bill.gateway}
-                              </span>
-                              <span className="font-mono font-extrabold text-white tracking-wider bg-slate-950 px-2 py-1 rounded-md border border-slate-800 text-xs">
-                                {bill.transactionId}
-                              </span>
-                            </div>
-                          </td>
-
-                          <td className="p-4 font-black text-[#1DB954] text-sm">
-                            ৳{(bill.amount || 0).toLocaleString('bn-BD')}
-                          </td>
-
-                          <td className="p-4">
-                            {bill.status === 'verified' ? (
-                              <div className="space-y-0.5">
-                                <span className="px-2.5 py-1 bg-emerald-500/20 border border-emerald-500/40 text-[#1DB954] font-black rounded-full text-[10px] inline-flex items-center gap-1">
-                                  <ShieldCheck className="w-3 h-3" />
-                                  ✓ ভেরিফাইড (অটো-রিড)
-                                </span>
-                                {bill.verifiedAt && <p className="text-[10px] text-slate-500 font-mono">সময়: {bill.verifiedAt}</p>}
-                              </div>
-                            ) : bill.status === 'pending' ? (
-                              <span className="px-2.5 py-1 bg-amber-500/20 border border-amber-500/40 text-amber-300 font-black rounded-full text-[10px] inline-flex items-center gap-1 animate-pulse">
-                                ⏳ ভেরিফিকেশন বাকি
-                              </span>
-                            ) : (
-                              <span className="px-2.5 py-1 bg-rose-500/20 border border-rose-500/40 text-rose-300 font-black rounded-full text-[10px]">
-                                ✕ বাতিল করা হয়েছে
-                              </span>
-                            )}
-                          </td>
-
-                          <td className="p-4 text-right">
-                            {bill.status === 'pending' ? (
-                              <div className="flex items-center justify-end gap-1.5">
-                                <button
-                                  onClick={() => handleAutoVerifySingleBill(bill.id)}
-                                  className="px-2.5 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-[10px] rounded-lg cursor-pointer flex items-center gap-1 shadow"
-                                >
-                                  <Zap className="w-3 h-3 fill-slate-950" />
-                                  অটো-রিড & ভেরিফাই
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    setCompanyBills(prev => prev.map(b => b.id === bill.id ? { ...b, status: 'rejected' } : b));
-                                  }}
-                                  className="px-2 py-1.5 bg-rose-500/20 hover:bg-rose-600 text-rose-300 hover:text-white font-bold text-[10px] rounded-lg cursor-pointer transition"
-                                >
-                                  বাতিল
-                                </button>
-                              </div>
-                            ) : (
-                              <button
-                                onClick={() => {
-                                  setCompanyBills(prev => prev.map(b => b.id === bill.id ? { ...b, status: 'pending' } : b));
-                                }}
-                                className="px-2.5 py-1 bg-slate-800 text-slate-400 hover:text-white font-bold text-[10px] rounded-lg cursor-pointer"
-                              >
-                                পেন্ডিং করুন
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
                   </tbody>
                 </table>
               </div>
@@ -7717,7 +7683,7 @@ PTENit ডিজিটাল টিম`;
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-3xl space-y-4">
+            <div className="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 max-w-3xl space-y-4">
               {settingsSaved && (
                 <div className="p-2.5 bg-emerald-500/20 border border-emerald-500/50 text-emerald-500 font-bold rounded-xl text-xs flex items-center gap-2">
                   <Check className="w-4 h-4" /> সেটিংস সফলভাবে আপডেট ও সেভ হয়েছে!
@@ -7726,93 +7692,93 @@ PTENit ডিজিটাল টিম`;
 
             <form onSubmit={handleSaveSettings} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">হিরো মেইন হেডিং</label>
+                <label className="block text-xs font-bold mb-1 text-slate-200">হিরো মেইন হেডিং</label>
                 <input
                   type="text"
                   value={settingsForm.heroHeading}
                   onChange={e => setSettingsForm({ ...settingsForm, heroHeading: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                  className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">হিরো সাবটেক্সট (Hero Subtext)</label>
+                <label className="block text-xs font-bold mb-1 text-slate-200">হিরো সাবটেক্সট (Hero Subtext)</label>
                 <textarea
                   rows={3}
                   value={settingsForm.heroSubtext}
                   onChange={e => setSettingsForm({ ...settingsForm, heroSubtext: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                  className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">স্টুডেন্ট কাউন্টার</label>
+                  <label className="block text-xs font-bold mb-1 text-slate-200">স্টুডেন্ট কাউন্টার</label>
                   <input
                     type="text"
                     value={settingsForm.statsStudents}
                     onChange={e => setSettingsForm({ ...settingsForm, statsStudents: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">প্রজেক্ট কাউন্টার</label>
+                  <label className="block text-xs font-bold mb-1 text-slate-200">প্রজেক্ট কাউন্টার</label>
                   <input
                     type="text"
                     value={settingsForm.statsProjects}
                     onChange={e => setSettingsForm({ ...settingsForm, statsProjects: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">ফোন নম্বর</label>
+                  <label className="block text-xs font-bold mb-1 text-slate-200">ফোন নম্বর</label>
                   <input
                     type="text"
                     value={settingsForm.phone}
                     onChange={e => setSettingsForm({ ...settingsForm, phone: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">ইমেইল ঠিকানা</label>
+                  <label className="block text-xs font-bold mb-1 text-slate-200">ইমেইল ঠিকানা</label>
                   <input
                     type="text"
                     value={settingsForm.email}
                     onChange={e => setSettingsForm({ ...settingsForm, email: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">অফিস ঠিকানা</label>
+                <label className="block text-xs font-bold mb-1 text-slate-200">অফিস ঠিকানা</label>
                 <input
                   type="text"
                   value={settingsForm.officeAddress}
                   onChange={e => setSettingsForm({ ...settingsForm, officeAddress: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                  className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
                 />
               </div>
 
               {/* Logo 01: PTENit Website Logo (Main Site Header & Footer) */}
-              <div className="p-4 sm:p-5 rounded-2xl border-2 border-[#1DB954]/30 bg-white dark:bg-slate-900 shadow-sm space-y-4 font-bengali">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div className="p-4 sm:p-5 rounded-2xl border-2 border-[#1DB954]/30 bg-slate-950 shadow-sm space-y-4 font-bengali">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
                   <div>
-                    <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                       <span className="w-2.5 h-2.5 rounded-full bg-[#1DB954] animate-pulse" />
                       ০১. পিটেন আইটি ওয়েবসাইট লোগো (PTENit Main Website Logo)
                     </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    <p className="text-xs text-slate-400 mt-0.5">
                       মূল ওয়েবসাইট, হেডার ন্যাভবার ও ফুটারের জন্য লোগো। আপলোড না করলে ডিফল্ট টেক্সট লোগো (PTENit) থাকবে।
                     </p>
                   </div>
                   <span className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border shrink-0 ${
                     settingsForm.logoUrl
                       ? "bg-[#1DB954]/10 text-[#1DB954] border-[#1DB954]/30"
-                      : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-800"
                   }`}>
                     {settingsForm.logoUrl ? "ইমেজ লোগো সক্রিয়" : "ডিফল্ট টেক্সট লোগো"}
                   </span>
@@ -7843,7 +7809,7 @@ PTENit ডিজিটাল টিম`;
                         logoUrl: e.target.value,
                         logoMode: e.target.value ? "image" : "box_text"
                       })}
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white placeholder:text-slate-400 focus:outline-none focus:border-[#1DB954]"
                     />
                   </div>
 
@@ -7877,16 +7843,16 @@ PTENit ডিজিটাল টিম`;
                       </button>
                     </div>
                   ) : (
-                    <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                    <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#1DB954] to-emerald-600 flex items-center justify-center font-bold text-white text-base shadow-sm">
                           P
                         </div>
                         <div className="font-bold text-sm">
-                          <span className="text-slate-900 dark:text-white">PTEN</span>
+                          <span className="text-white">PTEN</span>
                           <span className="text-[#1DB954]">it</span>
                         </div>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400 ml-2">
+                        <span className="text-[10px] text-slate-400 ml-2">
                           (বর্তমানে ডিফল্ট টেক্সট লোগো প্রদর্শিত হচ্ছে)
                         </span>
                       </div>
@@ -7896,21 +7862,21 @@ PTENit ডিজিটাল টিম`;
               </div>
 
               {/* Logo 02: Marketplace Logo (Marketplace Header & Branding) */}
-              <div className="p-4 sm:p-5 rounded-2xl border-2 border-sky-500/30 bg-white dark:bg-slate-900 shadow-sm space-y-4 font-bengali">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div className="p-4 sm:p-5 rounded-2xl border-2 border-sky-500/30 bg-slate-950 shadow-sm space-y-4 font-bengali">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
                   <div>
-                    <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                       <span className="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse" />
                       ০২. মার্কেটপ্লেস লোগো (Marketplace Logo)
                     </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    <p className="text-xs text-slate-400 mt-0.5">
                       মার্কেটপ্লেস ও সার্ভিসেস সেকশনের নিজস্ব লোগো। আপলোড না করলে পিটেন আইটির মূল লোগো বা ডিফল্ট টেক্সট থাকবে।
                     </p>
                   </div>
                   <span className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border shrink-0 ${
                     settingsForm.marketplaceLogoUrl
                       ? "bg-sky-500/10 text-sky-500 border-sky-500/30"
-                      : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-800"
                   }`}>
                     {settingsForm.marketplaceLogoUrl ? "মার্কেটপ্লেস লোগো সক্রিয়" : "ডিফল্ট লোগো"}
                   </span>
@@ -7939,7 +7905,7 @@ PTENit ডিজিটাল টিম`;
                         ...settingsForm,
                         marketplaceLogoUrl: e.target.value
                       })}
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-sky-500"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white placeholder:text-slate-400 focus:outline-none focus:border-sky-500"
                     />
                   </div>
 
@@ -7972,16 +7938,16 @@ PTENit ডিজিটাল টিম`;
                       </button>
                     </div>
                   ) : (
-                    <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                    <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center font-bold text-white text-base shadow-sm">
                           M
                         </div>
                         <div className="font-bold text-sm">
-                          <span className="text-slate-900 dark:text-white">PTENit</span>
+                          <span className="text-white">PTENit</span>
                           <span className="text-sky-500 ml-1">Marketplace</span>
                         </div>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400 ml-2">
+                        <span className="text-[10px] text-slate-400 ml-2">
                           (আপলোড না থাকলে মূল সাইট লোগো বা ডিফল্ট টেক্সট দেখাবে)
                         </span>
                       </div>
@@ -7991,21 +7957,21 @@ PTENit ডিজিটাল টিম`;
               </div>
 
               {/* Hero Visual Customizer: Clean Model / Cover Photo Upload */}
-              <div className="p-4 sm:p-5 rounded-2xl border-2 border-emerald-500/30 bg-white dark:bg-slate-900 shadow-sm space-y-4 font-bengali">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div className="p-4 sm:p-5 rounded-2xl border-2 border-emerald-500/30 bg-slate-950 shadow-sm space-y-4 font-bengali">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
                   <div>
-                    <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                       <Sparkles className="w-4 h-4 text-[#1DB954]" />
                       হিরো সেকশন কভার বা মডেল ছবি (Hero Image)
                     </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    <p className="text-xs text-slate-400 mt-0.5">
                       ওয়েবসাইটের হিরো সেকশনের ডানপাশে মডেল ছবি আপলোড করুন। ছবিটি কোনো ফ্রেম ছাড়াই সফট মাস্ক ও ব্যাকগ্রাউন্ড কালারের সাথে মিশে হিরো হেডলাইনকে প্রেজেন্ট করবে।
                     </p>
                   </div>
                   <span className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border shrink-0 ${
                     settingsForm.heroPhotoUrl || settingsForm.heroBannerUrl
                       ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
-                      : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-800"
                   }`}>
                     {settingsForm.heroPhotoUrl || settingsForm.heroBannerUrl ? "মাস্কড মডেল ছবি সক্রিয়" : "কোড প্রিভিউ সক্রিয়"}
                   </span>
@@ -8039,7 +8005,7 @@ PTENit ডিজিটাল টিম`;
                         heroBannerUrl: e.target.value,
                         heroVisualType: e.target.value ? "photo" : "code_mockup"
                       })}
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white placeholder:text-slate-400 focus:outline-none focus:border-[#1DB954]"
                     />
                   </div>
 
@@ -8077,7 +8043,7 @@ PTENit ডিজিটাল টিম`;
                       </button>
                     </div>
                   ) : (
-                    <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+                    <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-400">
                       কোনো ছবি যুক্ত নেই — হিরো সেকশনে ডিফল্ট প্ল্যাটফর্ম কোড উইন্ডো প্রদর্শিত হচ্ছে।
                     </div>
                   )}
@@ -8085,14 +8051,14 @@ PTENit ডিজিটাল টিম`;
               </div>
 
               {/* Money Back & Escrow Guarantee Settings Control */}
-              <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+              <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950/50 space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                   <div>
-                    <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                    <h4 className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
                       <ShieldCheck className="w-4 h-4 text-[#1DB954]" />
                       মানি ব্যাক ও এস্ক্রো গ্যারান্টি কন্ট্রোল (Money-Back & Escrow Guarantee)
                     </h4>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    <p className="text-[11px] text-slate-400 mt-0.5">
                       গিগ সার্ভিস ও পেমেন্ট পেজে মানি ব্যাক গ্যারান্টি এবং এস্ক্রো সুরক্ষা ব্যাজ সক্রিয়/নিষ্ক্রিয় ও পরিবর্তন করুন।
                     </p>
                   </div>
@@ -8110,7 +8076,7 @@ PTENit ডিজিটাল টিম`;
                 {settingsForm.enableMoneyBackGuarantee !== false && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                     <div>
-                      <label className="block text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">
+                      <label className="block text-xs font-bold text-slate-200 mb-1">
                         গ্যারান্টি সময়সীমা (দিন)
                       </label>
                       <input
@@ -8119,20 +8085,20 @@ PTENit ডিজিটাল টিম`;
                         max={90}
                         value={settingsForm.moneyBackGuaranteeDays ?? 10}
                         onChange={e => setSettingsForm({ ...settingsForm, moneyBackGuaranteeDays: parseInt(e.target.value) || 10 })}
-                        className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
                         placeholder="১০"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">
+                      <label className="block text-xs font-bold text-slate-200 mb-1">
                         গ্যারান্টি ব্যাজ টেক্সট (Custom Badge Text)
                       </label>
                       <input
                         type="text"
                         value={settingsForm.moneyBackGuaranteeText || `${settingsForm.moneyBackGuaranteeDays || 10}-দিনের মানি ব্যাক ও এস্ক্রো গ্যারান্টি`}
                         onChange={e => setSettingsForm({ ...settingsForm, moneyBackGuaranteeText: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white focus:outline-none focus:border-[#1DB954]"
                         placeholder="১০-দিনের মানি ব্যাক ও এস্ক্রো গ্যারান্টি"
                       />
                     </div>
@@ -8151,376 +8117,9 @@ PTENit ডিজিটাল টিম`;
         </div>
         )}
 
-        {/* TAB 7.2: DEDICATED SUB-ADMIN MANAGEMENT */}
+        {/* TAB 7.2: DEDICATED SUB-ADMIN & RBAC STAFF MANAGEMENT */}
         {activeAdminTab === 'sub_admins' && (
-          <div className="space-y-6 font-bengali">
-            {/* Top Header Banner */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5 bg-slate-900 border border-slate-800 p-3.5 sm:p-5 rounded-2xl shadow-lg">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <Users className="w-5 h-5 text-amber-400" /> সাব-এডমিন টিম ({settingsForm.subAdminMembers?.length || 0})
-                  </h2>
-                </div>
-                <p className="text-[11px] text-slate-400">
-                  টিম সদস্য ও একসেস পারমিশন কন্ট্রোল।
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setSubAdminModalOpen(true)}
-                className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 shrink-0 shadow transition cursor-pointer"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>+ নতুন মেম্বার</span>
-              </button>
-            </div>
-
-            {/* Quick Stat Counter Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              <div className="bg-slate-900 p-3 sm:p-4 rounded-xl border border-slate-800 shadow">
-                <p className="text-xs text-slate-400 font-bold">মোট মেম্বার</p>
-                <p className="text-xl sm:text-2xl font-black text-white mt-1">
-                  {settingsForm.subAdminMembers?.length || 0} <span className="text-xs font-normal text-slate-400">জন</span>
-                </p>
-              </div>
-              <div className="bg-slate-900 p-3 sm:p-4 rounded-xl border border-slate-800 shadow">
-                <p className="text-xs text-amber-400 font-bold">সাব-এডমিন</p>
-                <p className="text-xl sm:text-2xl font-black text-amber-400 mt-1">
-                  {(settingsForm.subAdminMembers || []).filter(m => m.role === 'Sub-Admin').length} <span className="text-xs font-normal text-slate-400">জন</span>
-                </p>
-              </div>
-              <div className="bg-slate-900 p-3 sm:p-4 rounded-xl border border-slate-800 shadow">
-                <p className="text-xs text-emerald-400 font-bold">সাপোর্ট</p>
-                <p className="text-xl sm:text-2xl font-black text-emerald-400 mt-1">
-                  {(settingsForm.subAdminMembers || []).filter(m => m.role === 'Support Specialist').length} <span className="text-xs font-normal text-slate-400">জন</span>
-                </p>
-              </div>
-              <div className="bg-slate-900 p-3 sm:p-4 rounded-xl border border-slate-800 shadow">
-                <p className="text-xs text-blue-400 font-bold">ম্যানেজার</p>
-                <p className="text-xl sm:text-2xl font-black text-blue-400 mt-1">
-                  {(settingsForm.subAdminMembers || []).filter(m => m.role === 'Order Manager' || m.role === 'Course Admin').length} <span className="text-xs font-normal text-slate-400">জন</span>
-                </p>
-              </div>
-            </div>
-
-            {/* Filter & Search Controls */}
-            <div className="bg-slate-900 p-3 sm:p-4 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 shadow">
-              <div className="relative w-full sm:w-72">
-                <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="নাম, ইমেইল বা ফোন..."
-                  value={subAdminSearchFilter}
-                  onChange={e => setSubAdminSearchFilter(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500"
-                />
-              </div>
-
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <span className="text-xs text-slate-400 font-bold whitespace-nowrap">পদবী:</span>
-                <select
-                  value={subAdminRoleFilter}
-                  onChange={e => setSubAdminRoleFilter(e.target.value)}
-                  className="w-full sm:w-auto px-2.5 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-amber-500"
-                >
-                  <option value="all">সকল ({settingsForm.subAdminMembers?.length || 0})</option>
-                  <option value="Sub-Admin">Sub-Admin</option>
-                  <option value="Support Specialist">Support Specialist</option>
-                  <option value="Order Manager">Order Manager</option>
-                  <option value="Course Admin">Course Admin</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Sub-Admin Members List Cards */}
-            <div className="space-y-4">
-              {(() => {
-                const members = (settingsForm.subAdminMembers || []).filter(m => {
-                  const matchesSearch = !subAdminSearchFilter ||
-                    m.name.toLowerCase().includes(subAdminSearchFilter.toLowerCase()) ||
-                    m.email.toLowerCase().includes(subAdminSearchFilter.toLowerCase()) ||
-                    m.phone.includes(subAdminSearchFilter);
-                  const matchesRole = subAdminRoleFilter === 'all' || m.role === subAdminRoleFilter;
-                  return matchesSearch && matchesRole;
-                });
-
-                if (members.length === 0) {
-                  return (
-                    <div className="bg-white dark:bg-slate-800 p-12 text-center rounded-3xl border border-dashed border-slate-300 dark:border-slate-700 space-y-3">
-                      <div className="w-14 h-14 mx-auto rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
-                        <Users className="w-7 h-7" />
-                      </div>
-                      <h4 className="text-base font-extrabold text-slate-900 dark:text-white">কোনো সাব-এডমিন বা সাপোর্ট মেম্বার পাওয়া যায়নি</h4>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
-                        আপনার এডমিন প্যানেলকে সহযোগিতার জন্য নতুন সাব-এডমিন নিয়োগ করতে উপরের "+ নতুন সাব-এডমিন / মেম্বার নিয়োগ" বাটনে ক্লিক করুন।
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => setSubAdminModalOpen(true)}
-                        className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl inline-flex items-center gap-1.5 shadow transition"
-                      >
-                        <Plus className="w-3.5 h-3.5" /> মেম্বার যুক্ত করুন
-                      </button>
-                    </div>
-                  );
-                }
-
-                const allSelected = members.length > 0 && members.every(m => selectedSubAdminIds.includes(m.id));
-
-                const handleToggleSelectAll = () => {
-                  if (allSelected) {
-                    setSelectedSubAdminIds(prev => prev.filter(id => !members.some(m => m.id === id)));
-                  } else {
-                    const newIds = Array.from(new Set([...selectedSubAdminIds, ...members.map(m => m.id)]));
-                    setSelectedSubAdminIds(newIds);
-                  }
-                };
-
-                const handleBulkStatusChange = (newStatus: 'active' | 'suspended') => {
-                  if (selectedSubAdminIds.length === 0) return;
-                  const updatedList = (settingsForm.subAdminMembers || []).map(m =>
-                    selectedSubAdminIds.includes(m.id) ? { ...m, status: newStatus } : m
-                  );
-                  setSettingsForm({ ...settingsForm, subAdminMembers: updatedList });
-                  updateSiteSettings({ ...settingsForm, subAdminMembers: updatedList });
-                  alert(`সিলেক্ট করা ${selectedSubAdminIds.length} জন মেম্বারের স্টেটাস ${newStatus === 'active' ? 'অ্যাক্টিভ' : 'সাসপেন্ডেড'} করা হয়েছে!`);
-                };
-
-                const handleBulkDelete = () => {
-                  if (selectedSubAdminIds.length === 0) return;
-                  if (window.confirm(`আপনি কি নিশ্চিত যে সিলেক্ট করা ${selectedSubAdminIds.length} জন সাব-এডমিন মেম্বারকে স্থায়ীভাবে মুছে ফেলতে চান?`)) {
-                    const updatedList = (settingsForm.subAdminMembers || []).filter(m => !selectedSubAdminIds.includes(m.id));
-                    setSettingsForm({ ...settingsForm, subAdminMembers: updatedList });
-                    updateSiteSettings({ ...settingsForm, subAdminMembers: updatedList });
-                    setSelectedSubAdminIds([]);
-                    alert('সিলেক্ট করা মেম্বারদের রিমুভ করা হয়েছে!');
-                  }
-                };
-
-                return (
-                  <div className="space-y-4">
-                    {/* Bulk Action Header Control Toolbar */}
-                    <div className="bg-amber-500/10 dark:bg-slate-900 border border-amber-500/30 p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-sm">
-                      <div className="flex items-center gap-3">
-                        <label className="flex items-center gap-2 cursor-pointer text-xs font-black text-slate-800 dark:text-slate-200">
-                          <input
-                            type="checkbox"
-                            checked={allSelected}
-                            onChange={handleToggleSelectAll}
-                            className="w-4 h-4 rounded text-amber-500 focus:ring-amber-500 cursor-pointer"
-                          />
-                          <span>সবগুলো সিলেক্ট করুন ({members.length})</span>
-                        </label>
-                        {selectedSubAdminIds.length > 0 && (
-                          <span className="px-2.5 py-0.5 bg-amber-500 text-slate-950 font-black text-[11px] rounded-full">
-                            {selectedSubAdminIds.length} জন সিলেক্টেড
-                          </span>
-                        )}
-                      </div>
-
-                      {selectedSubAdminIds.length > 0 ? (
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <button
-                            type="button"
-                            onClick={() => handleBulkStatusChange('active')}
-                            className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs rounded-xl flex items-center gap-1 shadow transition cursor-pointer"
-                          >
-                            <ShieldCheck className="w-3.5 h-3.5" />
-                            <span>বাল্ক অ্যাক্টিভ করুন ({selectedSubAdminIds.length})</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => handleBulkStatusChange('suspended')}
-                            className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs rounded-xl flex items-center gap-1 shadow transition cursor-pointer"
-                          >
-                            <Zap className="w-3.5 h-3.5" />
-                            <span>বাল্ক সাসপেন্ড করুন ({selectedSubAdminIds.length})</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={handleBulkDelete}
-                            className="px-3 py-1.5 bg-rose-500 hover:bg-rose-600 text-white font-black text-xs rounded-xl flex items-center gap-1 shadow transition cursor-pointer"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                            <span>বাল্ক ডিলিট ({selectedSubAdminIds.length})</span>
-                          </button>
-                        </div>
-                      ) : (
-                        <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
-                          💡 একসাথে একাধিক মেম্বারের অ্যাক্সেস অ্যাক্টিভ/সাসপেন্ড করতে টিক চিহ্ন দিন
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {members.map(member => {
-                        const isSelected = selectedSubAdminIds.includes(member.id);
-
-                        return (
-                          <div
-                            key={member.id}
-                            className={`bg-slate-900 p-3.5 sm:p-4 rounded-xl border transition-all flex flex-col justify-between gap-3 ${
-                              isSelected
-                                ? 'border-amber-500 bg-amber-950/20 shadow-md'
-                                : 'border-slate-800 hover:border-amber-500/50 shadow'
-                            }`}
-                          >
-                            <div className="space-y-2.5">
-                              <div className="flex items-start justify-between gap-2">
-                                <div className="flex items-center gap-2.5">
-                                  <input
-                                    type="checkbox"
-                                    checked={isSelected}
-                                    onChange={() => {
-                                      if (isSelected) {
-                                        setSelectedSubAdminIds(prev => prev.filter(id => id !== member.id));
-                                      } else {
-                                        setSelectedSubAdminIds(prev => [...prev, member.id]);
-                                      }
-                                    }}
-                                    className="w-4 h-4 rounded text-amber-500 focus:ring-amber-500 cursor-pointer shrink-0 mt-0.5"
-                                  />
-                                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-black text-xs text-white shadow-inner shrink-0 ${
-                                    member.role === 'Sub-Admin' ? 'bg-gradient-to-br from-amber-500 to-amber-700' :
-                                    member.role === 'Support Specialist' ? 'bg-gradient-to-br from-emerald-500 to-teal-700' :
-                                    member.role === 'Order Manager' ? 'bg-gradient-to-br from-blue-500 to-indigo-700' :
-                                    'bg-gradient-to-br from-purple-500 to-violet-700'
-                                  }`}>
-                                    {member.name.charAt(0)}
-                                  </div>
-                                  <div>
-                                    <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
-                                      {member.name}
-                                    </h4>
-                                    <span className={`inline-block px-2 py-0.5 text-[10px] font-bold rounded mt-0.5 ${
-                                      member.role === 'Sub-Admin' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' :
-                                      member.role === 'Support Specialist' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
-                                      member.role === 'Order Manager' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
-                                      'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                                    }`}>
-                                      {member.role}
-                                    </span>
-                                  </div>
-                                </div>
-
-                                <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full border flex items-center gap-1 shrink-0 ${
-                                  member.status === 'active'
-                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                                    : 'bg-slate-800 text-slate-400 border-slate-700'
-                                }`}>
-                                  <span className={`w-1.5 h-1.5 rounded-full ${member.status === 'active' ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}`}></span>
-                                  {member.status === 'active' ? 'অ্যাক্টিভ' : 'সাসপেন্ডেড'}
-                                </span>
-                              </div>
-
-                              <div className="space-y-1 text-xs text-slate-300 font-mono bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                                <p className="flex items-center gap-1.5">
-                                  <span className="text-slate-400 font-sans font-bold">ইমেইল:</span> {member.email}
-                                </p>
-                                <p className="flex items-center gap-1.5">
-                                  <span className="text-slate-400 font-sans font-bold">মোবাইল:</span> {member.phone}
-                                </p>
-                                {member.assignedAt && (
-                                  <p className="flex items-center gap-1.5 text-[11px]">
-                                    <span className="text-slate-400 font-sans font-bold">নিয়োগ তারিখ:</span> {member.assignedAt}
-                                  </p>
-                                )}
-                              </div>
-
-                              <div>
-                                <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5">
-                                  অনুমোদিত অ্যাক্সেস পারমিশনসমূহ:
-                                </p>
-                                <div className="flex flex-wrap gap-1.5">
-                                  {member.permissions.map((perm, idx) => {
-                                    const permLabels: Record<string, string> = {
-                                      'orders_manage': '📦 অর্ডার প্রসেসিং',
-                                      'support_chat': '💬 লাইভ চ্যাট & সাপোর্ট',
-                                      'courses_manage': '📚 কোর্স মডারেশন',
-                                      'user_verify': '👥 ইউজার ভেরিফিকেশন',
-                                      'billing_verify': '⚡ বিলিং অডিট',
-                                      'gigs_manage': '💼 গিগ & সার্ভিস'
-                                    };
-                                    return (
-                                      <span
-                                        key={idx}
-                                        className="px-2 py-0.5 bg-slate-100 dark:bg-slate-700/80 text-slate-700 dark:text-slate-300 text-[10px] font-bold rounded-lg border border-slate-200 dark:border-slate-600"
-                                      >
-                                        {permLabels[perm] || perm}
-                                      </span>
-                                    );
-                                  })}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="pt-3 border-t border-slate-100 dark:border-slate-700/70 flex items-center justify-between gap-2">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  const updatedList = (settingsForm.subAdminMembers || []).map(m =>
-                                    m.id === member.id ? { ...m, status: (m.status === 'active' ? 'suspended' : 'active') as any } : m
-                                  );
-                                  setSettingsForm({ ...settingsForm, subAdminMembers: updatedList });
-                                  updateSiteSettings({ ...settingsForm, subAdminMembers: updatedList });
-                                }}
-                                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                                  member.status === 'active'
-                                    ? 'bg-amber-500/10 text-amber-500 hover:bg-amber-500/20'
-                                    : 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20'
-                                }`}
-                              >
-                                {member.status === 'active' ? 'পজ / সাসপেন্ড করুন' : 'পুনরায় সক্রিয় করুন'}
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  if (window.confirm(`আপনি কি নিশ্চিত যে ${member.name}-কে সাব-এডমিন তালিকা থেকে মুছে ফেলতে চান?`)) {
-                                    handleRemoveSubAdmin(member.id);
-                                  }
-                                }}
-                                className="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 rounded-xl text-xs font-bold flex items-center gap-1 transition cursor-pointer"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                                <span>ডিলিট</span>
-                              </button>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })()}
-            </div>
-
-            {/* Permission Guide Matrix Card */}
-            <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 text-white">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-amber-500" />
-                <h3 className="text-sm font-black text-white">সাব-এডমিন পদবী ও পারমিশন গাইডলাইন</h3>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                <div className="p-3.5 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
-                  <p className="font-black text-amber-400">১. Sub-Admin</p>
-                  <p className="text-slate-400 text-[11px]">সম্পূর্ণ একাডেমি ও মার্কেটপ্লেসের সকল অর্ডার, গিগ, ক্লায়েন্ট ও ভেরিফিকেশন অ্যাক্সেস।</p>
-                </div>
-                <div className="p-3.5 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
-                  <p className="font-black text-emerald-400">২. Support Specialist</p>
-                  <p className="text-slate-400 text-[11px]">শুধুমাত্র সরাসরি লাইভ মেসেঞ্জার চ্যাট, গ্রাহক সাপোর্ট ও টিকেট সমাধান করার সুবিধা।</p>
-                </div>
-                <div className="p-3.5 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
-                  <p className="font-black text-blue-400">৩. Order Manager</p>
-                  <p className="text-slate-400 text-[11px]">মার্কেটপ্লেস এস্ক্রো অর্ডার ডেলিভারি যাচাই, অ্যাপ্রুভাল ও কোর্স রেজিস্ট্রেশন ম্যানেজমেন্ট।</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <StaffAccessControl />
         )}
 
         {/* TAB: ALL WRITTEN CONTENT EDITOR */}
@@ -8539,7 +8138,7 @@ PTENit ডিজিটাল টিম`;
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 max-w-3xl space-y-6">
+            <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 max-w-3xl space-y-6">
               {settingsSaved && (
                 <div className="p-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-500 font-bold rounded-xl text-xs flex items-center gap-2">
                   <Check className="w-4 h-4" /> লিখিত কনটেন সফলভাবে আপডেট ও সেভ হয়েছে!
@@ -8548,7 +8147,7 @@ PTENit ডিজিটাল টিম`;
 
               <form onSubmit={handleSaveSettings} className="space-y-5">
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <label className="block text-xs font-bold mb-1 text-slate-200 flex items-center gap-1.5">
                     📢 হিরো ব্যানার নোটিশ & অ্যানাউন্সমেন্ট টেক্সট
                   </label>
                   <input
@@ -8556,12 +8155,12 @@ PTENit ডিজিটাল টিম`;
                     value={settingsForm.announcementNoticeText || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, announcementNoticeText: e.target.value })}
                     placeholder="উদা: 📢 ঈদ মেগা ধামাকা অফার! প্রিমিয়াম সার্ভিস ও ডিজিটাল প্রোডাক্ট কোর্সে বিশেষ ছাড় চলছে!"
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white focus:outline-none focus:border-[#1DB954]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <label className="block text-xs font-bold mb-1 text-slate-200 flex items-center gap-1.5">
                     ℹ️ আমাদের সম্পর্কে বিস্তারিত কন্টেন্ট (About Us Written Content)
                   </label>
                   <textarea
@@ -8569,12 +8168,12 @@ PTENit ডিজিটাল টিম`;
                     value={settingsForm.aboutUsText || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, aboutUsText: e.target.value })}
                     placeholder="PTEN IT Solutions হলো বাংলাদেশের শীর্ষস্থানীয় ডিজিটাল সার্ভিস ও আইটি স্কিল ডেভেলপমেন্ট প্ল্যাটফর্ম..."
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <label className="block text-xs font-bold mb-1 text-slate-200 flex items-center gap-1.5">
                     📜 শর্তাবলী ও সার্ভিস পলিসি (Terms & Conditions Text)
                   </label>
                   <textarea
@@ -8582,12 +8181,12 @@ PTENit ডিজিটাল টিম`;
                     value={settingsForm.termsAndConditionsText || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, termsAndConditionsText: e.target.value })}
                     placeholder="১. আমাদের সকল ডিজিটাল সার্ভিস এবং কোর্স ব্যবহারের ক্ষেত্রে প্রফেশনাল পলিসি প্রযোজ্য..."
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <label className="block text-xs font-bold mb-1 text-slate-200 flex items-center gap-1.5">
                     🔒 প্রাইভেসি পলিসি টেক্সট (Privacy Policy Written Content)
                   </label>
                   <textarea
@@ -8595,12 +8194,12 @@ PTENit ডিজিটাল টিম`;
                     value={settingsForm.privacyPolicyText || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, privacyPolicyText: e.target.value })}
                     placeholder="আপনার ব্যক্তিগত তথ্য সম্পূর্ণ সুরক্ষিত রাখা হয়..."
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <label className="block text-xs font-bold mb-1 text-slate-200 flex items-center gap-1.5">
                     🔄 রিফান্ড পলিসি ও মানি ব্যাক শর্তাবলী (Refund Policy Text)
                   </label>
                   <textarea
@@ -8608,12 +8207,12 @@ PTENit ডিজিটাল টিম`;
                     value={settingsForm.refundPolicyText || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, refundPolicyText: e.target.value })}
                     placeholder="১০ দিনের মানি ব্যাক গ্যারান্টি শর্ত সাপেক্ষে প্রযোজ্য..."
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <label className="block text-xs font-bold mb-1 text-slate-200 flex items-center gap-1.5">
                     🦶 ফুটার কপিরাইট & ব্র্যান্ড স্লোগান টেক্সট (Footer Copyright Text)
                   </label>
                   <input
@@ -8621,7 +8220,7 @@ PTENit ডিজিটাল টিম`;
                     value={settingsForm.footerCopyrightText || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, footerCopyrightText: e.target.value })}
                     placeholder="© ২০২৬ PTEN IT Solutions. সর্বস্বত্ব সংরক্ষিত।"
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
                   />
                 </div>
 
@@ -8652,7 +8251,7 @@ PTENit ডিজিটাল টিম`;
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 max-w-3xl space-y-6">
+            <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 max-w-3xl space-y-6">
               {settingsSaved && (
                 <div className="p-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-500 font-bold rounded-xl text-xs flex items-center gap-2">
                   <Check className="w-4 h-4" /> রেসপন্সিভ লেআউট সেটিং সেভ হয়েছে!
@@ -8661,14 +8260,14 @@ PTENit ডিজিটাল টিম`;
 
               <form onSubmit={handleSaveSettings} className="space-y-6">
                 {/* 100% Fluid Full Width Toggle */}
-                <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 space-y-3">
+                <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950/60 space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+                      <h4 className="text-xs font-black text-white flex items-center gap-1.5">
                         <Smartphone className="w-4 h-4 text-[#1DB954]" />
                         <span>১০০% ফুল উইডথ মোড (100% Full-Width Fluid Container)</span>
                       </h4>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      <p className="text-[11px] text-slate-400 mt-0.5">
                         অন থাকলে ওয়েবসাইট নেভবার, ল্যান্ডিং পেইজ, কোর্স ও সার্ভিস ড্যাশবোর্ড স্ক্রিনের ১০০% উইডথ দখল করবে।
                       </p>
                     </div>
@@ -8685,8 +8284,8 @@ PTENit ডিজিটাল টিম`;
                 </div>
 
                 {/* Container Max Width Selector */}
-                <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 space-y-3">
-                  <label className="block text-xs font-bold text-slate-900 dark:text-white">
+                <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950/60 space-y-3">
+                  <label className="block text-xs font-bold text-white">
                     কন্টেইনার ম্যাক্সিমাম উইডথ (Container Width Limit)
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -8702,7 +8301,7 @@ PTENit ডিজিটাল টিম`;
                         className={`p-3 rounded-xl border text-xs font-extrabold flex items-center justify-between cursor-pointer transition-all ${
                           (settingsForm.containerMaxWidth || '100%') === opt.value
                             ? 'border-[#1DB954] bg-[#1DB954]/10 text-[#1DB954]'
-                            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                            : 'border-slate-800 bg-slate-900 text-slate-300'
                         }`}
                       >
                         <span>{opt.label}</span>
@@ -8713,9 +8312,9 @@ PTENit ডিজিটাল টিম`;
                 </div>
 
                 {/* Custom Scale Percentage */}
-                <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 space-y-3">
+                <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950/60 space-y-3">
                   <div className="flex justify-between items-center">
-                    <label className="text-xs font-bold text-slate-900 dark:text-white">
+                    <label className="text-xs font-bold text-white">
                       ডিসপ্লে ভিউপোর্ট জুম & স্কেলিং (%)
                     </label>
                     <span className="px-2.5 py-1 bg-[#1DB954]/20 text-[#1DB954] text-xs font-black rounded-lg">
@@ -8731,7 +8330,7 @@ PTENit ডিজিটাল টিম`;
                         className={`p-2.5 rounded-xl border text-xs font-extrabold text-center cursor-pointer transition-all ${
                           (settingsForm.customScalePercent || 100) === scale
                             ? 'border-[#1DB954] bg-[#1DB954] text-white font-black'
-                            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                            : 'border-slate-800 bg-slate-900 text-slate-300'
                         }`}
                       >
                         {scale}% {scale === 100 ? '(ডিফল্ট)' : ''}
@@ -8741,8 +8340,8 @@ PTENit ডিজিটাল টিম`;
                 </div>
 
                 {/* Mobile Responsive Grid Mode */}
-                <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 space-y-3">
-                  <label className="block text-xs font-bold text-slate-900 dark:text-white">
+                <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950/60 space-y-3">
+                  <label className="block text-xs font-bold text-white">
                     মোবাইল ডিভাইস গ্রিড রেসপন্সিভ মোড (Mobile Layout)
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -8758,7 +8357,7 @@ PTENit ডিজিটাল টিম`;
                         className={`p-3 rounded-xl border text-xs font-extrabold text-center cursor-pointer transition-all ${
                           (settingsForm.mobileResponsiveMode || 'fluid_100') === m.value
                             ? 'border-purple-500 bg-purple-500/10 text-purple-400'
-                            : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                            : 'border-slate-800 bg-slate-900 text-slate-300'
                         }`}
                       >
                         {m.label}
@@ -8816,7 +8415,7 @@ PTENit ডিজিটাল টিম`;
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 max-w-3xl space-y-6">
+            <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 max-w-3xl space-y-6">
               {settingsSaved && (
                 <div className="p-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-500 font-bold rounded-xl text-xs flex items-center gap-2">
                   <Check className="w-4 h-4" /> পিক্সেল আইডি সফলভাবে আপডেট ও সেভ হয়েছে!
@@ -8825,7 +8424,7 @@ PTENit ডিজিটাল টিম`;
 
               <form onSubmit={handleSaveSettings} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                  <label className="block text-xs font-bold mb-1 text-slate-200">
                     Facebook / Meta Pixel ID
                   </label>
                   <input
@@ -8833,13 +8432,13 @@ PTENit ডিজিটাল টিম`;
                     placeholder="উদা: 7891234567890"
                     value={settingsForm.metaPixelId || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, metaPixelId: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#1DB954]"
                   />
                   <p className="text-[11px] text-slate-500 mt-1">ফেসবুক অ্যাডস ট্র্যাকিং ও কাস্টম অডিয়েন্স তৈরির জন্য পিক্সেল আইডি আইডি।</p>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                  <label className="block text-xs font-bold mb-1 text-slate-200">
                     Google Analytics (GA4) Tag ID
                   </label>
                   <input
@@ -8847,13 +8446,13 @@ PTENit ডিজিটাল টিম`;
                     placeholder="উদা: G-XXXXXXXXXX"
                     value={settingsForm.googleAnalyticsId || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, googleAnalyticsId: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#1DB954]"
                   />
                   <p className="text-[11px] text-slate-500 mt-1">গুগল অ্যানালিটিক্স ৪ ট্র্যাকিং কোড।</p>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                  <label className="block text-xs font-bold mb-1 text-slate-200">
                     TikTok Pixel ID
                   </label>
                   <input
@@ -8861,12 +8460,12 @@ PTENit ডিজিটাল টিম`;
                     placeholder="উদা: C1234567890TIK"
                     value={settingsForm.tiktokPixelId || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, tiktokPixelId: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#1DB954]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                  <label className="block text-xs font-bold mb-1 text-slate-200">
                     Google Tag Manager (GTM) Container ID
                   </label>
                   <input
@@ -8874,12 +8473,12 @@ PTENit ডিজিটাল টিম`;
                     placeholder="উদা: GTM-XXXXXXX"
                     value={settingsForm.googleTagManagerId || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, googleTagManagerId: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#1DB954]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                  <label className="block text-xs font-bold mb-1 text-slate-200">
                     Meta Conversion API Access Token (Server-Side Tracking)
                   </label>
                   <textarea
@@ -8887,7 +8486,7 @@ PTENit ডিজিটাল টিম`;
                     placeholder="EAAG..."
                     value={settingsForm.conversionApiToken || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, conversionApiToken: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono text-white focus:outline-none focus:border-[#1DB954]"
                   />
                 </div>
 
@@ -8918,7 +8517,7 @@ PTENit ডিজিটাল টিম`;
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 max-w-4xl space-y-6">
+            <div className="bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-800 max-w-4xl space-y-6">
               {settingsSaved && (
                 <div className="p-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-500 font-bold rounded-xl text-xs flex items-center gap-2">
                   <Check className="w-4 h-4" /> SEO মেটা ট্যাগ ও ওপেনগ্রাফ সেটিংস সেভ করা হয়েছে!
@@ -8928,13 +8527,13 @@ PTENit ডিজিটাল টিম`;
               <form onSubmit={handleSaveSettings} className="space-y-6">
                 
                 {/* 1. Global Google & Search Engine Meta Tags */}
-                <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 space-y-4">
+                <div className="p-5 rounded-2xl border border-slate-800 bg-slate-950/60 space-y-4">
                   <span className="text-xs font-black text-emerald-500 uppercase tracking-wider flex items-center gap-2">
                     <Search className="w-4 h-4" />১. গুগল & সার্চ ইঞ্জিন মেটা ট্যাগস (Global Search Engine Meta)
                   </span>
 
                   <div>
-                    <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                    <label className="block text-xs font-bold mb-1 text-slate-200">
                       SEO শিরোনাম (Site Meta Title) *
                     </label>
                     <input
@@ -8943,13 +8542,13 @@ PTENit ডিজিটাল টিম`;
                       placeholder="উদা: PTENit – IT Services, Web Development, Digital Marketing & IT Training Academy"
                       value={settingsForm.seoTitle || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, seoTitle: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
                     />
                     <p className="text-[11px] text-slate-500 mt-1">সার্চ রেজাল্ট ও ব্রাউজার ট্যাবে প্রদর্শিত ওয়েবসাইটের মূল মেটা টাইটেল (৫০-৬০ ক্যারেক্টার আদর্শ)।</p>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                    <label className="block text-xs font-bold mb-1 text-slate-200">
                       মেটা ডেসক্রিপশন (Meta Description) *
                     </label>
                     <textarea
@@ -8958,13 +8557,13 @@ PTENit ডিজিটাল টিম`;
                       placeholder="উদা: PTENit বাংলাদেশে প্রফেশনাল ওয়েব ডিজাইন, কাস্টম সফটওয়্যার, ডিজিটাল মার্কেটিং ও আইটি স্কিল ট্রেনিং প্রদান করে।"
                       value={settingsForm.metaDescription || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, metaDescription: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
                     />
                     <p className="text-[11px] text-slate-500 mt-1">গুগল সার্চ রেজাল্টে টাইটেলের নিচে দেখানো সামারি ডেসক্রিপশন (১৩০-১৬০ ক্যারেক্টার)।</p>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                    <label className="block text-xs font-bold mb-1 text-slate-200">
                       সার্চ কি-ওয়ার্ডস (Meta Keywords)
                     </label>
                     <input
@@ -8972,13 +8571,13 @@ PTENit ডিজিটাল টিম`;
                       placeholder="PTENit, IT Services, Web Development Bangladesh, SEO Course, Graphic Design"
                       value={settingsForm.metaKeywords || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, metaKeywords: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white focus:outline-none focus:border-[#1DB954]"
                     />
                     <p className="text-[11px] text-slate-500 mt-1">কমা (,) দিয়ে আলাদা করা টার্গেটেড আইটি ও কোর্স কি-ওয়ার্ড তালিকা।</p>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                    <label className="block text-xs font-bold mb-1 text-slate-200">
                       Google Search Console Verification Tag
                     </label>
                     <input
@@ -8986,20 +8585,20 @@ PTENit ডিজিটাল টিম`;
                       placeholder="google-site-verification-token-code"
                       value={settingsForm.googleSiteVerification || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, googleSiteVerification: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#1DB954]"
                     />
                   </div>
                 </div>
 
                 {/* 2. OpenGraph Social Sharing Meta Tags */}
-                <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 space-y-4">
+                <div className="p-5 rounded-2xl border border-slate-800 bg-slate-950/60 space-y-4">
                   <span className="text-xs font-black text-sky-400 uppercase tracking-wider flex items-center gap-2">
                     <Globe className="w-4 h-4" />২. ওপেনগ্রাফ সোশ্যাল শেয়ারিং (Facebook, WhatsApp, LinkedIn OG Cards)
                   </span>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                      <label className="block text-xs font-bold mb-1 text-slate-200">
                         OpenGraph টাইটেল (OG Title)
                       </label>
                       <input
@@ -9007,18 +8606,18 @@ PTENit ডিজিটাল টিম`;
                         placeholder="PTENit – Complete IT Solutions & Skill Development Platform"
                         value={settingsForm.ogTitle || ''}
                         onChange={e => setSettingsForm({ ...settingsForm, ogTitle: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                      <label className="block text-xs font-bold mb-1 text-slate-200">
                         OpenGraph টাইপ (OG Type)
                       </label>
                       <select
                         value={settingsForm.ogType || 'website'}
                         onChange={e => setSettingsForm({ ...settingsForm, ogType: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
                       >
                         <option value="website">website</option>
                         <option value="article">article</option>
@@ -9029,7 +8628,7 @@ PTENit ডিজিটাল টিম`;
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                    <label className="block text-xs font-bold mb-1 text-slate-200">
                       OpenGraph ডেসক্রিপশন (OG Description)
                     </label>
                     <textarea
@@ -9037,12 +8636,12 @@ PTENit ডিজিটাল টিম`;
                       placeholder="ফেসবুক বা মেসেঞ্জারে লিংক শেয়ার করলে প্রদর্শিত বার্তা..."
                       value={settingsForm.ogDescription || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, ogDescription: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                    <label className="block text-xs font-bold mb-1 text-slate-200">
                       OpenGraph সোশ্যাল শেয়ার ব্যানার ইমেজ ইউআরএল (1200x630px OG Image)
                     </label>
                     <input
@@ -9050,7 +8649,7 @@ PTENit ডিজিটাল টিম`;
                       placeholder="https://images.unsplash.com/photo-..."
                       value={settingsForm.ogImageUrl || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, ogImageUrl: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono text-white focus:outline-none focus:border-[#1DB954]"
                     />
                   </div>
 
@@ -9075,20 +8674,20 @@ PTENit ডিজিটাল টিম`;
                 </div>
 
                 {/* 3. Twitter (X) & Canonical URL */}
-                <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 space-y-4">
+                <div className="p-5 rounded-2xl border border-slate-800 bg-slate-950/60 space-y-4">
                   <span className="text-xs font-black text-purple-400 uppercase tracking-wider flex items-center gap-2">
                     <Sparkles className="w-4 h-4" />৩. Twitter (X) কার্ডস & ক্যানোনিকাল ইউআরএল
                   </span>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                      <label className="block text-xs font-bold mb-1 text-slate-200">
                         Twitter Card Type
                       </label>
                       <select
                         value={settingsForm.twitterCard || 'summary_large_image'}
                         onChange={e => setSettingsForm({ ...settingsForm, twitterCard: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
                       >
                         <option value="summary_large_image">summary_large_image (বড় ছবিসহ)</option>
                         <option value="summary">summary (ছোট ছবিসহ)</option>
@@ -9096,7 +8695,7 @@ PTENit ডিজিটাল টিম`;
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                      <label className="block text-xs font-bold mb-1 text-slate-200">
                         Twitter / X Handle
                       </label>
                       <input
@@ -9104,13 +8703,13 @@ PTENit ডিজিটাল টিম`;
                         placeholder="@ptenit_bd"
                         value={settingsForm.twitterHandle || ''}
                         onChange={e => setSettingsForm({ ...settingsForm, twitterHandle: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                    <label className="block text-xs font-bold mb-1 text-slate-200">
                       Canonical Site URL (ক্যানোনিকাল ডোমেইন)
                     </label>
                     <input
@@ -9118,33 +8717,33 @@ PTENit ডিজিটাল টিম`;
                       placeholder="https://ptenit.com"
                       value={settingsForm.canonicalUrl || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, canonicalUrl: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#1DB954]"
                     />
                     <p className="text-[11px] text-slate-500 mt-1">ডুপ্লিকেট ইনডেক্সিং রোধ করতে আপনার সাইটের অফিসিয়াল ক্যানোনিকাল ডোমেইন।</p>
                   </div>
                 </div>
 
                 {/* 4. Robots.txt & Schema Structured Data */}
-                <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 space-y-4">
+                <div className="p-5 rounded-2xl border border-slate-800 bg-slate-950/60 space-y-4">
                   <span className="text-xs font-black text-amber-500 uppercase tracking-wider flex items-center gap-2">
                     <Code className="w-4 h-4" />৪. Robots.txt & Schema.org Structured Data (JSON-LD)
                   </span>
 
                   <div>
-                    <label className="block text-xs font-bold mb-1 text-slate-800 dark:text-slate-200">
+                    <label className="block text-xs font-bold mb-1 text-slate-200">
                       Robots.txt কাস্টম ইনস্ট্রাকশন
                     </label>
                     <textarea
                       rows={3}
                       value={settingsForm.robotsTxt || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, robotsTxt: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-950 text-emerald-400 font-mono text-xs focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-emerald-400 font-mono text-xs focus:outline-none focus:border-[#1DB954]"
                     />
                   </div>
 
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <label className="block text-xs font-bold text-slate-800 dark:text-slate-200">
+                      <label className="block text-xs font-bold text-slate-200">
                         Schema.org JSON-LD Structured Data
                       </label>
                       <button
@@ -9173,7 +8772,7 @@ PTENit ডিজিটাল টিম`;
                       rows={5}
                       value={settingsForm.structuredDataJson || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, structuredDataJson: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-950 text-sky-300 font-mono text-xs focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sky-300 font-mono text-xs focus:outline-none focus:border-[#1DB954]"
                     />
                   </div>
                 </div>
@@ -9194,10 +8793,10 @@ PTENit ডিজিটাল টিম`;
         {activeAdminTab === 'payment_methods' && (
           <div className="space-y-5 font-bengali">
             {/* Top Header Banner */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-sm">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-950 border border-slate-800 p-4 sm:p-5 rounded-2xl shadow-sm">
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <h2 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
                     <CreditCard className="w-5 h-5 text-[#1DB954]" />
                     পেমেন্ট সিস্টেম ও মেথড সেটিংস
                   </h2>
@@ -9205,7 +8804,7 @@ PTENit ডিজিটাল টিম`;
                     {settingsForm.paymentAutomationMode === 'automated' ? '⚡ স্বয়ংক্রিয় গেটওয়ে সক্রিয়' : '📱 ম্যানুয়াল TrxID মোড সক্রিয়'}
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-slate-400">
                   বর্তমান ম্যানুয়াল TrxID পেমেন্ট, ভবিষ্যতের অটোমেটেড গেটওয়ে এবং ফুটারের পেমেন্ট মেথড লোগো সহজে পরিচালনা করুন।
                 </p>
               </div>
@@ -9229,16 +8828,16 @@ PTENit ডিজিটাল টিম`;
             <form onSubmit={handleSaveSettings} className="space-y-5">
               
               {/* SECTION 1: ভবিষ্যৎ ও বর্তমান পেমেন্ট সিস্টেম (Clear, Clean & Transparent) */}
-              <div className="p-4 sm:p-6 rounded-2xl border-2 border-emerald-500/30 bg-white dark:bg-slate-900 shadow-sm space-y-5">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 pb-4 border-b border-slate-200 dark:border-slate-800">
+              <div className="p-4 sm:p-6 rounded-2xl border-2 border-emerald-500/30 bg-slate-950 shadow-sm space-y-5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 pb-4 border-b border-slate-800">
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="w-2.5 h-2.5 rounded-full bg-[#1DB954] animate-pulse" />
-                      <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                      <h3 className="text-sm sm:text-base font-black text-white">
                         ভবিষ্যৎ ও বর্তমান পেমেন্ট সিস্টেম নির্বাচন
                       </h3>
                     </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    <p className="text-xs text-slate-400 mt-1">
                       বর্তমানে ম্যানুয়াল TrxID দিয়ে শিক্ষার্থীদের ভর্তি করান। পরবর্তীতে যেকোনো সময় এক ক্লিকে মার্চেন্ট গেটওয়েতে অটোমেট করতে পারবেন।
                     </p>
                   </div>
@@ -9255,37 +8854,37 @@ PTENit ডিজিটাল টিম`;
 
                 {/* Step-by-Step Automation Roadmap Drawer */}
                 {showGatewayGuide && (
-                  <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 text-xs text-slate-700 dark:text-slate-300 space-y-3">
+                  <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 text-xs text-slate-300 space-y-3">
                     <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-black text-xs sm:text-sm">
                       <CheckCircle2 className="w-4 h-4" />
                       ভবিষ্যতে খুব সহজে পেমেন্ট অটোমেশন চালু করার ৪টি সহজ ধাপ:
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                      <div className="p-3 rounded-xl bg-white dark:bg-slate-950 border border-amber-500/20 space-y-1">
+                      <div className="p-3 rounded-xl bg-slate-950 border border-amber-500/20 space-y-1">
                         <span className="text-[10px] font-black uppercase text-amber-600 dark:text-amber-400 tracking-wider">ধাপ ০১</span>
-                        <h4 className="font-bold text-slate-900 dark:text-white text-xs">মার্চেন্ট একাউন্ট নিন</h4>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                        <h4 className="font-bold text-white text-xs">মার্চেন্ট একাউন্ট নিন</h4>
+                        <p className="text-[11px] text-slate-400 leading-relaxed">
                           বিকাশ মার্চেন্ট (PGW API) অথবা SSLCommerz / AamarPay-তে আবেদন করুন (ট্রেড লাইসেন্স ও ব্যাংক একাউন্ট লাগবে)।
                         </p>
                       </div>
-                      <div className="p-3 rounded-xl bg-white dark:bg-slate-950 border border-amber-500/20 space-y-1">
+                      <div className="p-3 rounded-xl bg-slate-950 border border-amber-500/20 space-y-1">
                         <span className="text-[10px] font-black uppercase text-amber-600 dark:text-amber-400 tracking-wider">ধাপ ০২</span>
-                        <h4 className="font-bold text-slate-900 dark:text-white text-xs">API Credentials সংগ্রহ</h4>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                        <h4 className="font-bold text-white text-xs">API Credentials সংগ্রহ</h4>
+                        <p className="text-[11px] text-slate-400 leading-relaxed">
                           গেটওয়ের ড্যাশবোর্ড থেকে App Key, App Secret, Username ও Password অথবা Store ID সংগ্রহ করুন।
                         </p>
                       </div>
-                      <div className="p-3 rounded-xl bg-white dark:bg-slate-950 border border-amber-500/20 space-y-1">
+                      <div className="p-3 rounded-xl bg-slate-950 border border-amber-500/20 space-y-1">
                         <span className="text-[10px] font-black uppercase text-amber-600 dark:text-amber-400 tracking-wider">ধাপ ০৩</span>
-                        <h4 className="font-bold text-slate-900 dark:text-white text-xs">কী ইনপুট দিয়ে টেস্ট</h4>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                        <h4 className="font-bold text-white text-xs">কী ইনপুট দিয়ে টেস্ট</h4>
+                        <p className="text-[11px] text-slate-400 leading-relaxed">
                           নিচের অটোমেটেড গেটওয়ে বক্সে কীগুলো বসিয়ে "🔌 টেস্ট গেটওয়ে সংযোগ" বাটনে ক্লিক করে কানেকশন নিশ্চিত করুন।
                         </p>
                       </div>
-                      <div className="p-3 rounded-xl bg-white dark:bg-slate-950 border border-amber-500/20 space-y-1">
+                      <div className="p-3 rounded-xl bg-slate-950 border border-amber-500/20 space-y-1">
                         <span className="text-[10px] font-black uppercase text-amber-600 dark:text-amber-400 tracking-wider">ধাপ ০৪</span>
-                        <h4 className="font-bold text-slate-900 dark:text-white text-xs">মোড চালু করুন</h4>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                        <h4 className="font-bold text-white text-xs">মোড চালু করুন</h4>
+                        <p className="text-[11px] text-slate-400 leading-relaxed">
                           "২. স্বয়ংক্রিয় গেটওয়ে মোড" সিলেক্ট করে "সেভ করুন" বাটনে চাপ দিলেই সাথে সাথে পুরো সাইটের পেমেন্ট অটোমেটিক হবে!
                         </p>
                       </div>
@@ -9301,7 +8900,7 @@ PTENit ডিজিটাল টিম`;
                     className={`p-4 sm:p-5 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-between space-y-3 relative ${
                       (settingsForm.paymentAutomationMode || 'manual') === 'manual'
                         ? 'border-[#1DB954] bg-[#1DB954]/5 ring-1 ring-[#1DB954] shadow-sm'
-                        : 'border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 hover:border-slate-300 dark:hover:border-slate-700'
+                        : 'border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 hover:border-slate-300 dark:hover:border-slate-700'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -9315,7 +8914,7 @@ PTENit ডিজিটাল টিম`;
                             <div className="w-1.5 h-1.5 rounded-full bg-white" />
                           )}
                         </div>
-                        <h4 className="font-black text-sm sm:text-base text-slate-900 dark:text-white">
+                        <h4 className="font-black text-sm sm:text-base text-white">
                           ১. বর্তমান সিস্টেম (ম্যানুয়াল TrxID মোড)
                         </h4>
                       </div>
@@ -9324,11 +8923,11 @@ PTENit ডিজিটাল টিম`;
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    <p className="text-xs text-slate-400 leading-relaxed">
                       শিক্ষার্থী আপনার বিকাশ/নগদ/রকেট নম্বরে টাকা পাঠিয়ে TrxID দেবে। আপনি অ্যাডমিন প্যানেল থেকে মিলিয়ে "Approved" দিলে কোর্স চালু হবে।
                     </p>
 
-                    <ul className="space-y-1.5 text-[11px] text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
+                    <ul className="space-y-1.5 text-[11px] text-slate-400 pt-2 border-t border-slate-800">
                       <li className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
                         <Check className="w-3.5 h-3.5 shrink-0" /> কোনো ব্যাংকিং API বা জটিল ডকুমেন্টের প্রয়োজন নেই
                       </li>
@@ -9347,7 +8946,7 @@ PTENit ডিজিটাল টিম`;
                     className={`p-4 sm:p-5 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-between space-y-3 relative ${
                       settingsForm.paymentAutomationMode === 'automated'
                         ? 'border-sky-500 bg-sky-500/5 ring-1 ring-sky-500 shadow-sm'
-                        : 'border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 hover:border-slate-300 dark:hover:border-slate-700'
+                        : 'border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 hover:border-slate-300 dark:hover:border-slate-700'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -9361,7 +8960,7 @@ PTENit ডিজিটাল টিম`;
                             <div className="w-1.5 h-1.5 rounded-full bg-white" />
                           )}
                         </div>
-                        <h4 className="font-black text-sm sm:text-base text-slate-900 dark:text-white">
+                        <h4 className="font-black text-sm sm:text-base text-white">
                           ২. ভবিষ্যৎ সিস্টেম (স্বয়ংক্রিয় গেটওয়ে মোড)
                         </h4>
                       </div>
@@ -9370,11 +8969,11 @@ PTENit ডিজিটাল টিম`;
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    <p className="text-xs text-slate-400 leading-relaxed">
                       বিকাশ মার্চেন্ট API বা SSLCommerz এর মাধ্যমে শিক্ষার্থী পেমেন্ট করবে। সফল হলেই সাথে সাথে কোনো অ্যাডমিন অনুমোদন ছাড়াই কোর্স অ্যাক্টিভ হবে।
                     </p>
 
-                    <ul className="space-y-1.5 text-[11px] text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
+                    <ul className="space-y-1.5 text-[11px] text-slate-400 pt-2 border-t border-slate-800">
                       <li className="flex items-center gap-1.5 text-sky-600 dark:text-sky-400 font-medium">
                         <Check className="w-3.5 h-3.5 shrink-0" /> শিক্ষার্থী পে করার সাথে সাথে অটোমেটিক অ্যাক্টিভেশন
                       </li>
@@ -9544,106 +9143,434 @@ PTENit ডিজিটাল টিম`;
                 )}
               </div>
 
-              {/* SECTION 2: ম্যানুয়াল পেমেন্ট নম্বর ও ব্যাংক তথ্য (বিকাশ, নগদ, রকেট) */}
-              <div className="p-4 sm:p-6 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-4">
-                <div>
-                  <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                    📱 মোবাইল ফাইনান্সিয়াল সার্ভিসেস (MFS) পেমেন্ট নম্বর
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    চেকআউট পেজে শিক্ষার্থীরা এই নম্বরগুলো দেখতে পাবে এবং এগুলোতে টাকা পাঠিয়ে TrxID প্রদান করবে।
-                  </p>
+              {/* SECTION 2: ম্যানুয়াল পেমেন্ট নম্বর, লোগো ও ব্যাংক তথ্য (বিকাশ, নগদ, রকেট, উপায়) */}
+              <div className="p-4 sm:p-6 rounded-2xl border-2 border-slate-800 bg-slate-950 shadow-sm space-y-5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+                  <div>
+                    <h3 className="text-sm sm:text-base font-black text-white flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                      📱 মোবাইল ফাইনান্সিয়াল সার্ভিসেস (MFS) পেমেন্ট নম্বর ও লোগো
+                    </h3>
+                    <p className="text-xs text-slate-400 mt-1">
+                      চেকআউট পেজে প্রদর্শিত bKash, Nagad, Rocket, Upay ও Bank এর নিজস্ব লোগো আপলোড করুন ও পেমেন্ট নম্বর সেট করুন।
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleSaveSettings();
+                      alert('MFS পেমেন্ট নম্বর ও লোগো সফলভাবে সংরক্ষণ করা হয়েছে!');
+                    }}
+                    className="px-4 py-2 bg-[#1DB954] hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl flex items-center gap-1.5 shadow transition cursor-pointer shrink-0 active:scale-95"
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>MFS সেটিংস সেভ করুন</span>
+                  </button>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 space-y-1.5">
-                    <label className="block text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
-                      <span>bKash নম্বর</span>
-                      <span className="text-[10px] text-[#1DB954] font-semibold">Personal / Merchant</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={settingsForm.bkashNumber || ''}
-                      onChange={e => setSettingsForm({ ...settingsForm, bkashNumber: e.target.value })}
-                      placeholder="যেমন: 01712345678"
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
-                    />
+                {/* 4 MFS Gateway Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {/* bKash Card */}
+                  <div className="p-4 rounded-2xl border border-pink-500/30 bg-pink-950/10 hover:border-pink-500/60 transition space-y-3 flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-black text-xs text-pink-400 flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-pink-500" />
+                          bKash (বিকাশ)
+                        </span>
+                        <select
+                          value={settingsForm.bkashAccountType || 'Personal'}
+                          onChange={e => setSettingsForm({ ...settingsForm, bkashAccountType: e.target.value as any })}
+                          className="bg-slate-900 border border-slate-700 text-[10px] font-bold text-pink-300 rounded-lg px-2 py-1 focus:outline-none"
+                        >
+                          <option value="Personal">Personal (ব্যক্তিগত)</option>
+                          <option value="Merchant">Merchant (মার্চেন্ট)</option>
+                          <option value="Agent">Agent (এজেন্ট)</option>
+                        </select>
+                      </div>
+
+                      {/* Logo Preview & File Upload */}
+                      <div className="p-2.5 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-12 h-12 rounded-xl bg-white p-1 border border-slate-700 flex items-center justify-center shrink-0 overflow-hidden shadow-xs">
+                            <img
+                              src={settingsForm.bkashLogoUrl || "https://upload.wikimedia.org/wikipedia/commons/7/77/BKash_logo.png"}
+                              alt="bKash"
+                              className="w-full h-full object-contain"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://upload.wikimedia.org/wikipedia/commons/7/77/BKash_logo.png";
+                              }}
+                            />
+                          </div>
+                          <div className="flex-1 space-y-1">
+                            <label className="block text-[11px] font-bold text-slate-300">লোগো নির্বাচন / আপলোড</label>
+                            <label className="inline-flex items-center gap-1 px-2.5 py-1 bg-pink-600/20 hover:bg-pink-600/30 text-pink-300 text-[10px] font-bold rounded-lg border border-pink-500/30 cursor-pointer transition">
+                              <Upload className="w-3 h-3" />
+                              <span>ছবি আপলোড</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => handleImageFileUpload(e, (url) => setSettingsForm({ ...settingsForm, bkashLogoUrl: url }))}
+                              />
+                            </label>
+                            {settingsForm.bkashLogoUrl && (
+                              <button
+                                type="button"
+                                onClick={() => setSettingsForm({ ...settingsForm, bkashLogoUrl: "https://upload.wikimedia.org/wikipedia/commons/7/77/BKash_logo.png" })}
+                                className="text-[10px] text-slate-400 hover:text-white ml-2 underline cursor-pointer"
+                              >
+                                ডিফল্ট
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        <input
+                          type="text"
+                          value={settingsForm.bkashLogoUrl || ''}
+                          onChange={e => setSettingsForm({ ...settingsForm, bkashLogoUrl: e.target.value })}
+                          placeholder="লোগো ইমেজ লিঙ্ক (URL)..."
+                          className="w-full px-2.5 py-1 bg-slate-950 border border-slate-800 rounded-lg text-[10px] text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-pink-500 font-mono"
+                        />
+                      </div>
+
+                      {/* Number Input */}
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-slate-300">বিকাশ পেমেন্ট নম্বর</label>
+                        <input
+                          type="text"
+                          value={settingsForm.bkashNumber || ''}
+                          onChange={e => setSettingsForm({ ...settingsForm, bkashNumber: e.target.value })}
+                          placeholder="যেমন: 01712345678"
+                          className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-black text-pink-400 focus:outline-none focus:border-pink-500"
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 space-y-1.5">
-                    <label className="block text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
-                      <span>Nagad নম্বর</span>
-                      <span className="text-[10px] text-amber-500 font-semibold">Personal / Merchant</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={settingsForm.nagadNumber || ''}
-                      onChange={e => setSettingsForm({ ...settingsForm, nagadNumber: e.target.value })}
-                      placeholder="যেমন: 01700000000"
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
-                    />
+                  {/* Nagad Card */}
+                  <div className="p-4 rounded-2xl border border-amber-500/30 bg-amber-950/10 hover:border-amber-500/60 transition space-y-3 flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-black text-xs text-amber-400 flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-amber-500" />
+                          Nagad (নগদ)
+                        </span>
+                        <select
+                          value={settingsForm.nagadAccountType || 'Personal'}
+                          onChange={e => setSettingsForm({ ...settingsForm, nagadAccountType: e.target.value as any })}
+                          className="bg-slate-900 border border-slate-700 text-[10px] font-bold text-amber-300 rounded-lg px-2 py-1 focus:outline-none"
+                        >
+                          <option value="Personal">Personal (ব্যক্তিগত)</option>
+                          <option value="Merchant">Merchant (মার্চেন্ট)</option>
+                          <option value="Agent">Agent (এজেন্ট)</option>
+                        </select>
+                      </div>
+
+                      {/* Logo Preview & File Upload */}
+                      <div className="p-2.5 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-12 h-12 rounded-xl bg-white p-1 border border-slate-700 flex items-center justify-center shrink-0 overflow-hidden shadow-xs">
+                            <img
+                              src={settingsForm.nagadLogoUrl || "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Nagad_Logo.png/800px-Nagad_Logo.png"}
+                              alt="Nagad"
+                              className="w-full h-full object-contain"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Nagad_Logo.png/800px-Nagad_Logo.png";
+                              }}
+                            />
+                          </div>
+                          <div className="flex-1 space-y-1">
+                            <label className="block text-[11px] font-bold text-slate-300">লোগো নির্বাচন / আপলোড</label>
+                            <label className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 text-[10px] font-bold rounded-lg border border-amber-500/30 cursor-pointer transition">
+                              <Upload className="w-3 h-3" />
+                              <span>ছবি আপলোড</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => handleImageFileUpload(e, (url) => setSettingsForm({ ...settingsForm, nagadLogoUrl: url }))}
+                              />
+                            </label>
+                            {settingsForm.nagadLogoUrl && (
+                              <button
+                                type="button"
+                                onClick={() => setSettingsForm({ ...settingsForm, nagadLogoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Nagad_Logo.png/800px-Nagad_Logo.png" })}
+                                className="text-[10px] text-slate-400 hover:text-white ml-2 underline cursor-pointer"
+                              >
+                                ডিফল্ট
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        <input
+                          type="text"
+                          value={settingsForm.nagadLogoUrl || ''}
+                          onChange={e => setSettingsForm({ ...settingsForm, nagadLogoUrl: e.target.value })}
+                          placeholder="লোগো ইমেজ লিঙ্ক (URL)..."
+                          className="w-full px-2.5 py-1 bg-slate-950 border border-slate-800 rounded-lg text-[10px] text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-amber-500 font-mono"
+                        />
+                      </div>
+
+                      {/* Number Input */}
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-slate-300">নগদ পেমেন্ট নম্বর</label>
+                        <input
+                          type="text"
+                          value={settingsForm.nagadNumber || ''}
+                          onChange={e => setSettingsForm({ ...settingsForm, nagadNumber: e.target.value })}
+                          placeholder="যেমন: 01700000000"
+                          className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-black text-amber-400 focus:outline-none focus:border-amber-500"
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 space-y-1.5">
-                    <label className="block text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
-                      <span>Rocket নম্বর</span>
-                      <span className="text-[10px] text-purple-500 font-semibold">Personal / Merchant</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={settingsForm.rocketNumber || ''}
-                      onChange={e => setSettingsForm({ ...settingsForm, rocketNumber: e.target.value })}
-                      placeholder="যেমন: 01900000000"
-                      className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
-                    />
+                  {/* Rocket Card */}
+                  <div className="p-4 rounded-2xl border border-purple-500/30 bg-purple-950/10 hover:border-purple-500/60 transition space-y-3 flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-black text-xs text-purple-400 flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-purple-500" />
+                          Rocket (রকেট)
+                        </span>
+                        <select
+                          value={settingsForm.rocketAccountType || 'Personal'}
+                          onChange={e => setSettingsForm({ ...settingsForm, rocketAccountType: e.target.value as any })}
+                          className="bg-slate-900 border border-slate-700 text-[10px] font-bold text-purple-300 rounded-lg px-2 py-1 focus:outline-none"
+                        >
+                          <option value="Personal">Personal (ব্যক্তিগত)</option>
+                          <option value="Merchant">Merchant (মার্চেন্ট)</option>
+                          <option value="Agent">Agent (এজেন্ট)</option>
+                        </select>
+                      </div>
+
+                      {/* Logo Preview & File Upload */}
+                      <div className="p-2.5 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-12 h-12 rounded-xl bg-white p-1 border border-slate-700 flex items-center justify-center shrink-0 overflow-hidden shadow-xs">
+                            <img
+                              src={settingsForm.rocketLogoUrl || "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Rocket_mobile_banking_logo.svg/640px-Rocket_mobile_banking_logo.svg.png"}
+                              alt="Rocket"
+                              className="w-full h-full object-contain"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Rocket_mobile_banking_logo.svg/640px-Rocket_mobile_banking_logo.svg.png";
+                              }}
+                            />
+                          </div>
+                          <div className="flex-1 space-y-1">
+                            <label className="block text-[11px] font-bold text-slate-300">লোগো নির্বাচন / আপলোড</label>
+                            <label className="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 text-[10px] font-bold rounded-lg border border-purple-500/30 cursor-pointer transition">
+                              <Upload className="w-3 h-3" />
+                              <span>ছবি আপলোড</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => handleImageFileUpload(e, (url) => setSettingsForm({ ...settingsForm, rocketLogoUrl: url }))}
+                              />
+                            </label>
+                            {settingsForm.rocketLogoUrl && (
+                              <button
+                                type="button"
+                                onClick={() => setSettingsForm({ ...settingsForm, rocketLogoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Rocket_mobile_banking_logo.svg/640px-Rocket_mobile_banking_logo.svg.png" })}
+                                className="text-[10px] text-slate-400 hover:text-white ml-2 underline cursor-pointer"
+                              >
+                                ডিফল্ট
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        <input
+                          type="text"
+                          value={settingsForm.rocketLogoUrl || ''}
+                          onChange={e => setSettingsForm({ ...settingsForm, rocketLogoUrl: e.target.value })}
+                          placeholder="লোগো ইমেজ লিঙ্ক (URL)..."
+                          className="w-full px-2.5 py-1 bg-slate-950 border border-slate-800 rounded-lg text-[10px] text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-purple-500 font-mono"
+                        />
+                      </div>
+
+                      {/* Number Input */}
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-slate-300">রকেট পেমেন্ট নম্বর</label>
+                        <input
+                          type="text"
+                          value={settingsForm.rocketNumber || ''}
+                          onChange={e => setSettingsForm({ ...settingsForm, rocketNumber: e.target.value })}
+                          placeholder="যেমন: 01900000000"
+                          className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-black text-purple-400 focus:outline-none focus:border-purple-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Upay Card */}
+                  <div className="p-4 rounded-2xl border border-blue-500/30 bg-blue-950/10 hover:border-blue-500/60 transition space-y-3 flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-black text-xs text-blue-400 flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-blue-500" />
+                          Upay (উপায়)
+                        </span>
+                        <select
+                          value={settingsForm.upayAccountType || 'Personal'}
+                          onChange={e => setSettingsForm({ ...settingsForm, upayAccountType: e.target.value as any })}
+                          className="bg-slate-900 border border-slate-700 text-[10px] font-bold text-blue-300 rounded-lg px-2 py-1 focus:outline-none"
+                        >
+                          <option value="Personal">Personal (ব্যক্তিগত)</option>
+                          <option value="Merchant">Merchant (মার্চেন্ট)</option>
+                          <option value="Agent">Agent (এজেন্ট)</option>
+                        </select>
+                      </div>
+
+                      {/* Logo Preview & File Upload */}
+                      <div className="p-2.5 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-12 h-12 rounded-xl bg-white p-1 border border-slate-700 flex items-center justify-center shrink-0 overflow-hidden shadow-xs">
+                            <img
+                              src={settingsForm.upayLogoUrl || "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Upay_logo.png/640px-Upay_logo.png"}
+                              alt="Upay"
+                              className="w-full h-full object-contain"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Upay_logo.png/640px-Upay_logo.png";
+                              }}
+                            />
+                          </div>
+                          <div className="flex-1 space-y-1">
+                            <label className="block text-[11px] font-bold text-slate-300">লোগো নির্বাচন / আপলোড</label>
+                            <label className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 text-[10px] font-bold rounded-lg border border-blue-500/30 cursor-pointer transition">
+                              <Upload className="w-3 h-3" />
+                              <span>ছবি আপলোড</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => handleImageFileUpload(e, (url) => setSettingsForm({ ...settingsForm, upayLogoUrl: url }))}
+                              />
+                            </label>
+                            {settingsForm.upayLogoUrl && (
+                              <button
+                                type="button"
+                                onClick={() => setSettingsForm({ ...settingsForm, upayLogoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Upay_logo.png/640px-Upay_logo.png" })}
+                                className="text-[10px] text-slate-400 hover:text-white ml-2 underline cursor-pointer"
+                              >
+                                ডিফল্ট
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        <input
+                          type="text"
+                          value={settingsForm.upayLogoUrl || ''}
+                          onChange={e => setSettingsForm({ ...settingsForm, upayLogoUrl: e.target.value })}
+                          placeholder="লোগো ইমেজ লিঙ্ক (URL)..."
+                          className="w-full px-2.5 py-1 bg-slate-950 border border-slate-800 rounded-lg text-[10px] text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 font-mono"
+                        />
+                      </div>
+
+                      {/* Number Input */}
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-slate-300">উপায় পেমেন্ট নম্বর</label>
+                        <input
+                          type="text"
+                          value={settingsForm.upayNumber || ''}
+                          onChange={e => setSettingsForm({ ...settingsForm, upayNumber: e.target.value })}
+                          placeholder="যেমন: 01800000000"
+                          className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-black text-blue-400 focus:outline-none focus:border-blue-500"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Bank Transfer Details (Optional) */}
-                <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-3">
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    🏦 ব্যাংক অ্যাকাউন্ট ট্রান্সফার বিবরণ (ঐচ্ছিক)
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Bank Transfer Details & Bank Logo */}
+                <div className="pt-4 border-t border-slate-800 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                      <span>🏦 ব্যাংক অ্যাকাউন্ট ট্রান্সফার বিবরণ ও লোগো (ঐচ্ছিক)</span>
+                    </h4>
+                    <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                      ম্যানুয়াল ডিপোজিট
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                    {/* Bank Logo Column */}
+                    <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
+                      <label className="block text-[11px] font-bold text-slate-300">ব্যাংক লোগো</label>
+                      <div className="flex items-center gap-2">
+                        <div className="w-10 h-10 rounded-lg bg-white p-1 border border-slate-700 flex items-center justify-center shrink-0 overflow-hidden">
+                          <img
+                            src={settingsForm.bankLogoUrl || "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Dutch-Bangla_Bank_logo.svg/640px-Dutch-Bangla_Bank_logo.svg.png"}
+                            alt="Bank"
+                            className="w-full h-full object-contain"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Dutch-Bangla_Bank_logo.svg/640px-Dutch-Bangla_Bank_logo.svg.png";
+                            }}
+                          />
+                        </div>
+                        <label className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold rounded-lg border border-slate-700 cursor-pointer transition">
+                          <span>আপলোড</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => handleImageFileUpload(e, (url) => setSettingsForm({ ...settingsForm, bankLogoUrl: url }))}
+                          />
+                        </label>
+                      </div>
+                      <input
+                        type="text"
+                        value={settingsForm.bankLogoUrl || ''}
+                        onChange={e => setSettingsForm({ ...settingsForm, bankLogoUrl: e.target.value })}
+                        placeholder="ব্যাংক লোগো URL..."
+                        className="w-full px-2 py-1 bg-slate-950 border border-slate-800 rounded-lg text-[10px] text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-emerald-500 font-mono"
+                      />
+                    </div>
+
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">ব্যাংকের নাম</label>
+                      <label className="block text-[11px] font-bold text-slate-400 mb-1">ব্যাংকের নাম</label>
                       <input
                         type="text"
                         placeholder="যেমন: Dutch-Bangla Bank PLC"
                         value={settingsForm.bankName || ''}
                         onChange={e => setSettingsForm({ ...settingsForm, bankName: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">একাউন্ট টাইটেল</label>
+                      <label className="block text-[11px] font-bold text-slate-400 mb-1">একাউন্ট টাইটেল</label>
                       <input
                         type="text"
                         placeholder="যেমন: PTENIT IT SOLUTIONS"
                         value={settingsForm.bankAccountName || ''}
                         onChange={e => setSettingsForm({ ...settingsForm, bankAccountName: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">একাউন্ট নম্বর</label>
+                      <label className="block text-[11px] font-bold text-slate-400 mb-1">একাউন্ট নম্বর</label>
                       <input
                         type="text"
                         placeholder="যেমন: 2181100098765"
                         value={settingsForm.bankAccountNumber || ''}
                         onChange={e => setSettingsForm({ ...settingsForm, bankAccountNumber: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono text-white focus:outline-none focus:border-[#1DB954]"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">ব্রাঞ্চ ও রাউটিং</label>
+                      <label className="block text-[11px] font-bold text-slate-400 mb-1">ব্রাঞ্চ ও রাউটিং</label>
                       <input
                         type="text"
                         placeholder="যেমন: Uttara Branch, Dhaka"
                         value={settingsForm.bankBranch || ''}
                         onChange={e => setSettingsForm({ ...settingsForm, bankBranch: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
                       />
                     </div>
                   </div>
@@ -9651,13 +9578,13 @@ PTENit ডিজিটাল টিম`;
               </div>
 
               {/* SECTION 3: ফুটার পেমেন্ট মেথড লোগো ম্যানেজার (Fixed Add, Delete, Restore & 1-Click Presets) */}
-              <div className="p-4 sm:p-6 rounded-2xl border-2 border-[#1DB954]/30 bg-white dark:bg-slate-900 shadow-sm space-y-4">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div className="p-4 sm:p-6 rounded-2xl border-2 border-[#1DB954]/30 bg-slate-950 shadow-sm space-y-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-800">
                   <div>
-                    <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                    <h3 className="text-sm sm:text-base font-black text-white flex items-center gap-2">
                       💳 ফুটার পেমেন্ট মেথড লোগো ম্যানেজার (Footer Payment Logos)
                     </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    <p className="text-xs text-slate-400 mt-0.5">
                       মোবাইল ও পিসিতে ওয়েবসাইটের ফুটারে প্রদর্শিত পেমেন্ট লোগো তালিকা পরিচালনা করুন।
                     </p>
                   </div>
@@ -9691,7 +9618,7 @@ PTENit ডিজিটাল টিম`;
                         setLogoFeedback('ডিফল্ট ৮টি পেমেন্ট লোগো পুনরুদ্ধার করা হয়েছে!');
                         setTimeout(() => setLogoFeedback(null), 3000);
                       }}
-                      className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl border border-slate-300 dark:border-slate-700 flex items-center gap-1.5 cursor-pointer transition shrink-0"
+                      className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl border border-slate-800 flex items-center gap-1.5 cursor-pointer transition shrink-0"
                       title="ডিফল্ট ৮টি লোগো আবার ফিরিয়ে আনুন"
                     >
                       <RefreshCw className="w-3.5 h-3.5" />
@@ -9710,9 +9637,9 @@ PTENit ডিজিটাল টিম`;
 
                 {/* Inline Add Logo Form (Fully works in iframe without prompt) */}
                 {showAddLogoForm && (
-                  <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3 animate-fadeIn">
+                  <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-800 space-y-3 animate-fadeIn">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                      <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
                         <Plus className="w-3.5 h-3.5 text-[#1DB954]" /> নতুন পেমেন্ট মেথড লোগো যোগ করুন
                       </h4>
                       <span className="text-[10px] text-slate-400">নাম ও লোগো ইমেজ দিয়ে "যুক্ত করুন" চাপুন</span>
@@ -9720,7 +9647,7 @@ PTENit ডিজিটাল টিম`;
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div>
-                        <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">
+                        <label className="block text-[11px] font-bold text-slate-300 mb-1">
                           পেমেন্ট মেথডের নাম *
                         </label>
                         <input
@@ -9728,12 +9655,12 @@ PTENit ডিজিটাল টিম`;
                           value={newLogoName}
                           onChange={e => setNewLogoName(e.target.value)}
                           placeholder="যেমন: City Bank, Cellfin, PayPal"
-                          className="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                          className="w-full p-2 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
                         />
                       </div>
 
                       <div className="sm:col-span-2">
-                        <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">
+                        <label className="block text-[11px] font-bold text-slate-300 mb-1">
                           লোগো ছবি (ইমেজ URL অথবা ডিভাইস থেকে আপলোড) *
                         </label>
                         <div className="flex items-center gap-2">
@@ -9742,9 +9669,9 @@ PTENit ডিজিটাল টিম`;
                             value={newLogoUrl}
                             onChange={e => setNewLogoUrl(e.target.value)}
                             placeholder="https://example.com/logo.png"
-                            className="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                            className="w-full p-2 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
                           />
-                          <label className="px-3 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs rounded-xl cursor-pointer shrink-0 flex items-center gap-1 border border-slate-300 dark:border-slate-700">
+                          <label className="px-3 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl cursor-pointer shrink-0 flex items-center gap-1 border border-slate-800">
                             <Upload className="w-3.5 h-3.5" />
                             <span>আপলোড</span>
                             <input
@@ -9762,7 +9689,7 @@ PTENit ডিজিটাল টিম`;
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
                       <div className="flex items-center gap-2">
                         {newLogoUrl && (
-                          <div className="w-10 h-7 bg-white dark:bg-slate-800 rounded-lg p-1 border border-slate-300 dark:border-slate-700 flex items-center justify-center">
+                          <div className="w-10 h-7 bg-slate-900 rounded-lg p-1 border border-slate-800 flex items-center justify-center">
                             <img src={newLogoUrl} alt="Preview" className="max-h-full max-w-full object-contain" />
                           </div>
                         )}
@@ -9824,7 +9751,7 @@ PTENit ডিজিটাল টিম`;
 
                 {/* 1-Click Popular Presets */}
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">
+                  <label className="block text-[11px] font-bold text-slate-400">
                     ⚡ ১-ক্লিকে জনপ্রিয় লোগো যোগ করুন (ক্লিক করলেই যুক্ত হবে):
                   </label>
                   <div className="flex flex-wrap gap-1.5">
@@ -9885,7 +9812,7 @@ PTENit ডিজিটাল টিম`;
                           className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition cursor-pointer flex items-center gap-1 ${
                             exists
                               ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
-                              : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#1DB954]'
+                              : 'bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-800 hover:border-[#1DB954]'
                           }`}
                         >
                           <Plus className="w-3 h-3 text-[#1DB954]" />
@@ -9899,7 +9826,7 @@ PTENit ডিজিটাল টিম`;
 
                 {/* List of Current Logos (Direct Delete without broken prompt) */}
                 <div className="space-y-2 pt-2">
-                  <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                  <div className="flex items-center justify-between text-xs text-slate-400">
                     <span className="font-bold">
                       বর্তমানে যুক্ত লোগো তালিকা (মোট: {(settingsForm.paymentLogos && settingsForm.paymentLogos.length > 0 ? settingsForm.paymentLogos : [1,2,3,4,5,6,7,8]).length}টি):
                     </span>
@@ -9926,12 +9853,12 @@ PTENit ডিজিটাল টিম`;
                         key={item.id || idx}
                         className={`p-2.5 rounded-xl border flex flex-col justify-between gap-2 transition ${
                           item.isActive !== false
-                            ? 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800'
+                            ? 'bg-slate-50 dark:bg-slate-950 border-slate-800'
                             : 'bg-slate-100/60 dark:bg-slate-950/40 border-dashed border-slate-300 dark:border-slate-800 opacity-60'
                         }`}
                       >
                         <div className="flex items-center gap-2">
-                          <div className="w-9 h-7 bg-white dark:bg-slate-800 rounded-lg p-1 border border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0 shadow-2xs">
+                          <div className="w-9 h-7 bg-slate-900 rounded-lg p-1 border border-slate-800 flex items-center justify-center shrink-0 shadow-2xs">
                             <img
                               src={item.logoUrl}
                               alt={item.name}
@@ -9942,7 +9869,7 @@ PTENit ডিজিটাল টিম`;
                             />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <span className="font-bold text-xs text-slate-900 dark:text-white block truncate">
+                            <span className="font-bold text-xs text-white block truncate">
                               {item.name}
                             </span>
                             <span className="text-[10px] text-slate-400 capitalize block truncate">
@@ -9951,7 +9878,7 @@ PTENit ডিজিটাল টিম`;
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between pt-1.5 border-t border-slate-200 dark:border-slate-800 text-xs">
+                        <div className="flex items-center justify-between pt-1.5 border-t border-slate-800 text-xs">
                           <label className="flex items-center gap-1.5 text-[11px] font-bold cursor-pointer select-none">
                             <input
                               type="checkbox"
@@ -10652,9 +10579,26 @@ PTENit ডিজিটাল টিম`;
             </div>
           );
         })()}
+            </>
+            )}
           </main>
         </div>
       </div>
+
+      {/* GLOBAL COMMAND PALETTE */}
+      <AdminCommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        onNavigate={(tabId) => handleOpenOrSwitchTask(tabId)}
+      />
+
+      {/* BOTTOM FLOATING SMART MULTI-TASK DOCK */}
+      <AdminFloatingHub
+        onNavigate={(tabId) => handleOpenOrSwitchTask(tabId)}
+        companyBills={companyBills}
+        onVerifyBill={(id) => handleAutoVerifySingleBill(id)}
+        onRejectBill={(id) => setCompanyBills(prev => prev.map(b => b.id === id ? { ...b, status: 'rejected' } : b))}
+      />
     </div>
   );
 };

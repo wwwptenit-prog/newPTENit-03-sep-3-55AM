@@ -357,7 +357,7 @@ const MainAppContent: React.FC = () => {
     );
   }
 
-  const isDashboardView = ['admin', 'teacher-dashboard', 'student-dashboard', 'customer-dashboard', 'learning', 'dashboard', 'marketplace'].includes(activeTab);
+  const isDashboardView = ['admin', 'teacher-dashboard', 'student-dashboard', 'customer-dashboard', 'learning', 'dashboard'].includes(activeTab);
 
   return (
     <div
@@ -365,8 +365,8 @@ const MainAppContent: React.FC = () => {
       className="min-h-screen bg-slate-50 dark:bg-slate-900 text-white dark:text-slate-100 flex flex-col font-sans selection:bg-[#1DB954] selection:text-white max-w-full overflow-x-hidden"
     >
       
-      {/* Top Main Navbar (Only shown on public website pages) */}
-      {!isDashboardView && (
+      {/* Top Main Navbar (Only shown on public website pages, not in dashboards or marketplace) */}
+      {!isDashboardView && activeTab !== 'marketplace' && (
         <Navbar
           activeTab={activeTab}
           setActiveTab={handleSetActiveTab}

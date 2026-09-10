@@ -445,12 +445,12 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
   const sectionContent = (
     <div className="space-y-4 sm:space-y-6 font-bengali">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-        <div className="space-y-1.5 text-center sm:text-left flex flex-col items-center sm:items-start">
-          <h2 className="text-lg sm:text-2xl md:text-3xl font-black font-bengali text-slate-900 dark:text-white leading-tight">
+      <div className="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3 mb-4 sm:mb-6">
+        <div className="space-y-0.5 sm:space-y-1 text-left min-w-0">
+          <h2 className="text-sm sm:text-lg md:text-2xl font-bold font-bengali text-slate-900 dark:text-white leading-tight">
             {t('ডিজিটাল প্রোডাক্টস', 'Digital Products')}
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-bengali">
+          <p className="text-[11px] sm:text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium font-bengali">
             {t('রেডিমেড সফটওয়্যার, সোর্স কোড ও স্ক্রিপ্ট', 'Ready software, source code & scripts')}
           </p>
         </div>

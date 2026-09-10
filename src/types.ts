@@ -15,6 +15,9 @@ export interface User {
   institution?: string;
   createdAt: string;
   blocked?: boolean;
+  isRestricted?: boolean;
+  restrictionReason?: string;
+  restrictedAt?: string;
   isSpecialist?: boolean;
   specialistStatus?: 'not_applied' | 'pending' | 'approved' | 'rejected';
   isSeller?: boolean;
@@ -44,6 +47,9 @@ export interface User {
     status: 'pending' | 'approved' | 'rejected';
     rejectionReason?: string;
   };
+  staffPermissions?: Record<string, boolean>;
+  staffDepartment?: string;
+  staffMember?: any;
 }
 
 export interface Lesson {
@@ -338,8 +344,25 @@ export interface SiteSettings {
   heroPhotoBadge?: string;
   heroPhotoGlowColor?: 'emerald' | 'cyan' | 'purple' | 'amber';
   bkashNumber?: string;
+  bkashLogoUrl?: string;
+  bkashAccountType?: 'Personal' | 'Merchant' | 'Agent';
   nagadNumber?: string;
+  nagadLogoUrl?: string;
+  nagadAccountType?: 'Personal' | 'Merchant' | 'Agent';
   rocketNumber?: string;
+  rocketLogoUrl?: string;
+  rocketAccountType?: 'Personal' | 'Merchant' | 'Agent';
+  upayNumber?: string;
+  upayLogoUrl?: string;
+  upayAccountType?: 'Personal' | 'Merchant' | 'Agent';
+  customMfsMethods?: Array<{
+    id: string;
+    name: string;
+    number: string;
+    logoUrl: string;
+    accountType: string;
+    isActive: boolean;
+  }>;
   bankName?: string;
   bankAccountName?: string;
   bankAccountNumber?: string;

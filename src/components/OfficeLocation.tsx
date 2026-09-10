@@ -36,11 +36,11 @@ export const OfficeLocation: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
         
         {/* Header */}
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto gap-2 sm:gap-3">
-          <h2 className="text-lg sm:text-2xl md:text-3xl font-black font-bengali text-slate-900 dark:text-white leading-tight">
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto gap-1 sm:gap-2">
+          <h2 className="text-sm sm:text-lg md:text-2xl font-bold font-bengali text-slate-900 dark:text-white leading-tight">
             {t('অফিস লোকেশন ও যোগাযোগ', 'Office Location & Contact')}
           </h2>
-          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-bengali">
+          <p className="text-slate-600 dark:text-slate-300 text-[11px] sm:text-xs md:text-sm font-bengali">
             {t('সরাসরি ইনকোয়ারি করুন বা অফিসে আসুন।', 'Inquire directly or visit our office.')}
           </p>
         </div>

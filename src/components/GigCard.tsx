@@ -358,17 +358,17 @@ export const GigCard: React.FC<GigCardProps> = ({
   return (
     <>
       {/* ========================================================================= */}
-      {/* 1. MOBILE FACEBOOK POST & MARKETPLACE CARD (SHOWN ON PHONE IN FEED MODE)  */}
+      {/* 1. FACEBOOK POST & MARKETPLACE CARD (SHOWN IN FEED MODE ACROSS MOBILE & PC) */}
       {/* ========================================================================= */}
       <div
         onClick={onClick}
         className={`${
-          isFeedMode ? "flex sm:hidden" : "hidden"
+          isFeedMode ? "flex" : "hidden"
         } flex-col bg-white dark:bg-slate-900 border ${
           userOrder
             ? "border-blue-500/80 ring-1 ring-blue-500/20 shadow-md"
             : "border-slate-200/90 dark:border-slate-800"
-        } rounded-2xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-200 cursor-pointer font-bengali ${className}`}
+        } rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-200 cursor-pointer font-bengali ${className}`}
       >
         {/* --- Facebook Post Header --- */}
         <div className="p-3 pb-2 flex items-center justify-between gap-2">
@@ -387,33 +387,33 @@ export const GigCard: React.FC<GigCardProps> = ({
             </div>
 
             <div className="min-w-0 flex-1">
-              {/* Line 1: Name (text-[13.5px] font-semibold) + Verified Blue Tick (Strictly 1 line) */}
-              <div className="flex items-center gap-1 min-w-0">
-                <span className="text-[13.5px] font-semibold text-slate-900 dark:text-slate-100 truncate">
+              {/* Line 1: Name (Facebook font size 15px/16px font-bold) + Verified Blue Tick */}
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="text-[15px] sm:text-base font-bold text-slate-900 dark:text-slate-100 truncate">
                   {gig.sellerName}
                 </span>
                 <CheckCircle2
-                  className="w-3.5 h-3.5 text-[#1877F2] fill-[#1877F2] text-white shrink-0"
+                  className="w-4 h-4 text-[#1877F2] fill-[#1877F2] text-white shrink-0"
                   title="Verified Profile"
                 />
               </div>
 
-              {/* Line 2: Guaranteed single-line display: 240d • Top Rated • Agency • Public Icon */}
-              <div className="flex items-center gap-1 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-normal mt-0.5 whitespace-nowrap flex-nowrap overflow-hidden">
+              {/* Line 2: Single-line display: 240d • Top Rated • Agency • Public Icon (Facebook 13px) */}
+              <div className="flex items-center gap-1.5 text-[12.5px] sm:text-[13px] text-slate-500 dark:text-slate-400 font-medium mt-0.5 whitespace-nowrap flex-nowrap overflow-hidden">
                 <span className="shrink-0">{postTime}</span>
-                <span className="text-slate-400 dark:text-slate-500 text-[8px] shrink-0">•</span>
-                <span className="font-medium text-amber-600 dark:text-amber-400 shrink-0">
+                <span className="text-slate-400 dark:text-slate-500 text-[10px] shrink-0">•</span>
+                <span className="font-semibold text-amber-600 dark:text-amber-400 shrink-0">
                   Top Rated
                 </span>
                 {isAgency && (
                   <>
-                    <span className="text-slate-400 dark:text-slate-500 text-[8px] shrink-0">•</span>
-                    <span className="font-normal text-slate-600 dark:text-slate-300 shrink-0">Agency</span>
+                    <span className="text-slate-400 dark:text-slate-500 text-[10px] shrink-0">•</span>
+                    <span className="font-medium text-slate-600 dark:text-slate-300 shrink-0">Agency</span>
                   </>
                 )}
-                <span className="text-slate-400 dark:text-slate-500 text-[8px] shrink-0">•</span>
+                <span className="text-slate-400 dark:text-slate-500 text-[10px] shrink-0">•</span>
                 <Globe
-                  className="w-3 h-3 text-slate-400 dark:text-slate-500 shrink-0"
+                  className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0"
                   aria-label="Public"
                 />
               </div>
@@ -421,7 +421,7 @@ export const GigCard: React.FC<GigCardProps> = ({
           </div>
 
           {/* Right Header Options (Delete if admin/owner, Follow Button, 3-dots Menu) */}
-          <div className="flex items-center gap-1 shrink-0 relative">
+          <div className="flex items-center gap-1.5 shrink-0 relative">
             {isOwnerOrAdmin && deleteGig && (
               <button
                 type="button"
@@ -431,21 +431,21 @@ export const GigCard: React.FC<GigCardProps> = ({
                     deleteGig(gig.id);
                   }
                 }}
-                className="p-1 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-full transition"
+                className="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-full transition"
                 title="Delete Gig"
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                <Trash2 className="w-4 h-4" />
               </button>
             )}
 
-            {/* Follow Button (compact, clean font-medium, rounded-full) */}
+            {/* Follow Button */}
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsFollowing((prev) => !prev);
               }}
-              className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition flex items-center gap-1 cursor-pointer active:scale-95 shrink-0 ${
+              className={`px-3 py-1.5 rounded-full text-xs sm:text-[13px] font-semibold transition flex items-center gap-1 cursor-pointer active:scale-95 shrink-0 ${
                 isFollowing
                   ? "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200"
                   : "bg-blue-50 dark:bg-blue-950/60 text-[#1877F2] dark:text-blue-400 hover:bg-[#1877F2] hover:text-white"
@@ -454,12 +454,12 @@ export const GigCard: React.FC<GigCardProps> = ({
             >
               {isFollowing ? (
                 <>
-                  <UserCheck className="w-3 h-3 text-[#1877F2]" />
+                  <UserCheck className="w-3.5 h-3.5 text-[#1877F2]" />
                   <span>Following</span>
                 </>
               ) : (
                 <>
-                  <UserPlus className="w-3 h-3" />
+                  <UserPlus className="w-3.5 h-3.5" />
                   <span>Follow</span>
                 </>
               )}
@@ -472,10 +472,10 @@ export const GigCard: React.FC<GigCardProps> = ({
                 e.stopPropagation();
                 setIsMenuOpen((prev) => !prev);
               }}
-              className="p-1 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition cursor-pointer"
+              className="p-1.5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition cursor-pointer"
               title="Menu"
             >
-              <MoreHorizontal className="w-4 h-4" />
+              <MoreHorizontal className="w-5 h-5" />
             </button>
 
             {/* Quick 3-Dots Dropdown Menu */}
@@ -544,9 +544,9 @@ export const GigCard: React.FC<GigCardProps> = ({
           </div>
         </div>
 
-        {/* --- Facebook Post Caption / Title (Clean font-normal, not bold) --- */}
-        <div className="px-3 pt-0.5 pb-2">
-          <p className="text-[13.5px] font-normal text-slate-800 dark:text-slate-200 leading-snug">
+        {/* --- Facebook Post Caption / Title (Facebook font scale 15px/16px font-normal) --- */}
+        <div className="px-3.5 pt-1 pb-2.5">
+          <p className="text-[15px] sm:text-base font-normal text-slate-800 dark:text-slate-100 leading-relaxed">
             {gig.title}
           </p>
         </div>
@@ -563,13 +563,13 @@ export const GigCard: React.FC<GigCardProps> = ({
               />
             </div>
             {/* Card Bottom: Start Work First + Starts at ৳2,000 */}
-            <div className="px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
-              <span className="text-xs font-medium text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+            <div className="px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+              <span className="text-sm font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
                 Start Work First
               </span>
-              <div className="flex items-center gap-1 text-xs">
+              <div className="flex items-center gap-1 text-sm">
                 <span className="text-slate-500 dark:text-slate-400 font-normal">Starts at</span>
-                <span className="font-semibold text-[#1877F2] dark:text-blue-400">
+                <span className="font-bold text-base text-[#1877F2] dark:text-blue-400">
                   ৳{price.toLocaleString("en-US")}
                 </span>
               </div>
@@ -612,13 +612,13 @@ export const GigCard: React.FC<GigCardProps> = ({
                   </div>
 
                   {/* Carousel Card Bottom: Start Work First + Starts at ৳2,000 */}
-                  <div className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-1.5">
-                    <span className="text-xs font-medium text-amber-600 dark:text-amber-400 flex items-center gap-1 truncate">
+                  <div className="px-3 py-2 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-1.5">
+                    <span className="text-sm font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1 truncate">
                       Start Work First
                     </span>
-                    <div className="flex items-center gap-1 text-xs shrink-0">
+                    <div className="flex items-center gap-1 text-sm shrink-0">
                       <span className="text-slate-500 dark:text-slate-400 font-normal">Starts at</span>
-                      <span className="font-semibold text-[#1877F2] dark:text-blue-400">
+                      <span className="font-bold text-base text-[#1877F2] dark:text-blue-400">
                         ৳{price.toLocaleString("en-US")}
                       </span>
                     </div>
@@ -629,95 +629,115 @@ export const GigCard: React.FC<GigCardProps> = ({
           </div>
         )}
 
-        {/* --- Facebook Reactions & Engagement Counter Bar (Clean font-normal) --- */}
-        <div className="px-3 py-1.5 flex items-center justify-between gap-1 text-xs text-slate-600 dark:text-slate-300">
+        {/* --- Facebook Reactions & Engagement Counter Bar (Facebook font scale 13.5px) --- */}
+        <div className="px-3.5 py-2 flex items-center justify-between gap-1 text-[13.5px] text-slate-600 dark:text-slate-300">
           {/* 1. Left: Facebook Likes */}
-          <div className="flex items-center gap-1.5 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             <div className="flex -space-x-1 items-center">
-              <span className="w-4 h-4 rounded-full bg-[#1877F2] text-white flex items-center justify-center text-[9px] shadow-xs ring-1 ring-white dark:ring-slate-900">
+              <span className="w-4.5 h-4.5 rounded-full bg-[#1877F2] text-white flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white dark:ring-slate-900">
                 <ThumbsUp className="w-2.5 h-2.5 fill-white text-white" />
               </span>
-              <span className="w-4 h-4 rounded-full bg-rose-500 text-white flex items-center justify-center text-[9px] shadow-xs ring-1 ring-white dark:ring-slate-900">
+              <span className="w-4.5 h-4.5 rounded-full bg-rose-500 text-white flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white dark:ring-slate-900">
                 <Heart className="w-2.5 h-2.5 fill-white text-white" />
               </span>
             </div>
-            <span className="font-normal text-slate-600 dark:text-slate-400 text-xs">
+            <span className="font-medium text-slate-600 dark:text-slate-400 text-[13.5px]">
               {likeCount} {likeCount === 1 ? "like" : "likes"}
             </span>
           </div>
 
           {/* 2. Right: Views Counter (1.8K views) */}
-          <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 shrink-0">
-            <Eye className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-            <span className="font-normal text-slate-500 dark:text-slate-400 text-xs">
+          <div className="flex items-center gap-1.5 text-[13.5px] text-slate-500 dark:text-slate-400 shrink-0">
+            <Eye className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+            <span className="font-medium text-slate-500 dark:text-slate-400 text-[13.5px]">
               {viewCountInK}
             </span>
           </div>
         </div>
 
-        {/* --- Action Bar: Up, Down, Details (3 round pill buttons, subtle Facebook style, clean font-medium) --- */}
-        <div className="px-3 py-2 grid grid-cols-3 gap-2 items-center border-t border-slate-100 dark:border-slate-800/80 bg-white dark:bg-slate-900">
-          {/* 1. Up / Upvote */}
+        {/* --- Action Bar: Facebook 4-Action Buttons (Like, Message, Share, Order) --- */}
+        <div className="px-2.5 sm:px-3.5 py-2 grid grid-cols-4 gap-2 items-center border-t border-slate-100 dark:border-slate-800/80 bg-white dark:bg-slate-900">
+          {/* 1. Like / Upvote */}
           <button
             type="button"
             onClick={handleUpvoteToggle}
-            className={`py-2 px-2.5 rounded-full text-xs font-medium flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs ${
+            className={`py-2 px-2 rounded-full text-xs sm:text-[14px] font-semibold flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs ${
               isUpvoted
-                ? "text-[#1877F2] bg-blue-50 dark:bg-blue-950/60 font-semibold"
+                ? "text-[#1877F2] bg-blue-50 dark:bg-blue-950/60 font-bold"
                 : "text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700"
             }`}
-            title="Upvote"
+            title="লাইক / Upvote"
           >
             <ThumbsUp
-              className={`w-3.5 h-3.5 ${
+              className={`w-4 h-4 ${
                 isUpvoted ? "fill-[#1877F2] text-[#1877F2]" : "text-slate-600 dark:text-slate-300"
               }`}
             />
-            <span>Up {upCount}</span>
+            <span className="hidden xs:inline">{isUpvoted ? "লাইকড" : "লাইক"}</span>
+            <span className="text-xs sm:text-[13px] font-bold">{upCount}</span>
           </button>
 
-          {/* 2. Down / Downvote */}
+          {/* 2. Message / চ্যাট */}
           <button
             type="button"
-            onClick={handleDownvoteToggle}
-            className={`py-2 px-2.5 rounded-full text-xs font-medium flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs ${
-              isDownvoted
-                ? "text-amber-600 bg-amber-50 dark:bg-amber-950/60 font-semibold"
-                : "text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700"
-            }`}
-            title="Downvote"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (openMessengerInbox) {
+                openMessengerInbox(gig.sellerId, gig.sellerName);
+              } else {
+                onClick();
+              }
+            }}
+            className="py-2 px-2 rounded-full text-xs sm:text-[14px] font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs"
+            title="সেলারকে ইনবক্স করুন"
           >
-            <ThumbsDown
-              className={`w-3.5 h-3.5 ${
-                isDownvoted ? "fill-amber-600 text-amber-600" : "text-slate-600 dark:text-slate-300"
-              }`}
-            />
-            <span>Down {downCount}</span>
+            <MessageCircle className="w-4 h-4 text-blue-500 dark:text-blue-400" />
+            <span>মেসেজ</span>
           </button>
 
-          {/* 3. Details (Clean pill button with ArrowRight) */}
+          {/* 3. Share / লিঙ্ক কপি */}
+          <button
+            type="button"
+            onClick={handleShareLink}
+            className="py-2 px-2 rounded-full text-xs sm:text-[14px] font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs"
+            title="গিগ লিঙ্ক কপি করুন"
+          >
+            {copiedLink ? (
+              <>
+                <Check className="w-4 h-4 text-emerald-500" />
+                <span className="text-emerald-600 font-bold">কপি</span>
+              </>
+            ) : (
+              <>
+                <Share2 className="w-4 h-4 text-slate-600 dark:text-slate-300" />
+                <span>শেয়ার</span>
+              </>
+            )}
+          </button>
+
+          {/* 4. Order / Details */}
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               onClick();
             }}
-            className="py-2 px-2.5 rounded-full text-xs font-medium text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs group/btn"
-            title="View Details"
+            className="py-2 px-2.5 rounded-full text-xs sm:text-[14px] font-bold text-white bg-[#1DB954] hover:bg-emerald-600 flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-xs group/btn"
+            title="বিস্তারিত দেখুন ও অর্ডার করুন"
           >
-            <span>Details</span>
-            <ArrowRight className="w-3.5 h-3.5 text-slate-600 dark:text-slate-300 group-hover/btn:translate-x-0.5 transition-transform" />
+            <span>অর্ডার</span>
+            <ArrowRight className="w-4 h-4 text-white group-hover/btn:translate-x-0.5 transition-transform" />
           </button>
         </div>
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. DESKTOP & COMPACT GRID CARD (SHOWN ON DESKTOP OR WHEN IN GRID MODE)     */}
+      {/* 2. DESKTOP & COMPACT GRID CARD (SHOWN WHEN IN GRID MODE)                  */}
       {/* ========================================================================= */}
       <div
         onClick={onClick}
         className={`${
-          isFeedMode ? "hidden sm:flex" : "flex"
+          isFeedMode ? "hidden" : "flex"
         } group relative bg-white dark:bg-slate-900 border ${
           userOrder
             ? "border-blue-500/70 ring-1 ring-blue-500/20 shadow-md"
@@ -846,7 +866,7 @@ export const GigCard: React.FC<GigCardProps> = ({
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-1">
-                    <span className="text-[11px] sm:text-sm font-semibold text-slate-900 dark:text-slate-100 truncate group-hover:text-[#1DB954] transition-colors">
+                    <span className="text-xs sm:text-[15px] font-bold text-slate-900 dark:text-slate-100 truncate group-hover:text-[#1DB954] transition-colors">
                       {gig.sellerName}
                     </span>
                     <CheckCircle2
@@ -854,25 +874,25 @@ export const GigCard: React.FC<GigCardProps> = ({
                       title="Verified Profile"
                     />
                   </div>
-                  <span className="text-[9px] sm:text-xs text-slate-500 dark:text-slate-400 block truncate font-normal">
+                  <span className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 block truncate font-medium">
                     {gig.sellerLevel || "Top Rated"}
                   </span>
                 </div>
               </div>
 
               {isAgency ? (
-                <span className="px-1.5 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md sm:rounded-full bg-[#1DB954]/15 text-[#1DB954] text-[8px] sm:text-xs font-semibold border border-[#1DB954]/30 shrink-0">
+                <span className="px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md sm:rounded-full bg-[#1DB954]/15 text-[#1DB954] text-[10px] sm:text-xs font-bold border border-[#1DB954]/30 shrink-0">
                   Agency
                 </span>
               ) : (
-                <span className="px-1.5 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md sm:rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[8px] sm:text-xs font-medium border border-slate-200 dark:border-slate-700 shrink-0">
+                <span className="px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md sm:rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] sm:text-xs font-semibold border border-slate-200 dark:border-slate-700 shrink-0">
                   Pro
                 </span>
               )}
             </div>
 
             {/* Gig Title */}
-            <h3 className="text-xs sm:text-[15px] font-semibold text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#1DB954] transition-colors min-h-[2rem] sm:min-h-[2.5rem]">
+            <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#1DB954] transition-colors min-h-[2.5rem] sm:min-h-[2.75rem]">
               {gig.title}
             </h3>
 
@@ -882,7 +902,7 @@ export const GigCard: React.FC<GigCardProps> = ({
                 {gig.tags.slice(0, 2).map((tag, idx) => (
                   <span
                     key={idx}
-                    className="text-[9px] sm:text-xs font-normal text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 px-1.5 py-0.5 rounded sm:rounded-md truncate max-w-[90px]"
+                    className="text-[10px] sm:text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-md truncate max-w-[110px]"
                   >
                     #{tag}
                   </span>
@@ -893,13 +913,13 @@ export const GigCard: React.FC<GigCardProps> = ({
         </div>
 
         {/* Footer Price & Action Ribbon */}
-        <div className="p-2 sm:p-3.5 md:p-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1 bg-slate-50/70 dark:bg-slate-950/40 rounded-b-2xl sm:rounded-b-3xl">
+        <div className="p-2.5 sm:p-3.5 md:p-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1 bg-slate-50/70 dark:bg-slate-950/40 rounded-b-2xl sm:rounded-b-3xl">
           <div className="min-w-0">
-            <span className="text-[9px] sm:text-xs text-slate-500 dark:text-slate-400 font-normal block leading-tight">
+            <span className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium block leading-tight">
               Starts at
             </span>
             <div className="flex items-baseline gap-0.5 sm:gap-1">
-              <span className="text-xs sm:text-base md:text-lg font-bold text-[#1DB954] block leading-tight">
+              <span className="text-sm sm:text-base md:text-lg font-black text-[#1DB954] block leading-tight">
                 ৳{price.toLocaleString("en-US")}
               </span>
             </div>
@@ -910,7 +930,7 @@ export const GigCard: React.FC<GigCardProps> = ({
               e.stopPropagation();
               onClick();
             }}
-            className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-medium text-white bg-[#1DB954] hover:bg-emerald-600 shadow-xs sm:shadow-md sm:shadow-[#1DB954]/20 transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
+            className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold text-white bg-[#1DB954] hover:bg-emerald-600 shadow-xs sm:shadow-md sm:shadow-[#1DB954]/20 transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
           >
             <span>Details</span>
             <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />

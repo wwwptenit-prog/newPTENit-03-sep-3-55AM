@@ -58,10 +58,10 @@ export const WhyChooseUs: React.FC = () => {
           <span className="inline-flex items-center gap-1.5 text-[#1DB954] font-bold text-xs uppercase tracking-widest bg-[#1DB954]/10 px-3 py-1 rounded-full border border-[#1DB954]/20">
             {t('কেন PTENit', 'Why Choose PTENit')}
           </span>
-          <h2 className="text-2xl sm:text-4xl font-black font-bengali text-slate-900 dark:text-white leading-tight">
+          <h2 className="text-sm sm:text-xl md:text-3xl font-bold font-bengali text-slate-900 dark:text-white leading-tight">
             {t('কেন PTENit নির্বাচন করবেন?', 'Why Choose PTENit?')}
           </h2>
-          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base font-bengali">
+          <p className="text-slate-600 dark:text-slate-300 text-[11px] sm:text-xs md:text-sm font-bengali">
             {t('আমরা শুধু কাজ করে দেওয়া বা ট্রেনিং দেওয়ায় সীমাবদ্ধ নই, আপনার সফলতার পথে দীর্ঘমেয়াদী অংশীদার হিসেবে কাজ করি।', 'We go beyond providing services or training — we act as your long-term success partner.')}
           </p>
         </div>

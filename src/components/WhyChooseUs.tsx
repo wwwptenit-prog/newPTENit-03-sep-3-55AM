@@ -10,8 +10,8 @@ export const WhyChooseUs: React.FC = () => {
       title: t("অভিজ্ঞতা & দক্ষতা", "Expertise & Skills"),
       desc: t("আমাদের টিমে রয়েছে ওয়েবসাইট ডিজাইন, ডেভেলপমেন্ট, এসইও, গ্রাফিক্স ও ডিজিটাল মার্কেটিং এর অভিজ্ঞ প্রফেশনালবৃন্দ।", "Our team consists of seasoned professionals in Web Design, Development, SEO, Graphics, and Digital Marketing."),
       icon: Briefcase,
-      color: "text-[#1DB954]",
-      bgColor: "bg-[#1DB954]/10"
+      color: "text-[#38BDF8]",
+      bgColor: "bg-[#006A4E]/10"
     },
     {
       title: t("আধুনিক প্রযুক্তি", "Modern Technology"),
@@ -38,8 +38,8 @@ export const WhyChooseUs: React.FC = () => {
       title: t("২৪/৭ ডেডিকেটেড সাপোর্ট", "24/7 Dedicated Support"),
       desc: t("কোর্স শেষ হওয়ার পরেও ক্লায়েন্ট ও শিক্ষার্থীদের জন্য আমাদের রয়েছে ডেডিকেটেড লাইফটাইম প্রাইভেট সাপোর্ট গ্রুপ।", "Even after course completion, we offer lifetime dedicated private support groups for students and clients."),
       icon: Headphones,
-      color: "text-emerald-500",
-      bgColor: "bg-emerald-500/10"
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10"
     },
     {
       title: t("সাশ্রয়ী ও যুক্তিসঙ্গত বাজেট", "Affordable Pricing"),
@@ -55,7 +55,7 @@ export const WhyChooseUs: React.FC = () => {
       <div className="max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
         
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-8 sm:mb-10 gap-2.5 sm:gap-3">
-          <span className="inline-flex items-center gap-1.5 text-[#1DB954] font-bold text-xs uppercase tracking-widest bg-[#1DB954]/10 px-3 py-1 rounded-full border border-[#1DB954]/20">
+          <span className="inline-flex items-center gap-1.5 text-[#38BDF8] font-bold text-xs uppercase tracking-widest bg-[#006A4E]/10 px-3 py-1 rounded-full border border-blue-600/50/20">
             {t('কেন PTENit', 'Why Choose PTENit')}
           </span>
           <h2 className="text-sm sm:text-xl md:text-3xl font-bold font-bengali text-slate-900 dark:text-white leading-tight">
@@ -72,7 +72,7 @@ export const WhyChooseUs: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="bg-slate-50 dark:bg-slate-800/60 p-3.5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-xs hover:shadow-xl hover:border-[#1DB954] transition-all duration-300 space-y-2 sm:space-y-4 flex flex-col justify-start"
+                className="bg-slate-50 dark:bg-slate-800/60 p-3.5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-xs hover:shadow-xl hover:border-blue-600/50 transition-all duration-300 space-y-2 sm:space-y-4 flex flex-col justify-start"
               >
                 <div className={`p-2.5 sm:p-4 rounded-xl sm:rounded-2xl ${feat.bgColor} ${feat.color} w-fit`}>
                   <Icon className="w-5 h-5 sm:w-7 sm:h-7" />

@@ -32,8 +32,8 @@ export const QuickRoleSwitcher: React.FC<QuickRoleSwitcherProps> = ({ activeTab,
       label: 'এডমিন প্যানেল',
       subtitle: 'প্ল্যাটফর্ম ও সিস্টেম কন্ট্রোল',
       icon: ShieldAlert,
-      color: 'text-amber-300 bg-amber-500/10 border-amber-500/30 hover:bg-amber-500/20',
-      activeBorder: 'border-amber-400 ring-2 ring-amber-400/50 bg-amber-500/20'
+      color: 'text-slate-800 bg-slate-50 border-slate-200 hover:bg-slate-100',
+      activeBorder: 'border-[#E11D48] ring-2 ring-[#E11D48]/30 bg-rose-50/50'
     },
     {
       role: 'customer',
@@ -41,8 +41,8 @@ export const QuickRoleSwitcher: React.FC<QuickRoleSwitcherProps> = ({ activeTab,
       label: 'গ্রাহক ড্যাশবোর্ড',
       subtitle: 'বায়ার ড্যাশবোর্ড ও অর্ডার হাব',
       icon: Briefcase,
-      color: 'text-emerald-300 bg-emerald-500/10 border-emerald-500/30 hover:bg-emerald-500/20',
-      activeBorder: 'border-[#1DB954] ring-2 ring-[#1DB954]/50 bg-emerald-500/20'
+      color: 'text-slate-800 bg-slate-50 border-slate-200 hover:bg-slate-100',
+      activeBorder: 'border-[#006A4E] ring-2 ring-[#006A4E]/30 bg-emerald-50/50'
     },
     {
       role: 'instructor',
@@ -50,26 +50,26 @@ export const QuickRoleSwitcher: React.FC<QuickRoleSwitcherProps> = ({ activeTab,
       label: 'স্পেশালিস্ট ড্যাশবোর্ড',
       subtitle: 'সেলার ড্যাশবোর্ড ও সার্ভিস হাব',
       icon: Zap,
-      color: 'text-teal-300 bg-teal-500/10 border-teal-500/30 hover:bg-teal-500/20',
-      activeBorder: 'border-teal-400 ring-2 ring-teal-400/50 bg-teal-500/20'
+      color: 'text-slate-800 bg-slate-50 border-slate-200 hover:bg-slate-100',
+      activeBorder: 'border-[#006A4E] ring-2 ring-[#006A4E]/30 bg-emerald-50/50'
     },
   ];
 
   return (
     <div className="fixed bottom-6 left-6 z-50 font-bengali">
       {isOpen && (
-        <div className="mb-3 bg-[#142B4D] border border-slate-700/90 rounded-2xl p-4 shadow-2xl text-white w-72 backdrop-blur-md space-y-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
-          <div className="flex items-center justify-between border-b border-slate-700 pb-2">
+        <div className="mb-3 bg-white border border-slate-200 rounded-2xl p-4 shadow-2xl text-slate-900 w-72 space-y-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-2">
             <div className="flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-[#1DB954] animate-pulse" />
-              <span className="text-xs font-bold text-slate-200">ড্যাশবোর্ড সুইচ</span>
+              <Sparkles className="w-4 h-4 text-[#006A4E]" />
+              <span className="text-xs font-bold text-slate-900">ড্যাশবোর্ড সুইচ</span>
             </div>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-[#1DB954] font-bold">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-[#006A4E] font-bold">
               Full Access
             </span>
           </div>
 
-          <p className="text-[11px] text-slate-400 leading-tight">
+          <p className="text-[11px] text-slate-500 leading-tight">
             যেকোনো ড্যাশবোর্ডে প্রবেশ করতে ক্লিক করুন:
           </p>
 
@@ -88,16 +88,16 @@ export const QuickRoleSwitcher: React.FC<QuickRoleSwitcherProps> = ({ activeTab,
                   }`}
                 >
                   <div className="flex items-center gap-2.5 text-left">
-                    <div className="p-1.5 rounded-lg bg-black/20 shrink-0">
+                    <div className="p-1.5 rounded-lg bg-white border border-slate-200 shadow-2xs shrink-0 text-[#006A4E]">
                       <Icon className="w-4 h-4" />
                     </div>
                     <div>
-                      <div className="font-extrabold text-white text-xs leading-tight">{label}</div>
-                      <div className="text-[10px] text-slate-300 font-normal leading-tight mt-0.5">{subtitle}</div>
+                      <div className="font-extrabold text-slate-900 text-xs leading-tight">{label}</div>
+                      <div className="text-[10px] text-slate-500 font-normal leading-tight mt-0.5">{subtitle}</div>
                     </div>
                   </div>
                   {isActive && (
-                    <span className="flex items-center gap-1 text-[10px] bg-[#1DB954] text-white px-2 py-0.5 rounded-full font-black shadow-sm shrink-0">
+                    <span className="flex items-center gap-1 text-[10px] bg-[#006A4E] text-white px-2 py-0.5 rounded-full font-black shadow-2xs shrink-0">
                       <Check className="w-3 h-3" /> এক্টিভ
                     </span>
                   )}
@@ -111,9 +111,9 @@ export const QuickRoleSwitcher: React.FC<QuickRoleSwitcherProps> = ({ activeTab,
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-emerald-600 to-[#1DB954] hover:from-emerald-500 hover:to-emerald-400 text-white font-bold text-xs rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all cursor-pointer border border-emerald-400/40"
+        className="flex items-center gap-2 px-4 py-3 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all cursor-pointer border border-[#006A4E]/40"
       >
-        <Sparkles className="w-4 h-4 text-amber-300 animate-spin" style={{ animationDuration: '4s' }} />
+        <Sparkles className="w-4 h-4 text-white" />
         <span>ড্যাশবোর্ড সুইচ</span>
         {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
       </button>

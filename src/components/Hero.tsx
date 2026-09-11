@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, Sparkles, ShieldCheck, Play, Code2, LineChart, Award, Users } from 'lucide-react';
 import { useData } from '../context/DataContext';
-import { GlitterParticles } from './GlitterParticles';
 
 interface HeroProps {
   setActiveTab: (tab: string) => void;
@@ -42,14 +41,14 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
       onMouseMove={handleMouseMove}
       onTouchMove={handleTouchMove}
       onMouseLeave={handleMouseLeave}
-      className="relative bg-gradient-to-b from-[#142B4D] via-[#0D1E38] to-[#142B4D] text-white pt-8 sm:pt-12 lg:pt-14 pb-0 overflow-hidden"
+      className="relative bg-[#091124] text-white pt-8 sm:pt-12 lg:pt-14 pb-0 overflow-hidden border-b border-slate-800/80"
     >
-      {/* Dynamic Cursor-Following Radiant Spotlight Glow */}
+      {/* Subtle Ambient Light Spotlight */}
       {mouseCoords && (
         <div
           className="absolute inset-0 pointer-events-none transition-opacity duration-300 z-0"
           style={{
-            background: `radial-gradient(550px circle at ${mouseCoords.x}px ${mouseCoords.y}px, rgba(29, 185, 84, 0.22), rgba(14, 165, 233, 0.12), transparent 70%)`,
+            background: `radial-gradient(550px circle at ${mouseCoords.x}px ${mouseCoords.y}px, rgba(22, 163, 74, 0.15), transparent 70%)`,
           }}
         />
       )}
@@ -86,18 +85,19 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
             >
               <button
                 onClick={() => setActiveTab('services')}
-                className="px-6 py-3 rounded-xl font-bold text-white bg-[#1DB954] hover:bg-emerald-500 shadow-lg shadow-[#1DB954]/25 hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5 group text-sm sm:text-base font-bengali"
+                className="px-6 py-3 rounded-xl font-bold text-white bg-[#16A34A] hover:bg-[#15803D] shadow-xs active:scale-95 transition-all cursor-pointer flex items-center gap-2 group text-sm sm:text-base font-bengali relative"
               >
                 {t('সার্ভিস দেখুন', 'Services')}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <span className="w-2 h-2 rounded-full bg-[#DC2626]" />
               </button>
 
               <button
                 onClick={() => setActiveTab('marketplace')}
-                className="px-6 py-3 rounded-xl font-bold text-slate-100 bg-slate-800/90 hover:bg-slate-700 border border-slate-600 hover:border-[#1DB954] transition-all cursor-pointer text-sm sm:text-base flex items-center gap-1.5 font-bengali"
+                className="px-6 py-3 rounded-xl font-bold text-slate-200 bg-slate-800/80 hover:bg-slate-700/80 hover:text-white border border-slate-700 transition-all cursor-pointer text-sm sm:text-base flex items-center gap-1.5 font-bengali"
               >
                 {t('মার্কেটপ্লেস', 'Marketplace')}
-                <Play className="w-3.5 h-3.5 text-[#1DB954] fill-[#1DB954]" />
+                <Play className="w-3.5 h-3.5 text-[#16A34A] fill-[#16A34A]" />
               </button>
             </motion.div>
 
@@ -110,19 +110,19 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
             >
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 <div className="flex items-center gap-2 justify-start pl-2 sm:pl-0">
-                  <Sparkles className="w-5 h-5 text-[#1DB954] shrink-0 stroke-[2.2]" />
+                  <Sparkles className="w-5 h-5 text-[#16A34A] shrink-0 stroke-[2.2]" />
                   <span className="text-xs sm:text-sm font-bold text-slate-200 font-bengali truncate">AI সাপোর্ট</span>
                 </div>
                 <div className="flex items-center gap-2 justify-start pl-2 sm:pl-0">
-                  <Award className="w-5 h-5 text-[#1DB954] shrink-0 stroke-[2.2]" />
+                  <Award className="w-5 h-5 text-[#16A34A] shrink-0 stroke-[2.2]" />
                   <span className="text-xs sm:text-sm font-bold text-slate-200 font-bengali truncate">{t('সার্টিফিকেট', 'Certificate')}</span>
                 </div>
                 <div className="flex items-center gap-2 justify-start pl-2 sm:pl-0">
-                  <ShieldCheck className="w-5 h-5 text-[#1DB954] shrink-0 stroke-[2.2]" />
+                  <ShieldCheck className="w-5 h-5 text-[#16A34A] shrink-0 stroke-[2.2]" />
                   <span className="text-xs sm:text-sm font-bold text-slate-200 font-bengali truncate">{t('বিশ্বস্ত ট্রেনিং', 'Trusted')}</span>
                 </div>
                 <div className="flex items-center gap-2 justify-start pl-2 sm:pl-0">
-                  <Users className="w-5 h-5 text-[#1DB954] shrink-0 stroke-[2.2]" />
+                  <Users className="w-5 h-5 text-[#16A34A] shrink-0 stroke-[2.2]" />
                   <span className="text-xs sm:text-sm font-bold text-slate-200 font-bengali truncate">{t('লাইফটাইম সাপোর্ট', 'Support')}</span>
                 </div>
               </div>
@@ -158,7 +158,7 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
                           alt="PTENit Career Model"
                           className="w-full h-auto max-h-[440px] sm:max-h-[500px] lg:max-h-[560px] object-cover object-top origin-bottom block align-bottom"
                           style={{
-                            filter: 'drop-shadow(0 15px 30px rgba(0, 0, 0, 0.4)) contrast(1.04) brightness(1.02)'
+                            filter: 'drop-shadow(0 15px 30px rgba(0, 0, 0, 0.15)) contrast(1.04) brightness(1.02)'
                           }}
                         />
                       </div>
@@ -175,22 +175,22 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
                   transition={{ duration: 0.7 }}
                   className="relative mx-auto max-w-md lg:max-w-none"
                 >
-                  <div className="bg-slate-900/90 rounded-2xl border border-slate-700/80 p-4 shadow-2xl shadow-emerald-950/50 backdrop-blur-md relative overflow-hidden">
+                  <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-4 shadow-xl relative overflow-hidden">
                     <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
                       <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-rose-500 inline-block" />
                         <span className="w-3 h-3 rounded-full bg-amber-500 inline-block" />
-                        <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
+                        <span className="w-3 h-3 rounded-full bg-blue-500 inline-block" />
                       </div>
-                      <span className="text-[11px] font-mono text-slate-400 bg-slate-800 px-3 py-1 rounded-md">
+                      <span className="text-[11px] font-mono text-slate-300 bg-slate-950 border border-slate-800 px-3 py-1 rounded-md">
                         https://ptenit.com/platform
                       </span>
                     </div>
 
                     <div className="space-y-4">
                       <div className="grid grid-cols-2 gap-3">
-                        <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700 flex items-center gap-3">
-                          <div className="p-2.5 bg-[#1DB954]/20 rounded-lg text-[#1DB954]">
+                        <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex items-center gap-3">
+                          <div className="p-2.5 bg-green-950/60 rounded-lg text-[#16A34A] border border-green-500/20">
                             <Code2 className="w-5 h-5" />
                           </div>
                           <div>
@@ -198,8 +198,8 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
                             <p className="text-sm font-bold text-white">React + Next.js</p>
                           </div>
                         </div>
-                        <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700 flex items-center gap-3">
-                          <div className="p-2.5 bg-blue-500/20 rounded-lg text-blue-400">
+                        <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex items-center gap-3">
+                          <div className="p-2.5 bg-blue-950/60 rounded-lg text-blue-400 border border-blue-500/20">
                             <LineChart className="w-5 h-5" />
                           </div>
                           <div>
@@ -209,21 +209,21 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
                         </div>
                       </div>
 
-                      <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-left font-mono text-xs text-slate-300 space-y-2 relative">
+                      <div className="bg-slate-950/90 p-4 rounded-xl border border-slate-800 text-left font-mono text-xs text-slate-300 space-y-2 relative">
                         <div className="text-slate-500">// PTENit Digital Core Engine</div>
-                        <div className="text-emerald-400">
-                          const <span className="text-sky-300">ptenItPlatform</span> = &#123;
+                        <div className="text-[#16A34A]">
+                          const <span className="text-white">ptenItPlatform</span> = &#123;
                         </div>
-                        <div className="pl-4 text-amber-300">
-                          services: <span className="text-slate-200">['Web', 'SEO', 'Marketing', 'Graphics']</span>,
+                        <div className="pl-4 text-slate-400">
+                          services: <span className="text-sky-300">['Web', 'SEO', 'Marketing', 'Graphics']</span>,
                         </div>
-                        <div className="pl-4 text-emerald-300">
-                          trainingStatus: <span className="text-[#1DB954]">'Enrollment Open'</span>
+                        <div className="pl-4 text-slate-400">
+                          trainingStatus: <span className="text-[#16A34A] font-bold">'Enrollment Open'</span>
                         </div>
-                        <div className="text-emerald-400">&#125;;</div>
+                        <div className="text-[#16A34A]">&#125;;</div>
                       </div>
 
-                      <div className="bg-gradient-to-r from-[#1DB954] to-emerald-600 p-3.5 rounded-xl text-white font-bold text-xs flex items-center justify-between shadow-lg">
+                      <div className="bg-[#16A34A] p-3.5 rounded-xl text-white font-bold text-xs flex items-center justify-between shadow-xs">
                         <span className="font-bengali">{t('লাইভ ক্লাস ও ফ্রিল্যান্সিং গাইডলাইন', 'Live Classes & Freelancing Guidance')}</span>
                         <span className="bg-white/20 px-2 py-1 rounded text-[10px]">ACTIVE</span>
                       </div>

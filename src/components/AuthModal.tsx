@@ -146,7 +146,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-5 sm:p-7 relative shadow-2xl space-y-4 text-white font-bengali my-auto overflow-hidden animate-in zoom-in-95 duration-150">
         
         {/* Decorative Top Emerald Glow */}
-        <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-24 bg-[#1DB954]/15 blur-2xl rounded-full pointer-events-none" />
+        <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-24 bg-[#006A4E]/15 blur-2xl rounded-full pointer-events-none" />
 
         {/* Close Button */}
         <button
@@ -171,12 +171,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               />
             ) : (
               <div className="flex items-center justify-center gap-2.5">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-[#1DB954] to-emerald-600 flex items-center justify-center font-heading font-black text-xl sm:text-2xl text-slate-950 shadow-md shadow-[#1DB954]/25 shrink-0">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-[#006A4E] to-blue-600 flex items-center justify-center font-heading font-black text-xl sm:text-2xl text-slate-950 shadow-md shadow-blue-500/25 shrink-0">
                   P
                 </div>
                 <div className="flex flex-col text-left">
                   <span className="font-heading text-xl sm:text-2xl font-black tracking-wider text-white flex items-center gap-0.5 leading-none">
-                    PTEN<span className="text-[#1DB954]">it</span>
+                    PTEN<span className="text-[#38BDF8]">it</span>
                   </span>
                   <span className="text-[10px] text-slate-400 font-medium tracking-tight mt-0.5">
                     IT Services, Training & Marketplace
@@ -200,7 +200,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="button"
                 onClick={() => { setMode('login'); setErrorMsg(''); setResetSuccess(false); }}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1DB954] hover:text-emerald-400 transition cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#38BDF8] hover:text-sky-400 transition cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>লগইন ফর্মে ফিরে যান</span>
@@ -218,12 +218,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {/* FORGOT PASSWORD MODE */}
         {mode === 'forgot' ? (
           resetSuccess ? (
-            <div className="space-y-3 text-center py-3 bg-emerald-500/10 border border-emerald-500/30 p-4 rounded-2xl">
-              <div className="w-11 h-11 rounded-full bg-[#1DB954] text-white flex items-center justify-center mx-auto shadow-md">
+            <div className="space-y-3 text-center py-3 bg-blue-500/10 border border-blue-500/30 p-4 rounded-2xl">
+              <div className="w-11 h-11 rounded-full bg-[#006A4E] text-white flex items-center justify-center mx-auto shadow-md">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-sm font-black text-[#1DB954]">
+                <h3 className="text-sm font-black text-[#38BDF8]">
                   পাসওয়ার্ড রিসেট মেসেজ প্রেরিত!
                 </h3>
                 <p className="text-xs text-slate-300 leading-relaxed">
@@ -233,7 +233,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="button"
                 onClick={() => { setMode('login'); setResetSuccess(false); setErrorMsg(''); }}
-                className="w-full py-2.5 bg-[#1DB954] hover:bg-emerald-500 text-white font-black text-xs rounded-xl shadow transition cursor-pointer active:scale-95"
+                className="w-full py-2.5 bg-[#006A4E] hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow transition cursor-pointer active:scale-95"
               >
                 লগইন করুন
               </button>
@@ -259,7 +259,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     placeholder="আপনার জিমেইল বা ফোন নম্বর"
                     value={resetEmailOrPhone}
                     onChange={e => setResetEmailOrPhone(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#1DB954] focus:ring-1 focus:ring-[#1DB954]/30"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
                   />
                 </div>
               </div>
@@ -273,14 +273,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   placeholder="পাসওয়ার্ড ভুলে যাওয়ার মেসেজ..."
                   value={resetSupportMsg}
                   onChange={e => setResetSupportMsg(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#1DB954] focus:ring-1 focus:ring-[#1DB954]/30"
+                  className="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={resetLoading}
-                className="w-full py-2.5 bg-[#1DB954] hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50"
+                className="w-full py-2.5 bg-[#006A4E] hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>{resetLoading ? 'পাঠানো হচ্ছে...' : 'রিসেট মেইল পাঠান'}</span>
@@ -301,7 +301,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   onClick={() => setSelectedRoleType('customer')}
                   className={`py-2 px-2 rounded-xl text-xs font-bold border transition cursor-pointer flex items-center justify-center gap-1.5 ${
                     selectedRoleType === 'customer'
-                      ? 'bg-[#1DB954] text-white border-[#1DB954] font-black shadow-sm'
+                      ? 'bg-[#006A4E] text-white border-blue-600/50 font-black shadow-sm'
                       : 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
                   }`}
                 >
@@ -314,7 +314,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   onClick={() => setSelectedRoleType('specialist')}
                   className={`py-2 px-2 rounded-xl text-xs font-bold border transition cursor-pointer flex items-center justify-center gap-1.5 ${
                     selectedRoleType === 'specialist'
-                      ? 'bg-[#1DB954] text-white border-[#1DB954] font-black shadow-sm'
+                      ? 'bg-[#006A4E] text-white border-blue-600/50 font-black shadow-sm'
                       : 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
                   }`}
                 >
@@ -327,7 +327,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   onClick={() => setSelectedRoleType('both')}
                   className={`py-2 px-2 rounded-xl text-xs font-bold border transition cursor-pointer flex items-center justify-center gap-1.5 ${
                     selectedRoleType === 'both'
-                      ? 'bg-[#1DB954] text-white border-[#1DB954] font-black shadow-sm'
+                      ? 'bg-[#006A4E] text-white border-blue-600/50 font-black shadow-sm'
                       : 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
                   }`}
                 >
@@ -350,7 +350,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   placeholder="আপনার নাম"
                   value={fullName}
                   onChange={e => setFullName(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#1DB954] focus:ring-1 focus:ring-[#1DB954]/30"
+                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
                 />
               </div>
             </div>
@@ -368,7 +368,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   placeholder="01712345678"
                   value={signupPhone}
                   onChange={e => setSignupPhone(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#1DB954] focus:ring-1 focus:ring-[#1DB954]/30"
+                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
                 />
               </div>
             </div>
@@ -386,7 +386,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   placeholder="yourname@gmail.com"
                   value={signupEmail}
                   onChange={e => setSignupEmail(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#1DB954] focus:ring-1 focus:ring-[#1DB954]/30"
+                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
                 />
               </div>
             </div>
@@ -404,12 +404,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   placeholder="••••••••"
                   value={signupPassword}
                   onChange={e => setSignupPassword(e.target.value)}
-                  className="w-full pl-9 pr-9 py-2 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#1DB954] focus:ring-1 focus:ring-[#1DB954]/30"
+                  className="w-full pl-9 pr-9 py-2 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
                 />
                 <button
                   type="button"
                   onClick={() => setShowSignupPassword(!showSignupPassword)}
-                  className="absolute right-3 top-2.5 text-slate-400 hover:text-[#1DB954] cursor-pointer"
+                  className="absolute right-3 top-2.5 text-slate-400 hover:text-sky-400 cursor-pointer"
                 >
                   {showSignupPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -419,7 +419,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-2 sm:py-2.5 bg-[#1DB954] hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 mt-1"
+              className="w-full py-2 sm:py-2.5 bg-[#006A4E] hover:bg-blue-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 mt-1"
             >
               <UserPlus className="w-4 h-4" />
               <span>সাইনআপ সম্পন্ন করুন</span>
@@ -431,7 +431,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="button"
                 onClick={() => { setMode('login'); setErrorMsg(''); }}
-                className="font-bold text-[#1DB954] hover:underline cursor-pointer ml-1"
+                className="font-bold text-[#38BDF8] hover:underline cursor-pointer ml-1"
               >
                 লগইন করুন
               </button>
@@ -452,7 +452,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   placeholder="ইমেইল বা মোবাইল নম্বর"
                   value={loginEmailOrPhone}
                   onChange={e => setLoginEmailOrPhone(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-xs sm:text-sm font-medium focus:outline-none focus:border-[#1DB954] focus:ring-1 focus:ring-[#1DB954]/30"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-xs sm:text-sm font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
                 />
               </div>
             </div>
@@ -469,12 +469,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   placeholder="••••••••"
                   value={loginPassword}
                   onChange={e => setLoginPassword(e.target.value)}
-                  className="w-full pl-9 pr-9 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-xs sm:text-sm font-medium focus:outline-none focus:border-[#1DB954] focus:ring-1 focus:ring-[#1DB954]/30"
+                  className="w-full pl-9 pr-9 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-xs sm:text-sm font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
                 />
                 <button
                   type="button"
                   onClick={() => setShowLoginPassword(!showLoginPassword)}
-                  className="absolute right-3 top-3 text-slate-400 hover:text-[#1DB954] cursor-pointer"
+                  className="absolute right-3 top-3 text-slate-400 hover:text-sky-400 cursor-pointer"
                 >
                   {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -488,7 +488,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   type="checkbox"
                   checked={rememberMe}
                   onChange={e => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-700 text-[#1DB954] focus:ring-[#1DB954] accent-[#1DB954] cursor-pointer"
+                  className="w-4 h-4 rounded border-slate-700 text-[#38BDF8] focus:ring-[#006A4E] accent-[#006A4E] cursor-pointer"
                 />
                 <span className="font-medium">পাসওয়ার্ড সেভ রাখুন</span>
               </label>
@@ -496,7 +496,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="button"
                 onClick={() => { setMode('forgot'); setErrorMsg(''); setResetSuccess(false); }}
-                className="font-bold text-[#1DB954] hover:text-emerald-400 hover:underline cursor-pointer"
+                className="font-bold text-[#38BDF8] hover:text-sky-400 hover:underline cursor-pointer"
               >
                 পাসওয়ার্ড ভুলে গেছেন?
               </button>
@@ -505,7 +505,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             {/* Slim & Compact Login Button */}
             <button
               type="submit"
-              className="w-full py-2 sm:py-2.5 bg-[#1DB954] hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md shadow-[#1DB954]/20 transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 tracking-wide mt-1"
+              className="w-full py-2 sm:py-2.5 bg-[#006A4E] hover:bg-blue-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md shadow-blue-500/20 transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 tracking-wide mt-1"
             >
               <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.5]" />
               <span>লগইন করুন</span>
@@ -517,7 +517,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="button"
                 onClick={() => { setMode('signup'); setErrorMsg(''); }}
-                className="font-bold text-[#1DB954] hover:underline cursor-pointer ml-1"
+                className="font-bold text-[#38BDF8] hover:underline cursor-pointer ml-1"
               >
                 সাইনআপ করুন
               </button>
@@ -535,7 +535,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <span>🛡️ এডমিন হিসেবে ১-ক্লিকে লগইন করুন</span>
               </button>
               <p className="text-[10px] text-slate-500 text-center mt-1">
-                এডমিন ইমেইল: <code className="text-emerald-400 font-mono">admin@ptenit.com</code> (পাসওয়ার্ড: <code className="text-emerald-400 font-mono">123456</code>)
+                এডমিন ইমেইল: <code className="text-sky-400 font-mono">admin@ptenit.com</code> (পাসওয়ার্ড: <code className="text-sky-400 font-mono">123456</code>)
               </p>
             </div>
           </form>

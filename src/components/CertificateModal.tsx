@@ -37,7 +37,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
           <p className="text-xs text-slate-400">
             প্রদত্ত আইডি অনুযায়ী কোনো বৈধ সার্টিফিকেট পাওয়া যায়নি।
           </p>
-          <button onClick={onClose} className="px-6 py-2 bg-[#1DB954] text-white font-bold rounded-xl">
+          <button onClick={onClose} className="px-6 py-2 bg-[#006A4E] text-white font-bold rounded-xl">
             বন্ধ করুন
           </button>
         </div>
@@ -57,7 +57,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
         {/* Top Floating Controls */}
         <div className="flex justify-between items-center p-4 border-b border-slate-100 print:hidden">
           <div className="flex items-center gap-2">
-            <Award className="w-6 h-6 text-[#1DB954]" />
+            <Award className="w-6 h-6 text-[#38BDF8]" />
             <span className="font-bold font-heading text-slate-800 text-sm">
               PTENit Official Certificate
             </span>
@@ -65,7 +65,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrint}
-              className="px-4 py-2 bg-slate-900 hover:bg-[#1DB954] text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2 bg-slate-900 hover:bg-[#006A4E] text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <Printer className="w-4 h-4" />
               প্রিন্ট / ডাউনলোড PDF
@@ -80,7 +80,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
         </div>
 
         {/* PRINTABLE CERTIFICATE CARD */}
-        <div className="p-8 sm:p-12 border-8 border-double border-[#142B4D] rounded-2xl bg-gradient-to-br from-amber-50/40 via-white to-emerald-50/40 relative text-slate-900 text-center space-y-6">
+        <div className="p-8 sm:p-12 border-8 border-double border-[#142B4D] rounded-2xl bg-gradient-to-br from-amber-50/40 via-white to-blue-50/40 relative text-slate-900 text-center space-y-6">
           
           {/* Watermark Logo */}
           <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none font-black text-9xl text-[#142B4D] font-heading select-none">
@@ -90,11 +90,11 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
           {/* Certificate Header */}
           <div className="space-y-2">
             <div className="flex justify-center items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-[#142B4D] text-[#1DB954] flex items-center justify-center font-black text-2xl font-heading shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-[#142B4D] text-[#38BDF8] flex items-center justify-center font-black text-2xl font-heading shadow-md">
                 P
               </div>
               <span className="text-3xl font-black font-heading tracking-widest text-[#142B4D]">
-                PTEN<span className="text-[#1DB954]">it</span>
+                PTEN<span className="text-[#38BDF8]">it</span>
               </span>
             </div>
             <p className="text-[11px] uppercase tracking-widest font-bold text-slate-500 font-sans">
@@ -106,7 +106,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             <h2 className="text-2xl sm:text-4xl font-serif font-bold text-[#142B4D] uppercase tracking-wider">
               Certificate of Completion
             </h2>
-            <div className="w-32 h-1 bg-gradient-to-r from-transparent via-[#1DB954] to-transparent mx-auto mt-2" />
+            <div className="w-32 h-1 bg-gradient-to-r from-transparent via-[#4F46E5] to-transparent mx-auto mt-2" />
           </div>
 
           <p className="text-xs sm:text-sm text-slate-600 font-serif italic">
@@ -114,7 +114,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
           </p>
 
           <div className="py-1">
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-[#142B4D] font-bengali underline decoration-[#1DB954] underline-offset-8">
+            <h3 className="text-3xl sm:text-4xl font-extrabold text-[#142B4D] font-bengali underline decoration-[#006A4E] underline-offset-8">
               {cert.studentName}
             </h3>
           </div>
@@ -140,7 +140,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               <span className="text-[10px] font-mono text-slate-500 block font-bold">
                 ID: {cert.certificateCode}
               </span>
-              <span className="text-[9px] text-[#1DB954] font-semibold flex items-center gap-0.5">
+              <span className="text-[9px] text-[#38BDF8] font-semibold flex items-center gap-0.5">
                 <ShieldCheck className="w-3 h-3" /> VERIFIED
               </span>
             </div>

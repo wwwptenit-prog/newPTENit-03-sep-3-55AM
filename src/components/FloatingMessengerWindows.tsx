@@ -761,7 +761,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
     if (!n) return null;
     if (n.type === 'success' || n.category === 'payment' || (n.title && (n.title.includes('৳') || n.title.includes('ওয়ালেট')))) {
       return (
-        <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-[#1DB954] shrink-0 shadow-xs">
+        <div className="w-10 h-10 rounded-2xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-[#38BDF8] shrink-0 shadow-xs">
           <ShieldCheck className="w-5 h-5" />
         </div>
       );
@@ -823,10 +823,10 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
       {isOpen && (
         <div className="fixed inset-0 z-[9999] bg-white dark:bg-[#18222D] flex flex-col font-bengali animate-in fade-in zoom-in-95 duration-200">
           
-          {/* MOBILE VIEW TOPBAR (6 ICONS + ATTACHED SUB-HEADER IN #0B132B) */}
-          <div className="md:hidden bg-[#0B132B] text-white shrink-0 font-bengali z-50">
+          {/* MOBILE VIEW TOPBAR (6 ICONS + ATTACHED SUB-HEADER IN WHITE) */}
+          <div className="md:hidden bg-white text-slate-800 border-b border-slate-200 shrink-0 font-bengali z-50">
             {/* Top 6 Icons Navigation Bar */}
-            <div className="flex items-center justify-around py-2 px-2 border-b border-slate-800/80">
+            <div className="flex items-center justify-around py-2 px-2 border-b border-slate-100">
               {/* 1. Home (Respects Seller / Buyer Mode) */}
               <button
                 type="button"
@@ -844,10 +844,10 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                     }));
                   }
                 }}
-                className="flex-1 flex justify-center items-center py-1 transition relative active:scale-95 cursor-pointer text-white"
+                className="flex-1 flex justify-center items-center py-1 transition relative active:scale-95 cursor-pointer text-slate-700 hover:text-slate-900"
                 title={marketplaceMode === 'selling' ? "সেলার হোমে ফিরে যান" : "মার্কেটপ্লেস হোমে ফিরে যান"}
               >
-                <Home className="w-5 h-5 text-white" />
+                <Home className="w-5 h-5 text-slate-700" />
               </button>
               {/* 2. Order */}
               <button
@@ -856,10 +856,10 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                   handleCloseAll();
                   if (onNavigateTab) onNavigateTab('marketplace', 'my-orders');
                 }}
-                className="flex-1 flex justify-center items-center py-1 transition relative active:scale-95 cursor-pointer text-white"
+                className="flex-1 flex justify-center items-center py-1 transition relative active:scale-95 cursor-pointer text-slate-700 hover:text-slate-900"
                 title="আমার অর্ডারসমূহ"
               >
-                <ShoppingBag className="w-5 h-5 text-white" />
+                <ShoppingBag className="w-5 h-5 text-slate-700" />
               </button>
               {/* 3. Messenger */}
               <button
@@ -871,13 +871,13 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                   if (isNotificationCenterOpen) closeNotificationCenter();
                 }}
                 className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer ${
-                  activeTopTab === 'messages' ? 'text-[#1DB954]' : 'text-white hover:text-emerald-400'
+                  activeTopTab === 'messages' ? 'text-[#006A4E]' : 'text-slate-600 hover:text-slate-900'
                 }`}
                 title="মেসেঞ্জার ও ইনবক্স"
               >
-                <Mail className={`w-5 h-5 ${activeTopTab === 'messages' ? 'stroke-[2.5] text-[#1DB954]' : 'text-white'}`} />
+                <Mail className={`w-5 h-5 ${activeTopTab === 'messages' ? 'stroke-[2.5] text-[#006A4E]' : 'text-slate-700'}`} />
                 {conversationList.filter(c => (c.unreadCount || 0) > 0).length > 0 && (
-                  <span className="absolute -top-1 right-1.5 min-w-4 h-4 px-1 rounded-full bg-[#1DB954] text-white text-[9px] font-black flex items-center justify-center shadow-xs ring-1 ring-slate-900 leading-none">
+                  <span className="absolute -top-1 right-1.5 min-w-4 h-4 px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs ring-1 ring-white leading-none">
                     {conversationList.filter(c => (c.unreadCount || 0) > 0).length}
                   </span>
                 )}
@@ -892,13 +892,13 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                   setSelectedNotification(null);
                 }}
                 className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer ${
-                  activeTopTab === 'notifications' ? 'text-[#1DB954]' : 'text-white hover:text-emerald-400'
+                  activeTopTab === 'notifications' ? 'text-[#006A4E]' : 'text-slate-600 hover:text-slate-900'
                 }`}
                 title="নোটিফিকেশন সেন্টার"
               >
-                <Bell className={`w-5 h-5 ${activeTopTab === 'notifications' ? 'stroke-[2.5] text-[#1DB954]' : 'text-white'}`} />
+                <Bell className={`w-5 h-5 ${activeTopTab === 'notifications' ? 'stroke-[2.5] text-[#006A4E]' : 'text-slate-700'}`} />
                 {roleScopedNotifications.filter(n => !n.read).length > 0 && (
-                  <span className="absolute -top-1 right-1.5 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs ring-1 ring-slate-900 leading-none">
+                  <span className="absolute -top-1 right-1.5 min-w-4 h-4 px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs ring-1 ring-white leading-none">
                     {roleScopedNotifications.filter(n => !n.read).length}
                   </span>
                 )}
@@ -908,17 +908,17 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                 type="button"
                 onClick={toggleOfferSound}
                 className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer ${
-                  isOfferSoundEnabled ? 'text-[#1DB954]' : 'text-slate-400 hover:text-white'
+                  isOfferSoundEnabled ? 'text-[#006A4E]' : 'text-slate-400 hover:text-slate-700'
                 }`}
                 title={isOfferSoundEnabled ? "সাউন্ড চালু (মিউট করতে ক্লিক করুন)" : "সাউন্ড বন্ধ (চালু করতে ক্লিক করুন)"}
               >
                 {isOfferSoundEnabled ? (
-                  <Volume2 className="w-5 h-5 text-[#1DB954] stroke-[2.5]" />
+                  <Volume2 className="w-5 h-5 text-[#006A4E] stroke-[2.5]" />
                 ) : (
-                  <VolumeX className="w-5 h-5 text-slate-400 hover:text-white" />
+                  <VolumeX className="w-5 h-5 text-slate-400 hover:text-slate-700" />
                 )}
-                <span className={`absolute -top-1 right-1 min-w-[20px] h-[15px] px-1 rounded-full text-white text-[8px] font-black flex items-center justify-center shadow-xs ring-1 ring-slate-900 leading-none ${
-                  isOfferSoundEnabled ? 'bg-[#1DB954]' : 'bg-slate-600 text-slate-200'
+                <span className={`absolute -top-1 right-1 min-w-[20px] h-[15px] px-1 rounded-full text-white text-[8px] font-black flex items-center justify-center shadow-xs ring-1 ring-white leading-none ${
+                  isOfferSoundEnabled ? 'bg-[#006A4E]' : 'bg-slate-400 text-white'
                 }`}>
                   {isOfferSoundEnabled ? 'ON' : 'OFF'}
                 </span>
@@ -926,7 +926,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
             </div>
 
             {/* Sub-Header Attached Below 6 Icons */}
-            <div className="px-3 py-2 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs transition-colors">
+            <div className="px-3 py-2 border-b border-slate-200 bg-white text-slate-900 shadow-xs transition-colors">
               {selectedConversationId && currentActiveWin ? (
                 /* Active Chat Sub-Header: < [Avatar] Name Active now 📹 📞 */
                 <div className="flex items-center justify-between w-full animate-in fade-in duration-150 py-0.5">
@@ -940,33 +940,33 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                         setActiveCategoryFilter('all');
                         if (setActiveMessengerConversationId) setActiveMessengerConversationId(null);
                       }}
-                      className="p-1 -ml-1 rounded-lg text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer shrink-0"
+                      className="p-1 -ml-1 rounded-lg text-slate-700 hover:text-slate-950 hover:bg-slate-100 transition cursor-pointer shrink-0"
                       title="ইনবক্সে ফিরে যান"
                     >
-                      <ChevronLeft className="w-5 h-5 text-slate-700 dark:text-slate-200 stroke-[2.5]" />
+                      <ChevronLeft className="w-5 h-5 text-slate-700 stroke-[2.5]" />
                     </button>
-                    <div className="relative shrink-0 p-[2px] rounded-full bg-gradient-to-tr from-emerald-400 via-blue-500 to-cyan-400 shadow-xs">
+                    <div className="relative shrink-0 p-[2px] rounded-full bg-emerald-100 shadow-xs">
                       {currentActiveWin.senderRole === 'customer' || currentActiveWin.senderRole === 'buyer' ? (
-                        <div className="w-8 h-8 rounded-full bg-slate-800 text-emerald-400 flex items-center justify-center border border-[#0B132B]">
+                        <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center border border-slate-200">
                           <User className="w-4 h-4" />
                         </div>
                       ) : (
                         <img
                           src={currentActiveWin.senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
                           alt={currentActiveWin.senderName}
-                          className="w-8 h-8 rounded-full object-cover border border-[#0B132B]"
+                          className="w-8 h-8 rounded-full object-cover border border-slate-200"
                         />
                       )}
-                      <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#1DB954] border-2 border-[#0B132B]" />
+                      <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#006A4E] border-2 border-white" />
                     </div>
                     <div className="min-w-0 flex flex-col justify-center">
                       <div className="flex items-center gap-1">
-                        <h2 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white tracking-tight leading-tight truncate">
+                        <h2 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight leading-tight truncate">
                           {currentActiveWin.senderName}
                         </h2>
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#006A4E] fill-[#006A4E] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
                       </div>
-                      <p className="text-[10px] text-[#1DB954] font-bold leading-none mt-0.5 truncate">
+                      <p className="text-[10px] text-[#006A4E] font-bold leading-none mt-0.5 truncate">
                         Active now
                       </p>
                     </div>
@@ -1002,7 +1002,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="সেলার, বায়ার বা সার্ভিস খুঁজুন..."
                       autoFocus
-                      className="w-full pl-9 pr-8 py-1.5 bg-white text-slate-900 placeholder-slate-400 border border-slate-300 rounded-full text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#1DB954] focus:border-transparent shadow-xs"
+                      className="w-full pl-9 pr-8 py-1.5 bg-white text-slate-900 placeholder-slate-400 border border-slate-300 rounded-full text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#006A4E] focus:border-transparent shadow-xs"
                     />
                     <button
                       type="button"
@@ -1032,7 +1032,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                     <div>
                       <div className="flex items-center gap-1.5">
                         <h2 className="text-sm font-black text-slate-900 dark:text-white tracking-tight leading-none">Academy & Learning</h2>
-                        <span className="w-2 h-2 rounded-full bg-[#1DB954]" />
+                        <span className="w-2 h-2 rounded-full bg-[#006A4E]" />
                       </div>
                       <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 tracking-wide leading-tight mt-0.5 font-sans">
                         PTENit Enrolled Courses & Features
@@ -1060,7 +1060,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                       onClick={() => setSelectedNotification(null)}
                       className="flex items-center gap-1 text-slate-800 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white transition cursor-pointer active:scale-95 py-1 -ml-1"
                     >
-                      <ChevronLeft className="w-5 h-5 text-[#1DB954] stroke-[2.5]" />
+                      <ChevronLeft className="w-5 h-5 text-[#38BDF8] stroke-[2.5]" />
                       <span className="text-xs font-black">ফিরে যান</span>
                     </button>
 
@@ -1093,9 +1093,9 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                       <div>
                         <div className="flex items-center gap-1.5">
                           <h2 className="text-sm font-black text-slate-900 dark:text-white tracking-tight leading-none">Notifications</h2>
-                          <span className="w-2 h-2 rounded-full bg-[#1DB954]" />
+                          <span className="w-2 h-2 rounded-full bg-[#006A4E]" />
                           {roleScopedNotifications.filter(n => !n.read).length > 0 && (
-                            <span className="bg-[#1DB954] text-white text-[10px] font-black rounded-full px-1.5 py-0.2 shrink-0">
+                            <span className="bg-[#006A4E] text-white text-[10px] font-black rounded-full px-1.5 py-0.2 shrink-0">
                               {roleScopedNotifications.filter(n => !n.read).length}
                             </span>
                           )}
@@ -1142,7 +1142,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                     <div>
                       <div className="flex items-center gap-1.5">
                         <h2 className="text-sm font-black text-slate-900 dark:text-white tracking-tight leading-none">Messages</h2>
-                        <span className="w-2 h-2 rounded-full bg-[#1DB954]" />
+                        <span className="w-2 h-2 rounded-full bg-[#006A4E]" />
                       </div>
                       <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 tracking-wide leading-tight mt-0.5 font-sans">
                         PTENit Marketplace Inbox
@@ -1195,7 +1195,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                   <div>
                     <h1 className="text-lg sm:text-xl font-black text-slate-950 dark:text-white tracking-tight flex items-center gap-1.5">
                       <span>{activeTopTab === 'notifications' ? 'Notifications' : 'Messages'}</span>
-                      <span className="w-2 h-2 rounded-full bg-[#1DB954]" />
+                      <span className="w-2 h-2 rounded-full bg-[#006A4E]" />
                     </h1>
                     <p className="text-[10px] font-semibold text-slate-400/90 tracking-wide leading-tight mt-0.5 font-sans">
                       {activeTopTab === 'notifications' ? 'PTENit Marketplace Updates' : 'PTENit Marketplace Inbox'}
@@ -1277,7 +1277,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                           : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                       }`}
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                       অনলাইন ({defaultHistory.filter(h => h.isOnline).length})
                     </button>
                     <button
@@ -1310,7 +1310,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                           if (markAllConversationsRead) markAllConversationsRead(isSellerMode ? 'selling' : 'buying');
                           setReadConvoIds(new Set(conversationList.map(c => c.id)));
                         }}
-                        className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/40 transition cursor-pointer whitespace-nowrap flex items-center gap-1 shrink-0"
+                        className="px-3 py-1 rounded-full text-xs font-bold bg-blue-500/20 text-[#006A4E] dark:text-sky-400 hover:bg-blue-500/30 border border-blue-500/40 transition cursor-pointer whitespace-nowrap flex items-center gap-1 shrink-0"
                         title="সব মেসেজ পড়া হয়েছে চিহ্নিত করুন"
                       >
                         <CheckCheck className="w-3.5 h-3.5" />
@@ -1330,7 +1330,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                     <div className="grid grid-cols-3 gap-2 bg-slate-900/90 border border-slate-800 p-3 rounded-2xl text-center shadow-lg">
                       <div className="p-2 bg-slate-800/80 rounded-xl border border-slate-700/50">
                         <p className="text-[10px] text-slate-400 font-bold">এনরোল্ড কোর্স</p>
-                        <p className="text-base font-black text-[#1DB954] mt-0.5">৩ টি</p>
+                        <p className="text-base font-black text-[#38BDF8] mt-0.5">৩ টি</p>
                       </div>
                       <div className="p-2 bg-slate-800/80 rounded-xl border border-slate-700/50">
                         <p className="text-[10px] text-slate-400 font-bold">লার্নিং সময়</p>
@@ -1344,7 +1344,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
 
                     {/* Interactive Feature Modal Popup (when clicked) */}
                     {activeCourseFeatureModal && (
-                      <div className="p-4 rounded-2xl bg-slate-900 border-2 border-[#1DB954] shadow-2xl relative animate-in fade-in zoom-in duration-200">
+                      <div className="p-4 rounded-2xl bg-slate-900 border-2 border-blue-600/50 shadow-2xl relative animate-in fade-in zoom-in duration-200">
                         <button
                           type="button"
                           onClick={() => setActiveCourseFeatureModal(null)}
@@ -1352,7 +1352,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                         >
                           <X className="w-4 h-4" />
                         </button>
-                        <div className="flex items-center gap-2 mb-2 text-[#1DB954]">
+                        <div className="flex items-center gap-2 mb-2 text-[#38BDF8]">
                           <Sparkles className="w-4 h-4" />
                           <h4 className="text-xs font-black uppercase tracking-wider">{activeCourseFeatureModal.featureTitle}</h4>
                         </div>
@@ -1361,15 +1361,15 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                         {activeCourseFeatureModal.featureType === 'video' && (
                           <div className="space-y-3">
                             <div className="aspect-video w-full rounded-xl bg-slate-950 border border-slate-800 flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
-                              <div className="w-12 h-12 rounded-full bg-[#1DB954] text-white flex items-center justify-center shadow-lg mb-2">
+                              <div className="w-12 h-12 rounded-full bg-[#006A4E] text-white flex items-center justify-center shadow-lg mb-2">
                                 <Play className="w-6 h-6 fill-slate-950 ml-0.5" />
                               </div>
                               <p className="text-xs font-bold text-white">Lesson 17: Redux Toolkit State Management & RTK Query</p>
                               <p className="text-[10px] text-slate-400 mt-1">Duration: 42 Minutes • HD 1080p Stream</p>
                             </div>
                             <div className="flex items-center justify-between text-xs text-slate-300 pt-1">
-                              <span className="text-[11px] text-emerald-400 font-bold">✓ ১৬/২০ লেসন সম্পূর্ণ</span>
-                              <button onClick={() => alert('পরবর্তী ক্লাসে চলে যাওয়া হচ্ছে...')} className="px-3 py-1.5 bg-[#1DB954] text-white font-black rounded-lg text-xs hover:bg-emerald-400 transition cursor-pointer">
+                              <span className="text-[11px] text-sky-400 font-bold">✓ ১৬/২০ লেসন সম্পূর্ণ</span>
+                              <button onClick={() => alert('পরবর্তী ক্লাসে চলে যাওয়া হচ্ছে...')} className="px-3 py-1.5 bg-[#006A4E] text-white font-black rounded-lg text-xs hover:bg-sky-400 transition cursor-pointer">
                                 পরবর্তী লেসন →
                               </button>
                             </div>
@@ -1405,10 +1405,10 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                             </div>
                             <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <Globe className="w-4 h-4 text-[#1DB954]" />
+                                <Globe className="w-4 h-4 text-[#38BDF8]" />
                                 <span className="font-bold text-white text-[11px]">Official GitHub Repository</span>
                               </div>
-                              <a href="https://github.com" target="_blank" rel="noreferrer" className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold rounded-md text-[10px] cursor-pointer">
+                              <a href="https://github.com" target="_blank" rel="noreferrer" className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-sky-400 font-bold rounded-md text-[10px] cursor-pointer">
                                 গিটহাব লিংক ↗
                               </a>
                             </div>
@@ -1436,7 +1436,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                               <p className="font-semibold text-white mb-1.5">প্রশ্ন ১: RTK Query-তে `useQuery` হুক ব্যবহারের প্রধান সুবিধা কোনটি?</p>
                               <div className="space-y-1">
                                 <label className="flex items-center gap-2 p-1.5 bg-slate-800/80 rounded cursor-pointer hover:bg-slate-700">
-                                  <input type="radio" name="quiz" className="accent-[#1DB954]" defaultChecked />
+                                  <input type="radio" name="quiz" className="accent-[#006A4E]" defaultChecked />
                                   <span>অটোমেটিক ক্যাশিং ও রি-ফেচিং সুবিধা প্রদান করে</span>
                                 </label>
                                 <label className="flex items-center gap-2 p-1.5 bg-slate-800/80 rounded cursor-pointer hover:bg-slate-700">
@@ -1445,7 +1445,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                                 </label>
                               </div>
                             </div>
-                            <button onClick={() => alert('কুইজ উত্তর সাবমিট করা হয়েছে! স্কোর: ১০০%')} className="w-full py-2 bg-[#1DB954] hover:bg-emerald-400 text-white font-black text-xs rounded-xl cursor-pointer">
+                            <button onClick={() => alert('কুইজ উত্তর সাবমিট করা হয়েছে! স্কোর: ১০০%')} className="w-full py-2 bg-[#006A4E] hover:bg-sky-400 text-white font-black text-xs rounded-xl cursor-pointer">
                               উত্তর জমা দিন
                             </button>
                           </div>
@@ -1457,9 +1457,9 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                             <textarea
                               placeholder="আপনার সমস্যা বা প্রশ্ন বিস্তারিত লিখুন..."
                               rows={2}
-                              className="w-full p-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-1 focus:ring-[#1DB954]"
+                              className="w-full p-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:ring-1 focus:ring-[#006A4E]"
                             />
-                            <button onClick={() => alert('আপনার প্রশ্ন সফলভাবে সাবমিট হয়েছে। ইন্সট্রাকটর শীঘ্রই উত্তর দিবেন।')} className="w-full py-2 bg-[#1DB954] text-white font-black text-xs rounded-xl cursor-pointer">
+                            <button onClick={() => alert('আপনার প্রশ্ন সফলভাবে সাবমিট হয়েছে। ইন্সট্রাকটর শীঘ্রই উত্তর দিবেন।')} className="w-full py-2 bg-[#006A4E] text-white font-black text-xs rounded-xl cursor-pointer">
                               প্রশ্ন পাঠান
                             </button>
                           </div>
@@ -1470,7 +1470,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                     {/* Section Title */}
                     <div className="flex items-center justify-between pt-1">
                       <h3 className="text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                        <BookOpen className="w-4 h-4 text-[#1DB954]" />
+                        <BookOpen className="w-4 h-4 text-[#38BDF8]" />
                         <span>এনরোল্ড কোর্সসমূহ ও এনাবেল্ড ফিচারস</span>
                       </h3>
                       <span className="text-[10px] text-slate-400 font-bold">লাইফটাইম অ্যাক্সেস</span>
@@ -1515,7 +1515,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                           <div className="flex items-start justify-between gap-3">
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
-                                <span className="px-2 py-0.5 rounded-md bg-[#1DB954]/20 text-[#1DB954] text-[10px] font-black border border-[#1DB954]/30">
+                                <span className="px-2 py-0.5 rounded-md bg-[#006A4E]/20 text-[#38BDF8] text-[10px] font-black border border-blue-600/50/30">
                                   {course.badge}
                                 </span>
                                 <span className="text-[10px] text-slate-400 font-bold">
@@ -1535,7 +1535,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                           <div>
                             <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
                               <div
-                                className="bg-gradient-to-r from-[#1DB954] to-emerald-400 h-2 rounded-full transition-all duration-500"
+                                className="bg-gradient-to-r from-[#006A4E] to-sky-400 h-2 rounded-full transition-all duration-500"
                                 style={{ width: `${course.progress}%` }}
                               />
                             </div>
@@ -1552,9 +1552,9 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                                 featureType: 'video',
                                 featureTitle: '🎬 ক্লাস ভিডিও দেখা'
                               })}
-                              className="p-2 rounded-xl bg-slate-800/90 hover:bg-[#1DB954]/20 hover:text-[#1DB954] text-slate-200 border border-slate-700/60 transition cursor-pointer flex flex-col items-center justify-center text-center gap-1 active:scale-95"
+                              className="p-2 rounded-xl bg-slate-800/90 hover:bg-[#006A4E]/20 hover:text-sky-400 text-slate-200 border border-slate-700/60 transition cursor-pointer flex flex-col items-center justify-center text-center gap-1 active:scale-95"
                             >
-                              <Play className="w-4 h-4 text-[#1DB954]" />
+                              <Play className="w-4 h-4 text-[#38BDF8]" />
                               <span className="text-[10px] font-black leading-none">ক্লাস ভিডিও</span>
                             </button>
 
@@ -1623,7 +1623,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                     </div>
 
                     {/* Browse Marketplace Courses Banner */}
-                    <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/80 to-slate-900 border border-[#1DB954]/40 flex items-center justify-between">
+                    <div className="p-3.5 rounded-2xl bg-gradient-to-r from-slate-950/80 to-slate-900 border border-blue-600/50/40 flex items-center justify-between">
                       <div>
                         <h4 className="text-xs font-black text-white">নতুন কোর্স এক্সপ্লোর করুন</h4>
                         <p className="text-[10px] text-slate-300 mt-0.5">মার্কেটপ্লেসের ১০০+ প্রিমিয়াম টিউটোরিয়াল ও কোর্স</p>
@@ -1632,7 +1632,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                         onClick={() => {
                           handleCloseAll();
                         }}
-                        className="px-3 py-2 bg-[#1DB954] hover:bg-emerald-400 text-white font-black rounded-xl text-xs shrink-0 cursor-pointer transition shadow"
+                        className="px-3 py-2 bg-[#006A4E] hover:bg-sky-400 text-white font-black rounded-xl text-xs shrink-0 cursor-pointer transition shadow"
                       >
                         কোর্স ক্যাটালগ →
                       </button>
@@ -1686,7 +1686,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                                 setActiveTopTab('messages');
                                 setSelectedNotification(null);
                               }}
-                              className="flex-1 py-2.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs rounded-xl flex items-center justify-center gap-2 transition shadow-xs cursor-pointer active:scale-95"
+                              className="flex-1 py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl flex items-center justify-center gap-2 transition shadow-xs cursor-pointer active:scale-95"
                             >
                               <span>সরাসরি ইনবক্সে কথা বলুন</span>
                               <Mail className="w-4 h-4" />
@@ -1790,7 +1790,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                               <div className="relative shrink-0">
                                 {getNotificationTypeIcon(n)}
                                 {!n.read && (
-                                  <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#1DB954] rounded-full border-2 border-white dark:border-[#18222D] shadow-xs" />
+                                  <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#006A4E] rounded-full border-2 border-white dark:border-[#18222D] shadow-xs" />
                                 )}
                               </div>
 
@@ -1810,7 +1810,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                                     {n.message}
                                   </p>
                                   {!n.read && (
-                                    <span className="min-w-5 h-5 px-1.5 bg-[#1DB954] text-white text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-xs ring-2 ring-white dark:ring-slate-900">
+                                    <span className="min-w-5 h-5 px-1.5 bg-[#006A4E] text-white text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-xs ring-2 ring-white dark:ring-slate-900">
                                       নতুন
                                     </span>
                                   )}
@@ -1849,7 +1849,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                               className="w-12 h-12 rounded-full object-cover border border-slate-200 dark:border-slate-700"
                             />
                             {c.isOnline ? (
-                              <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white dark:border-[#18222D]" />
+                              <span className="absolute bottom-0 right-0 w-3 h-3 bg-blue-500 rounded-full border-2 border-white dark:border-[#18222D]" />
                             ) : (
                               c.onlineTimeAgo && (
                                 <span className="absolute -bottom-1 -right-1 bg-slate-900 text-white text-[8px] font-bold px-1 rounded-full border border-slate-700">
@@ -1895,7 +1895,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                                 {c.lastMessage}
                               </p>
                               {c.unreadCount ? (
-                                <span className="min-w-5 h-5 px-1.5 bg-[#1DB954] text-white text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-sm ring-2 ring-white dark:ring-slate-900">
+                                <span className="min-w-5 h-5 px-1.5 bg-[#006A4E] text-white text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-sm ring-2 ring-white dark:ring-slate-900">
                                   {c.unreadCount}
                                 </span>
                               ) : null}
@@ -2149,7 +2149,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                         {seller.name}
                       </h4>
                       {seller.badge && (
-                        <span className="text-[9px] font-bold px-1.5 py-0.2 bg-[#1DB954]/10 text-[#1DB954] rounded-full">
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 bg-[#006A4E]/10 text-[#38BDF8] rounded-full">
                           {seller.badge}
                         </span>
                       )}
@@ -2232,7 +2232,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                   }
                   setIsAiModalOpen(false);
                 }}
-                className="w-full text-left p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 hover:scale-[1.01] transition cursor-pointer font-medium"
+                className="w-full text-left p-3 rounded-xl bg-blue-50 dark:bg-slate-950/30 border border-blue-200 dark:border-blue-900 text-blue-950 dark:text-blue-200 hover:scale-[1.01] transition cursor-pointer font-medium"
               >
                 ⚡ <strong className="font-bold">কনফার্মেশন মেসেজ:</strong> "ধন্যবাদ! কাজ শুরু হয়েছে ও দ্রুত আপডেট দেওয়া হবে।"
               </button>
@@ -2251,7 +2251,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                 alt={activeCallState.callerName}
                 className="w-24 h-24 rounded-full object-cover border-4 border-[#0084FF] shadow-2xl mx-auto animate-pulse"
               />
-              <span className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-slate-950" />
+              <span className="absolute bottom-1 right-1 w-5 h-5 bg-blue-500 rounded-full border-2 border-slate-950" />
             </div>
 
             <div>
@@ -2331,6 +2331,13 @@ const SingleChatWindow: React.FC<SingleChatWindowProps> = ({
   onCreateMeet,
   onExpandFullScreen
 }) => {
+  const { marketplaceOrders } = useData();
+  const linkedOrder = marketplaceOrders?.find(o => 
+    (win.orderId && (o.id === win.orderId || o.id.endsWith(win.orderId))) ||
+    (win.senderName && (o.buyerName === win.senderName || o.sellerName === win.senderName))
+  );
+  const isOrderCompleted = linkedOrder?.status === 'completed';
+
   const [inputText, setInputText] = useState('');
   const [showEmojis, setShowEmojis] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -2362,7 +2369,7 @@ const SingleChatWindow: React.FC<SingleChatWindowProps> = ({
         <div className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer" onClick={onMinimize} title="মিনিমাইজ / ম্যাক্সিমাইজ করুন">
           <div className="relative shrink-0">
             {win.senderRole === 'customer' || win.senderRole === 'buyer' ? (
-              <div className="w-8 h-8 rounded-full bg-slate-800 text-emerald-400 flex items-center justify-center border-2 border-white/60 shadow-xs">
+              <div className="w-8 h-8 rounded-full bg-slate-800 text-sky-400 flex items-center justify-center border-2 border-white/60 shadow-xs">
                 <User className="w-4 h-4" />
               </div>
             ) : (
@@ -2372,7 +2379,7 @@ const SingleChatWindow: React.FC<SingleChatWindowProps> = ({
                 className="w-8 h-8 rounded-full object-cover border-2 border-white/60 shadow-xs"
               />
             )}
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-1.5 ring-white" />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-sky-400 rounded-full ring-1.5 ring-white" />
           </div>
           <div className="min-w-0 flex-1">
             <h4 className="text-xs sm:text-sm font-black truncate leading-tight flex items-center gap-1">
@@ -2426,12 +2433,12 @@ const SingleChatWindow: React.FC<SingleChatWindowProps> = ({
         <>
           {/* Order Info Bar (if linked to an order) */}
           {win.orderId && (
-            <div className="px-3 py-1.5 bg-emerald-50 dark:bg-emerald-950/40 border-b border-emerald-200 dark:border-emerald-800/60 flex items-center justify-between text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+            <div className="px-3 py-1.5 bg-blue-50 dark:bg-blue-950/40 border-b border-blue-200 dark:border-blue-900/60 flex items-center justify-between text-[11px] font-bold text-blue-900 dark:text-sky-300">
               <span className="flex items-center gap-1">
-                <ShoppingBag className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <ShoppingBag className="w-3.5 h-3.5 text-[#006A4E] dark:text-sky-400" />
                 <span>প্রজেক্ট অর্ডার #{win.orderId.slice(-6)} এর চ্যাট রুম</span>
               </span>
-              <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-[9px] font-black">
+              <span className="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-700 dark:text-sky-300 text-[9px] font-black">
                 লাইভ এস্ক্রো
               </span>
             </div>
@@ -2495,61 +2502,73 @@ const SingleChatWindow: React.FC<SingleChatWindowProps> = ({
             </div>
           )}
 
-          {/* Footer Input Form */}
-          <form onSubmit={handleSend} className="p-2 border-t border-slate-200 dark:border-slate-700 flex items-center gap-1.5 bg-white dark:bg-[#1C2733]">
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              className="hidden"
-            />
+          {/* Footer Input Form or Completed Notice */}
+          {isOrderCompleted ? (
+            <div className="p-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs text-center font-bengali border-t border-slate-200 dark:border-slate-700 space-y-1">
+              <p className="font-semibold text-slate-900 dark:text-white flex items-center justify-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>প্রজেক্ট সম্পন্ন হওয়ায় মেসেজ পাঠানো বন্ধ রয়েছে</span>
+              </p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                নতুন কাজের প্রয়োজনে অনুগ্রহ করে নতুন অর্ডার করুন।
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSend} className="p-2 border-t border-slate-200 dark:border-slate-700 flex items-center gap-1.5 bg-white dark:bg-[#1C2733]">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+              />
 
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="p-1.5 text-slate-500 dark:text-slate-300 hover:text-[#0084FF] hover:bg-blue-50 dark:hover:bg-slate-800 rounded-full transition cursor-pointer shrink-0"
-              title="ফাইল বা ছবি সংযুক্ত করুন"
-            >
-              <Paperclip className="w-4 h-4" />
-            </button>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="p-1.5 text-slate-500 dark:text-slate-300 hover:text-[#0084FF] hover:bg-blue-50 dark:hover:bg-slate-800 rounded-full transition cursor-pointer shrink-0"
+                title="ফাইল বা ছবি সংযুক্ত করুন"
+              >
+                <Paperclip className="w-4 h-4" />
+              </button>
 
-            <button
-              type="button"
-              onClick={() => setShowEmojis(!showEmojis)}
-              className="p-1.5 text-slate-500 dark:text-slate-300 hover:text-[#0084FF] hover:bg-blue-50 dark:hover:bg-slate-800 rounded-full transition cursor-pointer shrink-0"
-              title="ইমোজি"
-            >
-              <Smile className="w-4 h-4" />
-            </button>
+              <button
+                type="button"
+                onClick={() => setShowEmojis(!showEmojis)}
+                className="p-1.5 text-slate-500 dark:text-slate-300 hover:text-[#0084FF] hover:bg-blue-50 dark:hover:bg-slate-800 rounded-full transition cursor-pointer shrink-0"
+                title="ইমোজি"
+              >
+                <Smile className="w-4 h-4" />
+              </button>
 
-            <input
-              type="text"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSend();
-                }
-              }}
-              placeholder="মেসেজ লিখুন..."
-              className="flex-1 px-3 py-2 text-xs bg-slate-100 dark:bg-slate-800 rounded-full text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0084FF]"
-            />
+              <input
+                type="text"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                }}
+                placeholder="মেসেজ লিখুন..."
+                className="flex-1 px-3 py-2 text-xs bg-slate-100 dark:bg-slate-800 rounded-full text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0084FF]"
+              />
 
-            <button
-              type="submit"
-              onClick={handleSend}
-              disabled={!inputText.trim()}
-              className={`p-2 rounded-full transition cursor-pointer shadow-xs active:scale-95 flex items-center justify-center shrink-0 ${
-                inputText.trim()
-                  ? 'bg-[#0084FF] hover:bg-[#0073e6] text-white'
-                  : 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed'
-              }`}
-              title="মেসেজ পাঠান"
-            >
-              <Send className="w-4 h-4" />
-            </button>
-          </form>
+              <button
+                type="submit"
+                onClick={handleSend}
+                disabled={!inputText.trim()}
+                className={`p-2 rounded-full transition cursor-pointer shadow-xs active:scale-95 flex items-center justify-center shrink-0 ${
+                  inputText.trim()
+                    ? 'bg-[#0084FF] hover:bg-[#0073e6] text-white'
+                    : 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed'
+                }`}
+                title="মেসেজ পাঠান"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </form>
+          )}
         </>
       )}
     </div>
@@ -2649,13 +2668,13 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
           </button>
 
           {/* Seller Avatar */}
-          <div className="relative shrink-0 p-[2px] rounded-full bg-gradient-to-tr from-emerald-400 via-blue-500 to-cyan-400 shadow-xs">
+          <div className="relative shrink-0 p-[2px] rounded-full bg-gradient-to-tr from-sky-400 via-blue-500 to-cyan-400 shadow-xs">
             <img
               src={win.senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
               alt={win.senderName}
               className="w-10 h-10 rounded-full object-cover border border-white dark:border-[#1C2733]"
             />
-            <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white dark:border-[#1C2733]" />
+            <span className="absolute bottom-0 right-0 w-3 h-3 bg-blue-500 rounded-full border-2 border-white dark:border-[#1C2733]" />
           </div>
 
           {/* Seller Info */}
@@ -2664,8 +2683,8 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
               <span className="truncate">{win.senderName}</span>
               <CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
             </h3>
-            <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            <p className="text-[10px] font-bold text-[#006A4E] dark:text-sky-400 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shrink-0" />
               <span className="truncate">অনলাইনে আছেন</span>
             </p>
           </div>
@@ -2677,7 +2696,7 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
           <button
             type="button"
             onClick={() => setIsOfferModalOpen(true)}
-            className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-xs font-black hover:bg-emerald-500/20 transition cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-blue-500/10 text-[#006A4E] dark:text-sky-400 border border-blue-500/30 text-xs font-black hover:bg-blue-500/20 transition cursor-pointer"
             title="কাস্টম অফার পাঠান"
           >
             <Briefcase className="w-3.5 h-3.5" />
@@ -2726,8 +2745,8 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
               <span>4.9</span>
             </span>
           </div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800/60 rounded-full text-emerald-700 dark:text-emerald-300 text-[11px] font-bold">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 dark:bg-blue-950/40 border border-sky-300 dark:border-blue-900/60 rounded-full text-blue-700 dark:text-sky-300 text-[11px] font-bold">
+            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
             <span>এন্ড-টু-এন্ড এনক্রিপ্টেড ও ১০০% নিরাপদ পেমেন্ট হিস্ট্রি</span>
           </div>
         </div>
@@ -2739,7 +2758,7 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
           >
             {!m.isSelf && (
               win.senderRole === 'customer' || win.senderRole === 'buyer' ? (
-                <div className="w-7 h-7 rounded-full bg-slate-800 text-emerald-400 flex items-center justify-center shrink-0 mb-1 border border-slate-700">
+                <div className="w-7 h-7 rounded-full bg-slate-800 text-sky-400 flex items-center justify-center shrink-0 mb-1 border border-slate-700">
                   <User className="w-3.5 h-3.5" />
                 </div>
               ) : (
@@ -2760,37 +2779,37 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
                 }`}
               >
                 {m.text.includes('💼') || m.text.includes('অফার') || m.text.includes('অর্ডার') ? (
-                  <div className="my-1 p-3.5 bg-gradient-to-br from-slate-900 via-slate-900 to-[#0B132B] text-white rounded-2xl border border-emerald-500/40 shadow-xl space-y-3 font-bengali">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                  <div className="my-1 p-3.5 bg-white text-slate-900 rounded-2xl border border-slate-200 shadow-md space-y-3 font-bengali">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                       <div className="flex items-center gap-2">
-                        <span className="p-1.5 rounded-xl bg-emerald-500/20 text-emerald-400">
+                        <span className="p-1.5 rounded-xl bg-emerald-100 text-[#006A4E]">
                           <Briefcase className="w-4 h-4" />
                         </span>
                         <div>
-                          <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 block">
+                          <span className="text-[10px] font-black uppercase tracking-wider text-[#006A4E] block">
                             ডাইরেক্ট প্রজেক্ট অর্ডার কার্ড
                           </span>
-                          <span className="text-xs font-bold text-slate-200">
+                          <span className="text-xs font-bold text-slate-800">
                             {win.senderName}-এর জন্য ব্যক্তিগত প্রস্তাব
                           </span>
                         </div>
                       </div>
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-black border border-emerald-500/30">
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-[#006A4E] text-[10px] font-black border border-emerald-200">
                         অপেক্ষমাণ (Pending)
                       </span>
                     </div>
 
-                    <div className="text-xs space-y-1 text-slate-200">
+                    <div className="text-xs space-y-1 text-slate-700">
                       <p className="whitespace-pre-wrap font-medium">{m.text}</p>
                     </div>
 
-                    <div className="pt-2 border-t border-slate-800 flex items-center gap-2">
+                    <div className="pt-2 border-t border-slate-100 flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => {
                           alert('অভিনন্দন! ডাইরেক্ট প্রজেক্ট অর্ডার কনফার্ম করা হয়েছে এবং এস্ক্রো গেটওয়েতে ফান্ড সিকিউরড করা হয়েছে।');
                         }}
-                        className="w-full py-2 px-3 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-md cursor-pointer transition active:scale-95"
+                        className="w-full py-2 px-3 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-xs cursor-pointer transition active:scale-95"
                       >
                         <ShoppingBag className="w-4 h-4" />
                         <span>অর্ডার একসেপ্ট ও সিকিউরড পেমেন্ট</span>
@@ -2802,16 +2821,16 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
                 )}
 
                 {m.meetLink && (
-                  <div className="mt-2.5 p-3 bg-slate-900 text-white border border-[#0084FF]/60 rounded-2xl space-y-2">
-                    <div className="flex items-center gap-2 text-xs font-bold text-sky-400">
-                      <Video className="w-4 h-4 text-sky-400 animate-pulse" />
+                  <div className="mt-2.5 p-3 bg-emerald-50 text-slate-900 border border-emerald-200 rounded-2xl space-y-2">
+                    <div className="flex items-center gap-2 text-xs font-bold text-[#006A4E]">
+                      <Video className="w-4 h-4 text-[#006A4E] animate-pulse" />
                       <span>Google Meet ভিডিও মিটিং রুম তৈরি হয়েছে</span>
                     </div>
                     <a
                       href={m.meetLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full py-2 px-3 bg-[#0084FF] hover:bg-[#0073e6] text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-xs cursor-pointer transition"
+                      className="w-full py-2 px-3 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-xs cursor-pointer transition"
                     >
                       <span>🚀 মিটিংয়ে যুক্ত হন</span>
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -2868,7 +2887,7 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
           <button
             type="button"
             onClick={() => setIsOfferModalOpen(true)}
-            className="p-1.5 sm:p-2 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-full transition cursor-pointer shrink-0 active:scale-95"
+            className="p-1.5 sm:p-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-slate-950/40 rounded-full transition cursor-pointer shrink-0 active:scale-95"
             title="নতুন ডাইরেক্ট প্রজেক্ট অর্ডার পাঠান"
           >
             <ShoppingBag className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
@@ -2936,7 +2955,7 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
             className="bg-white dark:bg-[#1C2733] border border-slate-200 dark:border-slate-700 w-full max-w-sm rounded-2xl shadow-2xl p-4 sm:p-5 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
-                <Briefcase className="w-5 h-5 text-emerald-500" />
+                <Briefcase className="w-5 h-5 text-blue-500" />
                 <span>কাস্টম প্রজেক্ট অফার পাঠান</span>
               </h3>
               <button
@@ -2957,7 +2976,7 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
                   type="text"
                   value={offerTitle}
                   onChange={(e) => setOfferTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006A4E]"
                   placeholder="যেমন: ফুল স্ট্যাক ওয়েবসাইট ডেভেলপমেন্ট"
                 />
               </div>
@@ -2971,7 +2990,7 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
                     type="number"
                     value={offerPrice}
                     onChange={(e) => setOfferPrice(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006A4E]"
                     placeholder="৫০০০"
                   />
                 </div>
@@ -2983,7 +3002,7 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
                     type="text"
                     value={offerDelivery}
                     onChange={(e) => setOfferDelivery(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006A4E]"
                     placeholder="৩ দিন"
                   />
                 </div>
@@ -3001,7 +3020,7 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
               <button
                 type="button"
                 onClick={handleSendCustomOffer}
-                className="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black shadow-md transition cursor-pointer"
+                className="flex-1 py-2 rounded-xl bg-[#047857] hover:bg-blue-500 text-white text-xs font-black shadow-md transition cursor-pointer"
               >
                 অফার পাঠান
               </button>

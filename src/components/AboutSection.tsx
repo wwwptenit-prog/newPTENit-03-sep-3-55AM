@@ -44,7 +44,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onBack }) => {
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold text-xs transition cursor-pointer shadow-xs"
                 title={t('পূর্ববর্তী স্থানে ফিরে যান', 'Go back to previous page')}
               >
-                <ArrowLeft className="w-4 h-4 text-[#1DB954]" />
+                <ArrowLeft className="w-4 h-4 text-[#38BDF8]" />
                 <span>{t('ফিরে যান', 'Back')}</span>
               </button>
             </div>
@@ -63,7 +63,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onBack }) => {
         {/* Mission & Vision Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           <div className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-[#1DB954]/20 text-[#1DB954] flex items-center justify-center font-bold">
+            <div className="w-12 h-12 rounded-2xl bg-[#006A4E]/20 text-[#38BDF8] flex items-center justify-center font-bold">
               <Target className="w-6 h-6" />
             </div>
             <h3 className="text-xl sm:text-2xl font-bold font-heading text-slate-900 dark:text-white font-bengali">
@@ -106,15 +106,15 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onBack }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
             {teamMembers.map((m, idx) => (
-              <div key={idx} className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 text-center space-y-3 shadow-sm hover:border-[#1DB954] transition-all">
+              <div key={idx} className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 text-center space-y-3 shadow-sm hover:border-blue-600/50 transition-all">
                 <img
                   src={m.image}
                   alt={m.name}
-                  className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-[#1DB954] shadow-md"
+                  className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-blue-600/50 shadow-md"
                 />
                 <div>
                   <h3 className="font-bold text-lg font-heading text-slate-900 dark:text-white">{m.name}</h3>
-                  <span className="text-xs text-[#1DB954] font-bold block">{m.role}</span>
+                  <span className="text-xs text-[#38BDF8] font-bold block">{m.role}</span>
                 </div>
                 <p className="text-xs text-slate-500 font-bengali leading-relaxed">{m.bio}</p>
               </div>

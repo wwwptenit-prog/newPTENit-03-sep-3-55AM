@@ -361,7 +361,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
           <div className="flex items-center gap-1.5 shrink-0">
             <span className="text-xs text-slate-400 font-normal">ক্যাটাগরি:</span>
             <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-amber-300 border border-slate-700 flex items-center gap-1.5">
-              {currentTab === 'teacher_seller' && <><GraduationCap className="w-3.5 h-3.5 text-emerald-400" /> টিচার ও সেলার ({teacherSellers.length})</>}
+              {currentTab === 'teacher_seller' && <><GraduationCap className="w-3.5 h-3.5 text-sky-400" /> টিচার ও সেলার ({teacherSellers.length})</>}
               {currentTab === 'just_seller' && <><Briefcase className="w-3.5 h-3.5 text-purple-400" /> যাস্ট সেলার ({justSellers.length})</>}
               {currentTab === 'trainees' && <><BookOpen className="w-3.5 h-3.5 text-sky-400" /> প্রশিক্ষণার্থী ({trainees.length})</>}
               {currentTab === 'buyers' && <><ShoppingBag className="w-3.5 h-3.5 text-blue-400" /> বায়ার ({buyers.length})</>}
@@ -434,7 +434,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
             <button
               type="button"
               onClick={handleBulkUnrestrict}
-              className="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-medium flex items-center gap-1.5 transition cursor-pointer"
+              className="px-3 py-1.5 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-sky-300 border border-blue-500/40 text-xs font-medium flex items-center gap-1.5 transition cursor-pointer"
             >
               <Unlock className="w-3.5 h-3.5" />
               <span>সক্রিয় করুন</span>
@@ -551,7 +551,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                           : isPending
                           ? 'border-amber-400'
                           : isTeacher
-                          ? 'border-emerald-400'
+                          ? 'border-sky-400'
                           : 'border-purple-400'
                       }`}
                     />
@@ -561,7 +561,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                           {user.name}
                         </h3>
                         {isTeacher && (
-                          <span className="px-2 py-0.2 rounded-md text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                          <span className="px-2 py-0.2 rounded-md text-[9px] font-black bg-blue-500/20 text-sky-300 border border-blue-500/40">
                             টিচার
                           </span>
                         )}
@@ -610,8 +610,8 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                         <span>অপেক্ষমান আবেদন</span>
                       </span>
                     ) : (
-                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3 text-emerald-400" />
+                      <span className="px-2.5 py-1 rounded-xl text-[10px] font-black bg-blue-500/20 text-sky-300 border border-blue-500/40 flex items-center gap-1">
+                        <CheckCircle className="w-3 h-3 text-sky-400" />
                         <span>সক্রিয় (Active)</span>
                       </span>
                     )}
@@ -670,7 +670,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                           href={user.mentorApplication.portfolioUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-emerald-400 underline inline-flex items-center gap-1"
+                          className="text-sky-400 underline inline-flex items-center gap-1"
                         >
                           {user.mentorApplication.portfolioUrl} <ExternalLink className="w-3 h-3" />
                         </a>
@@ -683,8 +683,8 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                 <div className="flex items-center gap-3 pt-1 text-[11px] text-slate-400 border-t border-slate-800/60 flex-wrap">
                   {isTeacher && (
                     <span className="flex items-center gap-1 text-slate-300 font-medium">
-                      <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
-                      পরিচালিত কোর্স: <strong className="text-emerald-400 font-mono">{userCoursesCount}</strong>
+                      <BookOpen className="w-3.5 h-3.5 text-sky-400" />
+                      পরিচালিত কোর্স: <strong className="text-sky-400 font-mono">{userCoursesCount}</strong>
                     </span>
                   )}
                   {isSeller && (
@@ -709,7 +709,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                           playAppSound('success');
                           alert(`${user.name}-কে সফলভাবে টিচার ও মেন্টর হিসেবে অনুমোদন প্রদান করা হয়েছে!`);
                         }}
-                        className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md cursor-pointer transition flex items-center gap-1 active:scale-95"
+                        className="px-3 py-1.5 rounded-xl bg-[#047857] hover:bg-blue-500 text-white font-bold text-xs shadow-md cursor-pointer transition flex items-center gap-1 active:scale-95"
                       >
                         <CheckCircle className="w-3.5 h-3.5" />
                         <span>গ্রহণ ও অনুমোদন</span>
@@ -753,7 +753,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                       {isBlocked ? (
                         <button
                           onClick={() => handleUnrestrict(user)}
-                          className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow cursor-pointer transition flex items-center gap-1 active:scale-95"
+                          className="px-3 py-1.5 rounded-xl bg-[#047857] hover:bg-blue-500 text-white font-black text-xs shadow cursor-pointer transition flex items-center gap-1 active:scale-95"
                         >
                           <Unlock className="w-3.5 h-3.5" />
                           <span>আনরেস্ট্রিক্ট করুন</span>

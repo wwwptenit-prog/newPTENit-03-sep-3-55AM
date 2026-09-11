@@ -155,7 +155,7 @@ const AdminLoginGate: React.FC<AdminLoginGateProps> = ({ onLogin, onGoHome }) =>
         {/* 1-Click Fast Login */}
         <button
           onClick={handleQuickLogin}
-          className="w-full py-3.5 px-4 rounded-2xl bg-[#1DB954] hover:bg-emerald-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#1DB954]/25 transition cursor-pointer active:scale-95"
+          className="w-full py-3.5 px-4 rounded-2xl bg-[#006A4E] hover:bg-blue-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition cursor-pointer active:scale-95"
         >
           <ShieldCheck className="w-4 h-4" />
           <span>১-ক্লিকে এডমিন লগইন করুন (Quick Login)</span>
@@ -175,7 +175,7 @@ const AdminLoginGate: React.FC<AdminLoginGateProps> = ({ onLogin, onGoHome }) =>
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@ptenit.com"
-              className="w-full px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#1DB954]"
+              className="w-full px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#006A4E]"
             />
           </div>
           <div>
@@ -185,7 +185,7 @@ const AdminLoginGate: React.FC<AdminLoginGateProps> = ({ onLogin, onGoHome }) =>
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#1DB954]"
+              className="w-full px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#006A4E]"
             />
           </div>
           <button
@@ -198,8 +198,8 @@ const AdminLoginGate: React.FC<AdminLoginGateProps> = ({ onLogin, onGoHome }) =>
 
         <div className="p-3 bg-slate-800/40 rounded-xl border border-slate-800 text-[11px] text-slate-400 space-y-1">
           <p className="font-bold text-slate-300">ডিফল্ট এডমিন তথ্য:</p>
-          <p>ইমেইল: <code className="text-emerald-400 font-mono">admin@ptenit.com</code> (বা <code className="text-emerald-400 font-mono">admin</code>)</p>
-          <p>পাসওয়ার্ড: <code className="text-emerald-400 font-mono">123456</code></p>
+          <p>ইমেইল: <code className="text-sky-400 font-mono">admin@ptenit.com</code> (বা <code className="text-sky-400 font-mono">admin</code>)</p>
+          <p>পাসওয়ার্ড: <code className="text-sky-400 font-mono">123456</code></p>
         </div>
 
         {/* RBAC Team Member Quick Test Login */}
@@ -223,7 +223,7 @@ const AdminLoginGate: React.FC<AdminLoginGateProps> = ({ onLogin, onGoHome }) =>
               className="p-2 rounded-xl bg-slate-800/90 hover:bg-slate-750 text-slate-200 text-left text-[10px] font-bold border border-slate-700/60 transition flex flex-col cursor-pointer"
             >
               <span className="text-white">💰 শফিকুল (ফাইন্যান্স)</span>
-              <span className="text-[9px] text-emerald-400 font-normal">পেমেন্ট বিল ভেরিফাই & লেজার</span>
+              <span className="text-[9px] text-sky-400 font-normal">পেমেন্ট বিল ভেরিফাই & লেজার</span>
             </button>
             <button
               type="button"
@@ -1747,8 +1747,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <h1 className="text-sm font-black text-white tracking-wide">PTENit এডমিন সেন্টার</h1>
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" title="সিস্টেম অনলাইন" />
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-mono font-bold border border-emerald-500/20">
+                <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" title="সিস্টেম অনলাইন" />
+                <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-sky-400 text-[10px] font-mono font-bold border border-blue-500/20">
                   {currentUser.email}
                 </span>
               </div>
@@ -1787,7 +1787,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-700 text-slate-200 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
               title="ভাষা পরিবর্তন"
             >
-              <Globe className="w-3.5 h-3.5 text-emerald-400" />
+              <Globe className="w-3.5 h-3.5 text-sky-400" />
               <span>{lang === 'bn' ? 'ENG' : 'বাং'}</span>
             </button>
 
@@ -1807,7 +1807,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 className="p-1.5 bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-700 text-slate-300 hover:text-white transition cursor-pointer relative"
                 title="নোটিফিকেশন"
               >
-                <Bell className="w-4 h-4 text-[#1DB954]" />
+                <Bell className="w-4 h-4 text-[#38BDF8]" />
                 {notifications.filter(n => !n.read).length > 0 && (
                   <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-0.5 bg-rose-600 text-white font-black text-[9px] rounded-full flex items-center justify-center shadow">
                     {notifications.filter(n => !n.read).length}
@@ -1819,12 +1819,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 z-50 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden font-bengali">
                   <div className="px-3.5 py-2.5 bg-slate-800/90 border-b border-slate-800 flex items-center justify-between">
                     <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                      <Bell className="w-3.5 h-3.5 text-emerald-400" />
+                      <Bell className="w-3.5 h-3.5 text-sky-400" />
                       <span>নোটিফিকেশন সেন্টার</span>
                     </h4>
                     <div className="flex items-center gap-1.5">
                       {notifications.filter(n => !n.read).length > 0 && (
-                        <button onClick={markAllNotificationsRead} className="text-[10px] text-emerald-400 hover:underline font-bold">
+                        <button onClick={markAllNotificationsRead} className="text-[10px] text-sky-400 hover:underline font-bold">
                           সব পঠিত ✓
                         </button>
                       )}
@@ -1840,7 +1840,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                           key={n.id}
                           onClick={() => markNotificationRead(n.id)}
                           className={`p-2.5 rounded-xl text-xs cursor-pointer transition ${
-                            n.read ? 'bg-slate-800/40 text-slate-400' : 'bg-slate-800 text-white border border-emerald-500/20'
+                            n.read ? 'bg-slate-800/40 text-slate-400' : 'bg-slate-800 text-white border border-blue-500/20'
                           }`}
                         >
                           <p className="font-bold text-[11px] truncate">{n.title}</p>
@@ -1875,7 +1875,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               </div>
             ) : (
               <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
                 <span className="text-[11px] text-amber-300 font-bold">
                   {(currentUser as any).staffMember.name} ({(currentUser as any).staffMember.department})
                 </span>
@@ -1908,7 +1908,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               <div className="min-w-0">
                 <div className="flex items-center gap-1">
                   <h1 className="text-[11px] font-black text-white truncate">PTENit</h1>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse shrink-0" />
                   <span className="text-[10px] font-bold text-amber-400 px-1 py-0.2 bg-amber-500/10 rounded border border-amber-500/20 truncate">
                     {activeMainModule === 'dashboard' ? 'ড্যাশবোর্ড' :
                      activeMainModule === 'academy' ? 'একাডেমি' :
@@ -1938,7 +1938,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
 
               <button
                 onClick={() => setAdminNotifOpen(!adminNotifOpen)}
-                className="p-1 bg-slate-900 rounded-lg text-[#1DB954] border border-slate-800 cursor-pointer relative"
+                className="p-1 bg-slate-900 rounded-lg text-[#38BDF8] border border-slate-800 cursor-pointer relative"
               >
                 <Bell className="w-3.5 h-3.5" />
                 {notifications.filter(n => !n.read).length > 0 && (
@@ -2156,7 +2156,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
 
               <div className="pt-2.5 border-t border-slate-800 space-y-2">
                 <div className="text-[10px] text-slate-400 truncate">
-                  এডমিন: <span className="text-emerald-400 font-mono">{currentUser.email}</span>
+                  এডমিন: <span className="text-sky-400 font-mono">{currentUser.email}</span>
                 </div>
                 <button
                   onClick={() => {
@@ -2192,7 +2192,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     <p className="text-[10px] text-slate-400">নেভিগেশন প্যানেল</p>
                   </div>
                 </div>
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
               </div>
 
               {/* Enterprise Main Modules */}
@@ -2337,9 +2337,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
 
             {/* Toast Notification */}
             {newPageSuccessMsg && (
-              <div className="bg-emerald-500/20 border border-emerald-500/40 text-[#1DB954] p-3 rounded-xl text-xs font-bold flex items-center justify-between shadow animate-fade-in font-bengali">
+              <div className="bg-blue-500/20 border border-blue-500/40 text-[#38BDF8] p-3 rounded-xl text-xs font-bold flex items-center justify-between shadow animate-fade-in font-bengali">
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-[#1DB954]" />
+                  <CheckCircle className="w-4 h-4 text-[#38BDF8]" />
                   <span>{newPageSuccessMsg}</span>
                 </div>
                 <button onClick={() => setNewPageSuccessMsg('')} className="text-slate-400 hover:text-white">✕</button>
@@ -2356,7 +2356,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
 
               if (activeMainModule === 'academy') {
                 categoryTitle = '🎓 একাডেমি:';
-                categoryColor = 'text-[#1DB954]';
+                categoryColor = 'text-[#38BDF8]';
                 subTabs = [
                   { id: 'courses', label: 'কোর্সসমূহ', icon: BookOpen },
                   { id: 'teachers', label: 'টিচারস', icon: Users, badge: payouts.filter(p => p.status === 'Pending').length }
@@ -2401,7 +2401,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               } else if (activeMainModule === 'users') {
                 const pendingCount = users.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication?.status === 'pending').length;
                 categoryTitle = '👥 ইউজার হাব:';
-                categoryColor = 'text-emerald-400';
+                categoryColor = 'text-sky-400';
                 subTabs = [
                   { id: 'users_teacher_seller', label: 'টিচার ও সেলার', icon: GraduationCap },
                   { id: 'users_just_seller', label: 'যাস্ট সেলার', icon: ShoppingBag },
@@ -2411,7 +2411,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 ];
               } else if (activeMainModule === 'ai_core') {
                 categoryTitle = '💳 ফাইন্যান্সিয়াল ও পেমেন্ট কোর:';
-                categoryColor = 'text-emerald-400';
+                categoryColor = 'text-sky-400';
                 subTabs = [
                   { id: 'ai_core', label: 'সকল পেমেন্ট লেজার, ভাউচার ও বিল ভেরিফাই', icon: CreditCard, badge: companyBills.filter(b => b.status === 'pending').length + payouts.filter(p => p.status === 'Pending').length }
                 ];
@@ -2610,7 +2610,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-slate-900 border border-slate-800 p-3.5 sm:p-4 rounded-2xl shadow">
                   <div className="space-y-0.5">
                     <h2 className="text-sm sm:text-base font-black text-white flex items-center gap-2">
-                      <LayoutDashboard className="w-4 h-4 text-[#1DB954]" /> ওভারভিউ ও লাইভ স্ট্যাটিস্টিক্স
+                      <LayoutDashboard className="w-4 h-4 text-[#38BDF8]" /> ওভারভিউ ও লাইভ স্ট্যাটিস্টিক্স
                     </h2>
                     <p className="text-[11px] text-slate-400">
                       কোর্স, স্টুডেন্ট, সার্ভিস ও আয়ের সার্বিক সারসংক্ষেপ
@@ -2620,7 +2620,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <div className="flex items-center gap-2 shrink-0">
                     <button
                       onClick={() => setActiveAdminTab('billing_verify')}
-                      className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl shadow transition cursor-pointer flex items-center gap-1"
+                      className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-extrabold text-xs rounded-xl shadow transition cursor-pointer flex items-center gap-1"
                     >
                       <CreditCard className="w-3.5 h-3.5" />
                       <span>পেমেন্ট ভেরিফাই</span>
@@ -2631,16 +2631,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 {/* Metric Cards Grid: 2 cols on mobile, 3 cols on tablet, 6 cols on desktop */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2 sm:gap-2.5">
                   {/* Card 1: Total Students */}
-                  <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-emerald-500/30 transition shadow-xs flex flex-col justify-between">
+                  <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-blue-500/30 transition shadow-xs flex flex-col justify-between">
                     <div className="flex justify-between items-start">
                       <span className="text-[11px] font-bold text-slate-400 truncate">স্টুডেন্টস</span>
-                      <div className="p-1 bg-emerald-500/10 rounded-lg text-[#1DB954]">
+                      <div className="p-1 bg-blue-500/10 rounded-lg text-[#38BDF8]">
                         <Users className="w-3.5 h-3.5" />
                       </div>
                     </div>
                     <div className="mt-1.5">
                       <p className="text-base sm:text-lg font-black text-white font-mono">{totalStudents} <span className="text-[10px] font-normal text-slate-400">জন</span></p>
-                      <p className="text-[9px] text-emerald-400 font-bold mt-0.5 truncate">● এক্টিভ ডাটাবেজ</p>
+                      <p className="text-[9px] text-sky-400 font-bold mt-0.5 truncate">● এক্টিভ ডাটাবেজ</p>
                     </div>
                   </div>
 
@@ -2720,13 +2720,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5 border-b border-slate-800 pb-2.5">
                     <div>
                       <h3 className="font-bold text-white text-xs sm:text-sm flex items-center gap-1.5">
-                        <Clock className="w-4 h-4 text-[#1DB954]" /> সাম্প্রতিক পেমেন্ট অর্ডার ও ট্রানজেকশন
+                        <Clock className="w-4 h-4 text-[#38BDF8]" /> সাম্প্রতিক পেমেন্ট অর্ডার ও ট্রানজেকশন
                       </h3>
                       <p className="text-[10px] text-slate-400">সর্বশেষ স্টুডেন্ট কোর্স পেমেন্ট অডিট</p>
                     </div>
                     <button
                       onClick={() => setActiveAdminTab('billing_verify')}
-                      className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-[#1DB954] hover:text-white text-[11px] font-bold rounded-lg border border-slate-700 transition cursor-pointer"
+                      className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-[#38BDF8] hover:text-white text-[11px] font-bold rounded-lg border border-slate-700 transition cursor-pointer"
                     >
                       সব দেখুন ({orders.length}) →
                     </button>
@@ -2759,7 +2759,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                                 <span className="text-[9px] text-slate-400">{ord.userMobile}</span>
                               </td>
                               <td className="p-2 text-slate-200 text-[11px] truncate max-w-[140px]">{ord.courseTitle}</td>
-                              <td className="p-2 font-black text-emerald-400 font-mono text-xs">৳{ord.amount}</td>
+                              <td className="p-2 font-black text-sky-400 font-mono text-xs">৳{ord.amount}</td>
                               <td className="p-2 font-mono text-[10px] text-slate-300">
                                 <span className="px-1.5 py-0.2 bg-slate-800 rounded text-[9px] font-bold border border-slate-700 mr-1 text-slate-300">{ord.paymentMethod}</span>
                                 {ord.transactionId}
@@ -2767,7 +2767,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                               <td className="p-2">
                                 <span className={`px-2 py-0.5 rounded-full text-[9px] font-black ${
                                   ord.status === 'Approved'
-                                    ? 'bg-emerald-500/20 text-[#1DB954] border border-emerald-500/30'
+                                    ? 'bg-blue-500/20 text-[#38BDF8] border border-blue-500/30'
                                     : ord.status === 'Rejected'
                                     ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
                                     : 'bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse'
@@ -2779,7 +2779,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                                 {ord.status === 'Pending' ? (
                                   <button
                                     onClick={() => updateOrderStatus(ord.id, 'Approved')}
-                                    className="px-2 py-0.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-[10px] rounded shadow cursor-pointer"
+                                    className="px-2 py-0.5 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-[10px] rounded shadow cursor-pointer"
                                   >
                                     অনুমোদন
                                   </button>
@@ -2802,10 +2802,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                       setActiveMainModule('academy');
                       setActiveAdminTab('teachers');
                     }}
-                    className="bg-slate-900 border border-slate-800 p-3 rounded-xl hover:border-[#1DB954] transition cursor-pointer space-y-1 shadow-xs group"
+                    className="bg-slate-900 border border-slate-800 p-3 rounded-xl hover:border-blue-600/50 transition cursor-pointer space-y-1 shadow-xs group"
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className="p-2 bg-emerald-500/10 rounded-lg text-[#1DB954] group-hover:bg-[#1DB954] group-hover:text-white transition">
+                      <div className="p-2 bg-blue-500/10 rounded-lg text-[#38BDF8] group-hover:bg-[#006A4E] group-hover:text-white transition">
                         <Users className="w-4 h-4" />
                       </div>
                       <div>
@@ -2861,7 +2861,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <Users className="w-5 h-5 text-[#1DB954]" /> টিচার ও মেন্টর
+                    <Users className="w-5 h-5 text-[#38BDF8]" /> টিচার ও মেন্টর
                   </h2>
                 </div>
                 <p className="text-[11px] text-slate-400">
@@ -2872,7 +2872,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   onClick={() => setTeacherModalOpen(true)}
-                  className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow flex items-center gap-1.5 transition cursor-pointer shrink-0"
+                  className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl shadow flex items-center gap-1.5 transition cursor-pointer shrink-0"
                 >
                   <Plus className="w-3.5 h-3.5" /> <span>+ নতুন টিচার</span>
                 </button>
@@ -2884,7 +2884,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               <button
                 onClick={() => setTeacherSubTab('list')}
                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition cursor-pointer flex items-center gap-1.5 shrink-0 ${
-                  teacherSubTab === 'list' ? 'bg-[#1DB954] text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  teacherSubTab === 'list' ? 'bg-[#006A4E] text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
                 <Users className="w-3.5 h-3.5" />
@@ -2894,7 +2894,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               <button
                 onClick={() => setTeacherSubTab('payouts')}
                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition cursor-pointer flex items-center gap-1.5 shrink-0 ${
-                  teacherSubTab === 'payouts' ? 'bg-[#1DB954] text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  teacherSubTab === 'payouts' ? 'bg-[#006A4E] text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
                 <CreditCard className="w-3.5 h-3.5" />
@@ -2909,7 +2909,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               <button
                 onClick={() => setTeacherSubTab('notices')}
                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition cursor-pointer flex items-center gap-1.5 shrink-0 ${
-                  teacherSubTab === 'notices' ? 'bg-[#1DB954] text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  teacherSubTab === 'notices' ? 'bg-[#006A4E] text-white shadow' : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
                 <MessageSquare className="w-3.5 h-3.5" />
@@ -2942,16 +2942,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                             <img
                               src={teacher.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}
                               alt={teacher.name}
-                              className="w-14 h-14 rounded-2xl object-cover border-2 border-emerald-500/40 shrink-0"
+                              className="w-14 h-14 rounded-2xl object-cover border-2 border-blue-500/40 shrink-0"
                             />
                             <div className="space-y-1 min-w-0">
                               <div className="flex items-center gap-1.5 flex-wrap">
                                 <h3 className="font-black text-sm text-white truncate">{teacher.name}</h3>
-                                <span className="px-2 py-0.5 bg-emerald-500/20 text-[#1DB954] text-[10px] font-bold rounded-full border border-emerald-500/30">
+                                <span className="px-2 py-0.5 bg-blue-500/20 text-[#38BDF8] text-[10px] font-bold rounded-full border border-blue-500/30">
                                   {teacher.role === 'admin' ? 'এডমিন & ইন্সট্রাক্টর' : 'টিচার / এক্সপার্ট'}
                                 </span>
                               </div>
-                              <p className="text-[11px] text-emerald-400 font-semibold">{teacher.title || 'ইনস্ট্রাক্টর'}</p>
+                              <p className="text-[11px] text-sky-400 font-semibold">{teacher.title || 'ইনস্ট্রাক্টর'}</p>
                               <p className="text-[10px] text-slate-400 truncate">{teacher.email} • {teacher.mobile || '01700000000'}</p>
                             </div>
                           </div>
@@ -2960,7 +2960,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                           <div className="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800/80 space-y-2 text-xs">
                             <div className="flex justify-between items-center text-slate-300">
                               <span className="flex items-center gap-1">
-                                <BookOpen className="w-3.5 h-3.5 text-[#1DB954]" /> চালুকৃত কোর্স:
+                                <BookOpen className="w-3.5 h-3.5 text-[#38BDF8]" /> চালুকৃত কোর্স:
                               </span>
                               <span className="font-extrabold text-white">{assignedCourses.length} টি</span>
                             </div>
@@ -2981,9 +2981,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
 
                             <div className="flex justify-between items-center pt-1.5 border-t border-slate-800 text-slate-300">
                               <span className="flex items-center gap-1">
-                                <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> আনুমানিক সম্মানিয়াম:
+                                <DollarSign className="w-3.5 h-3.5 text-sky-400" /> আনুমানিক সম্মানিয়াম:
                               </span>
-                              <span className="font-black text-emerald-400 font-mono">৳{(estimatedTotalEarnings || 0).toLocaleString()}</span>
+                              <span className="font-black text-sky-400 font-mono">৳{(estimatedTotalEarnings || 0).toLocaleString()}</span>
                             </div>
                           </div>
 
@@ -3021,7 +3021,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                               setNoticeRecipient(teacher.id);
                               setTeacherSubTab('notices');
                             }}
-                            className="px-3 py-1.5 bg-[#1DB954]/20 hover:bg-[#1DB954]/30 text-[#1DB954] font-bold text-[11px] rounded-xl border border-[#1DB954]/30 flex items-center gap-1 cursor-pointer"
+                            className="px-3 py-1.5 bg-[#006A4E]/20 hover:bg-[#006A4E]/30 text-[#38BDF8] font-bold text-[11px] rounded-xl border border-blue-600/50/30 flex items-center gap-1 cursor-pointer"
                           >
                             <Send className="w-3 h-3" />
                             <span>মেসেজ দিন</span>
@@ -3039,7 +3039,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               <div className="bg-slate-900 border border-slate-800 p-5 sm:p-6 rounded-3xl space-y-4 shadow-xl">
                 <div className="flex justify-between items-center border-b border-slate-800 pb-4">
                   <h3 className="text-base font-extrabold text-white flex items-center gap-2">
-                    <CreditCard className="w-5 h-5 text-[#1DB954]" /> টিচারদের বিল & উইথড্র রিকোয়েস্ট
+                    <CreditCard className="w-5 h-5 text-[#38BDF8]" /> টিচারদের বিল & উইথড্র রিকোয়েস্ট
                   </h3>
                   <span className="text-xs text-slate-400">
                     পেন্ডিং বিল যাচাই করে ট্রানজেকশন নম্বর সহ পরিশোধ করুন
@@ -3074,7 +3074,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                               <span className="text-[10px] text-slate-400">{p.teacherEmail}</span>
                             </td>
                             <td className="p-3.5 text-slate-400">{p.requestedAt}</td>
-                            <td className="p-3.5 font-black text-emerald-400 text-sm font-mono">৳{(p.amount || 0).toLocaleString()}</td>
+                            <td className="p-3.5 font-black text-sky-400 text-sm font-mono">৳{(p.amount || 0).toLocaleString()}</td>
                             <td className="p-3.5 font-medium text-slate-200">
                               <span className="px-2 py-0.5 bg-slate-800 rounded border border-slate-700 font-bold mr-1">{p.paymentMethod}</span>
                               {p.accountNumber}
@@ -3083,7 +3083,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                             <td className="p-3.5">
                               <span className={`px-2.5 py-1 rounded-full text-[10px] font-black ${
                                 p.status === 'Paid'
-                                  ? 'bg-emerald-500/20 text-[#1DB954] border border-emerald-500/30'
+                                  ? 'bg-blue-500/20 text-[#38BDF8] border border-blue-500/30'
                                   : p.status === 'Rejected'
                                   ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
                                   : 'bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse'
@@ -3100,7 +3100,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                                   <>
                                     <button
                                       onClick={() => setPayingPayoutId(p.id)}
-                                      className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold rounded-xl text-[11px] shadow transition-all cursor-pointer"
+                                      className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold rounded-xl text-[11px] shadow transition-all cursor-pointer"
                                     >
                                       পে করুন
                                     </button>
@@ -3140,11 +3140,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 {/* Send Notice Form */}
                 <div className="bg-slate-900 border border-slate-800 p-5 sm:p-6 rounded-3xl space-y-4 shadow-xl">
                   <h3 className="text-base font-extrabold text-white flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-[#1DB954]" /> টিচারদের নোটিশ ও সাপোর্ট মেসেজ পাঠান
+                    <MessageSquare className="w-5 h-5 text-[#38BDF8]" /> টিচারদের নোটিশ ও সাপোর্ট মেসেজ পাঠান
                   </h3>
 
                   {noticeSuccessMsg && (
-                    <div className="p-3 bg-emerald-500/20 border border-emerald-500/40 text-[#1DB954] text-xs font-bold rounded-xl flex items-center gap-2">
+                    <div className="p-3 bg-blue-500/20 border border-blue-500/40 text-[#38BDF8] text-xs font-bold rounded-xl flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 shrink-0" />
                       <span>{noticeSuccessMsg}</span>
                     </div>
@@ -3156,7 +3156,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                       <select
                         value={noticeRecipient}
                         onChange={e => setNoticeRecipient(e.target.value)}
-                        className="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-[#006A4E]"
                       >
                         <option value="all">📢 সকল টিচার ও ইনস্ট্রাক্টরবৃন্দ (All Teachers)</option>
                         {users.filter(u => u.role === 'teacher' || u.role === 'instructor' || u.role === 'admin').map(t => (
@@ -3172,7 +3172,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                         value={noticeSubject}
                         onChange={e => setNoticeSubject(e.target.value)}
                         placeholder="যেমন: নতুন কারিকুলাম ও ক্লাসের সময়সূচী সংক্রান্ত নির্দেশিকা"
-                        className="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-[#006A4E]"
                         required
                       />
                     </div>
@@ -3184,14 +3184,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                         value={noticeMessage}
                         onChange={e => setNoticeMessage(e.target.value)}
                         placeholder="টিচারদের জন্য বিস্তারিত নির্দেশনা লিখুন..."
-                        className="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-[#006A4E]"
                         required
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="w-full py-3 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+                      className="w-full py-3 bg-[#006A4E] hover:bg-[#047857] text-white font-bold rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
                     >
                       <Send className="w-4 h-4" />
                       <span>মেসেজ ও নোটিশ প্রেরণ করুন</span>
@@ -3217,7 +3217,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                           </div>
                           <p className="text-xs text-slate-300 leading-relaxed">{tn.message}</p>
                           <div className="pt-2 border-t border-slate-900 flex justify-between items-center text-[10px]">
-                            <span className="text-emerald-400 font-semibold">প্রাপক: {tn.recipientTeacherName || 'সকল টিচার'}</span>
+                            <span className="text-sky-400 font-semibold">প্রাপক: {tn.recipientTeacherName || 'সকল টিচার'}</span>
                             <div className="flex items-center gap-2">
                               <span className="text-slate-500">প্রেরক: {tn.senderName}</span>
                               <button
@@ -3248,7 +3248,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-[#1DB954]" /> কোর্স ({courses.length})
+                    <BookOpen className="w-5 h-5 text-[#38BDF8]" /> কোর্স ({courses.length})
                   </h2>
                 </div>
                 <p className="text-[11px] text-slate-400">
@@ -3270,7 +3270,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     setCourseIsFree(false);
                     setCourseModalOpen(true);
                   }}
-                  className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow transition shrink-0"
+                  className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow transition shrink-0"
                 >
                   <Plus className="w-3.5 h-3.5" /> <span>+ নতুন কোর্স</span>
                 </button>
@@ -3315,7 +3315,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                       onClick={() => setCourseSubTab(st.id)}
                       className={`px-3.5 py-2 text-xs font-bold rounded-xl whitespace-nowrap transition-all cursor-pointer ${
                         courseSubTab === st.id
-                          ? 'bg-[#1DB954] text-white shadow-md'
+                          ? 'bg-[#006A4E] text-white shadow-md'
                           : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-800'
                       }`}
                     >
@@ -3353,7 +3353,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                       <h3 className="font-bold text-white line-clamp-2 text-sm leading-snug">{course.title}</h3>
                       <div className="flex justify-between items-center text-xs text-slate-600 dark:text-slate-300 mt-1">
                         <span className="bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-md font-semibold text-[11px] text-slate-700 dark:text-slate-200">{course.category}</span>
-                        <span className="font-black text-[#1DB954]">{course.isFree ? 'Free' : `৳${course.discountPrice || course.price}`}</span>
+                        <span className="font-black text-[#38BDF8]">{course.isFree ? 'Free' : `৳${course.discountPrice || course.price}`}</span>
                       </div>
                     </div>
 
@@ -3365,7 +3365,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                           course.isPublicOffer || course.assignedInstructorId === 'public'
                             ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30'
                             : course.offerStatus === 'accepted'
-                            ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30'
+                            ? 'bg-blue-500/20 text-blue-700 dark:text-sky-300 border border-blue-500/30'
                             : 'bg-sky-500/20 text-sky-700 dark:text-sky-300 border border-sky-500/30'
                         }`}>
                           {course.isPublicOffer || course.assignedInstructorId === 'public'
@@ -3381,7 +3381,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
 
                       <div className="flex justify-between font-bold text-slate-300 pt-1.5 border-t border-slate-800 text-[11px]">
                         <span>🎯 {course.targetModules || 4} মডিউল | 📹 {course.targetLessons || 16} ক্লাস</span>
-                        <span className="text-[#1DB954] font-black">{course.teacherCommissionRate || 30}% কমিশন</span>
+                        <span className="text-[#38BDF8] font-black">{course.teacherCommissionRate || 30}% কমিশন</span>
                       </div>
                     </div>
                   </div>
@@ -3429,7 +3429,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <Briefcase className="w-5 h-5 text-[#1DB954]" /> সার্ভিসেস ({services.length})
+                    <Briefcase className="w-5 h-5 text-[#38BDF8]" /> সার্ভিসেস ({services.length})
                   </h2>
                 </div>
                 <p className="text-[11px] text-slate-400">
@@ -3448,7 +3448,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     setServiceThumbnail('https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80');
                     setServiceModalOpen(true);
                   }}
-                  className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow transition shrink-0"
+                  className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow transition shrink-0"
                 >
                   <Plus className="w-3.5 h-3.5" /> <span>+ নতুন সার্ভিস</span>
                 </button>
@@ -3465,14 +3465,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                         alt={s.title}
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute top-2 left-2 px-2 py-0.5 bg-slate-950/80 backdrop-blur-md text-[10px] font-bold text-[#1DB954] rounded-full border border-slate-700">
+                      <div className="absolute top-2 left-2 px-2 py-0.5 bg-slate-950/80 backdrop-blur-md text-[10px] font-bold text-[#38BDF8] rounded-full border border-slate-700">
                         {s.category}
                       </div>
                     </div>
                     <div className="p-4 space-y-1">
                       <h3 className="font-bold text-white text-base leading-snug">{s.title}</h3>
                       <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 mt-1">{s.shortDescription}</p>
-                      <span className="text-xs font-bold text-[#1DB954] block mt-2">{s.priceText}</span>
+                      <span className="text-xs font-bold text-[#38BDF8] block mt-2">{s.priceText}</span>
                     </div>
                   </div>
                   <div className="p-4 pt-0 flex gap-2">
@@ -3511,7 +3511,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <ShoppingBag className="w-5 h-5 text-[#1DB954]" /> গিগ ম্যানেজমেন্ট ({gigs.length})
+                    <ShoppingBag className="w-5 h-5 text-[#38BDF8]" /> গিগ ম্যানেজমেন্ট ({gigs.length})
                   </h2>
                 </div>
                 <p className="text-[11px] text-slate-400">
@@ -3522,7 +3522,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   onClick={openCreateGigModal}
-                  className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow transition shrink-0"
+                  className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow transition shrink-0"
                 >
                   <Plus className="w-3.5 h-3.5" /> <span>+ নতুন গিগ</span>
                 </button>
@@ -3535,7 +3535,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 onClick={() => setGigManageSubTab('gigs')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shrink-0 ${
                   gigManageSubTab === 'gigs'
-                    ? 'bg-[#1DB954] text-white shadow'
+                    ? 'bg-[#006A4E] text-white shadow'
                     : 'bg-slate-800/80 text-slate-300 hover:bg-slate-800'
                 }`}
               >
@@ -3565,7 +3565,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                       <div>
                         <div className="relative h-48 overflow-hidden bg-slate-950">
                           <img src={g.thumbnail} alt={g.title} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-300" />
-                          <div className="absolute top-3 left-3 px-2.5 py-1 bg-slate-950/80 backdrop-blur-md text-[10px] font-black text-[#1DB954] rounded-full border border-emerald-500/30">
+                          <div className="absolute top-3 left-3 px-2.5 py-1 bg-slate-950/80 backdrop-blur-md text-[10px] font-black text-[#38BDF8] rounded-full border border-blue-500/30">
                             {g.category}
                           </div>
                           <div className="absolute top-3 right-3 px-2.5 py-1 bg-amber-500 text-slate-950 font-black text-[10px] rounded-full shadow">
@@ -3597,7 +3597,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                             <div className="p-2 bg-slate-950/70 border border-slate-800 rounded-xl grid grid-cols-3 gap-1 text-center text-[10px]">
                               <div className="p-1 rounded bg-slate-900">
                                 <span className="text-slate-400 block text-[9px]">Basic</span>
-                                <span className="font-bold text-[#1DB954]">৳{g.packages.basic?.price}</span>
+                                <span className="font-bold text-[#38BDF8]">৳{g.packages.basic?.price}</span>
                               </div>
                               <div className="p-1 rounded bg-slate-900 border border-amber-500/30">
                                 <span className="text-amber-400 block text-[9px]">Standard</span>
@@ -3611,7 +3611,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                           )}
 
                           <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800/80">
-                            <span className="font-semibold text-emerald-400">⏱️ {g.deliveryTime || (g.packages?.basic ? `${g.packages.basic.deliveryDays} দিন` : '৩ দিন')}</span>
+                            <span className="font-semibold text-sky-400">⏱️ {g.deliveryTime || (g.packages?.basic ? `${g.packages.basic.deliveryDays} দিন` : '৩ দিন')}</span>
                             <span className="text-slate-400">⭐ {g.rating || 5.0} ({g.salesCount || 0} সেলস)</span>
                           </div>
                         </div>
@@ -3679,7 +3679,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                             </div>
                             <span className={`px-2.5 py-1 text-[11px] font-bold rounded-xl whitespace-nowrap ${
                               order.status === 'completed'
-                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                                ? 'bg-blue-500/20 text-sky-400 border border-blue-500/30'
                                 : order.status === 'delivered'
                                 ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
                                 : order.status === 'in_progress'
@@ -3702,7 +3702,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                             </div>
                             <div>
                               <span className="text-slate-400 block text-[10px]">ফোন নম্বর:</span>
-                              <span className="font-bold text-emerald-400">{order.clientPhone || 'তথ্য সংরক্ষিত'}</span>
+                              <span className="font-bold text-sky-400">{order.clientPhone || 'তথ্য সংরক্ষিত'}</span>
                             </div>
                             <div>
                               <span className="text-slate-400 block text-[10px]">অর্ডার প্যাকেজ:</span>
@@ -3710,7 +3710,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                             </div>
                             <div>
                               <span className="text-slate-400 block text-[10px]">মোট পেমেন্ট:</span>
-                              <span className="font-black text-[#1DB954] text-sm">৳{order.amount?.toLocaleString('bn-BD')}</span>
+                              <span className="font-black text-[#38BDF8] text-sm">৳{order.amount?.toLocaleString('bn-BD')}</span>
                             </div>
                           </div>
 
@@ -3723,7 +3723,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                                   📢 রেফারেল সম্পন্ন
                                 </span>
                               ) : (
-                                <span className="text-[10px] px-2 py-0.5 bg-emerald-500/20 text-[#1DB954] font-bold rounded-md">
+                                <span className="text-[10px] px-2 py-0.5 bg-blue-500/20 text-[#38BDF8] font-bold rounded-md">
                                   🏢 পিটেন আইটি হেড অফিস
                                 </span>
                               )}
@@ -3771,7 +3771,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                             {order.status !== 'completed' && (
                               <button
                                 onClick={() => updateMarketplaceOrderStatus(order.id, 'completed', 'প্রজেক্ট সফলভাবে সমাপ্ত হয়েছে')}
-                                className="flex-1 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-[#1DB954] font-bold text-xs rounded-xl cursor-pointer"
+                                className="flex-1 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-[#38BDF8] font-bold text-xs rounded-xl cursor-pointer"
                               >
                                 ✅ সম্পন্ন
                               </button>
@@ -3792,9 +3792,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
           <div className="space-y-6 font-bengali">
             {/* Action Banner */}
             {officeActionMsg && (
-              <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-2xl flex items-center justify-between text-sm font-bold animate-fadeIn">
+              <div className="p-4 bg-blue-500/10 border border-blue-500/30 text-sky-400 rounded-2xl flex items-center justify-between text-sm font-bold animate-fadeIn">
                 <span>{officeActionMsg}</span>
-                <button onClick={() => setOfficeActionMsg('')} className="text-xs bg-emerald-500/20 px-2 py-1 rounded-lg hover:bg-emerald-500/30">বন্ধ করুন</button>
+                <button onClick={() => setOfficeActionMsg('')} className="text-xs bg-blue-500/20 px-2 py-1 rounded-lg hover:bg-blue-500/30">বন্ধ করুন</button>
               </div>
             )}
 
@@ -3822,7 +3822,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   </div>
                   <div>
                     <span className="text-[10px] text-slate-400 font-medium block">মোট আর্নিং</span>
-                    <span className="text-sm font-black text-emerald-400">৳৩,৪৫,০০০</span>
+                    <span className="text-sm font-black text-sky-400">৳৩,৪৫,০০০</span>
                   </div>
                 </div>
               </div>
@@ -3871,7 +3871,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     }`}
                   >
                     <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5" /> সার্ভিসেস</span>
-                    <span className="px-2 py-0.5 bg-slate-900/80 text-emerald-400 font-mono text-[11px] rounded-full font-black border border-emerald-500/30">
+                    <span className="px-2 py-0.5 bg-slate-900/80 text-sky-400 font-mono text-[11px] rounded-full font-black border border-blue-500/30">
                       (1)
                     </span>
                   </button>
@@ -3936,14 +3936,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               {/* 3. একাউন্ট স্টেটমেন্ট (Account Statement) Card */}
               <div className={`p-5 rounded-3xl border transition-all cursor-pointer space-y-3 bg-slate-900 ${
                 officeSellerSubTab === 'financials'
-                  ? 'border-emerald-500/80 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/50'
+                  ? 'border-blue-500/80 shadow-lg shadow-blue-500/10 ring-1 ring-[#006A4E]/50'
                   : 'border-slate-800 hover:border-slate-700'
               }`}>
                 <div className="flex items-center justify-between">
-                  <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-2xl border border-emerald-500/30">
+                  <div className="p-3 bg-blue-500/10 text-sky-400 rounded-2xl border border-blue-500/30">
                     <DollarSign className="w-6 h-6" />
                   </div>
-                  <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 text-[10px] font-black rounded-full">
+                  <span className="px-2.5 py-1 bg-blue-500/20 text-sky-400 text-[10px] font-black rounded-full">
                     ৩. একাউন্ট স্টেটমেন্ট
                   </span>
                 </div>
@@ -3957,11 +3957,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   <button
                     onClick={() => setOfficeSellerSubTab('financials')}
                     className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                      officeSellerSubTab === 'financials' ? 'bg-emerald-500 text-white font-black' : 'bg-slate-950 text-slate-300 hover:bg-slate-800'
+                      officeSellerSubTab === 'financials' ? 'bg-blue-500 text-white font-black' : 'bg-slate-950 text-slate-300 hover:bg-slate-800'
                     }`}
                   >
                     <span className="flex items-center gap-1.5"><CreditCard className="w-3.5 h-3.5" /> আর্নিং & পেমেন্ট হিস্টোরি</span>
-                    <span className="text-[10px] text-emerald-400 font-bold">স্টেটমেন্ট</span>
+                    <span className="text-[10px] text-sky-400 font-bold">স্টেটমেন্ট</span>
                   </button>
                 </div>
               </div>
@@ -4089,7 +4089,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     <div className="grid grid-cols-1 gap-4">
                       {list.map(ord => {
                         const statusBadgeClass = 
-                          ord.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' :
+                          ord.status === 'completed' ? 'bg-blue-500/20 text-sky-400 border-blue-500/40' :
                           ord.status === 'in_progress' ? 'bg-sky-500/20 text-sky-400 border-sky-500/40' :
                           ord.status === 'in_review' ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' :
                           ord.status === 'cancelled' ? 'bg-rose-500/20 text-rose-400 border-rose-500/40' :
@@ -4124,7 +4124,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
 
                               <div className="flex items-center gap-2">
                                 <span className="text-xs text-slate-400">মূল্য:</span>
-                                <span className="text-lg font-black text-emerald-400">৳{ord.amount?.toLocaleString('bn-BD')}</span>
+                                <span className="text-lg font-black text-sky-400">৳{ord.amount?.toLocaleString('bn-BD')}</span>
                               </div>
                             </div>
 
@@ -4134,7 +4134,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                                 <span className="font-bold text-amber-400 flex items-center gap-1.5">
                                   <Sparkles className="w-4 h-4" /> অফার্ড ও আউটসোর্সড প্রজেক্ট (অফিস রেফারেল কমিশন: {ord.referralCommissionPercent}%)
                                 </span>
-                                <span className="text-emerald-400 font-black">
+                                <span className="text-sky-400 font-black">
                                   ফ্রিহ্যান্ড ফ্রিল্যান্সার পাবে: ৳{Math.round(((ord.amount || 0) * (100 - ord.referralCommissionPercent)) / 100).toLocaleString('bn-BD')}
                                 </span>
                               </div>
@@ -4244,7 +4244,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                                       updateMarketplaceOrderStatus?.(ord.id, 'completed', 'প্রজেক্ট সফলভাবে সম্পূর্ণ ও ক্লায়েন্টকে হ্যান্ডওভার করা হয়েছে।');
                                       setOfficeActionMsg(`অর্ডার #${ord.id} সম্পন্ন হয়েছে!`);
                                     }}
-                                    className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-black rounded-xl cursor-pointer shadow-md shadow-emerald-500/20 flex items-center gap-1"
+                                    className="px-3 py-1.5 bg-blue-500 hover:bg-[#047857] text-white text-xs font-black rounded-xl cursor-pointer shadow-md shadow-blue-500/20 flex items-center gap-1"
                                   >
                                     ✅ সম্পন্ন মার্ক করুন
                                   </button>
@@ -4309,7 +4309,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                         <p className="text-xs text-slate-400 line-clamp-2 mt-0.5">{srv.shortDescription}</p>
                       </div>
                       <div className="flex items-center justify-between border-t border-slate-800 pt-2">
-                        <span className="text-xs text-slate-400">শুরু: <strong className="text-emerald-400 font-black">{srv.priceText}</strong></span>
+                        <span className="text-xs text-slate-400">শুরু: <strong className="text-sky-400 font-black">{srv.priceText}</strong></span>
                         <button
                           onClick={() => {
                             setEditingServiceId(srv.id);
@@ -4363,7 +4363,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                         <p className="text-xs text-slate-400 mt-0.5">মেন্টর: {c.instructorName}</p>
                       </div>
                       <div className="flex items-center justify-between border-t border-slate-800 pt-2">
-                        <span className="text-xs text-emerald-400 font-bold">৳{c.price.toLocaleString('bn-BD')}</span>
+                        <span className="text-xs text-sky-400 font-bold">৳{c.price.toLocaleString('bn-BD')}</span>
                         <span className="text-xs text-slate-400">{c.studentsCount || 0} স্টুডেন্ট</span>
                       </div>
                     </div>
@@ -4423,7 +4423,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                       </div>
                       <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
                         <span className="text-slate-400">{std.course}</span>
-                        <span className="text-emerald-400 font-bold">{std.status}</span>
+                        <span className="text-sky-400 font-bold">{std.status}</span>
                       </div>
                     </div>
                   ))}
@@ -4437,11 +4437,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-4">
                   <div>
                     <h3 className="text-lg font-black text-white flex items-center gap-2">
-                      <DollarSign className="w-6 h-6 text-emerald-400" /> একাউন্ট স্টেটমেন্ট: আর্নিং ও পেমেন্ট হিস্টোরি
+                      <DollarSign className="w-6 h-6 text-sky-400" /> একাউন্ট স্টেটমেন্ট: আর্নিং ও পেমেন্ট হিস্টোরি
                     </h3>
                     <p className="text-xs text-slate-400 mt-0.5">অফিস সেলার ও মেন্টর কমিশন লেজার এবং ক্লায়েন্ট পেমেন্ট সামারি</p>
                   </div>
-                  <span className="px-3.5 py-1.5 bg-emerald-500/20 text-emerald-400 text-xs font-black rounded-full border border-emerald-500/40">
+                  <span className="px-3.5 py-1.5 bg-blue-500/20 text-sky-400 text-xs font-black rounded-full border border-blue-500/40">
                     আর্নিং স্টেটমেন্ট ভেরিফাইড
                   </span>
                 </div>
@@ -4457,9 +4457,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     <span className="text-2xl font-black text-amber-400 mt-1 block">৳৬৯,০০০</span>
                     <span className="text-[10px] text-slate-400 block">(২০% শেয়ারের ওপর)</span>
                   </div>
-                  <div className="bg-slate-950 p-4 rounded-2xl border border-emerald-500/30 text-center">
-                    <span className="text-xs text-emerald-400 font-bold block">ফ্রিল্যান্সার/স্টাফ পে-আউটস</span>
-                    <span className="text-2xl font-black text-emerald-400 mt-1 block">৳২,৭৬,০০০</span>
+                  <div className="bg-slate-950 p-4 rounded-2xl border border-blue-500/30 text-center">
+                    <span className="text-xs text-sky-400 font-bold block">ফ্রিল্যান্সার/স্টাফ পে-আউটস</span>
+                    <span className="text-2xl font-black text-sky-400 mt-1 block">৳২,৭৬,০০০</span>
                   </div>
                 </div>
 
@@ -4484,7 +4484,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                         <div className="flex items-center gap-4 text-xs">
                           <span>মোট: <strong className="text-white">৳{txn.total.toLocaleString('bn-BD')}</strong></span>
                           <span>অফিস রেফারেল কমিশন: <strong className="text-amber-400">৳{txn.officeComm.toLocaleString('bn-BD')}</strong></span>
-                          <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 font-bold rounded-lg border border-emerald-500/30">{txn.status}</span>
+                          <span className="px-2.5 py-1 bg-blue-500/20 text-sky-400 font-bold rounded-lg border border-blue-500/30">{txn.status}</span>
                         </div>
                       </div>
                     ))}
@@ -4578,7 +4578,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                       </button>
 
                       {invSuccessMsg && (
-                        <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs rounded-xl font-bold">
+                        <div className="p-3 bg-blue-500/10 border border-blue-500/30 text-sky-400 text-xs rounded-xl font-bold">
                           {invSuccessMsg}
                         </div>
                       )}
@@ -4684,8 +4684,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                           <span className="text-amber-400 font-bold">৳{Math.round(((calcHourlyRate * calcHours) * calcCommissionPercent) / 100).toLocaleString('bn-BD')}</span>
                         </div>
                         <div className="flex justify-between text-xs border-t border-slate-800 pt-2">
-                          <span className="text-emerald-400 font-black">ফ্রিল্যান্সার নেট পে-আউট:</span>
-                          <span className="text-emerald-400 font-black">৳{Math.round(((calcHourlyRate * calcHours) * (100 - calcCommissionPercent)) / 100).toLocaleString('bn-BD')}</span>
+                          <span className="text-sky-400 font-black">ফ্রিল্যান্সার নেট পে-আউট:</span>
+                          <span className="text-sky-400 font-black">৳{Math.round(((calcHourlyRate * calcHours) * (100 - calcCommissionPercent)) / 100).toLocaleString('bn-BD')}</span>
                         </div>
                       </div>
                     </div>
@@ -4803,9 +4803,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                         <span className="text-[10px] text-amber-400 block font-bold">অফিস রেফারেল ({outsourceCommissionPercent}%)</span>
                         <span className="text-xs font-black text-amber-400">৳{Math.round(((outsourceModalOrder.amount || 0) * outsourceCommissionPercent) / 100).toLocaleString('bn-BD')}</span>
                       </div>
-                      <div className="bg-emerald-500/10 p-2 rounded-xl border border-emerald-500/20">
-                        <span className="text-[10px] text-emerald-400 block font-bold">ফ্রিহ্যান্ড পাবে ({100 - outsourceCommissionPercent}%)</span>
-                        <span className="text-xs font-black text-emerald-400">৳{Math.round(((outsourceModalOrder.amount || 0) * (100 - outsourceCommissionPercent)) / 100).toLocaleString('bn-BD')}</span>
+                      <div className="bg-blue-500/10 p-2 rounded-xl border border-blue-500/20">
+                        <span className="text-[10px] text-sky-400 block font-bold">ফ্রিহ্যান্ড পাবে ({100 - outsourceCommissionPercent}%)</span>
+                        <span className="text-xs font-black text-sky-400">৳{Math.round(((outsourceModalOrder.amount || 0) * (100 - outsourceCommissionPercent)) / 100).toLocaleString('bn-BD')}</span>
                       </div>
                     </div>
                   </div>
@@ -5232,7 +5232,7 @@ PTENit ডিজিটাল টিম`;
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <Zap className="w-5 h-5 text-[#1DB954]" /> ডিজিটাল প্রোডাক্ট ও এক্সেস হাব ({digitalProducts.length})
+                    <Zap className="w-5 h-5 text-[#38BDF8]" /> ডিজিটাল প্রোডাক্ট ও এক্সেস হাব ({digitalProducts.length})
                   </h2>
                   {pendingDigitalOrders.length > 0 && (
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500 text-slate-950 animate-pulse">
@@ -5271,7 +5271,7 @@ PTENit ডিজিটাল টিম`;
                     setDpDemoUrl('');
                     setDpModalOpen(true);
                   }}
-                  className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer flex items-center gap-1.5 shrink-0"
+                  className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl shadow transition cursor-pointer flex items-center gap-1.5 shrink-0"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>+ নতুন প্রোডাক্ট</span>
@@ -5286,7 +5286,7 @@ PTENit ডিজিটাল টিম`;
                 onClick={() => setDpActiveSubTab('products')}
                 className={`px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 cursor-pointer ${
                   dpActiveSubTab === 'products'
-                    ? 'bg-[#1DB954] text-white shadow-lg shadow-[#1DB954]/20'
+                    ? 'bg-[#006A4E] text-white shadow-lg shadow-blue-500/20'
                     : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
                 }`}
               >
@@ -5299,7 +5299,7 @@ PTENit ডিজিটাল টিম`;
                 onClick={() => setDpActiveSubTab('orders')}
                 className={`px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 cursor-pointer relative ${
                   dpActiveSubTab === 'orders'
-                    ? 'bg-[#1DB954] text-white shadow-lg shadow-[#1DB954]/20'
+                    ? 'bg-[#006A4E] text-white shadow-lg shadow-blue-500/20'
                     : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
                 }`}
               >
@@ -5325,7 +5325,7 @@ PTENit ডিজিটাল টিম`;
                       placeholder="প্রোডাক্ট টাইটেল বা ক্যাটাগরি সার্চ..."
                       value={dpSearchFilter}
                       onChange={(e) => setDpSearchFilter(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                      className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
 
@@ -5337,7 +5337,7 @@ PTENit ডিজিটাল টিম`;
                         onClick={() => setDpCategoryFilter(cat)}
                         className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                           dpCategoryFilter === cat
-                            ? 'bg-[#1DB954] text-white shadow-md'
+                            ? 'bg-[#006A4E] text-white shadow-md'
                             : 'bg-slate-950 text-slate-300 hover:bg-slate-800 border border-slate-800'
                         }`}
                       >
@@ -5375,7 +5375,7 @@ PTENit ডিজিটাল টিম`;
                         <div className="absolute top-2 left-2 flex flex-col gap-1">
                           <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-xs ${
                             product.price === 0
-                              ? 'bg-emerald-500 text-white'
+                              ? 'bg-blue-500 text-white'
                               : 'bg-purple-600 text-white'
                           }`}>
                             {product.price === 0 ? '🎁 ১০০% ফ্রি' : `৳${product.price.toLocaleString('bn-BD')}`}
@@ -5384,7 +5384,7 @@ PTENit ডিজিটাল টিম`;
 
                         <div className="absolute top-2 right-2 flex items-center gap-1">
                           {(product.demoImages && product.demoImages.length > 0) && (
-                            <span className="bg-[#1DB954]/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded border border-white/20">
+                            <span className="bg-[#006A4E]/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded border border-white/20">
                               📸 {product.demoImages.length}টি ডেমো
                             </span>
                           )}
@@ -5397,7 +5397,7 @@ PTENit ডিজিটাল টিম`;
                           <span className="bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">
                             {product.fileSize}
                           </span>
-                          <span className="bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800 text-[#1DB954]">
+                          <span className="bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800 text-[#38BDF8]">
                             সেলস: {product.salesCount || 0}
                           </span>
                         </div>
@@ -5405,7 +5405,7 @@ PTENit ডিজিটাল টিম`;
 
                       {/* Content Body */}
                       <div className="p-4 space-y-2">
-                        <span className="text-[10px] font-bold text-[#1DB954] uppercase tracking-wide">
+                        <span className="text-[10px] font-bold text-[#38BDF8] uppercase tracking-wide">
                           {product.category}
                         </span>
                         <h3 className="text-sm font-black text-white line-clamp-2">
@@ -5422,7 +5422,7 @@ PTENit ডিজিটাল টিম`;
                               href={product.downloadUrl}
                               target="_blank"
                               rel="noreferrer"
-                              className="text-[#1DB954] hover:underline font-mono truncate max-w-[170px]"
+                              className="text-[#38BDF8] hover:underline font-mono truncate max-w-[170px]"
                             >
                               {product.downloadUrl}
                             </a>
@@ -5503,15 +5503,15 @@ PTENit ডিজিটাল টিম`;
                     </span>
                     <span className="text-xl font-black text-amber-400">{pendingDigitalOrders.length}</span>
                   </div>
-                  <div className="bg-slate-900 border border-emerald-500/30 p-3.5 rounded-2xl bg-emerald-500/5">
-                    <span className="text-[11px] text-emerald-400 font-bold block flex items-center gap-1">
+                  <div className="bg-slate-900 border border-blue-500/30 p-3.5 rounded-2xl bg-blue-500/5">
+                    <span className="text-[11px] text-sky-400 font-bold block flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" /> এক্সেস দেওয়া হয়েছে
                     </span>
-                    <span className="text-xl font-black text-emerald-400">{grantedDigitalOrders.length}</span>
+                    <span className="text-xl font-black text-sky-400">{grantedDigitalOrders.length}</span>
                   </div>
                   <div className="bg-slate-900 border border-slate-800 p-3.5 rounded-2xl">
                     <span className="text-[11px] text-slate-400 font-bold block">মোট বিক্রয় ভলিউম</span>
-                    <span className="text-xl font-black text-[#1DB954]">
+                    <span className="text-xl font-black text-[#38BDF8]">
                       ৳{digitalOrders.reduce((sum, o) => sum + (o.amount || 0), 0).toLocaleString('bn-BD')}
                     </span>
                   </div>
@@ -5526,7 +5526,7 @@ PTENit ডিজিটাল টিম`;
                       placeholder="নাম, ইমেইল, মোবাইল, ইনভয়েস আইডি বা সফটওয়্যার সার্চ..."
                       value={dpOrderSearch}
                       onChange={(e) => setDpOrderSearch(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                      className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
 
@@ -5537,7 +5537,7 @@ PTENit ডিজিটাল টিম`;
                       onClick={() => setDpOrderFilter('all')}
                       className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                         dpOrderFilter === 'all'
-                          ? 'bg-[#1DB954] text-white shadow-md'
+                          ? 'bg-[#006A4E] text-white shadow-md'
                           : 'bg-slate-950 text-slate-300 hover:bg-slate-800 border border-slate-800'
                       }`}
                     >
@@ -5559,7 +5559,7 @@ PTENit ডিজিটাল টিম`;
                       onClick={() => setDpOrderFilter('granted')}
                       className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                         dpOrderFilter === 'granted'
-                          ? 'bg-emerald-600 text-white shadow-md'
+                          ? 'bg-[#047857] text-white shadow-md'
                           : 'bg-slate-950 text-slate-300 hover:bg-slate-800 border border-slate-800'
                       }`}
                     >
@@ -5647,8 +5647,8 @@ PTENit ডিজিটাল টিম`;
                       onClick={() => setDpPaymentStatusFilter('verified')}
                       className={`px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition flex items-center gap-1 ${
                         dpPaymentStatusFilter === 'verified'
-                          ? 'bg-emerald-600 text-white font-black'
-                          : 'bg-slate-950 text-emerald-400 border border-slate-800'
+                          ? 'bg-[#047857] text-white font-black'
+                          : 'bg-slate-950 text-sky-400 border border-slate-800'
                       }`}
                     >
                       <CheckCircle2 className="w-3 h-3" /> ভেরিফাইড
@@ -5678,7 +5678,7 @@ PTENit ডিজিটাল টিম`;
                           {/* Card Header */}
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-mono font-bold text-xs bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 text-[#1DB954]">
+                              <span className="font-mono font-bold text-xs bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 text-[#38BDF8]">
                                 #{order.id}
                               </span>
 
@@ -5712,14 +5712,14 @@ PTENit ডিজিটাল টিম`;
                                 onClick={() => handleTogglePaymentStatus(order)}
                                 className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer border ${
                                   isVerified
-                                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30'
+                                    ? 'bg-blue-500/20 text-sky-300 border-blue-500/40 hover:bg-blue-500/30'
                                     : 'bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30 animate-pulse'
                                 }`}
                                 title={isVerified ? 'পেমেন্ট ভেরিফাইড (পুনরায় পেন্ডিং করতে ক্লিক করুন)' : 'পেমেন্ট পেন্ডিং (ভেরিফাই করতে ক্লিক করুন)'}
                               >
                                 {isVerified ? (
                                   <>
-                                    <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                                    <CheckCircle className="w-3.5 h-3.5 text-sky-400" />
                                     <span>ভেরিফাইড পেমেন্ট</span>
                                   </>
                                 ) : (
@@ -5730,7 +5730,7 @@ PTENit ডিজিটাল টিম`;
                                 )}
                               </button>
 
-                              <span className="text-sm font-black text-emerald-400">
+                              <span className="text-sm font-black text-sky-400">
                                 ৳{order.amount ? order.amount.toLocaleString('bn-BD') : 'ফ্রি'}
                               </span>
                               <span className="text-[11px] bg-slate-950 px-2 py-0.5 rounded border border-slate-800 text-slate-300 font-mono">
@@ -5767,7 +5767,7 @@ PTENit ডিজিটাল টিম`;
                                       href={activeDownloadUrl}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="text-[#1DB954] hover:underline font-mono truncate max-w-[200px] flex items-center gap-1"
+                                      className="text-[#38BDF8] hover:underline font-mono truncate max-w-[200px] flex items-center gap-1"
                                       title={activeDownloadUrl}
                                     >
                                       <Download className="w-3.5 h-3.5 shrink-0" />
@@ -5833,7 +5833,7 @@ PTENit ডিজিটাল টিম`;
                                 {order.transactionId && (
                                   <div className="flex items-center justify-between">
                                     <span className="text-slate-400">TrxID:</span>
-                                    <span className="text-emerald-400 font-mono font-bold">{order.transactionId}</span>
+                                    <span className="text-sky-400 font-mono font-bold">{order.transactionId}</span>
                                   </div>
                                 )}
                               </div>
@@ -5865,15 +5865,15 @@ PTENit ডিজিটাল টিম`;
                                     </button>
                                   </div>
                                 ) : (
-                                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold text-[10px] flex items-center gap-1">
-                                    <Unlock className="w-3 h-3 text-emerald-400" />
+                                  <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-sky-300 border border-blue-500/30 font-bold text-[10px] flex items-center gap-1">
+                                    <Unlock className="w-3 h-3 text-sky-400" />
                                     <span>Access Unlocked (১-ক্লিক ব্যবহারের অপেক্ষায়)</span>
                                   </span>
                                 )}
                               </div>
 
                               <div className="flex items-center gap-2">
-                                <code className="text-[#1DB954] font-mono text-[11px] truncate flex-1 bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800">
+                                <code className="text-[#38BDF8] font-mono text-[11px] truncate flex-1 bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800">
                                   {getCanvaInviteLinkForOrder(order)}
                                 </code>
                                 <button
@@ -5892,9 +5892,9 @@ PTENit ডিজিটাল টিম`;
 
                           {/* Access Status Banner */}
                           {order.accessGranted ? (
-                            <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-between gap-2 text-xs flex-wrap">
-                              <div className="flex items-center gap-2 text-emerald-400 font-bold">
-                                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                            <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center justify-between gap-2 text-xs flex-wrap">
+                              <div className="flex items-center gap-2 text-sky-400 font-bold">
+                                <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0" />
                                 <span>
                                   এক্সেস সক্রিয়! গ্রাহক ফাইলটি ডাউনলোড বা লিংক অ্যাক্সেস করতে পারবেন। (মাধ্যম: {
                                     order.accessDeliveryMethod === 'whatsapp' ? 'হোয়াটসঅ্যাপ' : 
@@ -5926,7 +5926,7 @@ PTENit ডিজিটাল টিম`;
                             <button
                               type="button"
                               onClick={() => handleOpenWhatsAppModal(order)}
-                              className="py-2 px-3 rounded-xl bg-[#25D366] hover:bg-emerald-600 text-white font-black text-xs flex items-center gap-1.5 shadow-md transition active:scale-95 cursor-pointer"
+                              className="py-2 px-3 rounded-xl bg-[#25D366] hover:bg-[#047857] text-white font-black text-xs flex items-center gap-1.5 shadow-md transition active:scale-95 cursor-pointer"
                               title="গ্রাহকের হোয়াটসঅ্যাপে এডিটেবল মেসেজ ও এক্সেস লিংক পাঠান"
                             >
                               <WhatsAppIcon className="w-3.5 h-3.5" />
@@ -5962,7 +5962,7 @@ PTENit ডিজিটাল টিম`;
                               className={`py-2 px-3 rounded-xl font-bold text-xs flex items-center gap-1.5 border transition cursor-pointer ${
                                 order.accessGranted
                                   ? 'bg-slate-800 hover:bg-rose-950/40 text-rose-300 border-rose-500/30'
-                                  : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/40'
+                                  : 'bg-blue-500/20 hover:bg-blue-500/30 text-sky-300 border-blue-500/40'
                               }`}
                             >
                               {order.accessGranted ? <XCircle className="w-3.5 h-3.5" /> : <CheckCircle className="w-3.5 h-3.5" />}
@@ -5997,7 +5997,7 @@ PTENit ডিজিটাল টিম`;
                 <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-7 space-y-5 shadow-2xl animate-scaleUp font-bengali my-8">
                   <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-[#1DB954]/20 text-[#1DB954] flex items-center justify-center font-bold">
+                      <div className="w-8 h-8 rounded-lg bg-[#006A4E]/20 text-[#38BDF8] flex items-center justify-center font-bold">
                         <Zap className="w-4 h-4" />
                       </div>
                       <h3 className="text-lg font-black text-white">
@@ -6078,7 +6078,7 @@ PTENit ডিজিটাল টিম`;
                         value={dpTitle}
                         onChange={(e) => setDpTitle(e.target.value)}
                         placeholder="e.g. Canva Pro VIP Team Access / Web Script"
-                        className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                        className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
 
@@ -6088,7 +6088,7 @@ PTENit ডিজিটাল টিম`;
                         <select
                           value={dpCategory}
                           onChange={(e) => setDpCategory(e.target.value as any)}
-                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#006A4E]"
                         >
                           <option value="Scripts & PHP">Scripts & PHP</option>
                           <option value="WordPress">WordPress Themes & Plugins</option>
@@ -6104,7 +6104,7 @@ PTENit ডিজিটাল টিম`;
                         <select
                           value={dpDeliveryType}
                           onChange={(e) => setDpDeliveryType(e.target.value as any)}
-                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-amber-500/50 rounded-xl text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-amber-500/50 rounded-xl text-xs text-white focus:outline-none focus:border-[#006A4E]"
                         >
                           <option value="canva_auto">⚡ Auto Canva Access (১-বার ব্যবহারযোগ্য লিংক)</option>
                           <option value="file_download">📁 Information → File Download (ভেরিফাইড ডাউনলোড)</option>
@@ -6115,7 +6115,7 @@ PTENit ডিজিটাল টিম`;
 
                     {/* Canva Setup Box (shown when deliveryType === 'canva_auto') */}
                     {dpDeliveryType === 'canva_auto' && (
-                      <div className="p-4 bg-gradient-to-br from-amber-500/10 via-slate-900 to-emerald-500/10 rounded-2xl border border-amber-500/30 space-y-3">
+                      <div className="p-4 bg-gradient-to-br from-amber-500/10 via-slate-900 to-blue-500/10 rounded-2xl border border-amber-500/30 space-y-3">
                         <div className="flex items-center gap-2 text-amber-400 font-bold text-xs">
                           <Crown className="w-4 h-4 text-amber-400" />
                           <span>⚡ Auto Canva Access কনফিগারেশন</span>
@@ -6135,7 +6135,7 @@ PTENit ডিজিটাল টিম`;
                               value={dpCanvaInviteLink}
                               onChange={(e) => setDpCanvaInviteLink(e.target.value)}
                               placeholder="https://www.canva.com/brand/join?token=..."
-                              className="w-full px-3.5 py-2.5 bg-slate-950 border border-amber-500/40 rounded-xl text-xs text-[#1DB954] font-mono focus:outline-none focus:border-[#1DB954]"
+                              className="w-full px-3.5 py-2.5 bg-slate-950 border border-amber-500/40 rounded-xl text-xs text-[#38BDF8] font-mono focus:outline-none focus:border-[#006A4E]"
                             />
                           </div>
                           <span className="text-[10px] text-slate-400 block mt-1">
@@ -6152,7 +6152,7 @@ PTENit ডিজিটাল টিম`;
                             value={dpCanvaRules}
                             onChange={(e) => setDpCanvaRules(e.target.value)}
                             placeholder="১. ক্যানভায় লগইন করে Access Now বাটনে ক্লিক করুন..."
-                            className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                            className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#006A4E]"
                           />
                         </div>
                       </div>
@@ -6162,7 +6162,7 @@ PTENit ডিজিটাল টিম`;
                     <div className="p-3.5 bg-slate-950 rounded-2xl border border-slate-800 space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-extrabold text-white">প্রাইসিং সেটআপ:</span>
-                        <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-emerald-400">
+                        <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-sky-400">
                           <input
                             type="checkbox"
                             checked={dpIsFree}
@@ -6171,7 +6171,7 @@ PTENit ডিজিটাল টিম`;
                               if (e.target.checked) setDpPrice(0);
                               else setDpPrice(450);
                             }}
-                            className="rounded text-[#1DB954] focus:ring-0 w-4 h-4"
+                            className="rounded text-[#38BDF8] focus:ring-0 w-4 h-4"
                           />
                           <span>🎁 এটি কি ১০০% ফ্রি প্রোডাক্ট? (Free Access)</span>
                         </label>
@@ -6186,7 +6186,7 @@ PTENit ডিজিটাল টিম`;
                               required
                               value={dpPrice}
                               onChange={(e) => setDpPrice(Number(e.target.value))}
-                              className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-[#1DB954] font-black"
+                              className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-[#38BDF8] font-black"
                             />
                           </div>
                           <div>
@@ -6200,7 +6200,7 @@ PTENit ডিজিটাল টিম`;
                           </div>
                         </div>
                       ) : (
-                        <p className="text-xs text-emerald-400 font-bold">
+                        <p className="text-xs text-sky-400 font-bold">
                           ✓ ব্যবহারকারীরা কোন পেমেন্ট ছাড়াই সরাসরি ১-ক্লিকে বিনামূল্যে ডাউনলোড করতে পারবে।
                         </p>
                       )}
@@ -6215,14 +6215,14 @@ PTENit ডিজিটাল টিম`;
                         value={dpThumbnail}
                         onChange={(e) => setDpThumbnail(e.target.value)}
                         placeholder="https://..."
-                        className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                        className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
 
                     {/* Multiple Demo Images & Live Demo URL */}
                     <div className="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800 space-y-3">
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#1DB954]">
-                        <ImageIcon className="w-4 h-4 text-[#1DB954]" />
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#38BDF8]">
+                        <ImageIcon className="w-4 h-4 text-[#38BDF8]" />
                         <span>একাধিক ডেমো পিকচার ও লাইভ ডেমো ওয়েবসাইট</span>
                       </div>
 
@@ -6235,7 +6235,7 @@ PTENit ডিজিটাল টিম`;
                           value={dpDemoImagesText}
                           onChange={(e) => setDpDemoImagesText(e.target.value)}
                           placeholder="https://images.unsplash.com/photo-1..., https://images.unsplash.com/photo-2..."
-                          className="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                          className="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#006A4E]"
                         />
                         <span className="text-[10px] text-slate-400 block mt-1">
                           গ্রাহকরা প্রোডাক্টে ক্লিক করলে এসব ডেমো স্ক্রিনশট স্লাইড ও ফুলস্ক্রিন জুম করে দেখতে পারবে।
@@ -6251,7 +6251,7 @@ PTENit ডিজিটাল টিম`;
                           value={dpDemoUrl}
                           onChange={(e) => setDpDemoUrl(e.target.value)}
                           placeholder="https://ptenit.com/demo বা ডেমো ওয়েবসাইট লিংক"
-                          className="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-[#1DB954] placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                          className="w-full px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-[#38BDF8] placeholder-slate-500 focus:outline-none focus:border-[#006A4E]"
                         />
                         <span className="text-[10px] text-slate-400 block mt-1">
                           গ্রাহকরা সরাসরি "লাইভ ডেমো" বাটনে ক্লিক করে ব্রাউজারে টেস্ট করতে পারবে।
@@ -6269,7 +6269,7 @@ PTENit ডিজিটাল টিম`;
                           value={dpDownloadUrl}
                           onChange={(e) => setDpDownloadUrl(e.target.value)}
                           placeholder="https://drive.google.com/..."
-                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-[#1DB954] font-mono focus:outline-none focus:border-[#1DB954]"
+                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-[#38BDF8] font-mono focus:outline-none focus:border-[#006A4E]"
                         />
                       </div>
 
@@ -6280,7 +6280,7 @@ PTENit ডিজিটাল টিম`;
                           value={dpLicenseKey}
                           onChange={(e) => setDpLicenseKey(e.target.value)}
                           placeholder="e.g. PTEN-SCRIPT-2026-KEY"
-                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-amber-400 font-mono focus:outline-none focus:border-[#1DB954]"
+                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-amber-400 font-mono focus:outline-none focus:border-[#006A4E]"
                         />
                       </div>
                     </div>
@@ -6327,7 +6327,7 @@ PTENit ডিজিটাল টিম`;
                         value={dpShortDesc}
                         onChange={(e) => setDpShortDesc(e.target.value)}
                         placeholder="রেডিমেড রেসপন্সিভ সোর্স কোড ও ফুল ইনস্টলেশন গাইড..."
-                        className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                        className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
 
@@ -6339,7 +6339,7 @@ PTENit ডিজিটাল টিম`;
                         value={dpFeaturesText}
                         onChange={(e) => setDpFeaturesText(e.target.value)}
                         placeholder="লাইফটাইম ফ্রি আপডেট, সম্পূর্ণ কাস্টমাইজেবল, প্রফেশনাল ইউআই"
-                        className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                        className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
 
@@ -6351,7 +6351,7 @@ PTENit ডিজিটাল টিম`;
                         value={dpFullDesc}
                         onChange={(e) => setDpFullDesc(e.target.value)}
                         placeholder="প্রোডাক্টটি কেনার পর কীভাবে সেটআপ করবেন, লাইসেন্স কি কীভাবে ব্যবহার করবেন এবং কি কি ফিচার পাবেন বিস্তারিত লিখুন..."
-                        className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                        className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
 
@@ -6365,7 +6365,7 @@ PTENit ডিজিটাল টিম`;
                       </button>
                       <button
                         type="submit"
-                        className="px-6 py-2.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-extrabold text-xs sm:text-sm rounded-xl cursor-pointer shadow-lg shadow-emerald-500/20"
+                        className="px-6 py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white font-extrabold text-xs sm:text-sm rounded-xl cursor-pointer shadow-lg shadow-blue-500/20"
                       >
                         {editingDpId ? 'পরিবর্তন সেভ করুন' : 'পাবলিশ করুন ✓'}
                       </button>
@@ -6411,7 +6411,7 @@ PTENit ডিজিটাল টিম`;
                     </div>
                     <div className="text-right shrink-0">
                       <span className="text-[10px] text-slate-400 block font-bold">অর্ডার মূল্য:</span>
-                      <span className="font-black text-emerald-400 text-sm">৳{dpAccessFileModalOrder.amount.toLocaleString('bn-BD')}</span>
+                      <span className="font-black text-sky-400 text-sm">৳{dpAccessFileModalOrder.amount.toLocaleString('bn-BD')}</span>
                     </div>
                   </div>
 
@@ -6421,7 +6421,7 @@ PTENit ডিজিটাল টিম`;
                     <div className="space-y-1.5">
                       <label className="block text-slate-300 font-bold flex items-center justify-between">
                         <span>১. গুগল ড্রাইভ / ক্লাউড ডাউনলোড লিঙ্ক (Google Drive Link)</span>
-                        <span className="text-[10px] text-[#1DB954] font-normal">সরাসরি লিঙ্ক দিন</span>
+                        <span className="text-[10px] text-[#38BDF8] font-normal">সরাসরি লিঙ্ক দিন</span>
                       </label>
                       <div className="relative">
                         <Link2 className="w-4 h-4 absolute left-3.5 top-3 text-slate-500" />
@@ -6550,7 +6550,7 @@ PTENit ডিজিটাল টিম`;
                           হোয়াটসঅ্যাপ মেসেজ ও এক্সেস পাঠান
                         </h3>
                         <p className="text-[11px] text-slate-400">
-                          অর্ডার: <span className="font-mono font-bold text-emerald-400">#{dpWhatsAppModalOrder.id}</span> • প্রাপক: <span className="text-white font-bold">{dpWhatsAppModalOrder.buyerName}</span> ({dpWhatsAppModalOrder.buyerPhone || 'ফোন নম্বর নেই'})
+                          অর্ডার: <span className="font-mono font-bold text-sky-400">#{dpWhatsAppModalOrder.id}</span> • প্রাপক: <span className="text-white font-bold">{dpWhatsAppModalOrder.buyerName}</span> ({dpWhatsAppModalOrder.buyerPhone || 'ফোন নম্বর নেই'})
                         </p>
                       </div>
                     </div>
@@ -6609,7 +6609,7 @@ PTENit ডিজিটাল টিম`;
                     <button
                       type="button"
                       onClick={handleSendWhatsAppSubmit}
-                      className="px-6 py-2.5 bg-[#25D366] hover:bg-emerald-600 text-white font-black text-xs sm:text-sm rounded-xl cursor-pointer shadow-lg shadow-emerald-900/30 flex items-center gap-2 transition active:scale-95"
+                      className="px-6 py-2.5 bg-[#25D366] hover:bg-[#047857] text-white font-black text-xs sm:text-sm rounded-xl cursor-pointer shadow-lg shadow-blue-950/30 flex items-center gap-2 transition active:scale-95"
                     >
                       <WhatsAppIcon className="w-4 h-4" />
                       <span>WhatsApp-এ মেসেজ পাঠান ✓</span>
@@ -6702,7 +6702,7 @@ PTENit ডিজিটাল টিম`;
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <CreditCard className="w-5 h-5 text-[#1DB954]" /> পেমেন্ট ও অর্ডার ({orders.length})
+                    <CreditCard className="w-5 h-5 text-[#38BDF8]" /> পেমেন্ট ও অর্ডার ({orders.length})
                   </h2>
                 </div>
                 <p className="text-[11px] text-slate-400">
@@ -6711,7 +6711,7 @@ PTENit ডিজিটাল টিম`;
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
-                <span className="text-xs text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20 font-mono">
+                <span className="text-xs text-sky-400 font-bold bg-blue-500/10 px-3 py-1.5 rounded-xl border border-blue-500/20 font-mono">
                   রিভেনিউ: ৳{totalRevenue.toLocaleString()}
                 </span>
               </div>
@@ -6726,7 +6726,7 @@ PTENit ডিজিটাল টিম`;
                   placeholder="অর্ডার আইডি, নাম, ফোন বা TrxID..."
                   value={orderSearchFilter}
                   onChange={(e) => setOrderSearchFilter(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs font-medium text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                  className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs font-medium text-white placeholder-slate-500 focus:outline-none focus:border-[#006A4E]"
                 />
               </div>
 
@@ -6743,7 +6743,7 @@ PTENit ডিজিটাল টিম`;
                     onClick={() => setOrderStatusFilter(item.id)}
                     className={`px-2.5 py-1.5 rounded-lg text-xs font-bold shrink-0 transition cursor-pointer ${
                       orderStatusFilter === item.id
-                        ? 'bg-[#1DB954] text-white shadow-sm'
+                        ? 'bg-[#006A4E] text-white shadow-sm'
                         : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
                     }`}
                   >
@@ -6755,13 +6755,13 @@ PTENit ডিজিটাল টিম`;
 
             {/* BULK ACTION TOOLBAR (Visible when orders selected) */}
             {selectedOrderIds.length > 0 && (
-              <div className="p-4 bg-gradient-to-r from-slate-900 via-emerald-950/80 to-slate-900 border-2 border-[#1DB954] rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="p-4 bg-gradient-to-r from-slate-900 via-slate-950/80 to-slate-900 border-2 border-blue-600/50 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#1DB954] text-white flex items-center justify-center font-black text-sm shrink-0 shadow-md">
+                  <div className="w-10 h-10 rounded-xl bg-[#006A4E] text-white flex items-center justify-center font-black text-sm shrink-0 shadow-md">
                     <CheckSquare className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-xs font-black text-white bg-[#1DB954] px-2.5 py-0.5 rounded-full mr-2">
+                    <span className="text-xs font-black text-white bg-[#006A4E] px-2.5 py-0.5 rounded-full mr-2">
                       {selectedOrderIds.length} টি সিলেক্টেড
                     </span>
                     <span className="text-xs font-bold text-slate-200">
@@ -6776,7 +6776,7 @@ PTENit ডিজিটাল টিম`;
                     <select
                       value={bulkOrderTargetStatus}
                       onChange={(e) => setBulkOrderTargetStatus(e.target.value as any)}
-                      className="bg-slate-900 text-white text-xs font-bold py-1 px-2 rounded-lg border border-slate-700 focus:outline-none focus:border-[#1DB954] cursor-pointer"
+                      className="bg-slate-900 text-white text-xs font-bold py-1 px-2 rounded-lg border border-slate-700 focus:outline-none focus:border-[#006A4E] cursor-pointer"
                     >
                       <option value="Paid">Paid (অনুমোদিত)</option>
                       <option value="Pending">Pending (অপেক্ষমান)</option>
@@ -6787,7 +6787,7 @@ PTENit ডিজিটাল টিম`;
 
                   <button
                     onClick={handleApplyBulkOrderStatus}
-                    className="px-4 py-2 bg-[#1DB954] hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                    className="px-4 py-2 bg-[#006A4E] hover:bg-[#047857] text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer"
                   >
                     <CheckCircle className="w-4 h-4" />
                     <span>বাল্ক আপডেট</span>
@@ -6823,7 +6823,7 @@ PTENit ডিজিটাল টিম`;
                           type="checkbox"
                           checked={isAllCourseOrdersSelected}
                           onChange={handleToggleSelectAllCourseOrders}
-                          className="w-4 h-4 rounded cursor-pointer accent-[#1DB954]"
+                          className="w-4 h-4 rounded cursor-pointer accent-[#006A4E]"
                           title="সকলের সিলেক্ট/আনসিলেক্ট করুন"
                         />
                       </th>
@@ -6851,7 +6851,7 @@ PTENit ডিজিটাল টিম`;
                             key={o.id}
                             className={`transition-colors ${
                               isSelected
-                                ? 'bg-emerald-500/10 dark:bg-emerald-950/40 border-l-4 border-l-[#1DB954]'
+                                ? 'bg-blue-500/10 dark:bg-blue-950/40 border-l-4 border-l-[#006A4E]'
                                 : 'hover:bg-slate-50 dark:hover:bg-slate-700/50'
                             }`}
                           >
@@ -6860,14 +6860,14 @@ PTENit ডিজিটাল টিম`;
                                 type="checkbox"
                                 checked={isSelected}
                                 onChange={() => handleToggleSelectCourseOrder(o.id)}
-                                className="w-4 h-4 rounded cursor-pointer accent-[#1DB954]"
+                                className="w-4 h-4 rounded cursor-pointer accent-[#006A4E]"
                               />
                             </td>
                             <td className="p-4 font-mono font-bold text-white">{o.id}</td>
                             <td className="p-4 text-slate-200">{o.userName} ({o.userMobile})</td>
                             <td className="p-4 text-slate-200">{o.courseTitle}</td>
                             <td className="p-4 font-medium text-slate-300">{o.paymentMethod} - {o.transactionId}</td>
-                            <td className="p-4 font-bold text-[#1DB954]">৳{o.amount}</td>
+                            <td className="p-4 font-bold text-[#38BDF8]">৳{o.amount}</td>
                             <td className="p-4">
                               <select
                                 value={o.status}
@@ -6909,7 +6909,7 @@ PTENit ডিজিটাল টিম`;
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <Building2 className="w-5 h-5 text-[#1DB954]" /> ক্লায়েন্ট প্রজেক্ট
+                    <Building2 className="w-5 h-5 text-[#38BDF8]" /> ক্লায়েন্ট প্রজেক্ট
                   </h2>
                 </div>
                 <p className="text-[11px] text-slate-400">
@@ -6920,7 +6920,7 @@ PTENit ডিজিটাল টিম`;
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   onClick={() => alert('নতুন B2B ক্লায়েন্ট প্রজেক্ট যুক্ত করতে বায়ার জব ও ডেসপ্যাচ ম্যানেজমেন্ট ব্যবহার করুন।')}
-                  className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow transition shrink-0"
+                  className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow transition shrink-0"
                 >
                   <Plus className="w-3.5 h-3.5" /> <span>+ নতুন প্রজেক্ট</span>
                 </button>
@@ -6935,7 +6935,7 @@ PTENit ডিজিটাল টিম`;
               </div>
               <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow">
                 <p className="text-xs text-slate-400 font-bold">মোট চুক্তিকৃত মূল্য (B2B Value)</p>
-                <p className="text-2xl font-black text-[#1DB954] mt-1">৳৪,৫০,০০০</p>
+                <p className="text-2xl font-black text-[#38BDF8] mt-1">৳৪,৫০,০০০</p>
               </div>
               <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow">
                 <p className="text-xs text-slate-400 font-bold">সম্পন্ন মিলস্টোনস</p>
@@ -6950,7 +6950,7 @@ PTENit ডিজিটাল টিম`;
             {/* Client Projects List */}
             <div className="bg-slate-900 rounded-3xl border border-slate-800 p-6 space-y-4 shadow-xl">
               <h3 className="text-base font-black text-white flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-emerald-400" />
+                <Building2 className="w-5 h-5 text-sky-400" />
                 <span>বর্তমান B2B কর্পোরেট ক্লায়েন্ট তালিকা</span>
               </h3>
 
@@ -6973,16 +6973,16 @@ PTENit ডিজিটাল টিম`;
                         <p className="text-[10px] text-slate-400">ক্লায়েন্ট: অ্যাপেক্স বিডি লিমিটেড</p>
                       </td>
                       <td className="p-3 text-slate-300">Software & ERP</td>
-                      <td className="p-3 text-emerald-400 font-bold">কে.এম. রফিকুল ইসলাম (Head of IT)</td>
+                      <td className="p-3 text-sky-400 font-bold">কে.এম. রফিকুল ইসলাম (Head of IT)</td>
                       <td className="p-3 font-bold text-white">৳১,৮০,০০০</td>
                       <td className="p-3">
                         <div className="w-28 bg-slate-800 rounded-full h-2 overflow-hidden">
-                          <div className="bg-[#1DB954] h-2 rounded-full" style={{ width: '75%' }}></div>
+                          <div className="bg-[#006A4E] h-2 rounded-full" style={{ width: '75%' }}></div>
                         </div>
                         <span className="text-[10px] text-slate-400 mt-0.5 block">৩/৪ মিলস্টোন সম্পন্ন</span>
                       </td>
                       <td className="p-3">
-                        <span className="px-2 py-1 bg-emerald-500/20 text-[#1DB954] font-bold rounded-full text-[10px]">
+                        <span className="px-2 py-1 bg-blue-500/20 text-[#38BDF8] font-bold rounded-full text-[10px]">
                           ইন প্রোগ্রেস
                         </span>
                       </td>
@@ -6994,16 +6994,16 @@ PTENit ডিজিটাল টিম`;
                         <p className="text-[10px] text-slate-400">ক্লায়েন্ট: ঢাকা মার্ট ডিজিটাল</p>
                       </td>
                       <td className="p-3 text-slate-300">Mobile App Development</td>
-                      <td className="p-3 text-emerald-400 font-bold">তানভীর আহমেদ (App Specialist)</td>
+                      <td className="p-3 text-sky-400 font-bold">তানভীর আহমেদ (App Specialist)</td>
                       <td className="p-3 font-bold text-white">৳১,২০,০০০</td>
                       <td className="p-3">
                         <div className="w-28 bg-slate-800 rounded-full h-2 overflow-hidden">
-                          <div className="bg-[#1DB954] h-2 rounded-full" style={{ width: '50%' }}></div>
+                          <div className="bg-[#006A4E] h-2 rounded-full" style={{ width: '50%' }}></div>
                         </div>
                         <span className="text-[10px] text-slate-400 mt-0.5 block">২/৪ মিলস্টোন সম্পন্ন</span>
                       </td>
                       <td className="p-3">
-                        <span className="px-2 py-1 bg-emerald-500/20 text-[#1DB954] font-bold rounded-full text-[10px]">
+                        <span className="px-2 py-1 bg-blue-500/20 text-[#38BDF8] font-bold rounded-full text-[10px]">
                           ইন প্রোগ্রেস
                         </span>
                       </td>
@@ -7015,11 +7015,11 @@ PTENit ডিজিটাল টিম`;
                         <p className="text-[10px] text-slate-400">ক্লায়েন্ট: গ্রীন ফিল্ড এগ্রো</p>
                       </td>
                       <td className="p-3 text-slate-300">Graphics & Video</td>
-                      <td className="p-3 text-emerald-400 font-bold">সাবরিনা সুলতানা (Design Expert)</td>
+                      <td className="p-3 text-sky-400 font-bold">সাবরিনা সুলতানা (Design Expert)</td>
                       <td className="p-3 font-bold text-white">৳৫০,০০০</td>
                       <td className="p-3">
                         <div className="w-28 bg-slate-800 rounded-full h-2 overflow-hidden">
-                          <div className="bg-[#1DB954] h-2 rounded-full" style={{ width: '100%' }}></div>
+                          <div className="bg-[#006A4E] h-2 rounded-full" style={{ width: '100%' }}></div>
                         </div>
                         <span className="text-[10px] text-slate-400 mt-0.5 block">সম্পূর্ণ সম্পন্ন</span>
                       </td>
@@ -7046,7 +7046,7 @@ PTENit ডিজিটাল টিম`;
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <ShoppingBag className="w-5 h-5 text-[#1DB954]" /> মার্কেটপ্লেস হাব
+                    <ShoppingBag className="w-5 h-5 text-[#38BDF8]" /> মার্কেটপ্লেস হাব
                   </h2>
                 </div>
                 <p className="text-[11px] text-slate-400">
@@ -7070,7 +7070,7 @@ PTENit ডিজিটাল টিম`;
                       onClick={() => setMktAdminSubTab(tab.id as any)}
                       className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                         mktAdminSubTab === tab.id
-                          ? 'bg-[#1DB954] text-white shadow-sm'
+                          ? 'bg-[#006A4E] text-white shadow-sm'
                           : 'text-slate-400 hover:text-white hover:bg-slate-800'
                       }`}
                     >
@@ -7089,7 +7089,7 @@ PTENit ডিজিটাল টিম`;
                   <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow space-y-1">
                     <p className="text-xs sm:text-sm text-slate-400 font-bold">মোট গিগ সার্ভিস</p>
                     <p className="text-2xl sm:text-3xl font-black text-white">{gigs.length} টি</p>
-                    <span className="text-xs text-emerald-400 font-bold">পাবলিক বায়ার ক্যাটালগে প্রদর্শিত</span>
+                    <span className="text-xs text-sky-400 font-bold">পাবলিক বায়ার ক্যাটালগে প্রদর্শিত</span>
                   </div>
 
                   <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow space-y-1">
@@ -7106,17 +7106,17 @@ PTENit ডিজিটাল টিম`;
 
                   <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow space-y-1">
                     <p className="text-xs sm:text-sm text-slate-400 font-bold">মার্কেটপ্লেস এডমিন রেভিনিউ</p>
-                    <p className="text-2xl sm:text-3xl font-black text-[#1DB954]">
+                    <p className="text-2xl sm:text-3xl font-black text-[#38BDF8]">
                       ৳{marketplaceOrders.reduce((sum, o) => sum + (o.adminCommission || 0), 0).toLocaleString('bn-BD')}
                     </p>
-                    <span className="text-xs text-[#1DB954] font-bold">{mktCommissionRate}% রেট এ জমাকৃত কমিশন</span>
+                    <span className="text-xs text-[#38BDF8] font-bold">{mktCommissionRate}% রেট এ জমাকৃত কমিশন</span>
                   </div>
                 </div>
 
                 {/* Dynamic Platform Fee Controller */}
                 <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 shadow-xl">
                   <h3 className="text-base font-black text-white flex items-center gap-2">
-                    <DollarSign className="w-5 h-5 text-[#1DB954]" />
+                    <DollarSign className="w-5 h-5 text-[#38BDF8]" />
                     <span>প্ল্যাটফর্ম ফি & কমিশন রেট কন্ট্রোলার</span>
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center bg-slate-950 p-4 rounded-2xl border border-slate-800">
@@ -7128,7 +7128,7 @@ PTENit ডিজিটাল টিম`;
                           setMktCommissionRate(Number(e.target.value));
                           alert(`প্লাটফর্ম কমিশন রেট সফলভাবে ${e.target.value}% এ সেট করা হয়েছে!`);
                         }}
-                        className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs font-black text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs font-black text-white focus:outline-none focus:border-[#006A4E]"
                       >
                         <option value={5}>৫% (ইনসেন্টিভ কম ফি)</option>
                         <option value={10}>১০% (স্ট্যান্ডার্ড রেট - ডিফল্ট)</option>
@@ -7144,7 +7144,7 @@ PTENit ডিজিটাল টিম`;
 
                     <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1 text-xs">
                       <p className="text-slate-400 font-semibold">সেলার পে-আউট শেয়ার:</p>
-                      <p className="font-black text-[#1DB954] text-sm">{100 - mktCommissionRate}% ডিরেক্ট পে আউট</p>
+                      <p className="font-black text-[#38BDF8] text-sm">{100 - mktCommissionRate}% ডিরেক্ট পে আউট</p>
                     </div>
                   </div>
                 </div>
@@ -7162,7 +7162,7 @@ PTENit ডিজিটাল টিম`;
                       placeholder="গিগ শিরোনাম বা সেলারের নাম খুঁজুন..."
                       value={gigSearchFilter}
                       onChange={(e) => setGigSearchFilter(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                      className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
 
@@ -7170,7 +7170,7 @@ PTENit ডিজিটাল টিম`;
                     <button
                       onClick={() => setGigStatusFilter('all')}
                       className={`px-3 py-1.5 rounded-xl font-bold transition cursor-pointer ${
-                        gigStatusFilter === 'all' ? 'bg-[#1DB954] text-white' : 'bg-slate-900 text-slate-400 border border-slate-800'
+                        gigStatusFilter === 'all' ? 'bg-[#006A4E] text-white' : 'bg-slate-900 text-slate-400 border border-slate-800'
                       }`}
                     >
                       সকল গিগ ({gigs.length})
@@ -7186,7 +7186,7 @@ PTENit ডিজিটাল টিম`;
                         <div className="space-y-2">
                           <div className="relative h-36 rounded-xl overflow-hidden bg-slate-950">
                             <img src={gig.thumbnail} alt={gig.title} className="w-full h-full object-cover" />
-                            <span className="absolute top-2 left-2 px-2.5 py-0.5 bg-slate-950/80 backdrop-blur text-[10px] font-bold text-emerald-400 rounded-md border border-slate-700">
+                            <span className="absolute top-2 left-2 px-2.5 py-0.5 bg-slate-950/80 backdrop-blur text-[10px] font-bold text-sky-400 rounded-md border border-slate-700">
                               {gig.category}
                             </span>
                           </div>
@@ -7194,7 +7194,7 @@ PTENit ডিজিটাল টিম`;
                           <div className="flex items-center gap-2">
                             <img src={gig.sellerAvatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"} alt={gig.sellerName} className="w-6 h-6 rounded-full object-cover" />
                             <span className="text-xs font-bold text-white truncate">{gig.sellerName}</span>
-                            <span className="text-[10px] font-bold text-[#1DB954] bg-[#1DB954]/10 px-1.5 py-0.5 rounded">
+                            <span className="text-[10px] font-bold text-[#38BDF8] bg-[#006A4E]/10 px-1.5 py-0.5 rounded">
                               Vetted Pro
                             </span>
                           </div>
@@ -7203,14 +7203,14 @@ PTENit ডিজিটাল টিম`;
                         </div>
 
                         <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-                          <span className="font-black text-[#1DB954]">
+                          <span className="font-black text-[#38BDF8]">
                             ৳{(gig.packages?.basic?.price ?? 0).toLocaleString('bn-BD')}
                           </span>
                           
                           <div className="flex items-center gap-1.5 flex-wrap justify-end">
                             <button
                               onClick={() => handleOpenAdminEditGig(gig)}
-                              className="px-2 py-1 bg-emerald-500/20 text-[#1DB954] hover:bg-[#1DB954] hover:text-white text-[10px] font-bold rounded-lg transition border border-emerald-500/30 cursor-pointer flex items-center gap-1"
+                              className="px-2 py-1 bg-blue-500/20 text-[#38BDF8] hover:bg-[#006A4E] hover:text-white text-[10px] font-bold rounded-lg transition border border-blue-500/30 cursor-pointer flex items-center gap-1"
                               title="গিগ এডিট করুন"
                             >
                               <Edit className="w-3 h-3" />
@@ -7264,7 +7264,7 @@ PTENit ডিজিটাল টিম`;
                       setJobAssignedStaffId('');
                       setJobModalOpen(true);
                     }}
-                    className="px-3.5 py-2 bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow transition-all"
+                    className="px-3.5 py-2 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow transition-all"
                   >
                     <Plus className="w-4 h-4" />
                     <span>+ নতুন জব পোস্ট / কাস্টম প্রজেক্ট এডড</span>
@@ -7287,7 +7287,7 @@ PTENit ডিজিটাল টিম`;
                         </div>
 
                         <div className="text-right shrink-0">
-                          <p className="text-sm font-black text-[#1DB954]">৳{(job.budget || 0).toLocaleString('bn-BD')}</p>
+                          <p className="text-sm font-black text-[#38BDF8]">৳{(job.budget || 0).toLocaleString('bn-BD')}</p>
                           <p className="text-[10px] text-slate-400">স্ট্যাটাস: <strong className="uppercase text-amber-400">{job.status}</strong></p>
                         </div>
                       </div>
@@ -7296,8 +7296,8 @@ PTENit ডিজিটাল টিম`;
                       <div className="pt-3 border-t border-slate-900 flex flex-wrap items-center justify-between gap-3 text-xs">
                         <div className="text-slate-400">
                           {job.assignedStaffName ? (
-                            <span className="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 font-bold rounded-xl border border-emerald-500/30 flex items-center gap-1.5">
-                              <CheckCircle className="w-4 h-4 text-[#1DB954]" />
+                            <span className="px-3 py-1.5 bg-blue-500/20 text-sky-400 font-bold rounded-xl border border-blue-500/30 flex items-center gap-1.5">
+                              <CheckCircle className="w-4 h-4 text-[#38BDF8]" />
                               অর্পিত/ডেসপ্যাচকৃত স্টাফ: {job.assignedStaffName}
                             </span>
                           ) : (
@@ -7311,7 +7311,7 @@ PTENit ডিজিটাল টিম`;
                         <div className="flex items-center gap-2 flex-wrap">
                           <select
                             id={`dispatch-${job.id}`}
-                            className="p-2 bg-slate-900 border border-slate-700 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                            className="p-2 bg-slate-900 border border-slate-700 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-[#006A4E]"
                           >
                             <option value="">-- স্টাফ নির্বাচন করুন --</option>
                             {agencyStaff.map(s => (
@@ -7332,7 +7332,7 @@ PTENit ডিজিটাল টিম`;
                                 alert('অনুগ্রহ করে অফিস স্টাফ মেম্বার সিলেক্ট করুন।');
                               }
                             }}
-                            className="px-3.5 py-2 bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs rounded-xl shadow cursor-pointer transition flex items-center gap-1"
+                            className="px-3.5 py-2 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl shadow cursor-pointer transition flex items-center gap-1"
                           >
                             <Send className="w-3.5 h-3.5" />
                             <span>ডেসপ্যাচ করুন</span>
@@ -7372,14 +7372,14 @@ PTENit ডিজিটাল টিম`;
                         placeholder="অর্ডার, বায়ার বা সেলার খুঁজুন..."
                         value={mktOrderSearchFilter}
                         onChange={(e) => setMktOrderSearchFilter(e.target.value)}
-                        className="w-full pl-8 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full pl-8 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
 
                     <select
                       value={mktOrderStatusFilter}
                       onChange={(e) => setMktOrderStatusFilter(e.target.value)}
-                      className="p-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-[#1DB954] cursor-pointer"
+                      className="p-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-[#006A4E] cursor-pointer"
                     >
                       <option value="all">সকল স্ট্যাটাস</option>
                       <option value="pending">pending</option>
@@ -7395,9 +7395,9 @@ PTENit ডিজিটাল টিম`;
 
                 {/* BULK ACTION BAR FOR MARKETPLACE ORDERS */}
                 {selectedMktOrderIds.length > 0 && (
-                  <div className="p-3 bg-slate-950 border-2 border-[#1DB954] rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg animate-in fade-in duration-200">
+                  <div className="p-3 bg-slate-950 border-2 border-blue-600/50 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg animate-in fade-in duration-200">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-black text-white bg-[#1DB954] px-2.5 py-0.5 rounded-full">
+                      <span className="text-xs font-black text-white bg-[#006A4E] px-2.5 py-0.5 rounded-full">
                         {selectedMktOrderIds.length} টি এস্ক্রো অর্ডার সিলেক্টেড
                       </span>
                     </div>
@@ -7408,7 +7408,7 @@ PTENit ডিজিটাল টিম`;
                         <select
                           value={bulkMktOrderTargetStatus}
                           onChange={(e) => setBulkMktOrderTargetStatus(e.target.value as any)}
-                          className="bg-slate-950 text-white text-xs font-bold py-0.5 px-2 rounded border border-slate-700 focus:outline-none focus:border-[#1DB954] cursor-pointer uppercase"
+                          className="bg-slate-950 text-white text-xs font-bold py-0.5 px-2 rounded border border-slate-700 focus:outline-none focus:border-[#006A4E] cursor-pointer uppercase"
                         >
                           <option value="completed">completed (সম্পন্ন)</option>
                           <option value="in_progress">in_progress (চলমান)</option>
@@ -7421,7 +7421,7 @@ PTENit ডিজিটাল টিম`;
 
                       <button
                         onClick={handleApplyBulkMktOrderStatus}
-                        className="px-3 py-1.5 bg-[#1DB954] text-white font-black text-xs rounded-xl hover:bg-emerald-500 transition shadow cursor-pointer flex items-center gap-1"
+                        className="px-3 py-1.5 bg-[#006A4E] text-white font-black text-xs rounded-xl hover:bg-blue-500 transition shadow cursor-pointer flex items-center gap-1"
                       >
                         <CheckCircle className="w-3.5 h-3.5" />
                         <span>বাল্ক আপডেট</span>
@@ -7454,7 +7454,7 @@ PTENit ডিজিটাল টিম`;
                             type="checkbox"
                             checked={isAllMktOrdersSelected}
                             onChange={handleToggleSelectAllMktOrders}
-                            className="w-4 h-4 rounded cursor-pointer accent-[#1DB954]"
+                            className="w-4 h-4 rounded cursor-pointer accent-[#006A4E]"
                           />
                         </th>
                         <th className="p-3">অর্ডার ID & শিরোনাম</th>
@@ -7481,7 +7481,7 @@ PTENit ডিজিটাল টিম`;
                             <tr
                               key={ord.id}
                               className={`transition-colors ${
-                                isSelected ? 'bg-emerald-950/30 border-l-2 border-l-[#1DB954]' : 'hover:bg-slate-800/40'
+                                isSelected ? 'bg-slate-950/30 border-l-2 border-l-[#006A4E]' : 'hover:bg-slate-800/40'
                               }`}
                             >
                               <td className="p-3 text-center">
@@ -7489,7 +7489,7 @@ PTENit ডিজিটাল টিম`;
                                   type="checkbox"
                                   checked={isSelected}
                                   onChange={() => handleToggleSelectMktOrder(ord.id)}
-                                  className="w-4 h-4 rounded cursor-pointer accent-[#1DB954]"
+                                  className="w-4 h-4 rounded cursor-pointer accent-[#006A4E]"
                                 />
                               </td>
                               <td className="p-3">
@@ -7500,7 +7500,7 @@ PTENit ডিজিটাল টিম`;
                               <td className="p-3 text-slate-300 font-bold">{ord.sellerName}</td>
                               <td className="p-3 font-bold text-white">৳{(ord.amount || (ord as any).price || 0).toLocaleString('bn-BD')}</td>
                               <td className="p-3 font-bold text-amber-400">৳{(ord.adminCommission || 0).toLocaleString('bn-BD')}</td>
-                              <td className="p-3 font-bold text-[#1DB954]">৳{(ord.sellerPayout || 0).toLocaleString('bn-BD')}</td>
+                              <td className="p-3 font-bold text-[#38BDF8]">৳{(ord.sellerPayout || 0).toLocaleString('bn-BD')}</td>
                               <td className="p-3">
                                 <span className="px-2 py-1 bg-sky-500/20 text-sky-300 font-bold rounded-full text-[10px] uppercase">
                                   {ord.status}
@@ -7512,7 +7512,7 @@ PTENit ডিজিটাল টিম`;
                                     onClick={() => {
                                       alert(`অর্ডার ${ord.id} এর এস্ক্রো পেমেন্ট সফলভাবে সেলারের ওয়ালেটে রিলিজ করা হলো!`);
                                     }}
-                                    className="px-2.5 py-1 bg-[#1DB954] text-white font-black text-[10px] rounded-md shadow hover:bg-emerald-500 transition cursor-pointer"
+                                    className="px-2.5 py-1 bg-[#006A4E] text-white font-black text-[10px] rounded-md shadow hover:bg-blue-500 transition cursor-pointer"
                                   >
                                     রিলিজ এস্ক্রো
                                   </button>
@@ -7541,7 +7541,7 @@ PTENit ডিজিটাল টিম`;
             {mktAdminSubTab === 'categories' && (
               <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 shadow-xl">
                 <h3 className="text-base font-black text-white flex items-center gap-2">
-                  <Tag className="w-5 h-5 text-[#1DB954]" />
+                  <Tag className="w-5 h-5 text-[#38BDF8]" />
                   <span>ক্যাটাগরি & সার্ভিস ফিল্টার</span>
                 </h3>
 
@@ -7551,7 +7551,7 @@ PTENit ডিজিটাল টিম`;
                     placeholder="নতুন ক্যাটাগরির নাম লিখুন..."
                     value={newCatName}
                     onChange={(e) => setNewCatName(e.target.value)}
-                    className="flex-1 p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1DB954]"
+                    className="flex-1 p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#006A4E]"
                   />
                   <button
                     onClick={() => {
@@ -7561,7 +7561,7 @@ PTENit ডিজিটাল টিম`;
                         alert(`ক্যাটাগরি "${newCatName.trim()}" সফলভাবে যুক্ত হয়েছে!`);
                       }
                     }}
-                    className="px-4 py-2.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs rounded-xl cursor-pointer"
+                    className="px-4 py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl cursor-pointer"
                   >
                     + যোগ করুন
                   </button>
@@ -7591,7 +7591,7 @@ PTENit ডিজিটাল টিম`;
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <ImageIcon className="w-5 h-5 text-[#1DB954]" /> গ্যালারি ও মিডিয়া ({gallery.length})
+                    <ImageIcon className="w-5 h-5 text-[#38BDF8]" /> গ্যালারি ও মিডিয়া ({gallery.length})
                   </h2>
                 </div>
                 <p className="text-[11px] text-slate-400">
@@ -7602,7 +7602,7 @@ PTENit ডিজিটাল টিম`;
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   onClick={() => setGalleryModalOpen(true)}
-                  className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow transition shrink-0"
+                  className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow transition shrink-0"
                 >
                   <Plus className="w-3.5 h-3.5" /> <span>+ নতুন ছবি</span>
                 </button>
@@ -7614,7 +7614,7 @@ PTENit ডিজিটাল টিম`;
                 <div key={item.id} className="relative group rounded-xl overflow-hidden bg-slate-900 border border-slate-800 shadow">
                   <img src={item.imageUrl} alt={item.title} className="w-full h-32 sm:h-40 object-cover" />
                   <div className="p-2.5 space-y-0.5">
-                    <span className="text-[10px] font-bold text-[#1DB954] uppercase">{item.category}</span>
+                    <span className="text-[10px] font-bold text-[#38BDF8] uppercase">{item.category}</span>
                     <h4 className="text-xs font-bold text-white line-clamp-1">{item.title}</h4>
                     <p className="text-[11px] text-slate-400 line-clamp-1">{item.caption}</p>
                   </div>
@@ -7637,7 +7637,7 @@ PTENit ডিজিটাল টিম`;
                 </h3>
                 <button
                   onClick={() => setTestimonialModalOpen(true)}
-                  className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl flex items-center gap-1 cursor-pointer shadow transition shrink-0"
+                  className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl flex items-center gap-1 cursor-pointer shadow transition shrink-0"
                 >
                   <Plus className="w-3.5 h-3.5" /> <span>+ নতুন রিভিউ</span>
                 </button>
@@ -7650,7 +7650,7 @@ PTENit ডিজিটাল টিম`;
                       <img src={t.avatar} alt={t.name} className="w-9 h-9 rounded-full object-cover shrink-0" />
                       <div>
                         <h4 className="text-xs font-bold text-white">{t.name}</h4>
-                        <span className="text-[10px] text-emerald-400 font-semibold">{t.courseOrService}</span>
+                        <span className="text-[10px] text-sky-400 font-semibold">{t.courseOrService}</span>
                         <p className="text-xs text-slate-300 mt-0.5 line-clamp-2">"{t.text}"</p>
                       </div>
                     </div>
@@ -7674,7 +7674,7 @@ PTENit ডিজিটাল টিম`;
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-[#1DB954]" /> ওয়েবসাইট কন্টেন্ট
+                    <Settings className="w-5 h-5 text-[#38BDF8]" /> ওয়েবসাইট কন্টেন্ট
                   </h2>
                 </div>
                 <p className="text-[11px] text-slate-400">
@@ -7685,7 +7685,7 @@ PTENit ডিজিটাল টিম`;
 
             <div className="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 max-w-3xl space-y-4">
               {settingsSaved && (
-                <div className="p-2.5 bg-emerald-500/20 border border-emerald-500/50 text-emerald-500 font-bold rounded-xl text-xs flex items-center gap-2">
+                <div className="p-2.5 bg-blue-500/20 border border-blue-500/50 text-blue-500 font-bold rounded-xl text-xs flex items-center gap-2">
                   <Check className="w-4 h-4" /> সেটিংস সফলভাবে আপডেট ও সেভ হয়েছে!
                 </div>
               )}
@@ -7697,7 +7697,7 @@ PTENit ডিজিটাল টিম`;
                   type="text"
                   value={settingsForm.heroHeading}
                   onChange={e => setSettingsForm({ ...settingsForm, heroHeading: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                  className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#006A4E]"
                 />
               </div>
 
@@ -7707,7 +7707,7 @@ PTENit ডিজিটাল টিম`;
                   rows={3}
                   value={settingsForm.heroSubtext}
                   onChange={e => setSettingsForm({ ...settingsForm, heroSubtext: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                  className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#006A4E]"
                 />
               </div>
 
@@ -7718,7 +7718,7 @@ PTENit ডিজিটাল টিম`;
                     type="text"
                     value={settingsForm.statsStudents}
                     onChange={e => setSettingsForm({ ...settingsForm, statsStudents: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
                 <div>
@@ -7727,7 +7727,7 @@ PTENit ডিজিটাল টিম`;
                     type="text"
                     value={settingsForm.statsProjects}
                     onChange={e => setSettingsForm({ ...settingsForm, statsProjects: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
               </div>
@@ -7739,7 +7739,7 @@ PTENit ডিজিটাল টিম`;
                     type="text"
                     value={settingsForm.phone}
                     onChange={e => setSettingsForm({ ...settingsForm, phone: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
                 <div>
@@ -7748,7 +7748,7 @@ PTENit ডিজিটাল টিম`;
                     type="text"
                     value={settingsForm.email}
                     onChange={e => setSettingsForm({ ...settingsForm, email: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
               </div>
@@ -7759,16 +7759,16 @@ PTENit ডিজিটাল টিম`;
                   type="text"
                   value={settingsForm.officeAddress}
                   onChange={e => setSettingsForm({ ...settingsForm, officeAddress: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#1DB954]"
+                  className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sm font-medium text-white placeholder:text-slate-500 focus:outline-none focus:border-[#006A4E]"
                 />
               </div>
 
               {/* Logo 01: PTENit Website Logo (Main Site Header & Footer) */}
-              <div className="p-4 sm:p-5 rounded-2xl border-2 border-[#1DB954]/30 bg-slate-950 shadow-sm space-y-4 font-bengali">
+              <div className="p-4 sm:p-5 rounded-2xl border-2 border-blue-600/50/30 bg-slate-950 shadow-sm space-y-4 font-bengali">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
                   <div>
                     <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#1DB954] animate-pulse" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#006A4E] animate-pulse" />
                       ০১. পিটেন আইটি ওয়েবসাইট লোগো (PTENit Main Website Logo)
                     </h3>
                     <p className="text-xs text-slate-400 mt-0.5">
@@ -7777,7 +7777,7 @@ PTENit ডিজিটাল টিম`;
                   </div>
                   <span className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border shrink-0 ${
                     settingsForm.logoUrl
-                      ? "bg-[#1DB954]/10 text-[#1DB954] border-[#1DB954]/30"
+                      ? "bg-[#006A4E]/10 text-[#38BDF8] border-blue-600/50/30"
                       : "bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-800"
                   }`}>
                     {settingsForm.logoUrl ? "ইমেজ লোগো সক্রিয়" : "ডিফল্ট টেক্সট লোগো"}
@@ -7786,7 +7786,7 @@ PTENit ডিজিটাল টিম`;
 
                 <div className="space-y-3">
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                    <label className="px-4 py-2.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl cursor-pointer flex items-center justify-center gap-2 shrink-0 shadow transition-all">
+                    <label className="px-4 py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl cursor-pointer flex items-center justify-center gap-2 shrink-0 shadow transition-all">
                       <Upload className="w-4 h-4" />
                       <span>পিটেন আইটি লোগো আপলোড</span>
                       <input
@@ -7809,7 +7809,7 @@ PTENit ডিজিটাল টিম`;
                         logoUrl: e.target.value,
                         logoMode: e.target.value ? "image" : "box_text"
                       })}
-                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white placeholder:text-slate-400 focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white placeholder:text-slate-400 focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
 
@@ -7825,7 +7825,7 @@ PTENit ডিজিটাল টিম`;
                         </div>
                         <div>
                           <p className="text-xs font-bold text-white">পিটেন আইটি ইমেজ লোগো আপলোড করা হয়েছে</p>
-                          <p className="text-[10px] text-[#1DB954]">হেডার ও ফুটারে এই লোগোটি প্রদর্শিত হচ্ছে</p>
+                          <p className="text-[10px] text-[#38BDF8]">হেডার ও ফুটারে এই লোগোটি প্রদর্শিত হচ্ছে</p>
                         </div>
                       </div>
 
@@ -7845,12 +7845,12 @@ PTENit ডিজিটাল টিম`;
                   ) : (
                     <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#1DB954] to-emerald-600 flex items-center justify-center font-bold text-white text-base shadow-sm">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#006A4E] to-blue-600 flex items-center justify-center font-bold text-white text-base shadow-sm">
                           P
                         </div>
                         <div className="font-bold text-sm">
                           <span className="text-white">PTEN</span>
-                          <span className="text-[#1DB954]">it</span>
+                          <span className="text-[#38BDF8]">it</span>
                         </div>
                         <span className="text-[10px] text-slate-400 ml-2">
                           (বর্তমানে ডিফল্ট টেক্সট লোগো প্রদর্শিত হচ্ছে)
@@ -7957,11 +7957,11 @@ PTENit ডিজিটাল টিম`;
               </div>
 
               {/* Hero Visual Customizer: Clean Model / Cover Photo Upload */}
-              <div className="p-4 sm:p-5 rounded-2xl border-2 border-emerald-500/30 bg-slate-950 shadow-sm space-y-4 font-bengali">
+              <div className="p-4 sm:p-5 rounded-2xl border-2 border-blue-500/30 bg-slate-950 shadow-sm space-y-4 font-bengali">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
                   <div>
                     <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-[#1DB954]" />
+                      <Sparkles className="w-4 h-4 text-[#38BDF8]" />
                       হিরো সেকশন কভার বা মডেল ছবি (Hero Image)
                     </h3>
                     <p className="text-xs text-slate-400 mt-0.5">
@@ -7970,7 +7970,7 @@ PTENit ডিজিটাল টিম`;
                   </div>
                   <span className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border shrink-0 ${
                     settingsForm.heroPhotoUrl || settingsForm.heroBannerUrl
-                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                      ? "bg-blue-500/10 text-[#006A4E] dark:text-sky-400 border-blue-500/30"
                       : "bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-800"
                   }`}>
                     {settingsForm.heroPhotoUrl || settingsForm.heroBannerUrl ? "মাস্কড মডেল ছবি সক্রিয়" : "কোড প্রিভিউ সক্রিয়"}
@@ -7980,7 +7980,7 @@ PTENit ডিজিটাল টিম`;
                 {/* Upload & URL Controls */}
                 <div className="space-y-3">
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                    <label className="px-4 py-2.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl cursor-pointer flex items-center justify-center gap-2 shrink-0 shadow transition-all">
+                    <label className="px-4 py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl cursor-pointer flex items-center justify-center gap-2 shrink-0 shadow transition-all">
                       <Upload className="w-4 h-4" />
                       <span>মডেল বা কভার ছবি আপলোড করুন</span>
                       <input
@@ -8005,7 +8005,7 @@ PTENit ডিজিটাল টিম`;
                         heroBannerUrl: e.target.value,
                         heroVisualType: e.target.value ? "photo" : "code_mockup"
                       })}
-                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white placeholder:text-slate-400 focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white placeholder:text-slate-400 focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
 
@@ -8013,7 +8013,7 @@ PTENit ডিজিটাল টিম`;
                   {(settingsForm.heroPhotoUrl || settingsForm.heroBannerUrl) ? (
                     <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-20 h-24 rounded-lg overflow-hidden border border-[#1DB954]/50 bg-slate-950 shrink-0">
+                        <div className="w-20 h-24 rounded-lg overflow-hidden border border-blue-600/50/50 bg-slate-950 shrink-0">
                           <img
                             src={settingsForm.heroPhotoUrl || settingsForm.heroBannerUrl}
                             alt="Hero Cover Preview"
@@ -8022,7 +8022,7 @@ PTENit ডিজিটাল টিম`;
                         </div>
                         <div>
                           <p className="text-xs font-bold text-white">হিরো সেকশনে আপনার ছবি যুক্ত হয়েছে</p>
-                          <p className="text-[10px] text-[#1DB954]">
+                          <p className="text-[10px] text-[#38BDF8]">
                             হিরো সেকশনে টেক্সটের পাশে ব্যাকগ্রাউন্ড কালারের সাথে নিখুঁতভাবে মিশে ছবিটি প্রদর্শিত হচ্ছে।
                           </p>
                         </div>
@@ -8055,7 +8055,7 @@ PTENit ডিজিটাল টিম`;
                 <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                   <div>
                     <h4 className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-                      <ShieldCheck className="w-4 h-4 text-[#1DB954]" />
+                      <ShieldCheck className="w-4 h-4 text-[#38BDF8]" />
                       মানি ব্যাক ও এস্ক্রো গ্যারান্টি কন্ট্রোল (Money-Back & Escrow Guarantee)
                     </h4>
                     <p className="text-[11px] text-slate-400 mt-0.5">
@@ -8069,7 +8069,7 @@ PTENit ডিজিটাল টিম`;
                       onChange={e => setSettingsForm({ ...settingsForm, enableMoneyBackGuarantee: e.target.checked })}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1DB954]"></div>
+                    <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#006A4E]"></div>
                   </label>
                 </div>
 
@@ -8085,7 +8085,7 @@ PTENit ডিজিটাল টিম`;
                         max={90}
                         value={settingsForm.moneyBackGuaranteeDays ?? 10}
                         onChange={e => setSettingsForm({ ...settingsForm, moneyBackGuaranteeDays: parseInt(e.target.value) || 10 })}
-                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#006A4E]"
                         placeholder="১০"
                       />
                     </div>
@@ -8098,7 +8098,7 @@ PTENit ডিজিটাল টিম`;
                         type="text"
                         value={settingsForm.moneyBackGuaranteeText || `${settingsForm.moneyBackGuaranteeDays || 10}-দিনের মানি ব্যাক ও এস্ক্রো গ্যারান্টি`}
                         onChange={e => setSettingsForm({ ...settingsForm, moneyBackGuaranteeText: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white focus:outline-none focus:border-[#006A4E]"
                         placeholder="১০-দিনের মানি ব্যাক ও এস্ক্রো গ্যারান্টি"
                       />
                     </div>
@@ -8108,7 +8108,7 @@ PTENit ডিজিটাল টিম`;
 
               <button
                 type="submit"
-                className="px-6 py-3 bg-[#1DB954] text-white font-bold text-xs rounded-xl flex items-center gap-2 cursor-pointer shadow-lg"
+                className="px-6 py-3 bg-[#006A4E] text-white font-bold text-xs rounded-xl flex items-center gap-2 cursor-pointer shadow-lg"
               >
                 <Save className="w-4 h-4" /> সেভ করুন
               </button>
@@ -8140,7 +8140,7 @@ PTENit ডিজিটাল টিম`;
 
             <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 max-w-3xl space-y-6">
               {settingsSaved && (
-                <div className="p-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-500 font-bold rounded-xl text-xs flex items-center gap-2">
+                <div className="p-3 bg-blue-500/20 border border-blue-500/50 text-blue-500 font-bold rounded-xl text-xs flex items-center gap-2">
                   <Check className="w-4 h-4" /> লিখিত কনটেন সফলভাবে আপডেট ও সেভ হয়েছে!
                 </div>
               )}
@@ -8155,7 +8155,7 @@ PTENit ডিজিটাল টিম`;
                     value={settingsForm.announcementNoticeText || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, announcementNoticeText: e.target.value })}
                     placeholder="উদা: 📢 ঈদ মেগা ধামাকা অফার! প্রিমিয়াম সার্ভিস ও ডিজিটাল প্রোডাক্ট কোর্সে বিশেষ ছাড় চলছে!"
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -8168,7 +8168,7 @@ PTENit ডিজিটাল টিম`;
                     value={settingsForm.aboutUsText || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, aboutUsText: e.target.value })}
                     placeholder="PTEN IT Solutions হলো বাংলাদেশের শীর্ষস্থানীয় ডিজিটাল সার্ভিস ও আইটি স্কিল ডেভেলপমেন্ট প্ল্যাটফর্ম..."
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -8181,7 +8181,7 @@ PTENit ডিজিটাল টিম`;
                     value={settingsForm.termsAndConditionsText || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, termsAndConditionsText: e.target.value })}
                     placeholder="১. আমাদের সকল ডিজিটাল সার্ভিস এবং কোর্স ব্যবহারের ক্ষেত্রে প্রফেশনাল পলিসি প্রযোজ্য..."
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -8194,7 +8194,7 @@ PTENit ডিজিটাল টিম`;
                     value={settingsForm.privacyPolicyText || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, privacyPolicyText: e.target.value })}
                     placeholder="আপনার ব্যক্তিগত তথ্য সম্পূর্ণ সুরক্ষিত রাখা হয়..."
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -8207,7 +8207,7 @@ PTENit ডিজিটাল টিম`;
                     value={settingsForm.refundPolicyText || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, refundPolicyText: e.target.value })}
                     placeholder="১০ দিনের মানি ব্যাক গ্যারান্টি শর্ত সাপেক্ষে প্রযোজ্য..."
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -8220,7 +8220,7 @@ PTENit ডিজিটাল টিম`;
                     value={settingsForm.footerCopyrightText || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, footerCopyrightText: e.target.value })}
                     placeholder="© ২০২৬ PTEN IT Solutions. সর্বস্বত্ব সংরক্ষিত।"
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -8242,7 +8242,7 @@ PTENit ডিজিটাল টিম`;
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
-                    <Monitor className="w-6 h-6 text-emerald-400" /> ১০০% রেসপন্সিভ & কন্টেইনার উইডথ কন্ট্রোল
+                    <Monitor className="w-6 h-6 text-sky-400" /> ১০০% রেসপন্সিভ & কন্টেইনার উইডথ কন্ট্রোল
                   </h2>
                 </div>
                 <p className="text-xs text-slate-300">
@@ -8253,7 +8253,7 @@ PTENit ডিজিটাল টিম`;
 
             <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 max-w-3xl space-y-6">
               {settingsSaved && (
-                <div className="p-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-500 font-bold rounded-xl text-xs flex items-center gap-2">
+                <div className="p-3 bg-blue-500/20 border border-blue-500/50 text-blue-500 font-bold rounded-xl text-xs flex items-center gap-2">
                   <Check className="w-4 h-4" /> রেসপন্সিভ লেআউট সেটিং সেভ হয়েছে!
                 </div>
               )}
@@ -8264,7 +8264,7 @@ PTENit ডিজিটাল টিম`;
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="text-xs font-black text-white flex items-center gap-1.5">
-                        <Smartphone className="w-4 h-4 text-[#1DB954]" />
+                        <Smartphone className="w-4 h-4 text-[#38BDF8]" />
                         <span>১০০% ফুল উইডথ মোড (100% Full-Width Fluid Container)</span>
                       </h4>
                       <p className="text-[11px] text-slate-400 mt-0.5">
@@ -8278,7 +8278,7 @@ PTENit ডিজিটাল টিম`;
                         onChange={e => setSettingsForm({ ...settingsForm, enableFullWidth100Percent: e.target.checked })}
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1DB954]"></div>
+                      <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#006A4E]"></div>
                     </label>
                   </div>
                 </div>
@@ -8300,12 +8300,12 @@ PTENit ডিজিটাল টিম`;
                         onClick={() => setSettingsForm({ ...settingsForm, containerMaxWidth: opt.value })}
                         className={`p-3 rounded-xl border text-xs font-extrabold flex items-center justify-between cursor-pointer transition-all ${
                           (settingsForm.containerMaxWidth || '100%') === opt.value
-                            ? 'border-[#1DB954] bg-[#1DB954]/10 text-[#1DB954]'
+                            ? 'border-blue-600/50 bg-[#006A4E]/10 text-[#38BDF8]'
                             : 'border-slate-800 bg-slate-900 text-slate-300'
                         }`}
                       >
                         <span>{opt.label}</span>
-                        {(settingsForm.containerMaxWidth || '100%') === opt.value && <Check className="w-4 h-4 text-[#1DB954]" />}
+                        {(settingsForm.containerMaxWidth || '100%') === opt.value && <Check className="w-4 h-4 text-[#38BDF8]" />}
                       </button>
                     ))}
                   </div>
@@ -8317,7 +8317,7 @@ PTENit ডিজিটাল টিম`;
                     <label className="text-xs font-bold text-white">
                       ডিসপ্লে ভিউপোর্ট জুম & স্কেলিং (%)
                     </label>
-                    <span className="px-2.5 py-1 bg-[#1DB954]/20 text-[#1DB954] text-xs font-black rounded-lg">
+                    <span className="px-2.5 py-1 bg-[#006A4E]/20 text-[#38BDF8] text-xs font-black rounded-lg">
                       {settingsForm.customScalePercent || 100}%
                     </span>
                   </div>
@@ -8329,7 +8329,7 @@ PTENit ডিজিটাল টিম`;
                         onClick={() => setSettingsForm({ ...settingsForm, customScalePercent: scale })}
                         className={`p-2.5 rounded-xl border text-xs font-extrabold text-center cursor-pointer transition-all ${
                           (settingsForm.customScalePercent || 100) === scale
-                            ? 'border-[#1DB954] bg-[#1DB954] text-white font-black'
+                            ? 'border-blue-600/50 bg-[#006A4E] text-white font-black'
                             : 'border-slate-800 bg-slate-900 text-slate-300'
                         }`}
                       >
@@ -8368,8 +8368,8 @@ PTENit ডিজিটাল টিম`;
 
                 {/* Live Responsive Grid Box Preview */}
                 <div className="p-4 rounded-2xl border border-slate-800 bg-slate-950 space-y-2">
-                  <span className="text-[11px] font-black text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#1DB954] animate-ping"></span>
+                  <span className="text-[11px] font-black text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#006A4E] animate-ping"></span>
                     রেসপন্সিভ গ্রিড লাইভ প্রিভিউ (100% Fit Box)
                   </span>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
@@ -8382,7 +8382,7 @@ PTENit ডিজিটাল টিম`;
                     <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl text-center text-[10px] font-bold text-slate-300">
                       🖥️ ল্যাপটপ (100%)
                     </div>
-                    <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl text-center text-[10px] font-bold text-[#1DB954]">
+                    <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl text-center text-[10px] font-bold text-[#38BDF8]">
                       ✨ ডেক্সটপ (100% Fluid)
                     </div>
                   </div>
@@ -8390,7 +8390,7 @@ PTENit ডিজিটাল টিম`;
 
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-[#1DB954] text-white font-black text-xs rounded-xl flex items-center gap-2 cursor-pointer shadow-lg hover:bg-emerald-500 transition-all"
+                  className="px-6 py-3 bg-[#006A4E] text-white font-black text-xs rounded-xl flex items-center gap-2 cursor-pointer shadow-lg hover:bg-blue-500 transition-all"
                 >
                   <Save className="w-4 h-4" /> ১০০% রেসপন্সিভ সেটিং সেভ করুন
                 </button>
@@ -8417,7 +8417,7 @@ PTENit ডিজিটাল টিম`;
 
             <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 max-w-3xl space-y-6">
               {settingsSaved && (
-                <div className="p-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-500 font-bold rounded-xl text-xs flex items-center gap-2">
+                <div className="p-3 bg-blue-500/20 border border-blue-500/50 text-blue-500 font-bold rounded-xl text-xs flex items-center gap-2">
                   <Check className="w-4 h-4" /> পিক্সেল আইডি সফলভাবে আপডেট ও সেভ হয়েছে!
                 </div>
               )}
@@ -8432,7 +8432,7 @@ PTENit ডিজিটাল টিম`;
                     placeholder="উদা: 7891234567890"
                     value={settingsForm.metaPixelId || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, metaPixelId: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#006A4E]"
                   />
                   <p className="text-[11px] text-slate-500 mt-1">ফেসবুক অ্যাডস ট্র্যাকিং ও কাস্টম অডিয়েন্স তৈরির জন্য পিক্সেল আইডি আইডি।</p>
                 </div>
@@ -8446,7 +8446,7 @@ PTENit ডিজিটাল টিম`;
                     placeholder="উদা: G-XXXXXXXXXX"
                     value={settingsForm.googleAnalyticsId || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, googleAnalyticsId: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#006A4E]"
                   />
                   <p className="text-[11px] text-slate-500 mt-1">গুগল অ্যানালিটিক্স ৪ ট্র্যাকিং কোড।</p>
                 </div>
@@ -8460,7 +8460,7 @@ PTENit ডিজিটাল টিম`;
                     placeholder="উদা: C1234567890TIK"
                     value={settingsForm.tiktokPixelId || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, tiktokPixelId: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -8473,7 +8473,7 @@ PTENit ডিজিটাল টিম`;
                     placeholder="উদা: GTM-XXXXXXX"
                     value={settingsForm.googleTagManagerId || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, googleTagManagerId: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -8486,7 +8486,7 @@ PTENit ডিজিটাল টিম`;
                     placeholder="EAAG..."
                     value={settingsForm.conversionApiToken || ''}
                     onChange={e => setSettingsForm({ ...settingsForm, conversionApiToken: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -8508,7 +8508,7 @@ PTENit ডিজিটাল টিম`;
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
-                    <Globe className="w-6 h-6 text-emerald-400" /> SEO & সার্চ ইঞ্জিন অপটিমাইজেশন (SEO Settings)
+                    <Globe className="w-6 h-6 text-sky-400" /> SEO & সার্চ ইঞ্জিন অপটিমাইজেশন (SEO Settings)
                   </h2>
                 </div>
                 <p className="text-xs text-slate-300">
@@ -8519,7 +8519,7 @@ PTENit ডিজিটাল টিম`;
 
             <div className="bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-800 max-w-4xl space-y-6">
               {settingsSaved && (
-                <div className="p-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-500 font-bold rounded-xl text-xs flex items-center gap-2">
+                <div className="p-3 bg-blue-500/20 border border-blue-500/50 text-blue-500 font-bold rounded-xl text-xs flex items-center gap-2">
                   <Check className="w-4 h-4" /> SEO মেটা ট্যাগ ও ওপেনগ্রাফ সেটিংস সেভ করা হয়েছে!
                 </div>
               )}
@@ -8528,7 +8528,7 @@ PTENit ডিজিটাল টিম`;
                 
                 {/* 1. Global Google & Search Engine Meta Tags */}
                 <div className="p-5 rounded-2xl border border-slate-800 bg-slate-950/60 space-y-4">
-                  <span className="text-xs font-black text-emerald-500 uppercase tracking-wider flex items-center gap-2">
+                  <span className="text-xs font-black text-blue-500 uppercase tracking-wider flex items-center gap-2">
                     <Search className="w-4 h-4" />১. গুগল & সার্চ ইঞ্জিন মেটা ট্যাগস (Global Search Engine Meta)
                   </span>
 
@@ -8542,7 +8542,7 @@ PTENit ডিজিটাল টিম`;
                       placeholder="উদা: PTENit – IT Services, Web Development, Digital Marketing & IT Training Academy"
                       value={settingsForm.seoTitle || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, seoTitle: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#006A4E]"
                     />
                     <p className="text-[11px] text-slate-500 mt-1">সার্চ রেজাল্ট ও ব্রাউজার ট্যাবে প্রদর্শিত ওয়েবসাইটের মূল মেটা টাইটেল (৫০-৬০ ক্যারেক্টার আদর্শ)।</p>
                   </div>
@@ -8557,7 +8557,7 @@ PTENit ডিজিটাল টিম`;
                       placeholder="উদা: PTENit বাংলাদেশে প্রফেশনাল ওয়েব ডিজাইন, কাস্টম সফটওয়্যার, ডিজিটাল মার্কেটিং ও আইটি স্কিল ট্রেনিং প্রদান করে।"
                       value={settingsForm.metaDescription || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, metaDescription: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                     />
                     <p className="text-[11px] text-slate-500 mt-1">গুগল সার্চ রেজাল্টে টাইটেলের নিচে দেখানো সামারি ডেসক্রিপশন (১৩০-১৬০ ক্যারেক্টার)।</p>
                   </div>
@@ -8571,7 +8571,7 @@ PTENit ডিজিটাল টিম`;
                       placeholder="PTENit, IT Services, Web Development Bangladesh, SEO Course, Graphic Design"
                       value={settingsForm.metaKeywords || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, metaKeywords: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-white focus:outline-none focus:border-[#006A4E]"
                     />
                     <p className="text-[11px] text-slate-500 mt-1">কমা (,) দিয়ে আলাদা করা টার্গেটেড আইটি ও কোর্স কি-ওয়ার্ড তালিকা।</p>
                   </div>
@@ -8585,7 +8585,7 @@ PTENit ডিজিটাল টিম`;
                       placeholder="google-site-verification-token-code"
                       value={settingsForm.googleSiteVerification || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, googleSiteVerification: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
                 </div>
@@ -8606,7 +8606,7 @@ PTENit ডিজিটাল টিম`;
                         placeholder="PTENit – Complete IT Solutions & Skill Development Platform"
                         value={settingsForm.ogTitle || ''}
                         onChange={e => setSettingsForm({ ...settingsForm, ogTitle: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
 
@@ -8617,7 +8617,7 @@ PTENit ডিজিটাল টিম`;
                       <select
                         value={settingsForm.ogType || 'website'}
                         onChange={e => setSettingsForm({ ...settingsForm, ogType: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#006A4E]"
                       >
                         <option value="website">website</option>
                         <option value="article">article</option>
@@ -8636,7 +8636,7 @@ PTENit ডিজিটাল টিম`;
                       placeholder="ফেসবুক বা মেসেঞ্জারে লিংক শেয়ার করলে প্রদর্শিত বার্তা..."
                       value={settingsForm.ogDescription || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, ogDescription: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
 
@@ -8649,7 +8649,7 @@ PTENit ডিজিটাল টিম`;
                       placeholder="https://images.unsplash.com/photo-..."
                       value={settingsForm.ogImageUrl || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, ogImageUrl: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono text-white focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
 
@@ -8687,7 +8687,7 @@ PTENit ডিজিটাল টিম`;
                       <select
                         value={settingsForm.twitterCard || 'summary_large_image'}
                         onChange={e => setSettingsForm({ ...settingsForm, twitterCard: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#006A4E]"
                       >
                         <option value="summary_large_image">summary_large_image (বড় ছবিসহ)</option>
                         <option value="summary">summary (ছোট ছবিসহ)</option>
@@ -8703,7 +8703,7 @@ PTENit ডিজিটাল টিম`;
                         placeholder="@ptenit_bd"
                         value={settingsForm.twitterHandle || ''}
                         onChange={e => setSettingsForm({ ...settingsForm, twitterHandle: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
                   </div>
@@ -8717,7 +8717,7 @@ PTENit ডিজিটাল টিম`;
                       placeholder="https://ptenit.com"
                       value={settingsForm.canonicalUrl || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, canonicalUrl: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#006A4E]"
                     />
                     <p className="text-[11px] text-slate-500 mt-1">ডুপ্লিকেট ইনডেক্সিং রোধ করতে আপনার সাইটের অফিসিয়াল ক্যানোনিকাল ডোমেইন।</p>
                   </div>
@@ -8737,7 +8737,7 @@ PTENit ডিজিটাল টিম`;
                       rows={3}
                       value={settingsForm.robotsTxt || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, robotsTxt: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-emerald-400 font-mono text-xs focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sky-400 font-mono text-xs focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
 
@@ -8763,7 +8763,7 @@ PTENit ডিজিটাল টিম`;
                           }, null, 2);
                           setSettingsForm({ ...settingsForm, structuredDataJson: defaultSchema });
                         }}
-                        className="text-[11px] font-bold text-[#1DB954] hover:underline flex items-center gap-1 cursor-pointer"
+                        className="text-[11px] font-bold text-[#38BDF8] hover:underline flex items-center gap-1 cursor-pointer"
                       >
                         <Zap className="w-3 h-3" /> অটো ডেমো স্কিমা জেনারেট করুন
                       </button>
@@ -8772,14 +8772,14 @@ PTENit ডিজিটাল টিম`;
                       rows={5}
                       value={settingsForm.structuredDataJson || ''}
                       onChange={e => setSettingsForm({ ...settingsForm, structuredDataJson: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sky-300 font-mono text-xs focus:outline-none focus:border-[#1DB954]"
+                      className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-sky-300 font-mono text-xs focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="px-8 py-3.5 bg-[#1DB954] hover:bg-emerald-500 text-white font-black text-xs rounded-xl flex items-center gap-2 cursor-pointer shadow-lg hover:shadow-emerald-500/20 transition-all"
+                  className="px-8 py-3.5 bg-[#006A4E] hover:bg-blue-500 text-white font-black text-xs rounded-xl flex items-center gap-2 cursor-pointer shadow-lg hover:shadow-blue-500/20 transition-all"
                 >
                   <Save className="w-4.5 h-4.5" /> SEO ও মেটা ট্যাগ সেটিং সেভ করুন
                 </button>
@@ -8797,10 +8797,10 @@ PTENit ডিজিটাল টিম`;
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
-                    <CreditCard className="w-5 h-5 text-[#1DB954]" />
+                    <CreditCard className="w-5 h-5 text-[#38BDF8]" />
                     পেমেন্ট সিস্টেম ও মেথড সেটিংস
                   </h2>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#1DB954]/10 text-[#1DB954] border border-[#1DB954]/30">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#006A4E]/10 text-[#38BDF8] border border-blue-600/50/30">
                     {settingsForm.paymentAutomationMode === 'automated' ? '⚡ স্বয়ংক্রিয় গেটওয়ে সক্রিয়' : '📱 ম্যানুয়াল TrxID মোড সক্রিয়'}
                   </span>
                 </div>
@@ -8812,15 +8812,15 @@ PTENit ডিজিটাল টিম`;
               <button
                 type="button"
                 onClick={handleSaveSettings}
-                className="px-4 py-2 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow-sm transition shrink-0"
+                className="px-4 py-2 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow-sm transition shrink-0"
               >
                 <Save className="w-3.5 h-3.5" /> সেটিংস সংরক্ষণ করুন
               </button>
             </div>
 
             {settingsSaved && (
-              <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-bold rounded-xl text-xs flex items-center gap-2 animate-fadeIn">
-                <Check className="w-4 h-4 text-emerald-500" />
+              <div className="p-3 bg-blue-500/10 border border-blue-500/30 text-[#006A4E] dark:text-sky-400 font-bold rounded-xl text-xs flex items-center gap-2 animate-fadeIn">
+                <Check className="w-4 h-4 text-blue-500" />
                 পেমেন্ট মেথড ও সেটিংস সফলভাবে সংরক্ষণ করা হয়েছে!
               </div>
             )}
@@ -8828,11 +8828,11 @@ PTENit ডিজিটাল টিম`;
             <form onSubmit={handleSaveSettings} className="space-y-5">
               
               {/* SECTION 1: ভবিষ্যৎ ও বর্তমান পেমেন্ট সিস্টেম (Clear, Clean & Transparent) */}
-              <div className="p-4 sm:p-6 rounded-2xl border-2 border-emerald-500/30 bg-slate-950 shadow-sm space-y-5">
+              <div className="p-4 sm:p-6 rounded-2xl border-2 border-blue-500/30 bg-slate-950 shadow-sm space-y-5">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 pb-4 border-b border-slate-800">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#1DB954] animate-pulse" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#006A4E] animate-pulse" />
                       <h3 className="text-sm sm:text-base font-black text-white">
                         ভবিষ্যৎ ও বর্তমান পেমেন্ট সিস্টেম নির্বাচন
                       </h3>
@@ -8899,7 +8899,7 @@ PTENit ডিজিটাল টিম`;
                     onClick={() => setSettingsForm({ ...settingsForm, paymentAutomationMode: 'manual' })}
                     className={`p-4 sm:p-5 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-between space-y-3 relative ${
                       (settingsForm.paymentAutomationMode || 'manual') === 'manual'
-                        ? 'border-[#1DB954] bg-[#1DB954]/5 ring-1 ring-[#1DB954] shadow-sm'
+                        ? 'border-blue-600/50 bg-[#006A4E]/5 ring-1 ring-[#006A4E] shadow-sm'
                         : 'border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 hover:border-slate-300 dark:hover:border-slate-700'
                     }`}
                   >
@@ -8907,7 +8907,7 @@ PTENit ডিজিটাল টিম`;
                       <div className="flex items-center gap-2.5">
                         <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
                           (settingsForm.paymentAutomationMode || 'manual') === 'manual'
-                            ? 'border-[#1DB954] bg-[#1DB954]'
+                            ? 'border-blue-600/50 bg-[#006A4E]'
                             : 'border-slate-400 dark:border-slate-600'
                         }`}>
                           {(settingsForm.paymentAutomationMode || 'manual') === 'manual' && (
@@ -8918,7 +8918,7 @@ PTENit ডিজিটাল টিম`;
                           ১. বর্তমান সিস্টেম (ম্যানুয়াল TrxID মোড)
                         </h4>
                       </div>
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 shrink-0">
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-blue-500/10 text-[#006A4E] dark:text-sky-400 border border-blue-500/30 shrink-0">
                         সুপারিশকৃত ও কার্যকর
                       </span>
                     </div>
@@ -8928,13 +8928,13 @@ PTENit ডিজিটাল টিম`;
                     </p>
 
                     <ul className="space-y-1.5 text-[11px] text-slate-400 pt-2 border-t border-slate-800">
-                      <li className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
+                      <li className="flex items-center gap-1.5 text-[#006A4E] dark:text-sky-400 font-medium">
                         <Check className="w-3.5 h-3.5 shrink-0" /> কোনো ব্যাংকিং API বা জটিল ডকুমেন্টের প্রয়োজন নেই
                       </li>
-                      <li className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
+                      <li className="flex items-center gap-1.5 text-[#006A4E] dark:text-sky-400 font-medium">
                         <Check className="w-3.5 h-3.5 shrink-0" /> পার্সোনাল বা মার্চেন্ট যেকোনো নম্বরে টাকা নেওয়া যাবে
                       </li>
-                      <li className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
+                      <li className="flex items-center gap-1.5 text-[#006A4E] dark:text-sky-400 font-medium">
                         <Check className="w-3.5 h-3.5 shrink-0" /> ভুয়া অর্ডার বা পেমেন্ট চেক করার পূর্ণ নিয়ন্ত্রণ থাকবে
                       </li>
                     </ul>
@@ -9009,7 +9009,7 @@ PTENit ডিজিটাল টিম`;
                           className={`px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition ${
                             settingsForm.gatewaySandboxMode !== false
                               ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                              : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                              : 'bg-blue-500/20 text-sky-300 border border-blue-500/40'
                           }`}
                         >
                           {settingsForm.gatewaySandboxMode !== false ? '🧪 স্যান্ডবক্স (টেস্ট মোড)' : '🚀 লাইভ প্রোডাকশন'}
@@ -9131,7 +9131,7 @@ PTENit ডিজিটাল টিম`;
                       {gatewayTestResult && (
                         <div className={`p-2.5 rounded-xl text-xs font-bold flex items-center gap-2 ${
                           gatewayTestResult.success
-                            ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                            ? 'bg-blue-500/20 text-sky-300 border border-blue-500/40'
                             : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
                         }`}>
                           {gatewayTestResult.success ? <Check className="w-3.5 h-3.5" /> : <AlertTriangle className="w-3.5 h-3.5" />}
@@ -9148,7 +9148,7 @@ PTENit ডিজিটাল টিম`;
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
                   <div>
                     <h3 className="text-sm sm:text-base font-black text-white flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
                       📱 মোবাইল ফাইনান্সিয়াল সার্ভিসেস (MFS) পেমেন্ট নম্বর ও লোগো
                     </h3>
                     <p className="text-xs text-slate-400 mt-1">
@@ -9162,7 +9162,7 @@ PTENit ডিজিটাল টিম`;
                       handleSaveSettings();
                       alert('MFS পেমেন্ট নম্বর ও লোগো সফলভাবে সংরক্ষণ করা হয়েছে!');
                     }}
-                    className="px-4 py-2 bg-[#1DB954] hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl flex items-center gap-1.5 shadow transition cursor-pointer shrink-0 active:scale-95"
+                    className="px-4 py-2 bg-[#006A4E] hover:bg-[#047857] text-white font-extrabold text-xs rounded-xl flex items-center gap-1.5 shadow transition cursor-pointer shrink-0 active:scale-95"
                   >
                     <Save className="w-4 h-4" />
                     <span>MFS সেটিংস সেভ করুন</span>
@@ -9494,7 +9494,7 @@ PTENit ডিজিটাল টিম`;
                     <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
                       <span>🏦 ব্যাংক অ্যাকাউন্ট ট্রান্সফার বিবরণ ও লোগো (ঐচ্ছিক)</span>
                     </h4>
-                    <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                    <span className="text-[10px] text-sky-400 font-bold bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">
                       ম্যানুয়াল ডিপোজিট
                     </span>
                   </div>
@@ -9529,7 +9529,7 @@ PTENit ডিজিটাল টিম`;
                         value={settingsForm.bankLogoUrl || ''}
                         onChange={e => setSettingsForm({ ...settingsForm, bankLogoUrl: e.target.value })}
                         placeholder="ব্যাংক লোগো URL..."
-                        className="w-full px-2 py-1 bg-slate-950 border border-slate-800 rounded-lg text-[10px] text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-emerald-500 font-mono"
+                        className="w-full px-2 py-1 bg-slate-950 border border-slate-800 rounded-lg text-[10px] text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 font-mono"
                       />
                     </div>
 
@@ -9540,7 +9540,7 @@ PTENit ডিজিটাল টিম`;
                         placeholder="যেমন: Dutch-Bangla Bank PLC"
                         value={settingsForm.bankName || ''}
                         onChange={e => setSettingsForm({ ...settingsForm, bankName: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
                     <div>
@@ -9550,7 +9550,7 @@ PTENit ডিজিটাল টিম`;
                         placeholder="যেমন: PTENIT IT SOLUTIONS"
                         value={settingsForm.bankAccountName || ''}
                         onChange={e => setSettingsForm({ ...settingsForm, bankAccountName: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
                     <div>
@@ -9560,7 +9560,7 @@ PTENit ডিজিটাল টিম`;
                         placeholder="যেমন: 2181100098765"
                         value={settingsForm.bankAccountNumber || ''}
                         onChange={e => setSettingsForm({ ...settingsForm, bankAccountNumber: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-mono text-white focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
                     <div>
@@ -9570,7 +9570,7 @@ PTENit ডিজিটাল টিম`;
                         placeholder="যেমন: Uttara Branch, Dhaka"
                         value={settingsForm.bankBranch || ''}
                         onChange={e => setSettingsForm({ ...settingsForm, bankBranch: e.target.value })}
-                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
                   </div>
@@ -9578,7 +9578,7 @@ PTENit ডিজিটাল টিম`;
               </div>
 
               {/* SECTION 3: ফুটার পেমেন্ট মেথড লোগো ম্যানেজার (Fixed Add, Delete, Restore & 1-Click Presets) */}
-              <div className="p-4 sm:p-6 rounded-2xl border-2 border-[#1DB954]/30 bg-slate-950 shadow-sm space-y-4">
+              <div className="p-4 sm:p-6 rounded-2xl border-2 border-blue-600/50/30 bg-slate-950 shadow-sm space-y-4">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-800">
                   <div>
                     <h3 className="text-sm sm:text-base font-black text-white flex items-center gap-2">
@@ -9594,7 +9594,7 @@ PTENit ডিজিটাল টিম`;
                     <button
                       type="button"
                       onClick={() => setShowAddLogoForm(!showAddLogoForm)}
-                      className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs transition shrink-0"
+                      className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs transition shrink-0"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       {showAddLogoForm ? 'ফর্ম বন্ধ করুন' : '+ নতুন লোগো যোগ করুন'}
@@ -9629,8 +9629,8 @@ PTENit ডিজিটাল টিম`;
 
                 {/* Feedback Notification */}
                 {logoFeedback && (
-                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center gap-2 animate-fadeIn">
-                    <Check className="w-4 h-4 text-emerald-500" />
+                  <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/30 text-[#006A4E] dark:text-sky-400 text-xs font-bold flex items-center gap-2 animate-fadeIn">
+                    <Check className="w-4 h-4 text-blue-500" />
                     {logoFeedback}
                   </div>
                 )}
@@ -9640,7 +9640,7 @@ PTENit ডিজিটাল টিম`;
                   <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-800 space-y-3 animate-fadeIn">
                     <div className="flex items-center justify-between">
                       <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                        <Plus className="w-3.5 h-3.5 text-[#1DB954]" /> নতুন পেমেন্ট মেথড লোগো যোগ করুন
+                        <Plus className="w-3.5 h-3.5 text-[#38BDF8]" /> নতুন পেমেন্ট মেথড লোগো যোগ করুন
                       </h4>
                       <span className="text-[10px] text-slate-400">নাম ও লোগো ইমেজ দিয়ে "যুক্ত করুন" চাপুন</span>
                     </div>
@@ -9655,7 +9655,7 @@ PTENit ডিজিটাল টিম`;
                           value={newLogoName}
                           onChange={e => setNewLogoName(e.target.value)}
                           placeholder="যেমন: City Bank, Cellfin, PayPal"
-                          className="w-full p-2 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                          className="w-full p-2 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                         />
                       </div>
 
@@ -9669,7 +9669,7 @@ PTENit ডিজিটাল টিম`;
                             value={newLogoUrl}
                             onChange={e => setNewLogoUrl(e.target.value)}
                             placeholder="https://example.com/logo.png"
-                            className="w-full p-2 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                            className="w-full p-2 rounded-xl border border-slate-800 bg-slate-950 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                           />
                           <label className="px-3 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl cursor-pointer shrink-0 flex items-center gap-1 border border-slate-800">
                             <Upload className="w-3.5 h-3.5" />
@@ -9741,7 +9741,7 @@ PTENit ডিজিটাল টিম`;
                           setLogoFeedback(`"${newLogoName}" সফলভাবে যুক্ত করা হয়েছে!`);
                           setTimeout(() => setLogoFeedback(null), 3000);
                         }}
-                        className="px-4 py-2 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow-sm transition"
+                        className="px-4 py-2 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow-sm transition"
                       >
                         <Check className="w-3.5 h-3.5" /> লোগো যুক্ত করুন
                       </button>
@@ -9811,13 +9811,13 @@ PTENit ডিজিটাল টিম`;
                           }}
                           className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition cursor-pointer flex items-center gap-1 ${
                             exists
-                              ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
-                              : 'bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-800 hover:border-[#1DB954]'
+                              ? 'bg-blue-500/10 text-[#006A4E] dark:text-sky-400 border-blue-500/30'
+                              : 'bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-800 hover:border-blue-600/50'
                           }`}
                         >
-                          <Plus className="w-3 h-3 text-[#1DB954]" />
+                          <Plus className="w-3 h-3 text-[#38BDF8]" />
                           <span>{preset.name}</span>
-                          {exists && <span className="text-[9px] text-[#1DB954] font-black">✓</span>}
+                          {exists && <span className="text-[9px] text-[#38BDF8] font-black">✓</span>}
                         </button>
                       );
                     })}
@@ -9902,9 +9902,9 @@ PTENit ডিজিটাল টিম`;
                                 );
                                 setSettingsForm(prev => ({ ...prev, paymentLogos: updated }));
                               }}
-                              className="accent-[#1DB954] w-3.5 h-3.5"
+                              className="accent-[#006A4E] w-3.5 h-3.5"
                             />
-                            <span className={item.isActive !== false ? 'text-[#1DB954]' : 'text-slate-400'}>
+                            <span className={item.isActive !== false ? 'text-[#38BDF8]' : 'text-slate-400'}>
                               {item.isActive !== false ? 'সক্রিয়' : 'লুকানো'}
                             </span>
                           </label>
@@ -9947,7 +9947,7 @@ PTENit ডিজিটাল টিম`;
               <div className="flex justify-end pt-2">
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-sm rounded-xl flex items-center gap-2 cursor-pointer shadow-md hover:shadow-lg transition"
+                  className="px-6 py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-sm rounded-xl flex items-center gap-2 cursor-pointer shadow-md hover:shadow-lg transition"
                 >
                   <Save className="w-4 h-4" /> পেমেন্ট সেটিংস সংরক্ষণ করুন
                 </button>
@@ -9963,7 +9963,7 @@ PTENit ডিজিটাল টিম`;
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-sm sm:text-lg font-black text-white flex items-center gap-2">
-                    <Percent className="w-5 h-5 text-[#1DB954]" /> কমিশন কনফিগারেশন
+                    <Percent className="w-5 h-5 text-[#38BDF8]" /> কমিশন কনফিগারেশন
                   </h2>
                 </div>
                 <p className="text-[11px] text-slate-400">
@@ -9976,7 +9976,7 @@ PTENit ডিজিটাল টিম`;
                 <span className="text-xs font-bold text-slate-400">প্রিসেট:</span>
                 {[
                   { label: '৫%', val: 5, bg: 'bg-sky-500/20 text-sky-300 border-sky-500/40' },
-                  { label: '১০%', val: 10, bg: 'bg-emerald-500/20 text-[#1DB954] border-emerald-500/40' },
+                  { label: '১০%', val: 10, bg: 'bg-blue-500/20 text-[#38BDF8] border-blue-500/40' },
                   { label: '১৫%', val: 15, bg: 'bg-amber-500/20 text-amber-300 border-amber-500/40' },
                   { label: '২০%', val: 20, bg: 'bg-purple-500/20 text-purple-300 border-purple-500/40' }
                 ].map(preset => (
@@ -9988,7 +9988,7 @@ PTENit ডিজিটাল টিম`;
                       setTimeout(() => setFeeSaveSuccess(false), 3000);
                     }}
                     className={`px-2.5 py-1 rounded-lg text-xs font-bold border cursor-pointer transition ${
-                      mktCommissionRate === preset.val ? preset.bg + ' ring-1 ring-[#1DB954]' : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
+                      mktCommissionRate === preset.val ? preset.bg + ' ring-1 ring-[#006A4E]' : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
                     }`}
                   >
                     {preset.label}
@@ -9998,12 +9998,12 @@ PTENit ডিজিটাল টিম`;
             </div>
 
             {feeSaveSuccess && (
-              <div className="p-4 bg-emerald-500/20 border border-emerald-500/50 text-[#1DB954] font-black rounded-2xl text-xs flex items-center justify-between shadow-lg">
+              <div className="p-4 bg-blue-500/20 border border-blue-500/50 text-[#38BDF8] font-black rounded-2xl text-xs flex items-center justify-between shadow-lg">
                 <div className="flex items-center gap-2">
                   <Check className="w-5 h-5" />
                   <span>প্ল্যাটফর্ম ফি & কমিশন সেটিংস সফলভাবে সেভ ও কার্যকর হয়েছে!</span>
                 </div>
-                <span className="text-[11px] font-mono bg-emerald-950/60 px-2.5 py-1 rounded-lg">LIVE RATE: {mktCommissionRate}%</span>
+                <span className="text-[11px] font-mono bg-slate-950/60 px-2.5 py-1 rounded-lg">LIVE RATE: {mktCommissionRate}%</span>
               </div>
             )}
 
@@ -10026,7 +10026,7 @@ PTENit ডিজিটাল টিম`;
                 <div className="space-y-3">
                   <div className="flex justify-between items-center text-xs font-bold text-slate-300">
                     <label>এডমিন প্ল্যাটফর্ম কমিশন রেট (%)</label>
-                    <span className="text-lg font-black text-[#1DB954]">{mktCommissionRate}%</span>
+                    <span className="text-lg font-black text-[#38BDF8]">{mktCommissionRate}%</span>
                   </div>
                   <input
                     type="range"
@@ -10035,7 +10035,7 @@ PTENit ডিজিটাল টিম`;
                     step={1}
                     value={mktCommissionRate}
                     onChange={(e) => setMktCommissionRate(Number(e.target.value))}
-                    className="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-[#1DB954]"
+                    className="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-[#006A4E]"
                   />
                   <div className="flex justify-between text-[10px] text-slate-500 font-mono">
                     <span>০% (ফ্রি)</span>
@@ -10046,9 +10046,9 @@ PTENit ডিজিটাল টিম`;
 
                 {/* Auto Ratio Breakdown */}
                 <div className="grid grid-cols-2 gap-3 pt-2">
-                  <div className="bg-slate-950 p-3.5 rounded-2xl border border-emerald-500/20">
+                  <div className="bg-slate-950 p-3.5 rounded-2xl border border-blue-500/20">
                     <p className="text-[11px] text-slate-400 font-bold">এডমিন নিট কমিশন</p>
-                    <p className="text-xl font-black text-[#1DB954] mt-1">{mktCommissionRate}%</p>
+                    <p className="text-xl font-black text-[#38BDF8] mt-1">{mktCommissionRate}%</p>
                     <p className="text-[10px] text-slate-500 mt-0.5">প্রতিটি অর্ডারে প্ল্যাটফর্ম আয়</p>
                   </div>
                   <div className="bg-slate-950 p-3.5 rounded-2xl border border-amber-500/20">
@@ -10072,7 +10072,7 @@ PTENit ডিজিটাল টিম`;
                         step={0.5}
                         value={clientProcessingFeePercent}
                         onChange={(e) => setClientProcessingFeePercent(Number(e.target.value) || 0)}
-                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#006A4E]"
                       />
                       <span className="text-xs font-bold text-slate-400 shrink-0">% অতিরিক্ত</span>
                     </div>
@@ -10091,7 +10091,7 @@ PTENit ডিজিটাল টিম`;
                         step={0.5}
                         value={freelancerWithdrawalFeePercent}
                         onChange={(e) => setFreelancerWithdrawalFeePercent(Number(e.target.value) || 0)}
-                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs font-bold text-white focus:outline-none focus:border-[#006A4E]"
                       />
                       <span className="text-xs font-bold text-slate-400 shrink-0">% চার্জ</span>
                     </div>
@@ -10104,10 +10104,10 @@ PTENit ডিজিটাল টিম`;
               <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-5 shadow-xl">
                 <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                   <h3 className="text-base font-black text-white flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-[#1DB954]" />
+                    <BookOpen className="w-5 h-5 text-[#38BDF8]" />
                     <span>একাডেমি কোর্স ও ট্রেইনার রেভিনিউ শেয়ার</span>
                   </h3>
-                  <span className="px-2.5 py-1 bg-emerald-500/20 text-[#1DB954] text-xs font-black rounded-lg border border-emerald-500/30">
+                  <span className="px-2.5 py-1 bg-blue-500/20 text-[#38BDF8] text-xs font-black rounded-lg border border-blue-500/30">
                     ৯০:১০ রেশিও
                   </span>
                 </div>
@@ -10116,7 +10116,7 @@ PTENit ডিজিটাল টিম`;
                 <div className="space-y-3">
                   <div className="flex justify-between items-center text-xs font-bold text-slate-300">
                     <label>ইনস্ট্রাক্টর / ট্রেইনার শেয়ার (%)</label>
-                    <span className="text-lg font-black text-emerald-400">{trainerRevShareRate}%</span>
+                    <span className="text-lg font-black text-sky-400">{trainerRevShareRate}%</span>
                   </div>
                   <input
                     type="range"
@@ -10125,7 +10125,7 @@ PTENit ডিজিটাল টিম`;
                     step={1}
                     value={trainerRevShareRate}
                     onChange={(e) => setTrainerRevShareRate(Number(e.target.value))}
-                    className="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-emerald-400"
+                    className="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-sky-400"
                   />
                   <div className="flex justify-between text-[10px] text-slate-500 font-mono">
                     <span>৫০% (সমান শেয়ার)</span>
@@ -10136,9 +10136,9 @@ PTENit ডিজিটাল টিম`;
 
                 {/* Ratio Cards */}
                 <div className="grid grid-cols-2 gap-3 pt-2">
-                  <div className="bg-slate-950 p-3.5 rounded-2xl border border-emerald-500/20">
+                  <div className="bg-slate-950 p-3.5 rounded-2xl border border-blue-500/20">
                     <p className="text-[11px] text-slate-400 font-bold">ট্রেইনার এনরোলমেন্ট আয়</p>
-                    <p className="text-xl font-black text-emerald-400 mt-1">{trainerRevShareRate}%</p>
+                    <p className="text-xl font-black text-sky-400 mt-1">{trainerRevShareRate}%</p>
                     <p className="text-[10px] text-slate-500 mt-0.5">কোর্স বিক্রির টাকা থেকে প্রাপ্য</p>
                   </div>
                   <div className="bg-slate-950 p-3.5 rounded-2xl border border-sky-500/20">
@@ -10162,7 +10162,7 @@ PTENit ডিজিটাল টিম`;
             </div>
 
             {/* LIVE INTERACTIVE REVENUE SIMULATOR */}
-            <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/30 border border-slate-800 p-6 rounded-3xl space-y-5 shadow-xl">
+            <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950/30 border border-slate-800 p-6 rounded-3xl space-y-5 shadow-xl">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-4">
                 <div>
                   <h3 className="text-base font-black text-white flex items-center gap-2">
@@ -10184,7 +10184,7 @@ PTENit ডিজিটাল টিম`;
                       min={100}
                       value={feeSimulatorAmount}
                       onChange={(e) => setFeeSimulatorAmount(Number(e.target.value) || 0)}
-                      className="w-32 pl-7 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs font-black text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-32 pl-7 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs font-black text-white focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
                 </div>
@@ -10208,10 +10208,10 @@ PTENit ডিজিটাল টিম`;
                       <p className="text-[10px] text-slate-500">মূল: ৳{sampleAmount.toLocaleString('bn-BD')} + ফি: ৳{clientFee}</p>
                     </div>
 
-                    <div className="bg-slate-950/80 border border-emerald-500/30 p-4 rounded-2xl space-y-1">
-                      <span className="text-[10px] text-emerald-400 font-bold">২. এডমিন প্ল্যাটফর্ম আয় ({mktCommissionRate}%)</span>
-                      <p className="text-xl font-black text-[#1DB954]">৳{adminCommission.toLocaleString('bn-BD')}</p>
-                      <p className="text-[10px] text-emerald-400/80">নেট প্রফিট মার্জিন</p>
+                    <div className="bg-slate-950/80 border border-blue-500/30 p-4 rounded-2xl space-y-1">
+                      <span className="text-[10px] text-sky-400 font-bold">২. এডমিন প্ল্যাটফর্ম আয় ({mktCommissionRate}%)</span>
+                      <p className="text-xl font-black text-[#38BDF8]">৳{adminCommission.toLocaleString('bn-BD')}</p>
+                      <p className="text-[10px] text-sky-400/80">নেট প্রফিট মার্জিন</p>
                     </div>
 
                     <div className="bg-slate-950/80 border border-amber-500/30 p-4 rounded-2xl space-y-1">
@@ -10251,7 +10251,7 @@ PTENit ডিজিটাল টিম`;
                   setTimeout(() => setFeeSaveSuccess(false), 3000);
                   alert(`ফি ও কমিশন সেটিংস সফলভাবে সেভ হয়েছে!\n• মার্কেটপ্লেস কমিশন: ${mktCommissionRate}%\n• ট্রেইনার শেয়ার: ${trainerRevShareRate}%\n• ক্লায়েন্ট ফি: ${clientProcessingFeePercent}%\n• উইথড্রয়াল চার্জ: ${freelancerWithdrawalFeePercent}%`);
                 }}
-                className="px-7 py-3 bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs rounded-2xl flex items-center gap-2 cursor-pointer shadow-xl transition-all"
+                className="px-7 py-3 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-2xl flex items-center gap-2 cursor-pointer shadow-xl transition-all"
               >
                 <Save className="w-4 h-4" />
                 <span>ফি & কমিশন কনফিগারেশন সেভ করুন</span>
@@ -10288,7 +10288,7 @@ PTENit ডিজিটাল টিম`;
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
-                      <DollarSign className="w-6 h-6 text-[#1DB954]" /> মার্কেটপ্লেস ফিনান্সিয়ালস & কাজের অগ্রগতি পার্সেন্টেজ (%)
+                      <DollarSign className="w-6 h-6 text-[#38BDF8]" /> মার্কেটপ্লেস ফিনান্সিয়ালস & কাজের অগ্রগতি পার্সেন্টেজ (%)
                     </h2>
                   </div>
                   <p className="text-xs text-slate-300">
@@ -10299,7 +10299,7 @@ PTENit ডিজিটাল টিম`;
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => alert('মার্কেটপ্লেস কাজের পার্সেন্টেজ ও ফিনান্সিয়াল স্টেটমেন্ট ডাউনলোড সফল হয়েছে!')}
-                    className="px-4 py-2.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs rounded-xl flex items-center gap-2 cursor-pointer shadow-lg transition-all"
+                    className="px-4 py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl flex items-center gap-2 cursor-pointer shadow-lg transition-all"
                   >
                     <FileText className="w-4 h-4" /> <span>স্টেটমেন্ট ডাউনলোড</span>
                   </button>
@@ -10307,7 +10307,7 @@ PTENit ডিজিটাল টিম`;
               </div>
 
               {/* WORK COMPLETION PERCENTAGE & PROGRESS BANNER */}
-              <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/40 border border-emerald-500/30 rounded-3xl p-6 shadow-xl space-y-5">
+              <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950/40 border border-blue-500/30 rounded-3xl p-6 shadow-xl space-y-5">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-4">
                   <div>
                     <h3 className="text-base font-black text-white flex items-center gap-2">
@@ -10319,7 +10319,7 @@ PTENit ডিজিটাল টিম`;
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="px-3.5 py-1.5 bg-[#1DB954]/20 border border-emerald-500/40 text-[#1DB954] text-xs font-black rounded-xl">
+                    <span className="px-3.5 py-1.5 bg-[#006A4E]/20 border border-blue-500/40 text-[#38BDF8] text-xs font-black rounded-xl">
                       সার্বিক সমাপ্তির হার: {completedRate}%
                     </span>
                   </div>
@@ -10328,8 +10328,8 @@ PTENit ডিজিটাল টিম`;
                 {/* Multi-Segment Visual Progress Bar */}
                 <div className="space-y-2">
                   <div className="flex justify-between text-xs font-bold text-slate-300">
-                    <span className="flex items-center gap-1.5 text-emerald-400">
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                    <span className="flex items-center gap-1.5 text-sky-400">
+                      <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block"></span>
                       সম্পন্ন কাজ: {completedRate}% ({completedMktOrders.length} টি)
                     </span>
                     <span className="flex items-center gap-1.5 text-purple-400">
@@ -10350,7 +10350,7 @@ PTENit ডিজিটাল টিম`;
                   <div className="h-4 bg-slate-950 rounded-full overflow-hidden flex border border-slate-800 p-0.5 shadow-inner">
                     <div
                       style={{ width: `${completedRate}%` }}
-                      className="bg-gradient-to-r from-emerald-500 to-[#1DB954] h-full rounded-l-full transition-all duration-500"
+                      className="bg-gradient-to-r from-blue-500 to-[#7C3AED] h-full rounded-l-full transition-all duration-500"
                       title={`সম্পন্ন কাজ: ${completedRate}%`}
                     />
                     <div
@@ -10373,14 +10373,14 @@ PTENit ডিজিটাল টিম`;
 
                 {/* 4-Column Percentage Cards */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
-                  <div className="bg-slate-950/70 border border-emerald-500/20 p-3.5 rounded-2xl">
+                  <div className="bg-slate-950/70 border border-blue-500/20 p-3.5 rounded-2xl">
                     <div className="flex justify-between items-center text-[11px] text-slate-400 font-bold">
                       <span>✅ ১০০% সম্পন্ন প্রজেক্ট</span>
-                      <span className="text-emerald-400 font-black text-sm">{completedRate}%</span>
+                      <span className="text-sky-400 font-black text-sm">{completedRate}%</span>
                     </div>
-                    <p className="text-xl font-black text-emerald-400 mt-1">{completedMktOrders.length} টি কাজ</p>
+                    <p className="text-xl font-black text-sky-400 mt-1">{completedMktOrders.length} টি কাজ</p>
                     <div className="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
-                      <div className="bg-emerald-400 h-full rounded-full" style={{ width: `${completedRate}%` }} />
+                      <div className="bg-sky-400 h-full rounded-full" style={{ width: `${completedRate}%` }} />
                     </div>
                   </div>
 
@@ -10435,12 +10435,12 @@ PTENit ডিজিটাল টিম`;
                 <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow space-y-1">
                   <div className="flex justify-between items-center">
                     <p className="text-xs text-slate-400 font-bold">মার্কেটপ্লেস কমিশন</p>
-                    <span className="text-[10px] px-2 py-0.5 bg-emerald-500/20 text-[#1DB954] rounded-md font-black">১০% ফিক্সড</span>
+                    <span className="text-[10px] px-2 py-0.5 bg-blue-500/20 text-[#38BDF8] rounded-md font-black">১০% ফিক্সড</span>
                   </div>
-                  <p className="text-2xl font-black text-[#1DB954]">
+                  <p className="text-2xl font-black text-[#38BDF8]">
                     ৳{totalAdminCommission.toLocaleString('bn-BD')}
                   </p>
-                  <p className="text-[11px] text-emerald-400">এডমিন নেট প্ল্যাটফর্ম আর্নিং</p>
+                  <p className="text-[11px] text-sky-400">এডমিন নেট প্ল্যাটফর্ম আর্নিং</p>
                 </div>
 
                 <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow space-y-1">
@@ -10514,8 +10514,8 @@ PTENit ডিজিটাল টিম`;
                           if (m.status === 'completed') {
                             jobProgressPercent = 100;
                             progressLabel = '১০০% সম্পন্ন (সম্পূর্ণ)';
-                            progressColor = 'bg-emerald-400 text-emerald-400';
-                            progressBg = 'bg-emerald-500/20 text-[#1DB954] border-emerald-500/30';
+                            progressColor = 'bg-sky-400 text-sky-400';
+                            progressBg = 'bg-blue-500/20 text-[#38BDF8] border-blue-500/30';
                           } else if (m.status === 'delivered') {
                             jobProgressPercent = 85;
                             progressLabel = '৮৫% ফাইল ডেলিভার্ড';
@@ -10556,9 +10556,9 @@ PTENit ডিজিটাল টিম`;
                                   </div>
                                 </div>
                               </td>
-                              <td className="p-3 font-bold text-[#1DB954]">
+                              <td className="p-3 font-bold text-[#38BDF8]">
                                 ৳{commAmt.toLocaleString('bn-BD')}
-                                <span className="text-[9px] text-emerald-400 block font-normal">(১০%)</span>
+                                <span className="text-[9px] text-sky-400 block font-normal">(১০%)</span>
                               </td>
                               <td className="p-3 font-bold text-amber-400">
                                 ৳{sellerAmt.toLocaleString('bn-BD')}

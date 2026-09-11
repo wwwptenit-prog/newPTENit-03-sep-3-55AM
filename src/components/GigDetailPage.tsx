@@ -277,16 +277,16 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
           
           <button
             onClick={onBack}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-[#1DB954] dark:bg-slate-800 dark:hover:bg-[#1DB954] text-slate-700 dark:text-slate-200 hover:text-white dark:hover:text-white font-bold text-xs sm:text-sm transition cursor-pointer shrink-0 shadow-xs active:scale-95"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-[#006A4E] dark:bg-slate-800 dark:hover:bg-[#006A4E] text-slate-700 dark:text-slate-200 hover:text-white dark:hover:text-white font-bold text-xs sm:text-sm transition cursor-pointer shrink-0 shadow-xs active:scale-95"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>ফিরে যান</span>
           </button>
 
           <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 truncate max-w-xs sm:max-w-md md:max-w-2xl">
-            <span onClick={onBack} className="hidden sm:inline hover:text-[#1DB954] cursor-pointer hover:underline transition">মার্কেটপ্লেস</span>
+            <span onClick={onBack} className="hidden sm:inline hover:text-sky-400 cursor-pointer hover:underline transition">মার্কেটপ্লেস</span>
             <ChevronRight className="w-3.5 h-3.5 shrink-0 hidden sm:inline" />
-            <span className="text-[#1DB954] font-bold truncate">{gig.category}</span>
+            <span className="text-[#38BDF8] font-bold truncate">{gig.category}</span>
             <ChevronRight className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">{gig.title}</span>
           </div>
@@ -297,7 +297,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsEditModalOpen(true)}
-                  className="px-2.5 py-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-[#1DB954] text-emerald-600 dark:text-[#1DB954] hover:text-white transition cursor-pointer text-xs font-bold flex items-center gap-1"
+                  className="px-2.5 py-1.5 rounded-xl border border-blue-500/30 bg-blue-500/10 hover:bg-[#006A4E] text-[#006A4E] dark:text-sky-400 hover:text-white transition cursor-pointer text-xs font-bold flex items-center gap-1"
                 >
                   <Edit className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">এডিট</span>
@@ -320,7 +320,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
               className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition cursor-pointer relative"
               title="লিংক শেয়ার করুন"
             >
-              <Share2 className="w-4 h-4 text-[#1DB954]" />
+              <Share2 className="w-4 h-4 text-[#38BDF8]" />
               {showCopyToast && (
                 <span className="absolute -bottom-8 right-0 bg-slate-900 text-white text-[10px] px-2 py-1 rounded shadow-lg whitespace-nowrap z-40">
                   লিংক কপি হয়েছে!
@@ -356,7 +356,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 আগে কাজ শুরু
               </span>
             ) : (
-              <span className="text-xs sm:text-sm font-bold text-[#1DB954] bg-[#1DB954]/10 px-3 py-1 rounded border border-[#1DB954]/20 flex items-center">
+              <span className="text-xs sm:text-sm font-bold text-[#38BDF8] bg-[#006A4E]/10 px-3 py-1 rounded border border-blue-600/50/20 flex items-center">
                 {gig.offerBadge === '৩০% ক্যাশব্যাক' ? '৩০% ছাড়' : (gig.offerBadge || '৩০% ছাড়')}
               </span>
             )}
@@ -365,7 +365,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
               <Star className="w-4 h-4 fill-current" />
               <span>{gig.rating || 5.0} ({gig.reviewsCount || 12} রিভিউ)</span>
               <span>•</span>
-              <span className="text-emerald-600 dark:text-[#1DB954]">{gig.salesCount || 25}+ প্রজেক্ট সম্পন্ন</span>
+              <span className="text-[#006A4E] dark:text-sky-400">{gig.salesCount || 25}+ প্রজেক্ট সম্পন্ন</span>
             </div>
           </div>
 
@@ -380,9 +380,9 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 <img
                   src={gig.sellerAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}
                   alt={gig.sellerName}
-                  className="w-11 h-11 sm:w-13 sm:h-13 rounded-full object-cover border-2 border-[#1DB954] shadow-xs"
+                  className="w-11 h-11 sm:w-13 sm:h-13 rounded-full object-cover border-2 border-blue-600/50 shadow-xs"
                 />
-                <span className="w-3.5 h-3.5 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full absolute bottom-0 right-0 animate-pulse" />
+                <span className="w-3.5 h-3.5 bg-blue-500 border-2 border-white dark:border-slate-900 rounded-full absolute bottom-0 right-0 animate-pulse" />
               </div>
               <div>
                 <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-1.5">
@@ -397,7 +397,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
 
             {siteSettings?.enableMoneyBackGuarantee !== false && (
               <div className="flex items-center gap-2 text-xs sm:text-sm font-bold">
-                <span className="px-3.5 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-[#1DB954] border border-[#1DB954]/30 flex items-center gap-2">
+                <span className="px-3.5 py-1.5 rounded-xl bg-blue-50 dark:bg-slate-950/60 text-[#38BDF8] border border-blue-600/50/30 flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span>{siteSettings?.moneyBackGuaranteeText || `${siteSettings?.moneyBackGuaranteeDays || 10}-দিনের মানি ব্যাক ও এস্ক্রো গ্যারান্টি`}</span>
                 </span>
@@ -426,7 +426,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveMediaIndex(prev => (prev > 0 ? prev - 1 : mediaList.length - 1))}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-slate-900/80 hover:bg-[#1DB954] text-white hover:text-white transition backdrop-blur-md shadow-md cursor-pointer"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-slate-900/80 hover:bg-[#006A4E] text-white hover:text-white transition backdrop-blur-md shadow-md cursor-pointer"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -434,7 +434,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveMediaIndex(prev => (prev < mediaList.length - 1 ? prev + 1 : 0))}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-slate-900/80 hover:bg-[#1DB954] text-white hover:text-white transition backdrop-blur-md shadow-md cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-slate-900/80 hover:bg-[#006A4E] text-white hover:text-white transition backdrop-blur-md shadow-md cursor-pointer"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -443,7 +443,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                   onClick={() => setLightboxImage(activeMediaUrl)}
                   className="absolute bottom-3 right-3 px-3 py-1.5 bg-slate-900/80 hover:bg-slate-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 backdrop-blur-md cursor-pointer border border-white/20"
                 >
-                  <Eye className="w-3.5 h-3.5 text-[#1DB954]" />
+                  <Eye className="w-3.5 h-3.5 text-[#38BDF8]" />
                   <span>ফুলস্ক্রিন</span>
                 </button>
               </div>
@@ -456,7 +456,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                     onClick={() => setActiveMediaIndex(idx)}
                     className={`relative w-20 h-14 sm:w-24 sm:h-16 rounded-xl overflow-hidden border-2 transition cursor-pointer shrink-0 ${
                       activeMediaIndex === idx
-                        ? 'border-[#1DB954] ring-2 ring-[#1DB954]/30 scale-102'
+                        ? 'border-blue-600/50 ring-2 ring-[#006A4E]/30 scale-102'
                         : 'border-slate-200 dark:border-slate-800 opacity-60 hover:opacity-100'
                     }`}
                   >
@@ -481,7 +481,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`px-4 py-2.5 rounded-xl transition cursor-pointer whitespace-nowrap text-xs sm:text-sm ${
                     activeTab === tab.id
-                      ? 'bg-[#1DB954] text-white font-black shadow-xs'
+                      ? 'bg-[#006A4E] text-white font-black shadow-xs'
                       : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold'
                   }`}
                 >
@@ -498,7 +498,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 <div className="space-y-5 animate-fadeIn font-bengali">
                   <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
                     <h3 className="text-base sm:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2 flex-wrap">
-                      <Briefcase className="w-5 h-5 text-[#1DB954]" />
+                      <Briefcase className="w-5 h-5 text-[#38BDF8]" />
                       <span>প্যাকেজ সমূহ</span>
                       
                       {(gig.offerBadge || editOfferBadge) === 'work_first' || (gig.offerBadge || editOfferBadge) === 'আগে কাজ শুরু' ? (
@@ -506,7 +506,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                           আগে কাজ শুরু
                         </span>
                       ) : (
-                        <span className="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-[#1DB954] border border-emerald-500/20 text-xs sm:text-sm font-bold rounded flex items-center">
+                        <span className="px-2.5 py-0.5 bg-blue-500/10 text-[#006A4E] dark:text-sky-400 border border-blue-500/20 text-xs sm:text-sm font-bold rounded flex items-center">
                           {(gig.offerBadge === '৩০% ক্যাশব্যাক' || editOfferBadge === '৩০% ক্যাশব্যাক') ? '৩০% ছাড়' : (gig.offerBadge || editOfferBadge || '৩০% ছাড়')}
                         </span>
                       )}
@@ -530,14 +530,14 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                           onClick={() => setSelectedPackage(pKey)}
                           className={`p-4 pt-6 sm:p-5 sm:pt-7 rounded-2xl border-2 transition cursor-pointer flex flex-col justify-between space-y-4 relative ${
                             isSelected
-                              ? 'bg-emerald-50/80 dark:bg-emerald-950/40 border-[#1DB954] shadow-sm'
+                              ? 'bg-blue-50/80 dark:bg-blue-950/40 border-blue-600/50 shadow-sm'
                               : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 hover:border-slate-300'
                           }`}
                         >
                           {/* Floating Package Badge on Top Border */}
                           <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap">
                             {pKey === 'basic' && (
-                              <span className="text-xs font-black text-white bg-[#1DB954] border border-emerald-600 px-3.5 py-0.5 rounded-full shadow-md">
+                              <span className="text-xs font-black text-white bg-[#006A4E] border border-blue-600 px-3.5 py-0.5 rounded-full shadow-md">
                                 বেসিক প্যাকেজ
                               </span>
                             )}
@@ -565,7 +565,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                                     আগে কাজ শুরু
                                   </span>
                                 ) : (
-                                  <span className="text-xs font-black text-emerald-600 dark:text-[#1DB954] bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/20">
+                                  <span className="text-xs font-black text-[#006A4E] dark:text-sky-400 bg-blue-500/10 px-2.5 py-0.5 rounded-md border border-blue-500/20">
                                     {(gig.offerBadge === '৩০% ক্যাশব্যাক' || editOfferBadge === '৩০% ক্যাশব্যাক') ? '৩০% ছাড়' : (gig.offerBadge || editOfferBadge || '৩০% ছাড়')}
                                   </span>
                                 )}
@@ -575,7 +575,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                             <h4 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">{pkg.name}</h4>
 
                             <div className="flex items-baseline gap-2">
-                              <span className="text-2xl sm:text-3xl font-black text-[#1DB954]">
+                              <span className="text-2xl sm:text-3xl font-black text-[#38BDF8]">
                                 ৳{(pkg.price ?? 0).toLocaleString('bn-BD')}
                               </span>
                               <span className="text-xs sm:text-sm text-slate-400 line-through font-bold">
@@ -585,17 +585,17 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
 
                             <div className="text-xs sm:text-sm space-y-2 border-t border-slate-200 dark:border-slate-800 pt-2.5 text-slate-700 dark:text-slate-200">
                               <p className="flex items-center gap-1.5 font-bold">
-                                <Clock className="w-4 h-4 text-[#1DB954]" /> {pkg.deliveryDays} দিনে ডেলিভারি
+                                <Clock className="w-4 h-4 text-[#38BDF8]" /> {pkg.deliveryDays} দিনে ডেলিভারি
                               </p>
                               <p className="flex items-center gap-1.5 font-bold">
-                                <Check className="w-4 h-4 text-[#1DB954]" /> {pkg.revisions} রিভিশন
+                                <Check className="w-4 h-4 text-[#38BDF8]" /> {pkg.revisions} রিভিশন
                               </p>
                             </div>
 
                             <div className="pt-2 space-y-1.5">
                               {(pkg.features || []).map((f, fIdx) => (
                                 <p key={fIdx} className="text-xs sm:text-sm flex items-center gap-1.5 text-slate-800 dark:text-slate-200 font-bold">
-                                  <Check className="w-4 h-4 text-[#1DB954] shrink-0" /> {f}
+                                  <Check className="w-4 h-4 text-[#38BDF8] shrink-0" /> {f}
                                 </p>
                               ))}
                             </div>
@@ -613,8 +613,8 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                             }}
                             className={`w-full py-2.5 rounded-xl font-black text-xs sm:text-sm cursor-pointer transition ${
                               isSelected
-                                ? 'bg-[#1DB954] text-white shadow-xs'
-                                : 'bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-[#1DB954] hover:text-white'
+                                ? 'bg-[#006A4E] text-white shadow-xs'
+                                : 'bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-[#006A4E] hover:text-white'
                             }`}
                           >
                             {isSelected ? 'অর্ডার করুন' : 'প্যাকেজ বাছাই করুন'}
@@ -630,7 +630,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
               {activeTab === 'overview' && (
                 <div className="space-y-5 animate-fadeIn font-bengali">
                   <h3 className="text-base sm:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
-                    <Sparkles className="w-5 h-5 text-[#1DB954]" />
+                    <Sparkles className="w-5 h-5 text-[#38BDF8]" />
                     <span>সার্ভিস বিবরণ ও কাজের পরিধি</span>
                   </h3>
 
@@ -639,26 +639,26 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                   </div>
 
                   <div className="p-5 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3.5">
-                    <h4 className="text-xs sm:text-sm font-black text-[#1DB954] uppercase tracking-wider">
+                    <h4 className="text-xs sm:text-sm font-black text-[#38BDF8] uppercase tracking-wider">
                       কেন এই গিগটি নির্বাচন করবেন?
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4.5 h-4.5 text-[#1DB954] shrink-0" />
+                        <CheckCircle2 className="w-4.5 h-4.5 text-[#38BDF8] shrink-0" />
                         <span>১০০% রেসপন্সিভ ও ক্লিন কোডিং</span>
                       </div>
                       {siteSettings?.enableMoneyBackGuarantee !== false && (
                         <div className="flex items-center gap-2">
-                          <CheckCircle2 className="w-4.5 h-4.5 text-[#1DB954] shrink-0" />
+                          <CheckCircle2 className="w-4.5 h-4.5 text-[#38BDF8] shrink-0" />
                           <span>এস্ক্রো ওয়ালেট টাকা {siteSettings?.moneyBackGuaranteeDays || 10} দিন সুরক্ষিত</span>
                         </div>
                       )}
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4.5 h-4.5 text-[#1DB954] shrink-0" />
+                        <CheckCircle2 className="w-4.5 h-4.5 text-[#38BDF8] shrink-0" />
                         <span>সোর্স ফাইল ও ফ্রি ডিপ্লয়মেন্ট গ্যারান্টি</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4.5 h-4.5 text-[#1DB954] shrink-0" />
+                        <CheckCircle2 className="w-4.5 h-4.5 text-[#38BDF8] shrink-0" />
                         <span>৩০ দিনের ফ্রি টেকনিক্যাল সাপোর্ট</span>
                       </div>
                     </div>
@@ -670,7 +670,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
               {activeTab === 'portfolio' && (
                 <div className="space-y-5 animate-fadeIn font-bengali">
                   <h3 className="text-base sm:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
-                    <ImageIcon className="w-5 h-5 text-[#1DB954]" />
+                    <ImageIcon className="w-5 h-5 text-[#38BDF8]" />
                     <span>পূর্বে সম্পন্নকৃত পোর্টফোলিও কাজ</span>
                   </h3>
 
@@ -692,7 +692,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                       <div key={idx} className="p-4 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-3">
                         <div className="relative h-44 sm:h-48 bg-slate-900 rounded-xl overflow-hidden cursor-pointer group" onClick={() => setLightboxImage(item.img)}>
                           <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition" />
-                          <span className="absolute top-2 left-2 bg-slate-950/80 text-[#1DB954] text-xs font-black px-2.5 py-1 rounded-full border border-[#1DB954]/30">
+                          <span className="absolute top-2 left-2 bg-slate-950/80 text-[#38BDF8] text-xs font-black px-2.5 py-1 rounded-full border border-blue-600/50/30">
                             {item.tag}
                           </span>
                         </div>
@@ -716,7 +716,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                     {reviewsList.map((rev, rIdx) => (
                       <div key={rIdx} className="p-4 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-[#1DB954] flex items-center justify-center border border-[#1DB954] shrink-0 font-bold">
+                          <div className="w-10 h-10 rounded-full bg-blue-500/10 dark:bg-blue-500/20 text-[#38BDF8] flex items-center justify-center border border-blue-600/50 shrink-0 font-bold">
                             <User className="w-5 h-5" />
                           </div>
                           <div>
@@ -742,7 +742,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
               {activeTab === 'seller' && (
                 <div className="space-y-5 animate-fadeIn font-bengali">
                   <h3 className="text-base sm:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
-                    <User className="w-5 h-5 text-[#1DB954]" />
+                    <User className="w-5 h-5 text-[#38BDF8]" />
                     <span>ফ্রি ল্যান্সার / সেলার প্রোফাইল</span>
                   </h3>
 
@@ -751,7 +751,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                       <img
                         src={gig.sellerAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}
                         alt={gig.sellerName}
-                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-[#1DB954]"
+                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-blue-600/50"
                       />
                       <div>
                         <h4 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
@@ -761,7 +761,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                         <p className="text-xs sm:text-sm text-slate-500 font-bold mt-1">
                           {gig.sellerTitle || 'Senior Developer & Tech Specialist'}
                         </p>
-                        <p className="text-xs sm:text-sm font-black text-emerald-600 dark:text-[#1DB954] mt-1">
+                        <p className="text-xs sm:text-sm font-black text-[#006A4E] dark:text-sky-400 mt-1">
                           ★ {gig.rating || 5.0} • {gig.salesCount || 25}টি সফল অর্ডার
                         </p>
                       </div>
@@ -770,9 +770,9 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                     <button
                       type="button"
                       onClick={handleOpenSellerChat}
-                      className="w-full py-3 bg-slate-900 text-white dark:bg-slate-800 hover:bg-[#1DB954] hover:text-white font-black rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer"
+                      className="w-full py-3 bg-slate-900 text-white dark:bg-slate-800 hover:bg-[#006A4E] hover:text-white font-black rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer"
                     >
-                      <MessageSquare className="w-4 h-4 text-[#1DB954]" />
+                      <MessageSquare className="w-4 h-4 text-[#38BDF8]" />
                       <span>মেসেজে কথা বলুন</span>
                     </button>
                   </div>
@@ -783,7 +783,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
               {activeTab === 'faqs' && (
                 <div className="space-y-4 animate-fadeIn font-bengali">
                   <h3 className="text-base sm:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
-                    <HelpCircle className="w-5 h-5 text-[#1DB954]" />
+                    <HelpCircle className="w-5 h-5 text-[#38BDF8]" />
                     <span>সাধারণ প্রশ্ন ও উত্তর (FAQs)</span>
                   </h3>
 
@@ -800,7 +800,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                           className="w-full p-4 text-left font-black text-sm sm:text-base text-slate-900 dark:text-white flex items-center justify-between cursor-pointer"
                         >
                           <span>{faq.q}</span>
-                          <ChevronDown className={`w-4 h-4 sm:w-5 sm:h-5 text-[#1DB954] transition transform ${openFaqIndex === fIdx ? 'rotate-180' : ''}`} />
+                          <ChevronDown className={`w-4 h-4 sm:w-5 sm:h-5 text-[#38BDF8] transition transform ${openFaqIndex === fIdx ? 'rotate-180' : ''}`} />
                         </button>
                         {openFaqIndex === fIdx && (
                           <div className="px-4 pb-4 pt-1 text-xs sm:text-sm text-slate-700 dark:text-slate-200 border-t border-slate-200/60 dark:border-slate-800 leading-relaxed font-bold">
@@ -820,13 +820,13 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
               <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-6 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4">
                 <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800/80 pb-3">
                   <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-[#1DB954]" />
+                    <Sparkles className="w-4 h-4 text-[#38BDF8]" />
                     <span>আরও জনপ্রিয় গিগ সার্ভিসসমূহ</span>
                   </h3>
                   <button
                     type="button"
                     onClick={onBack}
-                    className="text-[#1DB954] hover:text-emerald-400 text-xs font-bold hover:underline transition cursor-pointer flex items-center gap-1 shrink-0"
+                    className="text-[#38BDF8] hover:text-sky-400 text-xs font-bold hover:underline transition cursor-pointer flex items-center gap-1 shrink-0"
                   >
                     <span>সবগুলো দেখুন →</span>
                   </button>
@@ -840,15 +840,15 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                         onSelectGig(recGig);
                       }}
-                      className="p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-[#1DB954] transition cursor-pointer space-y-2 group"
+                      className="p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-blue-600/50 transition cursor-pointer space-y-2 group"
                     >
                       <div className="h-28 rounded-xl overflow-hidden bg-slate-900">
                         <img src={recGig.thumbnail} alt={recGig.title} className="w-full h-full object-cover group-hover:scale-105 transition" />
                       </div>
-                      <h4 className="text-xs font-black text-slate-900 dark:text-white line-clamp-1 group-hover:text-[#1DB954] transition">
+                      <h4 className="text-xs font-black text-slate-900 dark:text-white line-clamp-1 group-hover:text-sky-400 transition">
                         {recGig.title}
                       </h4>
-                      <div className="flex items-center justify-between text-[11px] font-bold text-[#1DB954]">
+                      <div className="flex items-center justify-between text-[11px] font-bold text-[#38BDF8]">
                         <span>৳{(recGig.packages?.basic?.price || recGig.price || 2000).toLocaleString('bn-BD')}</span>
                         <span className="text-slate-400">★ {recGig.rating || 5.0}</span>
                       </div>
@@ -863,7 +863,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
           {/* RIGHT COLUMN: STICKY ORDER CHECKOUT BOX (DESKTOP) */}
           <div className="hidden lg:block lg:col-span-5 xl:col-span-4 sticky top-20 space-y-4 font-bengali">
             
-            <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-6 border-2 border-[#1DB954]/50 shadow-xl space-y-4">
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-6 border-2 border-blue-600/50/50 shadow-xl space-y-4">
               
               {/* Package Selector Tabs */}
               <div className="grid grid-cols-3 gap-1 bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl text-xs sm:text-sm font-bold items-center justify-center text-center">
@@ -876,7 +876,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                       onClick={() => setSelectedPackage(pKey)}
                       className={`py-2.5 px-1 rounded-xl transition cursor-pointer text-center text-xs sm:text-sm font-black flex items-center justify-center ${
                         isSelected
-                          ? 'bg-[#1DB954] text-white shadow-sm'
+                          ? 'bg-[#006A4E] text-white shadow-sm'
                           : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
@@ -892,7 +892,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                   <div>
                     <div className="mb-1">
                       {selectedPackage === 'basic' && (
-                        <span className="text-xs font-black text-white bg-[#1DB954] px-2.5 py-1 rounded-lg shadow-xs inline-flex items-center justify-center text-center">
+                        <span className="text-xs font-black text-white bg-[#006A4E] px-2.5 py-1 rounded-lg shadow-xs inline-flex items-center justify-center text-center">
                           বেসিক প্যাকেজ
                         </span>
                       )}
@@ -911,7 +911,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                       {currentPkg.name || (selectedPackage === 'basic' ? 'বেসিক প্যাকেজ' : selectedPackage === 'standard' ? 'স্ট্যান্ডার্ড প্যাকেজ' : 'প্রিমিয়াম প্যাকেজ')}
                     </h3>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-black text-[#1DB954]">
+                  <div className="text-2xl sm:text-3xl font-black text-[#38BDF8]">
                     ৳{(currentPkg.price ?? 2500).toLocaleString('bn-BD')}
                   </div>
                 </div>
@@ -919,11 +919,11 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 {/* Specs */}
                 <div className="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                   <span className="flex items-center gap-1.5">
-                    <Clock className="w-4.5 h-4.5 text-[#1DB954]" />
+                    <Clock className="w-4.5 h-4.5 text-[#38BDF8]" />
                     <span>{currentPkg.deliveryDays ?? 3} দিনে ডেলিভারি</span>
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <Check className="w-4.5 h-4.5 text-[#1DB954]" />
+                    <Check className="w-4.5 h-4.5 text-[#38BDF8]" />
                     <span>{currentPkg.revisions ?? '3'}টি রিভিশন</span>
                   </span>
                 </div>
@@ -932,7 +932,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 <ul className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 space-y-2 pt-1">
                   {(currentPkg.features || ['হাই-কোয়ালিটি ডেলিভারি', 'সোর্স ফাইল', 'সাপোর্ট']).map((f, idx) => (
                     <li key={idx} className="flex items-center gap-2 font-bold">
-                      <CheckCircle2 className="w-4.5 h-4.5 text-[#1DB954] shrink-0" />
+                      <CheckCircle2 className="w-4.5 h-4.5 text-[#38BDF8] shrink-0" />
                       <span>{f}</span>
                     </li>
                   ))}
@@ -941,12 +941,12 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
 
               {/* Active Order Notice Pill in Sidebar */}
               {userActiveOrder && (
-                <div className="p-3 bg-[#1DB954]/10 border border-[#1DB954]/30 rounded-2xl flex items-center justify-between text-xs font-bold text-[#1DB954]">
+                <div className="p-3 bg-[#006A4E]/10 border border-blue-600/50/30 rounded-2xl flex items-center justify-between text-xs font-bold text-[#38BDF8]">
                   <span className="flex items-center gap-1.5 truncate">
-                    <CheckCircle2 className="w-4 h-4 shrink-0 text-[#1DB954]" />
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-[#38BDF8]" />
                     <span className="truncate">অর্ডারকৃত গিগ (আইডি: #{userActiveOrder.id.slice(-6)})</span>
                   </span>
-                  <span className="text-[10px] bg-[#1DB954] text-white px-2 py-0.5 rounded-md font-black uppercase shrink-0">
+                  <span className="text-[10px] bg-[#006A4E] text-white px-2 py-0.5 rounded-md font-black uppercase shrink-0">
                     একটিভ
                   </span>
                 </div>
@@ -957,7 +957,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 <button
                   type="button"
                   onClick={handleOpenOrderCheckout}
-                  className="w-full py-2.5 sm:py-3 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-bold font-bengali text-sm sm:text-base shadow-md hover:scale-[1.01] transition cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full py-2.5 sm:py-3 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-bold font-bengali text-sm sm:text-base shadow-md hover:scale-[1.01] transition cursor-pointer flex items-center justify-center gap-2"
                 >
                   <span>অর্ডার করুন</span>
                 </button>
@@ -967,7 +967,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                   onClick={handleOpenSellerChat}
                   className="w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer"
                 >
-                  <MessageSquare className="w-4 h-4 text-[#1DB954]" />
+                  <MessageSquare className="w-4 h-4 text-[#38BDF8]" />
                   <span>মেসেজে কথা বলুন</span>
                 </button>
               </div>
@@ -976,12 +976,12 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
               <div className="pt-3.5 border-t border-slate-100 dark:border-slate-800 text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 space-y-2">
                 {siteSettings?.enableMoneyBackGuarantee !== false && (
                   <p className="flex items-center gap-2">
-                    <ShieldCheck className="w-4.5 h-4.5 text-[#1DB954] shrink-0" />
+                    <ShieldCheck className="w-4.5 h-4.5 text-[#38BDF8] shrink-0" />
                     <span>{siteSettings?.moneyBackGuaranteeText || `${siteSettings?.moneyBackGuaranteeDays || 10}-দিনের মানি ব্যাক ও এস্ক্রো গ্যারান্টি`}</span>
                   </p>
                 )}
                 <p className="flex items-center gap-2">
-                  <Zap className="w-4.5 h-4.5 text-[#1DB954] shrink-0" />
+                  <Zap className="w-4.5 h-4.5 text-[#38BDF8] shrink-0" />
                   <span>দ্রুত অনলাইন টেকনিক্যাল সাপোর্ট</span>
                 </p>
               </div>
@@ -1000,7 +1000,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
           <div>
             <div className="mb-0.5">
               {selectedPackage === 'basic' && (
-                <span className="text-xs font-black text-white bg-[#1DB954] px-2 py-0.5 rounded inline-block text-center">
+                <span className="text-xs font-black text-white bg-[#006A4E] px-2 py-0.5 rounded inline-block text-center">
                   বেসিক প্যাকেজ
                 </span>
               )}
@@ -1015,7 +1015,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 </span>
               )}
             </div>
-            <span className="text-xl sm:text-2xl font-black text-[#1DB954]">
+            <span className="text-xl sm:text-2xl font-black text-[#38BDF8]">
               ৳{(currentPkg.price ?? 2500).toLocaleString('bn-BD')}
             </span>
           </div>
@@ -1023,7 +1023,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
           <button
             type="button"
             onClick={handleOpenOrderCheckout}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-bold font-bengali text-sm shadow-md flex items-center justify-center cursor-pointer active:scale-98"
+            className="flex-1 py-2.5 px-4 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-bold font-bengali text-sm shadow-md flex items-center justify-center cursor-pointer active:scale-98"
           >
             <span>অর্ডার করুন</span>
           </button>
@@ -1036,7 +1036,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
           <div className="relative max-w-4xl w-full max-h-[90vh] flex items-center justify-center">
             <button
               onClick={() => setLightboxImage(null)}
-              className="absolute -top-12 right-0 p-2 text-white hover:text-[#1DB954] transition cursor-pointer"
+              className="absolute -top-12 right-0 p-2 text-white hover:text-sky-400 transition cursor-pointer"
             >
               <X className="w-6 h-6" />
             </button>
@@ -1051,7 +1051,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
           <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 space-y-4 relative shadow-2xl my-auto">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
               <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <Edit className="w-4 h-4 text-[#1DB954]" />
+                <Edit className="w-4 h-4 text-[#38BDF8]" />
                 <span>গিগ এডিট করুন</span>
               </h3>
               <button onClick={() => setIsEditModalOpen(false)} className="text-slate-400 hover:text-white cursor-pointer">
@@ -1060,7 +1060,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
             </div>
 
             {editSuccess && (
-              <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 text-[#1DB954] font-bold text-xs rounded-xl text-center">
+              <div className="p-3 bg-blue-500/10 border border-blue-500/30 text-[#38BDF8] font-bold text-xs rounded-xl text-center">
                 ✓ গিগ সফলভাবে আপডেট করা হয়েছে!
               </div>
             )}
@@ -1072,7 +1072,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                   type="text"
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                   required
                 />
               </div>
@@ -1083,7 +1083,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                   type="text"
                   value={editCategory}
                   onChange={(e) => setEditCategory(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                   required
                 />
               </div>
@@ -1093,7 +1093,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 <select
                   value={editOfferBadge}
                   onChange={(e) => setEditOfferBadge(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954] font-bold"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E] font-bold"
                 >
                   <option value="আগে কাজ শুরু">⚡ আগে কাজ শুরু</option>
                   <option value="৫% ছাড়">🎁 ৫% ছাড়</option>
@@ -1140,7 +1140,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                   rows={3}
                   value={editDesc}
                   onChange={(e) => setEditDesc(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                 />
               </div>
 
@@ -1154,7 +1154,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#1DB954] hover:bg-emerald-600 text-white rounded-xl font-black cursor-pointer shadow"
+                  className="px-5 py-2 bg-[#006A4E] hover:bg-[#047857] text-white rounded-xl font-black cursor-pointer shadow"
                 >
                   সেভ করুন
                 </button>
@@ -1170,7 +1170,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
           <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-800 space-y-4 relative shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
               <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <BarChart2 className="w-4 h-4 text-[#1DB954]" />
+                <BarChart2 className="w-4 h-4 text-[#38BDF8]" />
                 <span>পারফরমেন্স অ্যানালিটিক্স</span>
               </h3>
               <button onClick={() => setIsPerformanceModalOpen(false)} className="text-slate-400 hover:text-white cursor-pointer">
@@ -1181,15 +1181,15 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
             <div className="grid grid-cols-2 gap-3 text-center text-xs">
               <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700">
                 <span className="text-slate-400 block font-medium">মোট ইম্প্রেশন</span>
-                <span className="text-lg font-black text-[#1DB954]">১,২৪০</span>
+                <span className="text-lg font-black text-[#38BDF8]">১,২৪০</span>
               </div>
               <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700">
                 <span className="text-slate-400 block font-medium">ক্লিক সংখ্যা</span>
-                <span className="text-lg font-black text-[#1DB954]">৩১৫</span>
+                <span className="text-lg font-black text-[#38BDF8]">৩১৫</span>
               </div>
               <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700">
                 <span className="text-slate-400 block font-medium">সম্পন্ন অর্ডার</span>
-                <span className="text-lg font-black text-[#1DB954]">{gig.salesCount || 25}</span>
+                <span className="text-lg font-black text-[#38BDF8]">{gig.salesCount || 25}</span>
               </div>
               <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700">
                 <span className="text-slate-400 block font-medium">গড় রিভিউ</span>
@@ -1199,7 +1199,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
 
             <button
               onClick={() => setIsPerformanceModalOpen(false)}
-              className="w-full py-2.5 bg-[#1DB954] text-white font-black rounded-xl cursor-pointer text-xs shadow"
+              className="w-full py-2.5 bg-[#006A4E] text-white font-black rounded-xl cursor-pointer text-xs shadow"
             >
               বন্ধ করুন
             </button>

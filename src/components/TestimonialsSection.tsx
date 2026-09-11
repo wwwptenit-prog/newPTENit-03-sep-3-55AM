@@ -56,7 +56,7 @@ export const TestimonialsSection: React.FC = () => {
                 return (
                   <div key={item.id || idx} className="w-full shrink-0 px-1">
                     <div className="bg-slate-50 dark:bg-slate-800/80 p-5 sm:p-6 rounded-3xl border border-slate-200/90 dark:border-slate-700 shadow-xs relative flex flex-col justify-between min-h-[260px]">
-                      <Quote className="w-8 h-8 text-[#1DB954]/20 absolute top-4 right-4" />
+                      <Quote className="w-8 h-8 text-[#38BDF8]/20 absolute top-4 right-4" />
 
                       <div className="space-y-3 relative z-10">
                         <div className="flex items-center gap-1 text-amber-400">
@@ -74,7 +74,7 @@ export const TestimonialsSection: React.FC = () => {
                         <img
                           src={item.avatar}
                           alt={loc.name}
-                          className="w-10 h-10 rounded-full object-cover border-2 border-[#1DB954] shrink-0"
+                          className="w-10 h-10 rounded-full object-cover border-2 border-blue-600/50 shrink-0"
                         />
                         <div className="min-w-0 flex-1">
                           <h4 className="font-bold text-sm text-slate-900 dark:text-white font-bengali truncate flex items-center gap-1">
@@ -82,7 +82,7 @@ export const TestimonialsSection: React.FC = () => {
                             <CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
                           </h4>
                           <p className="text-[11px] text-slate-500 font-bengali truncate">
-                            {loc.role} • <span className="text-[#1DB954] font-semibold">{loc.courseOrService}</span>
+                            {loc.role} • <span className="text-[#38BDF8] font-semibold">{loc.courseOrService}</span>
                           </p>
                         </div>
                       </div>
@@ -98,7 +98,7 @@ export const TestimonialsSection: React.FC = () => {
             <button
               type="button"
               onClick={handlePrev}
-              className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-[#1DB954] hover:text-white transition shadow-xs cursor-pointer active:scale-95"
+              className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-[#006A4E] hover:text-white transition shadow-xs cursor-pointer active:scale-95"
               aria-label="Previous review"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -113,7 +113,7 @@ export const TestimonialsSection: React.FC = () => {
                   onClick={() => setCurrentIndex(idx)}
                   className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                     currentIndex === idx
-                      ? 'w-6 bg-[#1DB954]'
+                      ? 'w-6 bg-[#006A4E]'
                       : 'w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400'
                   }`}
                   aria-label={`Go to slide ${idx + 1}`}
@@ -124,7 +124,7 @@ export const TestimonialsSection: React.FC = () => {
             <button
               type="button"
               onClick={handleNext}
-              className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-[#1DB954] hover:text-white transition shadow-xs cursor-pointer active:scale-95"
+              className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-[#006A4E] hover:text-white transition shadow-xs cursor-pointer active:scale-95"
               aria-label="Next review"
             >
               <ChevronRight className="w-4 h-4" />
@@ -139,9 +139,9 @@ export const TestimonialsSection: React.FC = () => {
             return (
               <div
                 key={item.id}
-                className="bg-slate-50 dark:bg-slate-800/60 p-8 rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-xs hover:shadow-xl hover:border-[#1DB954] transition-all duration-300 flex flex-col justify-between relative group"
+                className="bg-slate-50 dark:bg-slate-800/60 p-8 rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-xs hover:shadow-xl hover:border-blue-600/50 transition-all duration-300 flex flex-col justify-between relative group"
               >
-                <Quote className="w-10 h-10 text-[#1DB954]/20 absolute top-6 right-6 group-hover:text-[#1DB954]/40 transition-colors" />
+                <Quote className="w-10 h-10 text-[#38BDF8]/20 absolute top-6 right-6 group-hover:text-sky-400/40 transition-colors" />
 
                 <div className="space-y-4 relative z-10">
                   <div className="flex items-center gap-1 text-amber-400">
@@ -159,7 +159,7 @@ export const TestimonialsSection: React.FC = () => {
                   <img
                     src={item.avatar}
                     alt={loc.name}
-                    className="w-12 h-12 rounded-full object-cover border-2 border-[#1DB954]"
+                    className="w-12 h-12 rounded-full object-cover border-2 border-blue-600/50"
                   />
                   <div>
                     <h4 className="font-bold text-base text-slate-900 dark:text-white font-bengali flex items-center gap-1">
@@ -167,7 +167,7 @@ export const TestimonialsSection: React.FC = () => {
                       <CheckCircle2 className="w-4 h-4 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
                     </h4>
                     <p className="text-xs text-slate-500 font-bengali">
-                      {loc.role} • <span className="text-[#1DB954] font-semibold">{loc.courseOrService}</span>
+                      {loc.role} • <span className="text-[#38BDF8] font-semibold">{loc.courseOrService}</span>
                     </p>
                   </div>
                 </div>

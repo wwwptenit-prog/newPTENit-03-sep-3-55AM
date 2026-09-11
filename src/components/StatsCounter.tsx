@@ -92,54 +92,54 @@ export const StatsCounter: React.FC = () => {
       label: t('সফল স্টুডেন্ট ও ট্রেইনি', 'Successful Students & Trainees'),
       value: siteSettings.statsStudents || '500+',
       icon: Users,
-      color: 'text-[#1DB954]',
-      bgColor: 'bg-[#1DB954]/10'
+      color: 'text-[#16A34A]',
+      bgColor: 'bg-green-50'
     },
     {
       id: 'projects',
       label: t('সফল প্রজেক্ট ডেলিভারি', 'Projects Delivered'),
       value: siteSettings.statsProjects || '100+',
       icon: CheckCircle2,
-      color: 'text-sky-500',
-      bgColor: 'bg-sky-500/10'
+      color: 'text-[#16A34A]',
+      bgColor: 'bg-green-50'
     },
     {
       id: 'courses',
       label: t('পেশাদার ট্রেনিং কোর্স', 'Professional Courses'),
       value: siteSettings.statsCourses || '50+',
       icon: BookOpen,
-      color: 'text-amber-500',
-      bgColor: 'bg-amber-500/10'
+      color: 'text-[#DC2626]',
+      bgColor: 'bg-red-50'
     },
     {
       id: 'satisfaction',
       label: t('ক্লায়েন্ট স্যাটিসফ্যাকশন', 'Client Satisfaction Rate'),
       value: siteSettings.statsSatisfaction || '95%',
       icon: HeartHandshake,
-      color: 'text-rose-500',
-      bgColor: 'bg-rose-500/10'
+      color: 'text-[#16A34A]',
+      bgColor: 'bg-green-50'
     }
   ];
 
   return (
-    <section className="py-6 sm:py-10 lg:py-12 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm">
+    <section className="py-6 sm:py-8 bg-white border-b border-slate-200 shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-5 lg:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (
               <div
                 key={stat.id}
-                className="p-3 sm:p-5 lg:p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2 sm:gap-3.5 hover:border-[#1DB954] transition-all transform hover:-translate-y-1 shadow-xs"
+                className="p-3.5 sm:p-5 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2 sm:gap-3.5 hover:border-[#16A34A] transition-all transform hover:-translate-y-0.5 shadow-xs"
               >
-                <div className={`p-2 sm:p-3.5 rounded-xl ${stat.bgColor} ${stat.color} shrink-0`}>
-                  <Icon className="w-5 h-5 sm:w-7 sm:h-7" />
+                <div className={`p-2.5 sm:p-3 rounded-lg ${stat.bgColor} ${stat.color} shrink-0`}>
+                  <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="text-lg sm:text-2xl lg:text-3xl font-black font-heading text-slate-900 dark:text-white">
+                  <h3 className="text-lg sm:text-2xl lg:text-3xl font-black font-heading text-slate-900">
                     <AnimatedCounter value={stat.value} lang={lang} />
                   </h3>
-                  <p className="text-[11px] sm:text-xs lg:text-sm font-semibold text-slate-600 dark:text-slate-300 font-bengali leading-snug">
+                  <p className="text-[11px] sm:text-xs lg:text-sm font-semibold text-slate-600 font-bengali leading-snug">
                     {stat.label}
                   </p>
                 </div>

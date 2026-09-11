@@ -257,7 +257,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
   const progressPercent = Math.round(((completedLessons.length) / (allLessons.length || 1)) * 100);
 
   return (
-    <div className="bg-slate-950 text-white min-h-screen flex flex-col font-sans selection:bg-[#1DB954] selection:text-white">
+    <div className="bg-slate-950 text-white min-h-screen flex flex-col font-sans selection:bg-[#006A4E] selection:text-white">
       
       {/* 1. TOP HEADER: Compact, Clean, Smart */}
       <header className="bg-slate-900 border-b border-slate-800/90 px-3.5 sm:px-6 py-2.5 flex items-center justify-between gap-3 sticky top-0 z-40">
@@ -289,7 +289,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
             onClick={() => setIsSidebarOpenMobile(!isSidebarOpenMobile)}
             className="lg:hidden px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center gap-1.5 border border-slate-700/70 cursor-pointer"
           >
-            <BookOpen className="w-3.5 h-3.5 text-[#1DB954]" />
+            <BookOpen className="w-3.5 h-3.5 text-[#38BDF8]" />
             <span>সিলেবাস ({allLessons.length})</span>
           </button>
 
@@ -307,7 +307,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
       {/* 2. PROGRESS SUB-HEADER */}
       <div className="bg-slate-900/70 border-b border-slate-800/80 px-3.5 sm:px-6 py-2 flex items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2 min-w-0">
-          <span className="w-2 h-2 rounded-full bg-[#1DB954] shrink-0" />
+          <span className="w-2 h-2 rounded-full bg-[#006A4E] shrink-0" />
           <span className="text-slate-300 font-bold text-[11px] sm:text-xs truncate">
             বর্তমান পাঠ: <strong className="text-white">{currentLesson?.title}</strong>
           </span>
@@ -315,11 +315,11 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
 
         <div className="flex items-center gap-2.5 shrink-0">
           <span className="text-[11px] text-slate-300 font-bold">
-            প্রগ্রেস: <strong className="text-[#1DB954] font-black">{completedLessons.length}/{allLessons.length} সম্পন্ন ({progressPercent}%)</strong>
+            প্রগ্রেস: <strong className="text-[#38BDF8] font-black">{completedLessons.length}/{allLessons.length} সম্পন্ন ({progressPercent}%)</strong>
           </span>
           <div className="w-20 sm:w-28 bg-slate-800 h-2 rounded-full overflow-hidden">
             <div
-              className="bg-[#1DB954] h-full transition-all duration-300 rounded-full"
+              className="bg-[#006A4E] h-full transition-all duration-300 rounded-full"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -373,7 +373,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
               />
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center space-y-2 bg-slate-950">
-                <PlayCircle className="w-12 h-12 text-[#1DB954] animate-pulse" />
+                <PlayCircle className="w-12 h-12 text-[#38BDF8] animate-pulse" />
                 <p className="font-bold text-white text-sm">ভিডিও লেসন প্রস্তুত হচ্ছে...</p>
               </div>
             )}
@@ -382,7 +382,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
           {/* Lesson Controller Bar: Lesson Index + Prev/Next + Complete Button */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 bg-slate-900 p-3 sm:p-4 rounded-xl border border-slate-800">
             <div className="min-w-0">
-              <span className="text-[11px] font-black text-[#1DB954]">
+              <span className="text-[11px] font-black text-[#38BDF8]">
                 লেসন {currentLessonIndex + 1} / {allLessons.length} ({currentLesson?.duration || '২৫ মিনিট'})
               </span>
               <h2 className="text-sm sm:text-base font-extrabold text-white truncate">
@@ -407,8 +407,8 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                 onClick={handleMarkComplete}
                 className={`px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-1.5 transition cursor-pointer active:scale-95 ${
                   isCurrentLessonCompleted
-                    ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
-                    : 'bg-[#1DB954] hover:bg-emerald-500 text-white'
+                    ? 'bg-[#047857] hover:bg-blue-500 text-white'
+                    : 'bg-[#006A4E] hover:bg-blue-500 text-white'
                 }`}
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
@@ -435,7 +435,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                 type="button"
                 onClick={() => setActiveTab('video')}
                 className={`py-2 px-3 rounded-lg transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                  activeTab === 'video' ? 'bg-[#1DB954] text-white' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                  activeTab === 'video' ? 'bg-[#006A4E] text-white' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
                 }`}
               >
                 <Play className="w-3.5 h-3.5" />
@@ -490,7 +490,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                 type="button"
                 onClick={() => setActiveTab('ai-tutor')}
                 className={`py-2 px-3 rounded-lg transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
-                  activeTab === 'ai-tutor' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                  activeTab === 'ai-tutor' ? 'bg-[#047857] text-white' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5" />
@@ -502,7 +502,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
             {activeTab === 'video' && (
               <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 text-slate-300 text-xs sm:text-sm space-y-2.5">
                 <h3 className="font-black text-white text-sm sm:text-base flex items-center gap-2">
-                  <PlayCircle className="w-4 h-4 text-[#1DB954]" />
+                  <PlayCircle className="w-4 h-4 text-[#38BDF8]" />
                   <span>লেসনের মূল আলোচ্য বিষয়:</span>
                 </h3>
                 <p className="leading-relaxed text-slate-300 text-xs sm:text-sm">
@@ -579,7 +579,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                       <span className="font-bold text-white text-xs sm:text-sm">
                         ১. ই-কমার্স শপ ড্যাশবোর্ড UI ও Redux স্টেট ম্যানেজমেন্ট
                       </span>
-                      <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950 px-2.5 py-0.5 rounded-full border border-emerald-800">
+                      <span className="text-[10px] font-bold text-sky-400 bg-slate-950 px-2.5 py-0.5 rounded-full border border-blue-900">
                         মার্কস: ১০০/১০০ (A+) ✓
                       </span>
                     </div>
@@ -593,7 +593,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                         ২. JWT সিকিউর অথেন্টিকেশন, রিফ্রেশ টোকেন ও Protected Routes
                       </span>
                       {assignmentSubmitted ? (
-                        <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950 px-2.5 py-0.5 rounded-full border border-emerald-800">
+                        <span className="text-[10px] font-bold text-sky-400 bg-slate-950 px-2.5 py-0.5 rounded-full border border-blue-900">
                           জমা দেওয়া হয়েছে ✓
                         </span>
                       ) : (
@@ -604,7 +604,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                     </div>
 
                     {assignmentSubmitted ? (
-                      <div className="p-3 bg-emerald-950/70 border border-emerald-500/50 text-emerald-300 rounded-lg text-xs">
+                      <div className="p-3 bg-slate-950/70 border border-blue-500/50 text-sky-300 rounded-lg text-xs">
                         ✓ আপনার অ্যাসাইনমেন্ট ২ সফলভাবে জমা হয়েছে! ইন্সট্রাকটর কোড রিভিউ করে ফিডব্যাক প্রদান করবেন।
                       </div>
                     ) : (
@@ -629,7 +629,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                             value={assignmentRepoLink}
                             onChange={e => setAssignmentRepoLink(e.target.value)}
                             required
-                            className="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                            className="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                           />
                         </div>
                         <div>
@@ -641,12 +641,12 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                             placeholder="কী কী ফিচার বাস্তবায়ন করেছেন..."
                             value={assignmentNotes}
                             onChange={e => setAssignmentNotes(e.target.value)}
-                            className="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                            className="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                           />
                         </div>
                         <button
                           type="submit"
-                          className="px-4 py-2 bg-[#1DB954] hover:bg-emerald-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer transition shadow-xs"
+                          className="px-4 py-2 bg-[#006A4E] hover:bg-blue-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer transition shadow-xs"
                         >
                           <Upload className="w-3.5 h-3.5" />
                           <span>অ্যাসাইনমেন্ট ২ জমা দিন</span>
@@ -680,7 +680,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                     <span>মডিউল কুইজ টেস্ট</span>
                   </h3>
                   {quizScore !== null && (
-                    <span className="px-2.5 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-500 text-[11px] font-bold rounded">
+                    <span className="px-2.5 py-0.5 bg-slate-950 text-sky-300 border border-blue-500 text-[11px] font-bold rounded">
                       স্কোর: {quizScore}/{quizQuestions.length} ({Math.round((quizScore/quizQuestions.length)*100)}%)
                     </span>
                   )}
@@ -736,7 +736,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
             {activeTab === 'resources' && (
               <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-3">
                 <h3 className="font-black text-white text-sm sm:text-base flex items-center gap-2">
-                  <Code className="w-4 h-4 text-[#1DB954]" />
+                  <Code className="w-4 h-4 text-[#38BDF8]" />
                   <span>সোর্স কোড ও ফাইলস</span>
                 </h3>
 
@@ -748,7 +748,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                       href="https://github.com"
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1DB954] hover:bg-emerald-500 text-white text-xs font-bold transition cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#006A4E] hover:bg-blue-500 text-white text-xs font-bold transition cursor-pointer"
                     >
                       <Download className="w-3.5 h-3.5" />
                       <span>ডাউনলোড করুন</span>
@@ -802,8 +802,8 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                     </div>
                   </div>
                 ) : (
-                  <div className="p-3 bg-slate-950 rounded-xl border border-emerald-500/50 space-y-2">
-                    <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-bold">
+                  <div className="p-3 bg-slate-950 rounded-xl border border-blue-500/50 space-y-2">
+                    <div className="flex items-center gap-1.5 text-sky-400 text-xs font-bold">
                       <Award className="w-4 h-4" />
                       <span>অভিনন্দন! কোর্স সফলভাবে সম্পন্ন হয়েছে</span>
                     </div>
@@ -825,14 +825,14 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
 
             {/* TAB CONTENT 7: AI TUTOR */}
             {activeTab === 'ai-tutor' && (
-              <div className="bg-slate-900 p-4 sm:p-5 rounded-xl border border-emerald-500/40 space-y-3">
+              <div className="bg-slate-900 p-4 sm:p-5 rounded-xl border border-blue-500/40 space-y-3">
                 <div className="flex items-center gap-2">
-                  <div className="p-2 bg-[#1DB954]/20 text-[#1DB954] rounded-lg border border-[#1DB954]/30">
+                  <div className="p-2 bg-[#006A4E]/20 text-[#38BDF8] rounded-lg border border-blue-600/50/30">
                     <Sparkles className="w-4 h-4" />
                   </div>
                   <div>
                     <h3 className="font-extrabold text-white text-sm">AI কোডিং টিউটর</h3>
-                    <p className="text-xs text-[#1DB954]">লেসন বা কোড সমস্যা নিয়ে যেকোনো প্রশ্ন করুন</p>
+                    <p className="text-xs text-[#38BDF8]">লেসন বা কোড সমস্যা নিয়ে যেকোনো প্রশ্ন করুন</p>
                   </div>
                 </div>
 
@@ -843,12 +843,12 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                     value={aiQuestion}
                     onChange={e => setAiQuestion(e.target.value)}
                     required
-                    className="w-full p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-[#006A4E]"
                   />
                   <button
                     type="submit"
                     disabled={isAiAsking}
-                    className="px-4 py-2 bg-[#1DB954] hover:bg-emerald-500 disabled:opacity-50 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer transition"
+                    className="px-4 py-2 bg-[#006A4E] hover:bg-blue-500 disabled:opacity-50 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer transition"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>{isAiAsking ? 'উত্তর খোঁজা হচ্ছে...' : 'উত্তর জানুন'}</span>
@@ -857,7 +857,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
 
                 {aiAnswer && (
                   <div className="p-3 bg-slate-950 rounded-lg border border-slate-800 text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
-                    <p className="font-bold text-[#1DB954] mb-1">এআই টিউটর:</p>
+                    <p className="font-bold text-[#38BDF8] mb-1">এআই টিউটর:</p>
                     {aiAnswer}
                   </div>
                 )}
@@ -874,10 +874,10 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
         >
           <div className="flex justify-between items-center pb-2 border-b border-slate-800">
             <h2 className="font-black text-xs sm:text-sm text-slate-200 flex items-center gap-1.5">
-              <BookOpen className="w-4 h-4 text-[#1DB954]" />
+              <BookOpen className="w-4 h-4 text-[#38BDF8]" />
               <span>কোর্স সিলেবাস</span>
             </h2>
-            <span className="text-xs text-[#1DB954] font-black">
+            <span className="text-xs text-[#38BDF8] font-black">
               {allLessons.length} টি লেসন
             </span>
           </div>
@@ -905,15 +905,15 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                         }}
                         className={`w-full p-2 rounded-lg text-left text-xs font-bold transition flex items-center justify-between cursor-pointer border ${
                           isActive
-                            ? 'bg-[#1DB954] text-white border-emerald-400 shadow-sm'
+                            ? 'bg-[#006A4E] text-white border-sky-400 shadow-sm'
                             : isDone
-                            ? 'bg-slate-800/60 text-emerald-400 border-slate-700/60 hover:bg-slate-800'
+                            ? 'bg-slate-800/60 text-sky-400 border-slate-700/60 hover:bg-slate-800'
                             : 'bg-slate-950/80 text-slate-300 border-slate-800/80 hover:bg-slate-800 hover:text-white'
                         }`}
                       >
                         <div className="flex items-center gap-1.5 min-w-0 pr-1.5">
                           {isDone ? (
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <CheckCircle2 className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                           ) : (
                             <PlayCircle className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : 'text-slate-500'}`} />
                           )}
@@ -933,8 +933,8 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
       {/* Auto-Certificate Celebration Modal */}
       {showCertModal && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-emerald-500/40 p-5 sm:p-6 rounded-2xl max-w-sm w-full text-center space-y-3 shadow-2xl relative animate-in fade-in zoom-in font-bengali">
-            <div className="w-12 h-12 bg-emerald-500/20 text-[#1DB954] rounded-xl flex items-center justify-center mx-auto border border-emerald-500/30">
+          <div className="bg-slate-900 border border-blue-500/40 p-5 sm:p-6 rounded-2xl max-w-sm w-full text-center space-y-3 shadow-2xl relative animate-in fade-in zoom-in font-bengali">
+            <div className="w-12 h-12 bg-blue-500/20 text-[#38BDF8] rounded-xl flex items-center justify-center mx-auto border border-blue-500/30">
               <Award className="w-7 h-7" />
             </div>
 
@@ -959,7 +959,7 @@ export const CourseLearningPage: React.FC<CourseLearningPageProps> = ({
                     onViewCertificate(enrollment.certificateId);
                   }
                 }}
-                className="w-full py-2.5 bg-[#1DB954] hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow flex items-center justify-center gap-1.5 cursor-pointer transition"
+                className="w-full py-2.5 bg-[#006A4E] hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow flex items-center justify-center gap-1.5 cursor-pointer transition"
               >
                 <Award className="w-4 h-4" />
                 <span>সার্টিফিকেট ডাউনলোড করুন</span>

@@ -1505,7 +1505,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
         text: "অর্ডার সম্পন্ন ও ডেলিভার্ড",
         shortBadge: "সম্পন্ন",
         isOverdue: false,
-        badgeColor: "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-[#1DB954]",
+        badgeColor: "bg-blue-100 dark:bg-slate-950/60 text-blue-700 dark:text-sky-400",
         penaltyAmount: 0,
         buyerBonus: 0,
         days: 0,
@@ -3179,15 +3179,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
   };
 
   return (
-    <div id="marketplace-top" className="pt-0 pb-6 sm:py-5 px-2 sm:px-4 lg:px-6 w-full space-y-2 sm:space-y-4 font-sans text-slate-900 dark:text-slate-100 min-h-screen bg-slate-50 dark:bg-slate-950 pb-12 md:pb-8">
+    <div id="marketplace-top" className="pt-0 pb-6 sm:py-5 px-2 sm:px-4 lg:px-6 w-full space-y-2 sm:space-y-4 font-sans text-slate-900 min-h-screen bg-slate-50 pb-12 md:pb-8">
       
-      {/* PTENit MODERN FIVERR-STYLE MARKETPLACE HEADER (MATCHING PTENIT NAVBAR COLOR & STYLE) */}
+      {/* PTENit MODERN MARKETPLACE HEADER */}
       {!selectedGig && !(viewMode === 'selling' && sellerSubTab === 'create_gig') && (
-        <div className="sticky top-0 z-40 bg-[#0B132B] text-white px-2 sm:px-4 lg:px-6 mb-0 sm:mb-3 shadow-md">
+        <div className="sticky top-0 z-40 bg-white text-slate-900 px-2 sm:px-4 lg:px-6 mb-0 sm:mb-3 shadow-xs border-b border-slate-200">
           <div className="w-full px-2 sm:px-4 lg:px-6 py-1 sm:py-2 flex flex-col justify-between gap-2">
           
           {/* MOBILE PHONE HEADER (Facebook Lite Style Header & Merged Icon Navigation on Phone & Small Devices) */}
-          <div className="flex md:hidden flex-col gap-2 w-full font-bengali">
+          <div className="flex md:hidden flex-col gap-2 w-full font-bengali relative">
             {/* Top Bar: Brand, Search, Profile, Menu - ONLY visible on Home/Gigs tab */}
             {(((activeSubTab === 'gigs' && viewMode === 'buying') || (viewMode === 'selling' && (sellerSubTab === 'gigs' || sellerSubTab === 'overview'))) && !isInboxModalOpen && !isNotificationsOpen) && (
               <div className="flex items-center justify-between gap-1.5 w-full">
@@ -3220,11 +3220,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       />
                     ) : (
                       <>
-                        <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-gradient-to-br from-[#1DB954] to-emerald-600 flex items-center justify-center font-bold text-xs sm:text-base text-white shadow-md shadow-[#1DB954]/20 shrink-0">
+                        <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-[#006A4E] flex items-center justify-center font-bold text-xs sm:text-base text-white shadow-xs shrink-0 relative">
                           P
+                          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#E11D48] border border-white" />
                         </div>
-                        <span className="font-heading text-sm sm:text-base font-black tracking-wider text-white">
-                          PTEN<span className="text-[#1DB954]">it</span>
+                        <span className="font-heading text-sm sm:text-base font-black tracking-wider text-slate-900 flex items-center gap-0.5">
+                          PTEN<span className="text-[#006A4E]">it</span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] ml-0.5 inline-block" />
                         </span>
                       </>
                     )}
@@ -3239,13 +3241,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder={viewMode === 'selling' ? "সার্ভিস বা অর্ডার..." : "সার্চ করুন..."}
-                      className="w-full text-center pl-7 pr-7 py-1 bg-slate-900/90 border border-slate-700/80 text-white rounded-lg text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#1DB954] font-bengali shadow-inner placeholder:text-center focus:placeholder:text-left focus:text-left"
+                      className="w-full text-center pl-7 pr-7 py-1 bg-slate-100 border border-slate-300 text-slate-900 rounded-lg text-xs placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-[#006A4E] font-bengali placeholder:text-center focus:placeholder:text-left focus:text-left"
                     />
-                    <Search className="w-3.5 h-3.5 text-[#1DB954] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <Search className="w-3.5 h-3.5 text-[#006A4E] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                     {searchQuery && (
                       <button
                         onClick={() => setSearchQuery('')}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-0.5"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-800 p-0.5"
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -3254,10 +3256,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                   {/* LIVE FLOATING SEARCH RESULTS DROPDOWN (MOBILE MARKETPLACE) */}
                   {searchQuery.trim() && (
-                    <div className="absolute left-1/2 -translate-x-1/2 w-[calc(100vw-24px)] max-w-sm top-full mt-2 bg-[#142B4D] border border-slate-700 rounded-2xl shadow-2xl p-3 z-50 text-slate-200 max-h-80 overflow-y-auto">
-                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 border-b border-slate-700 pb-1 font-bengali flex items-center justify-between">
+                    <div className="absolute left-1/2 -translate-x-1/2 w-[calc(100vw-24px)] max-w-sm top-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 z-50 text-slate-800 max-h-80 overflow-y-auto">
+                      <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 border-b border-slate-200 pb-1 font-bengali flex items-center justify-between">
                         <span>মার্কেটপ্লেস গিগসমূহ ({filteredGigs.length})</span>
-                        <span className="text-[9px] text-[#1DB954] font-normal">লাইভ ফলাফল</span>
+                        <span className="text-[9px] text-[#006A4E] font-bold">লাইভ ফলাফল</span>
                       </div>
 
                       {filteredGigs.length > 0 ? (
@@ -3275,18 +3277,18 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   setSearchQuery('');
                                   window.scrollTo({ top: 0, behavior: 'smooth' });
                                 }}
-                                className="flex items-center gap-2 p-1.5 hover:bg-slate-800/90 rounded-lg cursor-pointer transition-colors bg-slate-900/60 border border-slate-800"
+                                className="flex items-center gap-2 p-1.5 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors bg-white border border-slate-200"
                               >
                                 <img
                                   src={gigThumbnail}
                                   alt={gig.title}
-                                  className="w-9 h-9 rounded-md object-cover shrink-0 border border-slate-700"
+                                  className="w-9 h-9 rounded-md object-cover shrink-0 border border-slate-200"
                                 />
                                 <div className="flex-1 min-w-0 font-bengali">
-                                  <p className="font-semibold text-xs text-white truncate">{gig.title}</p>
+                                  <p className="font-semibold text-xs text-slate-900 truncate">{gig.title}</p>
                                   <div className="flex items-center justify-between mt-0.5">
-                                    <span className="text-[10px] text-slate-400 truncate max-w-[110px]">{gig.sellerName}</span>
-                                    <span className="text-[11px] text-[#1DB954] font-bold">
+                                    <span className="text-[10px] text-slate-500 truncate max-w-[110px]">{gig.sellerName}</span>
+                                    <span className="text-[11px] text-[#006A4E] font-bold">
                                       ৳{gigPrice.toLocaleString('en-US')}
                                     </span>
                                   </div>
@@ -3296,13 +3298,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           })}
                         </div>
                       ) : (
-                        <p className="text-center text-slate-400 py-3 text-xs font-bengali">
+                        <p className="text-center text-slate-500 py-3 text-xs font-bengali">
                           কোনো গিগ বা সার্ভিস পাওয়া যায়নি।
                         </p>
                       )}
 
                       {filteredGigs.length > 0 && (
-                        <div className="pt-2 mt-1.5 border-t border-slate-700/80">
+                        <div className="pt-2 mt-1.5 border-t border-slate-200">
                           <button
                             onClick={() => {
                               setSelectedGig(null);
@@ -3310,7 +3312,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               setActiveSubTab('gigs');
                               window.scrollTo({ top: 400, behavior: 'smooth' });
                             }}
-                            className="w-full py-1.5 px-2.5 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs flex items-center justify-center gap-1.5 transition font-bengali cursor-pointer shadow"
+                            className="w-full py-1.5 px-2.5 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition font-bengali cursor-pointer shadow-xs"
                           >
                             <Search className="w-3.5 h-3.5" />
                             <span>সকল ফলাফল দেখুন ({filteredGigs.length} টি)</span>
@@ -3325,7 +3327,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 <div className="flex items-center justify-end gap-1 shrink-0">
                   {currentUser ? (
                     <div
-                      className="w-7 h-7 rounded-full bg-slate-800 flex items-center justify-center cursor-default select-none shrink-0 overflow-hidden"
+                      className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center cursor-default select-none shrink-0 overflow-hidden border border-slate-300"
                       title={`প্রোফাইল: ${currentUser.name}`}
                     >
                       <img
@@ -3338,11 +3340,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <button
                       type="button"
                       onClick={openAuthModal}
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-slate-200 hover:text-white hover:bg-slate-800/60 active:scale-90 transition cursor-pointer"
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-slate-700 hover:text-[#006A4E] hover:bg-slate-100 active:scale-90 transition cursor-pointer"
                       title="লগইন করুন"
                       aria-label="লগইন"
                     >
-                      <User className="w-5 h-5 text-[#1DB954]" />
+                      <User className="w-5 h-5 text-[#006A4E]" />
                     </button>
                   )}
 
@@ -3351,17 +3353,17 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     onClick={() => {
                       setIsMobileMarketplaceMenuOpen(!isMobileMarketplaceMenuOpen);
                     }}
-                    className="p-1.5 text-slate-200 hover:text-white cursor-pointer shrink-0 active:scale-95 touch-manipulation"
+                    className="p-1.5 text-slate-700 hover:text-slate-900 cursor-pointer shrink-0 active:scale-95 touch-manipulation"
                     title="মেনুবার"
                   >
-                    {isMobileMarketplaceMenuOpen ? <X className="w-5 h-5 text-[#1DB954]" /> : <Menu className="w-5 h-5" />}
+                    {isMobileMarketplaceMenuOpen ? <X className="w-5 h-5 text-[#E11D48]" /> : <Menu className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
             )}
 
             {/* FACEBOOK LITE STYLE UNIFIED ICON NAVIGATION BAR */}
-            <div className="flex items-center justify-between px-2 pt-1.5 pb-0.5 text-slate-300 w-full overflow-hidden">
+            <div className="flex items-center justify-between px-2 pt-1.5 pb-0.5 text-slate-600 w-full overflow-hidden border-t border-slate-100">
               {/* 1. 🏠 Marketplace / Specialist Home */}
               <button
                 type="button"
@@ -3389,8 +3391,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   ((viewMode === 'buying' && activeSubTab === 'gigs' && (activeTab === 'marketplace' || !activeTab)) ||
                    (viewMode === 'selling' && specialistMainTab === 'marketplace' && (sellerSubTab === 'overview' || sellerSubTab === 'gigs'))) &&
                   !selectedGig && !isInboxModalOpen && !isNotificationsOpen
-                    ? 'text-[#1DB954]'
-                    : 'text-white hover:text-[#1DB954]'
+                    ? 'text-[#006A4E]'
+                    : 'text-slate-600 hover:text-[#006A4E]'
                 }`}
                 title={viewMode === 'selling' ? 'সেলার ওভারভিউ / ড্যাশবোর্ড' : 'মার্কেটপ্লেস হোম'}
               >
@@ -3398,8 +3400,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   ((viewMode === 'buying' && activeSubTab === 'gigs' && (activeTab === 'marketplace' || !activeTab)) ||
                    (viewMode === 'selling' && specialistMainTab === 'marketplace' && (sellerSubTab === 'overview' || sellerSubTab === 'gigs'))) &&
                   !selectedGig && !isInboxModalOpen && !isNotificationsOpen
-                    ? 'text-[#1DB954]'
-                    : 'text-white'
+                    ? 'text-[#006A4E] stroke-[2.5]'
+                    : 'text-slate-600'
                 }`} />
               </button>
 
@@ -3431,8 +3433,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   ((viewMode === 'buying' && (activeSubTab === 'my-orders' || activeSubTab === 'my-courses' || activeSubTab === 'overview')) ||
                    (viewMode === 'selling' && specialistMainTab === 'marketplace' && sellerSubTab === 'orders')) &&
                   !selectedGig && !isInboxModalOpen && !isNotificationsOpen
-                    ? 'text-[#1DB954]'
-                    : 'text-white hover:text-[#1DB954]'
+                    ? 'text-[#006A4E]'
+                    : 'text-slate-600 hover:text-[#006A4E]'
                 }`}
                 title={viewMode === 'selling' ? 'ক্লায়েন্ট অর্ডারসমূহ' : 'আমার ক্রয়কৃত প্রজেক্ট ও কোর্সসমূহ'}
               >
@@ -3440,18 +3442,18 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   ((viewMode === 'buying' && (activeSubTab === 'my-orders' || activeSubTab === 'my-courses' || activeSubTab === 'overview')) ||
                    (viewMode === 'selling' && specialistMainTab === 'marketplace' && sellerSubTab === 'orders')) &&
                   !selectedGig && !isInboxModalOpen && !isNotificationsOpen
-                    ? 'stroke-[2.5] text-[#1DB954]'
-                    : 'text-white'
+                    ? 'stroke-[2.5] text-[#006A4E]'
+                    : 'text-slate-600'
                 }`} />
                 {viewMode === 'selling' ? (
                   marketplaceOrders && marketplaceOrders.length > 0 && (
-                    <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-[#1DB954] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                    <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-[#006A4E] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                       {marketplaceOrders.length}
                     </span>
                   )
                 ) : (
                   allBuyerOrders && allBuyerOrders.length > 0 && (
-                    <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-[#1DB954] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                    <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-[#006A4E] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                       {allBuyerOrders.length}
                     </span>
                   )
@@ -3469,13 +3471,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   openMessengerInbox();
                 }}
                 className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer ${
-                  isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-[#1DB954]' : 'text-white hover:text-[#1DB954]'
+                  isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-[#006A4E]' : 'text-slate-600 hover:text-[#006A4E]'
                 }`}
                 title={viewMode === 'selling' ? 'মেসেঞ্জার (সেলার ইনবক্স)' : 'মেসেঞ্জার'}
               >
-                <Mail className={`w-5 h-5 ${isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-[#1DB954] stroke-[2.5]' : 'text-white'}`} />
+                <Mail className={`w-5 h-5 ${isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-[#006A4E] stroke-[2.5]' : 'text-slate-600'}`} />
                 {unreadMarketplaceMsgCount > 0 && (
-                  <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-[#1DB954] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                  <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                     {unreadMarketplaceMsgCount}
                   </span>
                 )}
@@ -3492,13 +3494,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   openNotificationCenter();
                 }}
                 className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer ${
-                  isNotificationCenterOpen ? 'text-[#1DB954]' : 'text-white hover:text-[#1DB954]'
+                  isNotificationCenterOpen ? 'text-[#006A4E]' : 'text-slate-600 hover:text-[#006A4E]'
                 }`}
                 title="নোটিফিকেশন"
               >
-                <Bell className={`w-5 h-5 ${isNotificationCenterOpen ? 'text-[#1DB954] stroke-[2.5]' : 'text-white'}`} />
+                <Bell className={`w-5 h-5 ${isNotificationCenterOpen ? 'text-[#006A4E] stroke-[2.5]' : 'text-slate-600'}`} />
                 {roleScopedNotifications.filter(n => !n.read).length > 0 && (
-                  <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                  <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                     {roleScopedNotifications.filter(n => !n.read).length}
                   </span>
                 )}
@@ -3509,26 +3511,275 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 type="button"
                 onClick={toggleOfferSound}
                 className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer ${
-                  isOfferSoundEnabled ? 'text-[#1DB954]' : 'text-slate-400 hover:text-white'
+                  isOfferSoundEnabled ? 'text-[#006A4E]' : 'text-slate-400 hover:text-slate-600'
                 }`}
                 title={isOfferSoundEnabled ? "সাউন্ড চালু (মিউট করতে ক্লিক করুন)" : "সাউন্ড বন্ধ (চালু করতে ক্লিক করুন)"}
               >
                 {isOfferSoundEnabled ? (
-                  <Volume2 className="w-5 h-5 text-[#1DB954] stroke-[2.5]" />
+                  <Volume2 className="w-5 h-5 text-[#006A4E] stroke-[2.5]" />
                 ) : (
-                  <VolumeX className="w-5 h-5 text-slate-400 hover:text-white" />
+                  <VolumeX className="w-5 h-5 text-slate-400 hover:text-slate-600" />
                 )}
-                <span className={`absolute -top-1 right-1 min-w-[20px] h-[15px] px-1 rounded-full text-white text-[8px] font-black flex items-center justify-center shadow-xs ring-1 ring-slate-900 leading-none ${
-                  isOfferSoundEnabled ? 'bg-[#1DB954]' : 'bg-slate-600 text-slate-200'
+                <span className={`absolute -top-1 right-1 min-w-[20px] h-[15px] px-1 rounded-full text-white text-[8px] font-black flex items-center justify-center shadow-xs leading-none ${
+                  isOfferSoundEnabled ? 'bg-[#006A4E]' : 'bg-slate-400 text-slate-100'
                 }`}>
                   {isOfferSoundEnabled ? 'ON' : 'OFF'}
                 </span>
               </button>
+
+              {/* 6. 🎛️ Dynamic Filter / Reset Button for Phone View */}
+              {(() => {
+                const isAnyFilterActive = (
+                  selectedCategory !== 'All' ||
+                  sortBy !== 'popular' ||
+                  priceRangeFilter !== 'all' ||
+                  deliveryFilter !== 'any' ||
+                  ratingFilter > 0
+                );
+
+                return (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isAnyFilterActive) {
+                        // ফিল্টার করা অবস্থায় ক্লিক করলে সঙ্গে সঙ্গে রিসেট হবে
+                        setSelectedCategory('All');
+                        setSortBy('popular');
+                        setPriceRangeFilter('all');
+                        setDeliveryFilter('any');
+                        setRatingFilter(0);
+                        setSearchQuery('');
+                        setIsMobileFilterSheetOpen(false);
+                      } else {
+                        // ফিল্টার সক্রিয় না থাকলে ক্লিক করলে ফিল্টার পপআপ ওপেন হবে ("তখন পপ হবে")
+                        if (viewMode !== 'buying' || activeSubTab !== 'gigs') {
+                          setViewMode('buying');
+                          setActiveSubTab('gigs');
+                        }
+                        setIsMobileFilterSheetOpen(prev => !prev);
+                      }
+                    }}
+                    className={`flex-1 flex justify-center items-center py-1.5 transition-all duration-200 relative active:scale-95 cursor-pointer group ${
+                      isAnyFilterActive
+                        ? 'text-[#E11D48] hover:text-[#BE123C]'
+                        : isMobileFilterSheetOpen
+                        ? 'text-[#006A4E]'
+                        : 'text-slate-600 hover:text-[#006A4E]'
+                    }`}
+                    title={
+                      isAnyFilterActive
+                        ? "ফিল্টার রিসেট করুন (ক্লিক করলে রিসেট হবে)"
+                        : "ফিল্টার ও সর্ট করুন"
+                    }
+                  >
+                    {isAnyFilterActive ? (
+                      <RotateCcw className="w-5 h-5 text-[#E11D48] stroke-[2.4] transition-transform duration-300 group-hover:-rotate-90 group-active:scale-90" />
+                    ) : (
+                      <Filter className={`w-5 h-5 transition-transform duration-200 ${
+                        isMobileFilterSheetOpen ? 'text-[#006A4E] stroke-[2.5] scale-105' : 'text-slate-600 group-hover:text-[#006A4E]'
+                      }`} />
+                    )}
+
+                    {/* Dynamic Status Badge */}
+                    {isAnyFilterActive ? (
+                      <span className="absolute -top-1.5 right-0 min-w-[28px] h-[15px] px-1 rounded-full bg-[#E11D48] text-white text-[8px] font-black flex items-center justify-center shadow-xs leading-none ring-1 ring-white animate-pulse">
+                        রিসেট
+                      </span>
+                    ) : (
+                      <span className={`absolute -top-1.5 right-0 min-w-[26px] h-[15px] px-1 rounded-full text-white text-[8px] font-black flex items-center justify-center shadow-xs leading-none transition-colors ${
+                        isMobileFilterSheetOpen ? 'bg-[#006A4E]' : 'bg-slate-400 text-slate-100 group-hover:bg-[#006A4E]'
+                      }`}>
+                        ফিল্টার
+                      </span>
+                    )}
+                  </button>
+                );
+              })()}
             </div>
+
+            {/* MOBILE FILTER POPUP (ফিল্টার বাটনে ক্লিক করলে ঠিক সেখানে পপ এর ভিতর ফিল্টার) */}
+            {isMobileFilterSheetOpen && (
+              <>
+                {/* Backdrop */}
+                <div
+                  className="fixed inset-0 bg-black/30 backdrop-blur-xs z-50 animate-in fade-in duration-150"
+                  onClick={() => setIsMobileFilterSheetOpen(false)}
+                />
+
+                {/* Floating Popover Card */}
+                <div className="absolute right-1 top-full mt-1.5 w-[calc(100vw-1rem)] max-w-[340px] bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 p-4 animate-in fade-in zoom-in-95 duration-150 text-slate-800 font-bengali">
+                  {/* Arrow pointing up towards Filter button */}
+                  <div className="absolute -top-2 right-4 w-4 h-4 bg-white border-t border-l border-slate-200 rotate-45 transform" />
+
+                  {/* Header of Popup */}
+                  <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 mb-3 relative z-10">
+                    <div className="flex items-center gap-1.5">
+                      <Filter className="w-4 h-4 text-[#006A4E]" />
+                      <span className="font-black text-sm text-slate-900">মার্কেটপ্লেস ফিল্টার</span>
+                      {(selectedCategory !== 'All' || sortBy !== 'popular' || priceRangeFilter !== 'all' || deliveryFilter !== 'any' || ratingFilter > 0) && (
+                        <span className="text-[10px] bg-emerald-100 text-[#006A4E] font-extrabold px-2 py-0.5 rounded-full">
+                          সক্রিয়
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsMobileFilterSheetOpen(false)}
+                      className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer"
+                      title="বন্ধ করুন"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-3.5 relative z-10">
+                    {/* 1. ক্যাটাগরি সিলেক্ট */}
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        ক্যাটাগরি
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={selectedCategory}
+                          onChange={(e) => {
+                            setActiveSubTab('gigs');
+                            setSelectedGig(null);
+                            setSelectedCategory(e.target.value);
+                          }}
+                          className={`w-full pl-3 pr-8 py-2 bg-slate-50 border rounded-xl text-xs font-medium focus:outline-none appearance-none cursor-pointer ${
+                            selectedCategory !== 'All'
+                              ? 'text-[#006A4E] font-bold border-[#006A4E] bg-emerald-50/50'
+                              : 'text-slate-800 border-slate-200'
+                          }`}
+                        >
+                          <option value="All">সব ক্যাটাগরি</option>
+                          <option value="AI Services">এআই ও সফটওয়্যার</option>
+                          <option value="Programming & Tech">প্রোগ্রামিং ও টেকনোলজি</option>
+                          <option value="Graphics & Design">গ্রাফিক্স ও ডিজাইন</option>
+                          <option value="Digital Marketing">ডিজিটাল মার্কেটিং</option>
+                          <option value="Video & Animation">ভিডিও ও অ্যানিমেশন</option>
+                          <option value="SEO & Growth">এসইও ও গ্রোথ</option>
+                          <option value="Education & Training">এডুকেশন ও ট্রেনিং</option>
+                        </select>
+                        <ChevronDown className={`w-4 h-4 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none ${selectedCategory !== 'All' ? 'text-[#006A4E]' : 'text-slate-400'}`} />
+                      </div>
+                    </div>
+
+                    {/* 2. সর্ট / জনপ্রিয়তা */}
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        সর্ট করুন
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={sortBy}
+                          onChange={(e) => setSortBy(e.target.value as any)}
+                          className={`w-full pl-3 pr-8 py-2 bg-slate-50 border rounded-xl text-xs font-medium focus:outline-none appearance-none cursor-pointer ${
+                            sortBy !== 'popular'
+                              ? 'text-[#006A4E] font-bold border-[#006A4E] bg-emerald-50/50'
+                              : 'text-slate-800 border-slate-200'
+                          }`}
+                        >
+                          <option value="popular">জনপ্রিয়তা</option>
+                          <option value="price-asc">কম দাম (লো টু হাই)</option>
+                          <option value="price-desc">বেশি দাম (হাই টু লো)</option>
+                          <option value="rating">টপ রেটিং</option>
+                        </select>
+                        <ChevronDown className={`w-4 h-4 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none ${sortBy !== 'popular' ? 'text-[#006A4E]' : 'text-slate-400'}`} />
+                      </div>
+                    </div>
+
+                    {/* 3. বাজেট রেঞ্জ */}
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        বাজেট রেঞ্জ
+                      </label>
+                      <div className="grid grid-cols-2 gap-1.5 text-xs">
+                        <button
+                          type="button"
+                          onClick={() => setPriceRangeFilter('all')}
+                          className={`py-1.5 px-2 rounded-lg font-bold border transition text-center cursor-pointer ${
+                            priceRangeFilter === 'all'
+                              ? 'bg-[#006A4E] text-white border-[#006A4E]'
+                              : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                          }`}
+                        >
+                          যেকোনো বাজেট
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setPriceRangeFilter('under3k')}
+                          className={`py-1.5 px-2 rounded-lg font-bold border transition text-center cursor-pointer ${
+                            priceRangeFilter === 'under3k'
+                              ? 'bg-[#006A4E] text-white border-[#006A4E]'
+                              : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                          }`}
+                        >
+                          ৳৩,০০০ এর নিচে
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setPriceRangeFilter('3k-10k')}
+                          className={`py-1.5 px-2 rounded-lg font-bold border transition text-center cursor-pointer ${
+                            priceRangeFilter === '3k-10k'
+                              ? 'bg-[#006A4E] text-white border-[#006A4E]'
+                              : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                          }`}
+                        >
+                          ৳৩,০০০ - ৳১০,০০০
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setPriceRangeFilter('over30k')}
+                          className={`py-1.5 px-2 rounded-lg font-bold border transition text-center cursor-pointer ${
+                            priceRangeFilter === 'over30k'
+                              ? 'bg-[#006A4E] text-white border-[#006A4E]'
+                              : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                          }`}
+                        >
+                          ৳১০,০০০+
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Action buttons: রিসেট & প্রয়োগ করুন */}
+                    <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedCategory('All');
+                          setSortBy('popular');
+                          setPriceRangeFilter('all');
+                          setDeliveryFilter('any');
+                          setRatingFilter(0);
+                          setSearchQuery('');
+                          setIsMobileFilterSheetOpen(false);
+                        }}
+                        className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold border transition text-center active:scale-95 cursor-pointer ${
+                          (selectedCategory !== 'All' || sortBy !== 'popular' || priceRangeFilter !== 'all' || deliveryFilter !== 'any' || ratingFilter > 0)
+                            ? 'bg-[#E11D48] text-white border-[#E11D48] shadow-xs'
+                            : 'bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200'
+                        }`}
+                      >
+                        রিসেট
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setIsMobileFilterSheetOpen(false)}
+                        className="flex-1 py-2 px-3 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white text-xs font-bold transition text-center active:scale-95 shadow-xs cursor-pointer"
+                      >
+                        প্রয়োগ করুন
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
 
             {/* ATTACHED BUYER 4-TAB QUICK-ACTION STRIP FOR PHONE VIEW (ওভারভিউ | প্রজেক্ট | কোর্স | প্রোডাক্ট) */}
             {viewMode === 'buying' && (activeSubTab === 'my-orders' || activeSubTab === 'my-courses' || activeSubTab === 'overview') && !selectedGig && !isInboxModalOpen && !isNotificationsOpen && (
-              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-[#0B132B] text-white px-1.5 py-1.5 border-t border-slate-800 shadow-xs">
+              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-white text-slate-800 px-1.5 py-1.5 border-t border-slate-200 shadow-xs">
                 <div className="grid grid-cols-4 gap-1 w-full">
                   {/* 1. ওভারভিউ */}
                   <button
@@ -3539,11 +3790,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`py-1.5 px-0.5 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       orderHubTab === 'overview'
-                        ? 'bg-slate-800 text-white shadow-xs'
-                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800'
+                        ? 'bg-[#006A4E] text-white shadow-xs'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                     }`}
                   >
-                    <LayoutDashboard className={`w-3 h-3 shrink-0 ${orderHubTab === 'overview' ? 'text-white' : 'text-slate-400'}`} />
+                    <LayoutDashboard className="w-3 h-3 shrink-0" />
                     <span className="truncate">ওভারভিউ</span>
                   </button>
 
@@ -3556,11 +3807,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`py-1.5 px-0.5 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       orderHubTab === 'orders'
-                        ? 'bg-[#1DB954] text-white shadow-xs'
-                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800'
+                        ? 'bg-[#006A4E] text-white shadow-xs'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                     }`}
                   >
-                    <ShoppingBag className={`w-3 h-3 shrink-0 ${orderHubTab === 'orders' ? 'text-white' : 'text-[#1DB954]'}`} />
+                    <ShoppingBag className="w-3 h-3 shrink-0" />
                     <span className="truncate">প্রজেক্ট</span>
                   </button>
 
@@ -3573,11 +3824,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`py-1.5 px-0.5 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       orderHubTab === 'courses'
-                        ? 'bg-blue-600 text-white shadow-xs'
-                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800'
+                        ? 'bg-[#006A4E] text-white shadow-xs'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                     }`}
                   >
-                    <BookOpen className={`w-3 h-3 shrink-0 ${orderHubTab === 'courses' ? 'text-white' : 'text-blue-400'}`} />
+                    <BookOpen className="w-3 h-3 shrink-0" />
                     <span className="truncate">কোর্স</span>
                   </button>
 
@@ -3590,11 +3841,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`py-1.5 px-0.5 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       orderHubTab === 'products'
-                        ? 'bg-amber-600 text-white shadow-xs'
-                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800'
+                        ? 'bg-[#006A4E] text-white shadow-xs'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                     }`}
                   >
-                    <Package className={`w-3 h-3 shrink-0 ${orderHubTab === 'products' ? 'text-white' : 'text-amber-400'}`} />
+                    <Package className="w-3 h-3 shrink-0" />
                     <span className="truncate">প্রোডাক্ট</span>
                   </button>
                 </div>
@@ -3603,7 +3854,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
             {/* ATTACHED SPECIALIST 3-TAB QUICK-ACTION STRIP FOR PHONE VIEW */}
             {viewMode === 'selling' && sellerSubTab !== 'gigs' && sellerSubTab !== 'overview' && !selectedGig && !isInboxModalOpen && !isNotificationsOpen && (
-              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-[#0B132B] text-white px-2 py-2 border-t border-slate-800 shadow-xs">
+              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-white text-slate-800 px-2 py-2 border-t border-slate-200 shadow-xs">
                 <div className="grid grid-cols-3 gap-1.5 w-full">
                   {/* 1. অর্ডার */}
                   <button
@@ -3614,11 +3865,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`py-2 px-1.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       specialistMainTab === 'marketplace' && sellerSubTab === 'orders'
-                        ? 'bg-[#1DB954] text-white shadow-md'
-                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/80'
+                        ? 'bg-[#006A4E] text-white shadow-sm'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                     }`}
                   >
-                    <ShoppingBag className={`w-3.5 h-3.5 shrink-0 ${specialistMainTab === 'marketplace' && sellerSubTab === 'orders' ? 'text-white' : 'text-[#1DB954]'}`} />
+                    <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
                     <span className="truncate">অর্ডার ({marketplaceOrders.length})</span>
                   </button>
 
@@ -3631,11 +3882,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`py-2 px-1.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       specialistMainTab === 'payments'
-                        ? 'bg-amber-500 text-white shadow-md'
-                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/80'
+                        ? 'bg-[#006A4E] text-white shadow-sm'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                     }`}
                   >
-                    <Wallet className={`w-3.5 h-3.5 shrink-0 ${specialistMainTab === 'payments' ? 'text-white' : 'text-amber-400'}`} />
+                    <Wallet className="w-3.5 h-3.5 shrink-0" />
                     <span className="truncate">স্টেটমেন্ট</span>
                   </button>
 
@@ -3648,11 +3899,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`py-2 px-1.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       specialistMainTab === 'mentor'
-                        ? 'bg-teal-600 text-white shadow-md'
-                        : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-700/80'
+                        ? 'bg-[#006A4E] text-white shadow-sm'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
                     }`}
                   >
-                    <GraduationCap className={`w-3.5 h-3.5 shrink-0 ${specialistMainTab === 'mentor' ? 'text-white' : 'text-teal-400'}`} />
+                    <GraduationCap className="w-3.5 h-3.5 shrink-0" />
                     <span className="truncate">মেন্টর</span>
                   </button>
                 </div>
@@ -3662,7 +3913,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             
             {/* ATTACHED UNIFIED MESSENGER HEADER FOR PHONE VIEW */}
             {activeSubTab === 'messenger' && !selectedGig && !isInboxModalOpen && !isNotificationsOpen && (
-              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-[#0B132B] text-white px-3.5 py-2.5 border-t border-slate-800 shadow-xs">
+              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-white text-slate-800 px-3.5 py-2.5 border-t border-slate-200 shadow-xs">
                 {activeMessengerConversationId && activeMessengerUser ? (
                   <div className="flex items-center justify-between w-full animate-in fade-in duration-150 py-0.5">
                     <div className="flex items-center gap-2 min-w-0">
@@ -3673,27 +3924,27 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           setIsMessengerSearchActive(false);
                           setMessengerSearchQuery('');
                         }}
-                        className="p-1 -ml-1 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer shrink-0"
+                        className="p-1 -ml-1 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer shrink-0"
                         title="ইনবক্সে ফিরে যান"
                       >
-                        <ChevronLeft className="w-5 h-5 text-slate-200 stroke-[2.5]" />
+                        <ChevronLeft className="w-5 h-5 text-slate-700 stroke-[2.5]" />
                       </button>
-                      <div className="relative shrink-0 p-[2px] rounded-full bg-gradient-to-tr from-emerald-400 via-blue-500 to-cyan-400 shadow-xs">
+                      <div className="relative shrink-0 p-[2px] rounded-full bg-emerald-500 shadow-xs">
                         <img
                           src={activeMessengerUser.avatar}
                           alt={activeMessengerUser.name}
-                          className="w-8 h-8 rounded-full object-cover border border-slate-800"
+                          className="w-8 h-8 rounded-full object-cover border border-white"
                         />
-                        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#1DB954] border-2 border-[#0B132B]" />
+                        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#006A4E] border-2 border-white" />
                       </div>
                       <div className="min-w-0 flex flex-col justify-center">
                         <div className="flex items-center gap-1">
-                          <h2 className="text-xs sm:text-sm font-black text-white tracking-tight leading-tight truncate">
+                          <h2 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight leading-tight truncate">
                             {activeMessengerUser.name}
                           </h2>
-                          <BadgeCheck className="w-3.5 h-3.5 text-blue-400 shrink-0 fill-blue-500/20" />
+                          <BadgeCheck className="w-3.5 h-3.5 text-[#006A4E] shrink-0" />
                         </div>
-                        <p className="text-[10px] text-[#1DB954] font-bold leading-none mt-0.5 truncate">
+                        <p className="text-[10px] text-[#006A4E] font-bold leading-none mt-0.5 truncate">
                           Active now
                         </p>
                       </div>
@@ -3705,7 +3956,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           const meetBtn = document.getElementById('messenger-meet-trigger');
                           if (meetBtn) meetBtn.click();
                         }}
-                        className="p-1.5 rounded-full text-blue-400 hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1.5 rounded-full text-[#006A4E] hover:bg-slate-100 transition cursor-pointer"
                         title="ভিডিও কল"
                       >
                         <Video className="w-4.5 h-4.5" />
@@ -3716,7 +3967,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           const phoneBtn = document.getElementById('messenger-phone-trigger');
                           if (phoneBtn) phoneBtn.click();
                         }}
-                        className="p-1.5 rounded-full text-blue-400 hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1.5 rounded-full text-[#006A4E] hover:bg-slate-100 transition cursor-pointer"
                         title="ভয়েস কল"
                       >
                         <PhoneCall className="w-4.5 h-4.5" />
@@ -3733,7 +3984,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         onChange={(e) => setMessengerSearchQuery(e.target.value)}
                         placeholder="সেলার, ক্লায়েন্ট বা সার্ভিস খুঁজুন..."
                         autoFocus
-                        className="w-full pl-8 pr-8 py-1.5 bg-slate-800/90 text-white placeholder-slate-400 border border-slate-700 rounded-full text-xs focus:outline-none focus:ring-1 focus:ring-[#1DB954]"
+                        className="w-full pl-8 pr-8 py-1.5 bg-slate-100 text-slate-900 placeholder-slate-400 border border-slate-300 rounded-full text-xs focus:outline-none focus:ring-1 focus:ring-[#006A4E]"
                       />
                       <button
                         type="button"
@@ -3741,7 +3992,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           setIsMessengerSearchActive(false);
                           setMessengerSearchQuery('');
                         }}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition cursor-pointer"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xs transition cursor-pointer"
                         title="সার্চ বন্ধ করুন"
                       >
                         <X className="w-3 h-3" />
@@ -3750,7 +4001,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <button
                       type="button"
                       onClick={() => setIsMessengerSettingsModalOpen(true)}
-                      className="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer shrink-0"
+                      className="p-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer shrink-0"
                       title="মেসেঞ্জার সেটিংস"
                     >
                       <Settings className="w-4.5 h-4.5" />
@@ -3762,24 +4013,24 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <button
                         type="button"
                         onClick={() => setActiveSubTab('gigs')}
-                        className="p-1 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
                         title="ফিরে যান"
                       >
                         <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
                       </button>
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <h2 className="text-sm font-black text-white tracking-tight leading-none">Messages</h2>
-                          <span className="w-2 h-2 rounded-full bg-[#1DB954]" />
+                          <h2 className="text-sm font-black text-slate-900 tracking-tight leading-none">Messages</h2>
+                          <span className="w-2 h-2 rounded-full bg-[#006A4E]" />
                         </div>
-                        <p className="text-[10px] font-semibold text-slate-400 tracking-wide leading-tight mt-0.5 font-sans">PTENit Marketplace Inbox</p>
+                        <p className="text-[10px] font-semibold text-slate-500 tracking-wide leading-tight mt-0.5 font-sans">PTENit Marketplace Inbox</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => setIsMessengerSearchActive(true)}
-                        className="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
                         title="সার্চ করুন"
                       >
                         <Search className="w-4.5 h-4.5" />
@@ -3787,7 +4038,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <button
                         type="button"
                         onClick={() => setIsMessengerSettingsModalOpen(true)}
-                        className="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
                         title="মেসেঞ্জার সেটিংস"
                       >
                         <Settings className="w-4.5 h-4.5" />
@@ -3799,7 +4050,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             )}
             {/* ATTACHED UNIFIED FAVORITES / SAVED GIGS HEADER FOR PHONE VIEW */}
             {activeSubTab === 'saved_gigs' && !selectedGig && !isInboxModalOpen && !isNotificationsOpen && (
-              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-[#0B132B] text-white px-3.5 py-2.5 border-t border-slate-800 shadow-xs">
+              <div className="-mx-2 -mb-2 w-[calc(100%+1rem)] font-bengali bg-white text-slate-800 px-3.5 py-2.5 border-t border-slate-200 shadow-xs">
                 {isSavedSearchActive ? (
                   <div className="flex items-center gap-2 animate-in fade-in duration-150">
                     <div className="relative flex-1">
@@ -3810,7 +4061,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         onChange={(e) => setSavedSearchQuery(e.target.value)}
                         placeholder="পছন্দের গিগ বা সার্ভিস খুঁজুন..."
                         autoFocus
-                        className="w-full pl-8 pr-8 py-1.5 bg-slate-800/90 text-white placeholder-slate-400 border border-slate-700 rounded-full text-xs focus:outline-none focus:ring-1 focus:ring-[#1DB954]"
+                        className="w-full pl-8 pr-8 py-1.5 bg-slate-100 text-slate-900 placeholder-slate-400 border border-slate-300 rounded-full text-xs focus:outline-none focus:ring-1 focus:ring-[#006A4E]"
                       />
                       <button
                         type="button"
@@ -3818,7 +4069,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           setIsSavedSearchActive(false);
                           setSavedSearchQuery('');
                         }}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition cursor-pointer"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xs transition cursor-pointer"
                         title="বন্ধ করুন"
                       >
                         <X className="w-3 h-3" />
@@ -3827,7 +4078,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <button
                       type="button"
                       onClick={() => setIsSavedGigsSettingsModalOpen(true)}
-                      className="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer shrink-0"
+                      className="p-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer shrink-0"
                       title="সেটিংস ও প্রোফাইল"
                     >
                       <Settings className="w-4.5 h-4.5" />
@@ -3839,22 +4090,22 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <button
                         type="button"
                         onClick={() => setActiveSubTab('gigs')}
-                        className="p-1 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
                         title="ফিরে যান"
                       >
                         <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
                       </button>
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <h2 className="text-sm font-black text-white tracking-tight leading-none font-english">Saved Gigs</h2>
-                          <span className="w-2 h-2 rounded-full bg-[#1DB954]" />
+                          <h2 className="text-sm font-black text-slate-900 tracking-tight leading-none font-english">Saved Gigs</h2>
+                          <span className="w-2 h-2 rounded-full bg-[#006A4E]" />
                           {savedGigIds && savedGigIds.length > 0 && (
-                            <span className="min-w-4 h-4 px-1 bg-rose-500 text-white text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-xs">
+                            <span className="min-w-4 h-4 px-1 bg-[#E11D48] text-white text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-xs">
                               {savedGigIds.length}
                             </span>
                           )}
                         </div>
-                        <p className="text-[10px] font-semibold text-slate-400 tracking-wide leading-tight mt-0.5 font-english">
+                        <p className="text-[10px] font-semibold text-slate-500 tracking-wide leading-tight mt-0.5 font-english">
                           PTENit Favorites & Wishlist
                         </p>
                       </div>
@@ -3863,7 +4114,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <button
                         type="button"
                         onClick={() => setIsSavedSearchActive(true)}
-                        className="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
                         title="সার্চ করুন"
                       >
                         <Search className="w-4.5 h-4.5" />
@@ -3871,7 +4122,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <button
                         type="button"
                         onClick={() => setIsSavedGigsSettingsModalOpen(true)}
-                        className="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                        className="p-1.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
                         title="সেটিংস ও প্রোফাইল"
                       >
                         <Settings className="w-4.5 h-4.5" />
@@ -3892,7 +4143,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             {/* --------------------------------------------------------------------- */}
             {viewMode === 'buying' ? (
               <div className="flex flex-col w-full">
-                {/* Top Row: Brand + Fiverr Search Bar + Right-side Links & Controls */}
+                {/* Top Row: Brand + Search Bar + Right-side Links & Controls */}
                 <div className="flex items-center justify-between w-full h-14 gap-2 lg:gap-4 py-1">
                   {/* Left: Brand Logo + Quick Home Link */}
                   <div className="flex items-center gap-2 lg:gap-3 shrink-0">
@@ -3918,11 +4169,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           className="h-8 lg:h-9 w-auto object-contain rounded-md"
                         />
                       ) : (
-                        <div className="flex items-center gap-1">
-                          <span className="font-heading text-xl lg:text-2xl font-black tracking-tight text-white">
-                            PTEN<span className="text-[#1DB954]">it</span>
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-8 h-8 rounded-xl bg-[#006A4E] flex items-center justify-center font-bold text-lg text-white shadow-xs shrink-0 relative">
+                            P
+                            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#E11D48] border-2 border-white" />
+                          </div>
+                          <span className="font-heading text-xl lg:text-2xl font-black tracking-tight text-slate-900 flex items-center gap-0.5">
+                            PTEN<span className="text-[#006A4E]">it</span>
+                            <span className="w-2 h-2 rounded-full bg-[#E11D48] ml-1 inline-block" title="লাল-সবুজের অহংকার" />
                           </span>
-                          <span className="w-2 h-2 rounded-full bg-[#1DB954] self-end mb-1.5 animate-pulse" />
                         </div>
                       )}
                     </button>
@@ -3933,16 +4188,16 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       onClick={() => {
                         if (setActiveTab) setActiveTab('home');
                       }}
-                      className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold text-slate-300 hover:text-white bg-slate-800/90 hover:bg-slate-700 rounded-lg border border-slate-700/70 transition cursor-pointer active:scale-95 shadow-xs shrink-0"
+                      className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-200 transition cursor-pointer active:scale-95 shadow-xs shrink-0"
                       title="পিটেনআইটি মূল ওয়েবসাইটে ফিরে যান (হোম, কোর্স ও সার্ভিস)"
                     >
-                      <Home className="w-3.5 h-3.5 text-[#1DB954]" />
+                      <Home className="w-3.5 h-3.5 text-[#006A4E]" />
                       <span className="hidden xl:inline">মূল ওয়েবসাইট</span>
                       <span className="xl:hidden">হোম</span>
                     </button>
                   </div>
 
-                  {/* Center: Iconic Fiverr Search Bar with Green Action Button & Live Dropdown */}
+                  {/* Center: Search Bar with Green Action Button & Live Dropdown */}
                   <div className="flex-1 min-w-[170px] max-w-md lg:max-w-lg xl:max-w-xl mx-2 lg:mx-3 relative">
                     <form
                       onSubmit={(e) => {
@@ -3952,7 +4207,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           setActiveSubTab('gigs');
                         }
                       }}
-                      className="flex items-center w-full bg-slate-900/90 border border-slate-700 hover:border-slate-500 focus-within:border-[#1DB954] focus-within:ring-1 focus-within:ring-[#1DB954] rounded-lg overflow-hidden transition shadow-inner"
+                      className="flex items-center w-full bg-slate-50 border border-slate-300 hover:border-slate-400 focus-within:border-[#006A4E] focus-within:ring-1 focus-within:ring-[#006A4E] rounded-lg overflow-hidden transition shadow-xs"
                     >
                       <div className="pl-3 pr-1.5 text-slate-400 shrink-0">
                         <Search className="w-4 h-4" />
@@ -3962,31 +4217,32 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="কোন সার্ভিসটি খুঁজছেন? (যেমন: লোগো ডিজাইন, ওয়েবসাইট...)"
-                        className="w-full bg-transparent py-1.5 lg:py-2 text-xs lg:text-sm text-white placeholder-slate-400 focus:outline-none font-bengali truncate"
+                        className="w-full bg-transparent py-1.5 lg:py-2 text-xs lg:text-sm text-slate-900 placeholder-slate-400 focus:outline-none font-bengali truncate"
                       />
                       {searchQuery && (
                         <button
                           type="button"
                           onClick={() => setSearchQuery('')}
-                          className="text-slate-400 hover:text-white p-1 mr-1 cursor-pointer shrink-0"
+                          className="text-slate-400 hover:text-slate-700 p-1 mr-1 cursor-pointer shrink-0"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
                       )}
                       <button
                         type="submit"
-                        className="bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs lg:text-sm px-3.5 lg:px-4 py-1.5 lg:py-2 flex items-center gap-1 transition shrink-0 cursor-pointer shadow-xs active:scale-95 whitespace-nowrap"
+                        className="bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs lg:text-sm px-4 lg:px-5 py-1.5 lg:py-2 flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-xs active:scale-95 whitespace-nowrap"
                       >
+                        <Search className="w-3.5 h-3.5 text-white" />
                         <span>খুঁজুন</span>
                       </button>
                     </form>
 
                     {/* Live Search Dropdown */}
                     {searchQuery.trim() && (
-                      <div className="absolute left-0 top-full mt-2 w-full bg-[#142B4D] border border-slate-700 rounded-xl shadow-2xl p-3 z-50 text-slate-200 max-h-96 overflow-y-auto font-bengali">
-                        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 border-b border-slate-700 pb-1.5 flex items-center justify-between">
+                      <div className="absolute left-0 top-full mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-2xl p-3 z-50 text-slate-800 max-h-96 overflow-y-auto font-bengali">
+                        <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1.5 flex items-center justify-between">
                           <span>সার্চ ফলাফল ({filteredGigs.length})</span>
-                          <span className="text-[11px] text-[#1DB954] font-semibold">লাইভ ফলাফল</span>
+                          <span className="text-[11px] text-[#006A4E] font-bold">লাইভ ফলাফল</span>
                         </div>
                         {filteredGigs.length > 0 ? (
                           <div className="space-y-1.5">
@@ -4003,18 +4259,18 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     setSearchQuery('');
                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                   }}
-                                  className="flex items-center gap-2.5 p-2 hover:bg-slate-800/90 rounded-xl cursor-pointer transition bg-slate-900/60 border border-slate-800"
+                                  className="flex items-center gap-2.5 p-2 hover:bg-slate-50 rounded-xl cursor-pointer transition bg-white border border-slate-200"
                                 >
                                   <img
                                     src={gigThumb}
                                     alt={gig.title}
-                                    className="w-10 h-10 rounded-lg object-cover shrink-0 border border-slate-700"
+                                    className="w-10 h-10 rounded-lg object-cover shrink-0 border border-slate-200"
                                   />
                                   <div className="flex-1 min-w-0">
-                                    <p className="font-semibold text-xs text-white truncate">{gig.title}</p>
+                                    <p className="font-semibold text-xs text-slate-900 truncate">{gig.title}</p>
                                     <div className="flex items-center justify-between mt-1">
-                                      <span className="text-[10px] text-slate-400 truncate max-w-[120px]">{gig.sellerName}</span>
-                                      <span className="text-xs text-[#1DB954] font-bold">
+                                      <span className="text-[10px] text-slate-500 truncate max-w-[120px]">{gig.sellerName}</span>
+                                      <span className="text-xs text-[#006A4E] font-bold">
                                         ৳{gigPrice.toLocaleString('en-US')}
                                       </span>
                                     </div>
@@ -4024,7 +4280,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             })}
                           </div>
                         ) : (
-                          <p className="text-center text-slate-400 py-3 text-xs">
+                          <p className="text-center text-slate-500 py-3 text-xs">
                             কোনো গিগ বা সার্ভিস পাওয়া যায়নি।
                           </p>
                         )}
@@ -4032,9 +4288,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     )}
                   </div>
 
-                  {/* Right: Fiverr Buyer Links & Controls (Responsive & Side-by-Side) */}
+                  {/* Right: Buyer Links & Controls */}
                   <div className="flex items-center gap-1.5 lg:gap-2.5 shrink-0">
-                    {/* Switch to Selling (Fiverr's Famous Mode Switch Button) */}
+                    {/* Switch to Selling */}
                     <button
                       type="button"
                       onClick={() => {
@@ -4044,14 +4300,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         setSelectedGig(null);
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
-                      className="text-xs lg:text-sm font-bold text-[#1DB954] hover:text-white hover:bg-[#1DB954] border border-[#1DB954]/60 hover:border-[#1DB954] px-2.5 lg:px-3 py-1.5 rounded-lg transition duration-150 cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap active:scale-95"
+                      className="text-xs lg:text-sm font-bold text-[#006A4E] hover:text-white hover:bg-[#006A4E] border border-[#006A4E]/40 px-2.5 lg:px-3 py-1.5 rounded-lg transition duration-150 cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap active:scale-95"
                       title="সেলার মোডে সুইচ করুন (গিগ ও অর্ডার পরিচালনা)"
                     >
                       <Zap className="w-3.5 h-3.5" />
                       <span>Switch to Selling</span>
                     </button>
 
-                    {/* Secondary Navigation Links (Visible on 2XL+ to keep normal laptops spacious) */}
+                    {/* Secondary Navigation Links */}
                     <button
                       type="button"
                       onClick={() => {
@@ -4060,8 +4316,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       }}
                       className={`hidden 2xl:block text-xs lg:text-sm font-semibold transition px-2.5 py-1.5 rounded-lg cursor-pointer whitespace-nowrap ${
                         activeSubTab === 'ptenit-services'
-                          ? 'text-[#1DB954] font-bold bg-slate-800/60'
-                          : 'text-slate-300 hover:text-[#1DB954]'
+                          ? 'text-[#006A4E] font-bold bg-emerald-50'
+                          : 'text-slate-600 hover:text-slate-900'
                       }`}
                       title="PTENit অফিশিয়াল এজেন্সি সার্ভিসেস"
                     >
@@ -4076,8 +4332,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       }}
                       className={`hidden 2xl:block text-xs lg:text-sm font-semibold transition px-2.5 py-1.5 rounded-lg cursor-pointer whitespace-nowrap ${
                         activeSubTab === 'courses'
-                          ? 'text-[#1DB954] font-bold bg-slate-800/60'
-                          : 'text-slate-300 hover:text-[#1DB954]'
+                          ? 'text-[#006A4E] font-bold bg-emerald-50'
+                          : 'text-slate-600 hover:text-slate-900'
                       }`}
                       title="আইটি ট্রেনিং ও কোর্সসমূহ"
                     >
@@ -4098,14 +4354,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           setActiveSubTab('my-orders');
                           setOrderHubTab('orders');
                         }}
-                        className={`p-1.5 lg:p-2 rounded-lg relative text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer ${
-                          activeSubTab === 'my-orders' ? 'text-[#1DB954] bg-slate-800' : ''
+                        className={`p-1.5 lg:p-2 rounded-lg relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer ${
+                          activeSubTab === 'my-orders' ? 'text-[#006A4E] bg-emerald-50' : ''
                         }`}
                         title="আমার অর্ডারসমূহ"
                       >
                         <ShoppingBag className="w-4 lg:w-5 h-4 lg:h-5" />
                         {allBuyerOrders.length > 0 && (
-                          <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#1DB954] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                          <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#006A4E] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                             {allBuyerOrders.length}
                           </span>
                         )}
@@ -4121,14 +4377,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           }
                           openMessengerInbox();
                         }}
-                        className={`p-1.5 lg:p-2 rounded-lg relative text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer ${
-                          isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-[#1DB954] bg-slate-800' : ''
+                        className={`p-1.5 lg:p-2 rounded-lg relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer ${
+                          isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-[#006A4E] bg-emerald-50' : ''
                         }`}
                         title="ইনবক্স / মেসেজ"
                       >
                         <Mail className="w-4 lg:w-5 h-4 lg:h-5" />
                         {unreadMarketplaceMsgCount > 0 && (
-                          <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                          <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                             {unreadMarketplaceMsgCount}
                           </span>
                         )}
@@ -4141,14 +4397,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           setSelectedGig(null);
                           setActiveSubTab('saved_gigs');
                         }}
-                        className={`p-1.5 lg:p-2 rounded-lg relative text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer ${
-                          activeSubTab === 'saved_gigs' ? 'text-[#1DB954] bg-slate-800' : ''
+                        className={`p-1.5 lg:p-2 rounded-lg relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer ${
+                          activeSubTab === 'saved_gigs' ? 'text-[#006A4E] bg-emerald-50' : ''
                         }`}
                         title="সংরক্ষিত গিগ তালিকা (Favorites)"
                       >
-                        <Heart className={`w-4 lg:w-5 h-4 lg:h-5 ${savedGigIds.length > 0 ? 'text-rose-400 fill-rose-400/20' : ''}`} />
+                        <Heart className={`w-4 lg:w-5 h-4 lg:h-5 ${savedGigIds.length > 0 ? 'text-[#E11D48] fill-[#E11D48]/20' : ''}`} />
                         {savedGigIds.length > 0 && (
-                          <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                          <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                             {savedGigIds.length}
                           </span>
                         )}
@@ -4164,14 +4420,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           }
                           openNotificationCenter();
                         }}
-                        className={`p-1.5 lg:p-2 rounded-lg relative text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer ${
-                          isNotificationCenterOpen ? 'text-[#1DB954] bg-slate-800' : ''
+                        className={`p-1.5 lg:p-2 rounded-lg relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer ${
+                          isNotificationCenterOpen ? 'text-[#006A4E] bg-emerald-50' : ''
                         }`}
                         title="নোটিফিকেশন সেন্টার"
                       >
                         <Bell className="w-4 lg:w-5 h-4 lg:h-5" />
                         {roleScopedNotifications.filter(n => !n.read).length > 0 && (
-                          <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                          <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                             {roleScopedNotifications.filter(n => !n.read).length}
                           </span>
                         )}
@@ -4181,11 +4437,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <button
                         type="button"
                         onClick={toggleOfferSound}
-                        className="w-7 lg:w-8 h-7 lg:h-8 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition active:scale-95 cursor-pointer relative"
+                        className="w-7 lg:w-8 h-7 lg:h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition active:scale-95 cursor-pointer relative"
                         title={isOfferSoundEnabled ? "অর্ডার নোটিফিকেশন সাউন্ড চালু" : "অর্ডার নোটিফিকেশন সাউন্ড বন্ধ"}
                       >
                         {isOfferSoundEnabled ? (
-                          <Volume2 className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-[#1DB954]" />
+                          <Volume2 className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-[#006A4E]" />
                         ) : (
                           <VolumeX className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-slate-400" />
                         )}
@@ -4196,10 +4452,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <button
                       type="button"
                       onClick={() => setIsPostProjectModalOpen(true)}
-                      className="hidden lg:flex px-2.5 lg:px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold transition items-center gap-1.5 border border-slate-700 cursor-pointer shrink-0 whitespace-nowrap active:scale-95"
+                      className="hidden lg:flex px-2.5 lg:px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 text-xs font-bold transition items-center gap-1.5 border border-slate-200 cursor-pointer shrink-0 whitespace-nowrap active:scale-95"
                       title="কাস্টম প্রজেক্ট রিকোয়েস্ট পোস্ট করুন"
                     >
-                      <Plus className="w-3.5 h-3.5 text-[#1DB954]" />
+                      <Plus className="w-3.5 h-3.5 text-[#006A4E]" />
                       <span>পোস্ট প্রজেক্ট</span>
                     </button>
 
@@ -4207,27 +4463,27 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     {currentUser ? (
                       <div
                         onClick={() => setIsMobileMarketplaceMenuOpen(true)}
-                        className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 transition cursor-pointer border border-slate-700/60 shrink-0 select-none"
+                        className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition cursor-pointer border border-slate-200 shrink-0 select-none"
                         title={`প্রোফাইল মেনু: ${currentUser.name}`}
                       >
                         <div className="relative">
                           <img
                             src={currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
                             alt={currentUser.name}
-                            className="w-6 h-6 lg:w-7 lg:h-7 rounded-full object-cover border border-[#1DB954]"
+                            className="w-6 h-6 lg:w-7 lg:h-7 rounded-full object-cover border border-emerald-600"
                           />
-                          <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 border border-[#0B132B]" />
+                          <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-[#006A4E] border border-white" />
                         </div>
-                        <span className="hidden xl:inline text-xs font-bold text-slate-200 max-w-[65px] truncate">
+                        <span className="hidden xl:inline text-xs font-bold text-slate-700 max-w-[65px] truncate">
                           {currentUser.name.split(' ')[0]}
                         </span>
-                        <ChevronDown className="w-3 h-3 text-slate-400" />
+                        <ChevronDown className="w-3 h-3 text-slate-500" />
                       </div>
                     ) : (
                       <button
                         type="button"
                         onClick={openAuthModal}
-                        className="px-3 lg:px-3.5 py-1.5 rounded-lg bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs transition cursor-pointer flex items-center gap-1.5 shadow shrink-0 whitespace-nowrap active:scale-95"
+                        className="px-3 lg:px-3.5 py-1.5 rounded-lg bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs transition cursor-pointer flex items-center gap-1.5 shadow-xs shrink-0 whitespace-nowrap active:scale-95"
                       >
                         <User className="w-3.5 h-3.5" />
                         <span>লগইন</span>
@@ -4236,8 +4492,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   </div>
                 </div>
 
-                {/* Fiverr Iconic Horizontal Category Strip (বাটনে ক্লিক করলে সরাসরি ক্যাটাগরি ফিল্টার হয়) */}
-                <div className="border-t border-slate-800/80 pt-2 pb-1.5 flex items-center justify-between text-xs lg:text-[13px] text-slate-300 overflow-x-auto scrollbar-none whitespace-nowrap gap-4 lg:gap-6">
+                {/* Horizontal Category Strip */}
+                <div className="border-t border-slate-200 pt-2 pb-1.5 flex items-center justify-between text-xs lg:text-[13px] text-slate-600 overflow-x-auto scrollbar-none whitespace-nowrap gap-4 lg:gap-6">
                   {[
                     { key: 'All', label: 'সকল সার্ভিস' },
                     { key: 'Graphics & Design', label: 'গ্রাফিক্স ও ডিজাইন' },
@@ -4261,13 +4517,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         }}
                         className={`relative pb-1 font-medium transition cursor-pointer shrink-0 ${
                           isActive
-                            ? 'text-[#1DB954] font-bold'
-                            : 'text-slate-300 hover:text-white'
+                            ? 'text-[#006A4E] font-bold'
+                            : 'text-slate-600 hover:text-slate-900'
                         }`}
                       >
                         <span>{cat.label}</span>
                         {isActive && (
-                          <span className="absolute bottom-0 inset-x-0 h-0.5 bg-[#1DB954] rounded-full" />
+                          <span className="absolute bottom-0 inset-x-0 h-0.5 bg-[#006A4E] rounded-full" />
                         )}
                       </button>
                     );
@@ -4276,7 +4532,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               </div>
             ) : (
               /* --------------------------------------------------------------------- */
-              /* 2. FIVERR SELLER HUB NAVIGATION BAR (পিসিতে সেলার মেনুবার)              */
+              /* 2. SELLER HUB NAVIGATION BAR (পিসিতে সেলার মেনুবার)                     */
               /* --------------------------------------------------------------------- */
               <div className="flex items-center justify-between w-full h-14 gap-2 lg:gap-4 py-1">
                 {/* Left: Brand Logo + Seller Hub Badge + Quick Main Site Link */}
@@ -4299,11 +4555,17 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         className="h-8 lg:h-9 w-auto object-contain rounded-md"
                       />
                     ) : (
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-heading text-xl lg:text-2xl font-black tracking-tight text-white">
-                          PTEN<span className="text-[#1DB954]">it</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-xl bg-[#006A4E] flex items-center justify-center font-bold text-lg text-white shadow-xs shrink-0 relative">
+                          P
+                          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#E11D48] border-2 border-white" />
+                        </div>
+                        <span className="font-heading text-xl lg:text-2xl font-black tracking-tight text-slate-900 flex items-center gap-0.5">
+                          PTEN<span className="text-[#006A4E]">it</span>
+                          <span className="w-2 h-2 rounded-full bg-[#E11D48] ml-1 inline-block" title="লাল-সবুজের অহংকার" />
                         </span>
-                        <span className="px-1.5 py-0.5 bg-emerald-500/15 text-[#1DB954] border border-emerald-500/30 rounded text-[10px] lg:text-[11px] font-black uppercase tracking-wider">
+                        <span className="px-2 py-0.5 bg-emerald-50 text-[#006A4E] border border-emerald-200 rounded-md text-[10px] lg:text-[11px] font-black uppercase tracking-wider flex items-center gap-1 shadow-xs">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48]" />
                           Seller Hub
                         </span>
                       </div>
@@ -4316,16 +4578,16 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     onClick={() => {
                       if (setActiveTab) setActiveTab('home');
                     }}
-                    className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold text-slate-300 hover:text-white bg-slate-800/90 hover:bg-slate-700 rounded-lg border border-slate-700/70 transition cursor-pointer active:scale-95 shadow-xs shrink-0"
+                    className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-200 transition cursor-pointer active:scale-95 shadow-xs shrink-0"
                     title="পিটেনআইটি মূল ওয়েবসাইটে ফিরে যান (হোম, কোর্স ও সার্ভিস)"
                   >
-                    <Home className="w-3.5 h-3.5 text-[#1DB954]" />
+                    <Home className="w-3.5 h-3.5 text-[#006A4E]" />
                     <span className="hidden xl:inline">মূল ওয়েবসাইট</span>
                     <span className="xl:hidden">হোম</span>
                   </button>
                 </div>
 
-                {/* Center: Authentic Fiverr Seller Hub Navigation Links */}
+                {/* Center: Seller Hub Navigation Links */}
                 <div className="flex items-center gap-1 lg:gap-1.5 flex-1 justify-center max-w-2xl px-1">
                   {/* Link 1: Dashboard */}
                   <button
@@ -4337,8 +4599,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap ${
                       sellerSubTab === 'overview'
-                        ? 'text-[#1DB954] font-bold bg-slate-800/80 border-b-2 border-[#1DB954]'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                        ? 'text-[#006A4E] font-bold bg-emerald-50 border-b-2 border-[#006A4E]'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
                     <LayoutDashboard className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
@@ -4355,14 +4617,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 rounded-lg relative whitespace-nowrap ${
                       sellerSubTab === 'orders'
-                        ? 'text-[#1DB954] font-bold bg-slate-800/80 border-b-2 border-[#1DB954]'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                        ? 'text-[#006A4E] font-bold bg-emerald-50 border-b-2 border-[#006A4E]'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
                     <ShoppingBag className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
                     <span>অর্ডারসমূহ</span>
                     {marketplaceOrders.length > 0 && (
-                      <span className="ml-0.5 px-1.5 py-0.2 bg-[#1DB954] text-white text-[9px] font-black rounded-full shadow-xs">
+                      <span className="ml-0.5 px-1.5 py-0.2 bg-[#006A4E] text-white text-[9px] font-black rounded-full shadow-xs">
                         {marketplaceOrders.length}
                       </span>
                     )}
@@ -4378,8 +4640,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap ${
                       sellerSubTab === 'gigs' && specialistMainTab === 'marketplace'
-                        ? 'text-[#1DB954] font-bold bg-slate-800/80 border-b-2 border-[#1DB954]'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                        ? 'text-[#006A4E] font-bold bg-emerald-50 border-b-2 border-[#006A4E]'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
                     <Folder className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
@@ -4396,8 +4658,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap ${
                       specialistMainTab === 'payments'
-                        ? 'text-[#1DB954] font-bold bg-slate-800/80 border-b-2 border-[#1DB954]'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                        ? 'text-[#006A4E] font-bold bg-emerald-50 border-b-2 border-[#006A4E]'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
                     <Wallet className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
@@ -4408,14 +4670,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   <button
                     type="button"
                     onClick={() => setIsPostProjectModalOpen(true)}
-                    className="px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/40 transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap"
+                    className="px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap"
                     title="লাইভ বায়ার রিকোয়েস্ট ও কাস্টম প্রজেক্ট"
                   >
-                    <FileText className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-emerald-400" />
+                    <FileText className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-[#006A4E]" />
                     <span>বায়ার রিকোয়েস্ট</span>
                   </button>
 
-                  {/* Link 6: Growth & Mentorship (Hidden on smaller laptops) */}
+                  {/* Link 6: Growth & Mentorship */}
                   <button
                     type="button"
                     onClick={() => {
@@ -4425,8 +4687,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`hidden 2xl:flex px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer items-center gap-1.5 rounded-lg whitespace-nowrap ${
                       specialistMainTab === 'mentor'
-                        ? 'text-[#1DB954] font-bold bg-slate-800/80 border-b-2 border-[#1DB954]'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                        ? 'text-[#006A4E] font-bold bg-emerald-50 border-b-2 border-[#006A4E]'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
                     <GraduationCap className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
@@ -4434,9 +4696,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   </button>
                 </div>
 
-                {/* Right: Fiverr Seller Hub Actions */}
+                {/* Right: Seller Hub Actions */}
                 <div className="flex items-center gap-1.5 lg:gap-2.5 shrink-0">
-                  {/* Switch to Buying (Fiverr Seller Hub Switch) */}
+                  {/* Switch to Buying */}
                   <button
                     type="button"
                     onClick={() => {
@@ -4446,25 +4708,26 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       setSelectedGig(null);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="text-xs lg:text-sm font-bold text-slate-200 hover:text-white hover:bg-slate-800 px-2.5 lg:px-3 py-1.5 rounded-lg border border-slate-700 transition cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap active:scale-95"
+                    className="text-xs lg:text-sm font-bold text-slate-700 hover:text-slate-900 hover:bg-slate-100 px-2.5 lg:px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap active:scale-95"
                     title="বায়ার ব্রাউজিং মোডে ফিরে যান"
                   >
-                    <ShoppingBag className="w-3.5 h-3.5 text-[#1DB954]" />
+                    <ShoppingBag className="w-3.5 h-3.5 text-[#006A4E]" />
                     <span>Switch to Buying</span>
                   </button>
 
-                  {/* + Create a New Gig Button (Authentic Fiverr Green Button) */}
+                  {/* + Create a New Gig Button */}
                   <button
                     type="button"
                     onClick={() => {
                       setSelectedGig(null);
                       setSellerSubTab('create_gig');
                     }}
-                    className="px-3 lg:px-3.5 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs lg:text-sm rounded-lg transition shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95 shrink-0 whitespace-nowrap"
+                    className="px-3 lg:px-3.5 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs lg:text-sm rounded-lg transition shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 shrink-0 whitespace-nowrap relative group"
                     title="নতুন প্রফেশনাল গিগ তৈরি করুন"
                   >
-                    <Plus className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
+                    <Plus className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-white" />
                     <span>নতুন গিগ তৈরি</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48]" />
                   </button>
 
                   {/* Action Icons (Messages, Notifications, Sound) */}
@@ -4479,14 +4742,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         }
                         openMessengerInbox();
                       }}
-                      className={`p-1.5 lg:p-2 rounded-lg relative text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer ${
-                        isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-[#1DB954] bg-slate-800' : ''
+                      className={`p-1.5 lg:p-2 rounded-lg relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer ${
+                        isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-[#006A4E] bg-emerald-50' : ''
                       }`}
                       title="ইনবক্স / ক্লায়েন্ট মেসেজ"
                     >
                       <Mail className="w-4 lg:w-5 h-4 lg:h-5" />
                       {unreadMarketplaceMsgCount > 0 && (
-                        <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                        <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                           {unreadMarketplaceMsgCount}
                         </span>
                       )}
@@ -4502,14 +4765,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         }
                         openNotificationCenter();
                       }}
-                      className={`p-1.5 lg:p-2 rounded-lg relative text-slate-300 hover:text-white hover:bg-slate-800 transition cursor-pointer ${
-                        isNotificationCenterOpen ? 'text-[#1DB954] bg-slate-800' : ''
+                      className={`p-1.5 lg:p-2 rounded-lg relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer ${
+                        isNotificationCenterOpen ? 'text-[#006A4E] bg-emerald-50' : ''
                       }`}
                       title="অর্ডার ও সেলার নোটিফিকেশন"
                     >
                       <Bell className="w-4 lg:w-5 h-4 lg:h-5" />
                       {roleScopedNotifications.filter(n => !n.read).length > 0 && (
-                        <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                        <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                           {roleScopedNotifications.filter(n => !n.read).length}
                         </span>
                       )}
@@ -4519,11 +4782,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <button
                       type="button"
                       onClick={toggleOfferSound}
-                      className="w-7 lg:w-8 h-7 lg:h-8 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition active:scale-95 cursor-pointer relative"
+                      className="w-7 lg:w-8 h-7 lg:h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition active:scale-95 cursor-pointer relative"
                       title={isOfferSoundEnabled ? "অর্ডার নোটিফিকেশন সাউন্ড চালু" : "অর্ডার নোটিফিকেশন সাউন্ড বন্ধ"}
                     >
                       {isOfferSoundEnabled ? (
-                        <Volume2 className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-[#1DB954]" />
+                        <Volume2 className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-[#006A4E]" />
                       ) : (
                         <VolumeX className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-slate-400" />
                       )}
@@ -4534,21 +4797,21 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   {currentUser ? (
                     <div
                       onClick={() => setIsMobileMarketplaceMenuOpen(true)}
-                      className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 transition cursor-pointer border border-slate-700/60 shrink-0 select-none"
+                      className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition cursor-pointer border border-slate-200 shrink-0 select-none"
                       title={`সেলার প্রোফাইল: ${currentUser.name}`}
                     >
                       <div className="relative">
                         <img
                           src={currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
                           alt={currentUser.name}
-                          className="w-6 h-6 lg:w-7 lg:h-7 rounded-full object-cover border border-[#1DB954]"
+                          className="w-6 h-6 lg:w-7 lg:h-7 rounded-full object-cover border border-emerald-600"
                         />
-                        <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 border border-[#0B132B]" />
+                        <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-[#006A4E] border border-white" />
                       </div>
-                      <span className="hidden xl:inline text-xs font-bold text-slate-200 max-w-[65px] truncate">
+                      <span className="hidden xl:inline text-xs font-bold text-slate-700 max-w-[65px] truncate">
                         {currentUser.name.split(' ')[0]}
                       </span>
-                      <ChevronDown className="w-3 h-3 text-slate-400" />
+                      <ChevronDown className="w-3 h-3 text-slate-500" />
                     </div>
                   ) : null}
                 </div>
@@ -4567,18 +4830,18 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               aria-hidden="true"
             />
 
-            {/* Side Drawer Panel (Slide-in from Right) - Completely Borderless */}
-            <div className="fixed inset-y-0 right-0 w-[85vw] max-w-[340px] bg-[#0B132B] text-white shadow-2xl flex flex-col z-[100000] animate-in slide-in-from-right duration-300 ease-out">
-              {/* Drawer Top Bar - Minimal & Clean (No Logo, No Badges) */}
-              <div className="flex items-center justify-between px-4 py-3 bg-[#0B132B] shrink-0">
-                <span className="text-xs font-bold text-slate-400">মেনু</span>
+            {/* Side Drawer Panel (Slide-in from Right) */}
+            <div className="fixed inset-y-0 right-0 w-[85vw] max-w-[340px] bg-white text-slate-900 border-l border-slate-200 shadow-2xl flex flex-col z-[100000] animate-in slide-in-from-right duration-300 ease-out">
+              {/* Drawer Top Bar */}
+              <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-slate-100 shrink-0">
+                <span className="text-xs font-bold text-slate-500">মেনু</span>
                 <button
                   type="button"
                   onClick={() => setIsMobileMarketplaceMenuOpen(false)}
-                  className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 hover:text-white transition cursor-pointer active:scale-95"
+                  className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 hover:text-slate-900 transition cursor-pointer active:scale-95"
                   aria-label="মেনু বন্ধ করুন"
                 >
-                  <X className="w-4 h-4 text-slate-300 hover:text-white" />
+                  <X className="w-4 h-4 text-slate-600" />
                 </button>
               </div>
 
@@ -4587,14 +4850,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 <div className="space-y-2">
                   {/* 1. TOP: Buyer / Seller Profile with Full Details & Photo Edit */}
                   {currentUser ? (
-                    <div className="p-3 rounded-2xl bg-slate-800/90 space-y-2.5">
+                    <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
                       {/* Avatar + Details */}
                       <div className="flex items-center gap-3">
                         <div className="relative shrink-0">
                           <img
                             src={currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
                             alt={currentUser.name}
-                            className="w-12 h-12 rounded-full object-cover border border-slate-700"
+                            className="w-12 h-12 rounded-full object-cover border border-slate-300"
                           />
                           <button
                             type="button"
@@ -4602,7 +4865,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               setIsMobileMarketplaceMenuOpen(false);
                               setIsBuyerProfileModalOpen(true);
                             }}
-                            className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-[#1DB954] hover:bg-emerald-500 text-white flex items-center justify-center shadow-md cursor-pointer transition active:scale-90"
+                            className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-[#006A4E] hover:bg-[#047857] text-white flex items-center justify-center shadow-xs cursor-pointer transition active:scale-90"
                             title="ছবি ও তথ্য এডিট করুন"
                           >
                             <Camera className="w-2.5 h-2.5" />
@@ -4610,20 +4873,20 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center justify-between gap-1">
-                            <h4 className="text-xs font-black text-white truncate leading-tight">{currentUser.name}</h4>
+                            <h4 className="text-xs font-black text-slate-900 truncate leading-tight">{currentUser.name}</h4>
                             <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 ${
                               viewMode === 'selling'
-                                ? 'bg-amber-500/20 text-amber-300'
-                                : 'bg-emerald-500/20 text-[#1DB954]'
+                                ? 'bg-emerald-100 text-[#006A4E]'
+                                : 'bg-slate-200 text-slate-800'
                             }`}>
                               {viewMode === 'selling' ? 'সেলার' : 'বায়ার'}
                             </span>
                           </div>
-                          <p className="text-[10px] text-slate-400 truncate mt-0.5">
+                          <p className="text-[10px] text-slate-500 truncate mt-0.5">
                             {currentUser.email || currentUser.mobile || 'user@ptenit.com'}
                           </p>
                           {(currentUser as any)?.balance !== undefined && (
-                            <p className="text-[10px] font-bold text-emerald-400 mt-0.5">
+                            <p className="text-[10px] font-bold text-[#006A4E] mt-0.5">
                               ব্যালেন্স: ৳{(currentUser as any)?.balance || '0.00'}
                             </p>
                           )}
@@ -4637,9 +4900,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           setIsMobileMarketplaceMenuOpen(false);
                           setIsBuyerProfileModalOpen(true);
                         }}
-                        className="w-full py-1.5 px-2.5 rounded-xl bg-slate-700/80 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer active:scale-95"
+                        className="w-full py-1.5 px-2.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer active:scale-95"
                       >
-                        <Pencil className="w-3.5 h-3.5 text-[#1DB954]" />
+                        <Pencil className="w-3.5 h-3.5 text-[#006A4E]" />
                         <span>প্রোফাইল ও ছবি এডিট করুন</span>
                       </button>
                     </div>
@@ -4651,24 +4914,24 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         if (openAuthModal) openAuthModal();
                         else setIsProfileDropdownOpen(true);
                       }}
-                      className="w-full py-2.5 px-3 rounded-xl bg-[#1DB954] hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition active:scale-95 shadow-md"
+                      className="w-full py-2.5 px-3 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition active:scale-95 shadow-xs"
                     >
                       <User className="w-4 h-4" />
                       <span>লগইন</span>
                     </button>
                   )}
 
-                  {/* 2. PROMINENT RETURN TO MAIN PAGE (পিটেন মূল পেজে ফিরে যান - প্রোফাইলের কাছেই) */}
+                  {/* 2. RETURN TO MAIN PAGE */}
                   <button
                     type="button"
                     onClick={() => {
                       setIsMobileMarketplaceMenuOpen(false);
                       if (setActiveTab) setActiveTab('home');
                     }}
-                    className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-750 text-slate-200 hover:text-white transition active:scale-95 text-xs font-bold cursor-pointer"
+                    className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 transition active:scale-95 text-xs font-bold cursor-pointer"
                   >
                     <span className="flex items-center gap-2">
-                      <ArrowLeft className="w-4 h-4 text-[#1DB954]" />
+                      <ArrowLeft className="w-4 h-4 text-[#006A4E]" />
                       <span>পিটেন মূল পেইজে ফিরে যান</span>
                     </span>
                     <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -4682,13 +4945,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         setIsMobileMarketplaceMenuOpen(false);
                         if (openAuthModal) openAuthModal();
                       }}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl transition active:scale-95 text-xs font-bold bg-amber-950/40 hover:bg-amber-900/60 text-amber-300 border border-amber-500/20 cursor-pointer"
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl transition active:scale-95 text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-[#006A4E] border border-emerald-200 cursor-pointer"
                     >
                       <span className="flex items-center gap-2">
-                        <Zap className="w-3.5 h-3.5 text-amber-400" />
+                        <Zap className="w-3.5 h-3.5 text-[#006A4E]" />
                         <span>সেলার মোড (লগইন প্রয়োজন)</span>
                       </span>
-                      <span className="text-[10px] bg-amber-500/20 px-1.5 py-0.5 rounded text-amber-300 font-bold">লগইন</span>
+                      <span className="text-[10px] bg-emerald-100 px-1.5 py-0.5 rounded text-[#006A4E] font-bold">লগইন</span>
                     </button>
                   ) : !hasSellerAccount ? (
                     <button
@@ -4697,13 +4960,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         setIsMobileMarketplaceMenuOpen(false);
                         setIsMentorAppModalOpen(true);
                       }}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl transition active:scale-95 text-xs font-bold bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-500/20 cursor-pointer"
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl transition active:scale-95 text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-[#006A4E] border border-emerald-200 cursor-pointer"
                     >
                       <span className="flex items-center gap-2">
-                        <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                        <Sparkles className="w-3.5 h-3.5 text-[#006A4E]" />
                         <span>সেলার হতে আবেদন করুন</span>
                       </span>
-                      <span className="text-[10px] bg-emerald-500/20 px-1.5 py-0.5 rounded text-emerald-300 font-bold">আবেদন</span>
+                      <span className="text-[10px] bg-emerald-100 px-1.5 py-0.5 rounded text-[#006A4E] font-bold">আবেদন</span>
                     </button>
                   ) : (
                     <button
@@ -4712,14 +4975,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         handleToggleMode(viewMode === 'buying' ? 'selling' : 'buying');
                         setIsMobileMarketplaceMenuOpen(false);
                       }}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition active:scale-95 text-xs font-bold cursor-pointer ${
-                        viewMode === 'buying'
-                          ? 'bg-amber-950/60 hover:bg-amber-900/60 text-amber-300'
-                          : 'bg-emerald-950/60 hover:bg-emerald-900/60 text-emerald-300'
-                      }`}
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl transition active:scale-95 text-xs font-bold cursor-pointer bg-emerald-50 hover:bg-emerald-100 text-[#006A4E] border border-emerald-200"
                     >
                       <span className="flex items-center gap-2">
-                        <Zap className="w-3.5 h-3.5 text-amber-400" />
+                        <Zap className="w-3.5 h-3.5 text-[#006A4E]" />
                         <span>{viewMode === 'buying' ? 'সেলার মোডে যান' : 'বায়ার মোডে ফিরুন'}</span>
                       </span>
                       <ChevronRight className="w-3.5 h-3.5 opacity-70" />
@@ -4742,12 +5001,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           }}
                           className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
                             sellerSubTab === 'gigs' && specialistMainTab === 'marketplace'
-                              ? 'bg-[#1DB954] text-white font-black'
-                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                              ? 'bg-[#006A4E] text-white font-black'
+                              : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                            <Sparkles className="w-3.5 h-3.5 text-[#006A4E]" />
                             <span>আমার সার্ভিস ও গিগস</span>
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -4764,12 +5023,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           }}
                           className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
                             sellerSubTab === 'create_gig'
-                              ? 'bg-[#1DB954] text-white font-black'
-                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                              ? 'bg-[#006A4E] text-white font-black'
+                              : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <PlusCircle className="w-3.5 h-3.5 text-[#1DB954]" />
+                            <PlusCircle className="w-3.5 h-3.5 text-[#006A4E]" />
                             <span>নতুন গিগ তৈরি করুন</span>
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -4786,12 +5045,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           }}
                           className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
                             sellerSubTab === 'orders'
-                              ? 'bg-[#1DB954] text-white font-black'
-                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                              ? 'bg-[#006A4E] text-white font-black'
+                              : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <ShoppingBag className="w-3.5 h-3.5 text-amber-400" />
+                            <ShoppingBag className="w-3.5 h-3.5 text-[#006A4E]" />
                             <span>অর্ডার ও আর্নিং</span>
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -4805,12 +5064,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           }}
                           className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
                             activeSubTab === 'messenger'
-                              ? 'bg-[#1DB954] text-white font-black'
-                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                              ? 'bg-[#006A4E] text-white font-black'
+                              : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />
+                            <MessageSquare className="w-3.5 h-3.5 text-[#006A4E]" />
                             <span>মেসেঞ্জার ইনবক্স</span>
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -4830,12 +5089,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           }}
                           className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
                             activeSubTab === 'gigs' && !showSavedOnly
-                              ? 'bg-[#1DB954] text-white font-black'
-                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                              ? 'bg-[#006A4E] text-white font-black'
+                              : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <Sparkles className="w-3.5 h-3.5 text-[#1DB954]" />
+                            <Sparkles className="w-3.5 h-3.5 text-[#006A4E]" />
                             <span>সকল সার্ভিস ও গিগস</span>
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -4851,12 +5110,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           }}
                           className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
                             activeSubTab === 'my-orders'
-                              ? 'bg-[#1DB954] text-white font-black'
-                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                              ? 'bg-[#006A4E] text-white font-black'
+                              : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <ShoppingBag className="w-3.5 h-3.5 text-amber-400" />
+                            <ShoppingBag className="w-3.5 h-3.5 text-[#006A4E]" />
                             <span>আমার অর্ডারসমূহ</span>
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -4873,12 +5132,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           }}
                           className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
                             activeSubTab === 'gigs' && showSavedOnly
-                              ? 'bg-[#1DB954] text-white font-black'
-                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                              ? 'bg-[#006A4E] text-white font-black'
+                              : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <Heart className="w-3.5 h-3.5 text-rose-400" />
+                            <Heart className="w-3.5 h-3.5 text-[#E11D48]" />
                             <span>পছন্দের গিগসমূহ</span>
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -4892,12 +5151,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           }}
                           className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
                             activeSubTab === 'messenger'
-                              ? 'bg-[#1DB954] text-white font-black'
-                              : 'bg-slate-800/70 text-slate-200 hover:bg-slate-800'
+                              ? 'bg-[#006A4E] text-white font-black'
+                              : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />
+                            <MessageSquare className="w-3.5 h-3.5 text-[#006A4E]" />
                             <span>মেসেঞ্জার ইনবক্স</span>
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -4911,10 +5170,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             setSelectedGig(null);
                             setIsMobileMarketplaceMenuOpen(false);
                           }}
-                          className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold bg-slate-800/70 text-slate-200 hover:bg-slate-800 transition-all flex items-center justify-between cursor-pointer"
+                          className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100 transition-all flex items-center justify-between cursor-pointer"
                         >
                           <span className="flex items-center gap-2">
-                            <PlusCircle className="w-3.5 h-3.5 text-teal-400" />
+                            <PlusCircle className="w-3.5 h-3.5 text-[#006A4E]" />
                             <span>কাস্টম প্রজেক্ট পোস্ট</span>
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -4924,7 +5183,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   </div>
                 </div>
 
-                {/* 4. BOTTOM: LOGOUT (সবার নিচে লগ আউট থাকবে) */}
+                {/* 4. BOTTOM: LOGOUT */}
                 <div className="pt-2 shrink-0">
                   {currentUser ? (
                     <button
@@ -4933,7 +5192,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         setIsMobileMarketplaceMenuOpen(false);
                         logout();
                       }}
-                      className="w-full py-2.5 px-3 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-300 font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer active:scale-95"
+                      className="w-full py-2.5 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 text-[#E11D48] border border-rose-200 font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer active:scale-95"
                     >
                       <LogOut className="w-4 h-4" />
                       <span>লগআউট করুন</span>
@@ -4948,99 +5207,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       </div>
       )}
 
-      {/* Spacer for fixed topbar on mobile */}
-      {!selectedGig && !(viewMode === 'selling' && sellerSubTab === 'create_gig') && (
-        <div className={`sm:hidden !mt-0 ${
-          viewMode === 'selling' && sellerSubTab !== 'gigs' && sellerSubTab !== 'overview'
-            ? 'h-[96px]'
-            : (activeSubTab === 'my-orders' || activeSubTab === 'my-courses' || activeSubTab === 'overview')
-            ? 'h-[96px]'
-            : activeSubTab === 'messenger' || activeSubTab === 'saved_gigs'
-            ? 'h-[96px]'
-            : 'h-[94px]'
-        }`} />
-      )}
 
-      {/* CATEGORY & SERVICE FILTER SUB-NAVBAR (NOT FIXED ON PHONE VIEW, STICKY ON DESKTOP VIEW) */}
-      {viewMode === 'buying' && !['overview', 'my-orders', 'my-courses', 'saved_gigs', 'settings', 'post-project', 'public-offers', 'messenger'].includes(activeSubTab) && !selectedGig && (
-        <div className={`relative sm:sticky sm:top-[57px] z-30 !mt-0 transition-all duration-300 ease-in-out lg:hidden ${
-          isFilterBarVisible
-            ? 'translate-y-0 opacity-100 mb-2 sm:mb-6 max-h-[500px] pointer-events-auto'
-            : '-translate-y-2 opacity-0 py-0 mb-2 max-h-0 overflow-hidden pointer-events-none'
-        }`}>
-          
-          {/* PHONE VIEW: SAME DARK COLOR AS TOPBAR (#0B132B), NO BORDERS OR SPACES, LOOKS LIKE CONTINUATION OF TOPBAR, NOT FIXED */}
-          <div className="w-full bg-[#0B132B] px-2.5 sm:px-4 py-2 text-white font-bengali rounded-b-xl sm:rounded-xl shadow-xs">
-            <div className="flex items-center gap-1.5">
-              {/* 1. Category Select */}
-              <div className="relative flex-1 min-w-0">
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => {
-                    setActiveSubTab('gigs');
-                    setSelectedGig(null);
-                    setSelectedCategory(e.target.value);
-                  }}
-                  className={`w-full pl-2.5 pr-6 py-1 bg-slate-800/80 border-0 text-[10px] rounded-lg focus:outline-none appearance-none cursor-pointer truncate ${
-                    selectedCategory !== 'All'
-                      ? 'text-[#1DB954] font-extrabold'
-                      : 'text-slate-200 font-bold'
-                  }`}
-                >
-                  <option value="All" className="bg-slate-900 text-slate-100 font-normal">সব ক্যাটাগরি</option>
-                  <option value="AI Services" className="bg-slate-900 text-slate-100 font-normal">এআই ও সফটওয়্যার</option>
-                  <option value="Programming & Tech" className="bg-slate-900 text-slate-100 font-normal">প্রোগ্রামিং ও টেকনোলজি</option>
-                  <option value="Graphics & Design" className="bg-slate-900 text-slate-100 font-normal">গ্রাফিক্স ও ডিজাইন</option>
-                  <option value="Digital Marketing" className="bg-slate-900 text-slate-100 font-normal">ডিজিটাল মার্কেটিং</option>
-                  <option value="Video & Animation" className="bg-slate-900 text-slate-100 font-normal">ভিডিও ও অ্যানিমেশন</option>
-                  <option value="SEO & Growth" className="bg-slate-900 text-slate-100 font-normal">এসইও ও গ্রোথ</option>
-                  <option value="Education & Training" className="bg-slate-900 text-slate-100 font-normal">এডুকেশন ও ট্রেনিং</option>
-                </select>
-                <ChevronDown className={`w-3.5 h-3.5 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none ${selectedCategory !== 'All' ? 'text-[#1DB954]' : 'text-slate-400'}`} />
-              </div>
 
-              {/* 2. Sort Select */}
-              <div className="relative shrink-0">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
-                  className={`pl-2 pr-5 py-1 bg-slate-800/80 border-0 text-[10px] rounded-lg focus:outline-none appearance-none cursor-pointer ${
-                    sortBy !== 'popular'
-                      ? 'text-[#1DB954] font-extrabold'
-                      : 'text-slate-200 font-bold'
-                  }`}
-                >
-                  <option value="popular" className="bg-slate-900 text-slate-100 font-normal">জনপ্রিয়তা</option>
-                  <option value="price-asc" className="bg-slate-900 text-slate-100 font-normal">কম দাম</option>
-                  <option value="price-desc" className="bg-slate-900 text-slate-100 font-normal">বেশি দাম</option>
-                  <option value="rating" className="bg-slate-900 text-slate-100 font-normal">টপ রেটিং</option>
-                </select>
-                <ChevronDown className={`w-3 h-3 absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none ${sortBy !== 'popular' ? 'text-[#1DB954]' : 'text-slate-400'}`} />
-              </div>
 
-              {/* 3. Reset Button */}
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedCategory('All');
-                  setSortBy('popular');
-                  setPriceRangeFilter('all');
-                  setDeliveryFilter('any');
-                  setRatingFilter(0);
-                  setSearchQuery('');
-                }}
-                className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition shrink-0 cursor-pointer active:scale-95 ${
-                  (selectedCategory !== 'All' || sortBy !== 'popular' || priceRangeFilter !== 'all' || deliveryFilter !== 'any' || ratingFilter > 0)
-                    ? 'bg-rose-500 text-white font-extrabold shadow-xs'
-                    : 'bg-slate-800 text-slate-300 border-0'
-                }`}
-              >
-                রিসেট
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
         {/* OFFICIAL SERVICE DETAIL MODAL (Matching DigitalProductDetailModal!) */}
         {selectedService && (
@@ -5049,6 +5218,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             onClose={() => setSelectedService(null)}
             setActiveTab={setActiveTab}
             openAuthModal={openAuthModal}
+            viewerMode={viewMode === 'selling' ? 'seller' : 'buyer'}
           />
         )}
 
@@ -5075,6 +5245,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             }}
             setActiveTab={setActiveTab}
             openAuthModal={openAuthModal}
+            viewerMode={viewMode === 'selling' ? 'seller' : 'buyer'}
           />
         ) : viewMode === 'selling' ? (
         /* SELLER WORKSPACE */
@@ -5102,21 +5273,21 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 text-xs sm:text-sm font-bold flex items-center gap-1.5 transition cursor-pointer active:scale-95 shadow-2xs shrink-0"
                       title="সেলার ড্যাশবোর্ডে ফিরে যান"
                     >
-                      <ArrowLeft className="w-4 h-4 text-[#1DB954]" />
+                      <ArrowLeft className="w-4 h-4 text-[#38BDF8]" />
                       <span>সেলার ড্যাশবোর্ড</span>
                     </button>
 
                     {/* Center: Title & Short Badge */}
                     <div className="flex items-center gap-2 min-w-0 text-center sm:text-left">
-                      <div className="hidden sm:flex w-8 h-8 rounded-lg bg-[#1DB954]/20 text-[#1DB954] items-center justify-center font-black shrink-0">
-                        <PlusCircle className="w-5 h-5 text-[#1DB954]" />
+                      <div className="hidden sm:flex w-8 h-8 rounded-lg bg-[#006A4E]/20 text-[#38BDF8] items-center justify-center font-black shrink-0">
+                        <PlusCircle className="w-5 h-5 text-[#38BDF8]" />
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center justify-center sm:justify-start gap-1.5">
                           <h1 className="text-xs sm:text-base md:text-lg font-black text-slate-900 dark:text-white truncate">
                             পোস্ট এ গিগ (৩টি প্যাকেজ)
                           </h1>
-                          <span className="px-2 py-0.5 bg-[#1DB954]/15 text-[#1DB954] text-[10px] font-black rounded-full border border-[#1DB954]/30 shrink-0 hidden sm:inline">
+                          <span className="px-2 py-0.5 bg-[#006A4E]/15 text-[#38BDF8] text-[10px] font-black rounded-full border border-blue-600/50/30 shrink-0 hidden sm:inline">
                             ৩টি প্যাকেজ
                           </span>
                         </div>
@@ -5161,7 +5332,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       {/* SECTION 1: মূল তথ্য (OVERVIEW) */}
                       <div className="p-3.5 sm:p-5 bg-slate-50 dark:bg-slate-950/70 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3">
                         <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2.5 gap-2">
-                          <h3 className="text-xs sm:text-sm font-black uppercase text-[#1DB954] flex items-center gap-1.5">
+                          <h3 className="text-xs sm:text-sm font-black uppercase text-[#38BDF8] flex items-center gap-1.5">
                             <Layers className="w-4 h-4 shrink-0" />
                             <span>১. সাধারণ তথ্য ও টাইটেল</span>
                           </h3>
@@ -5169,7 +5340,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             type="button"
                             onClick={handleOptimizeWithGemini}
                             disabled={isAiOptimizing}
-                            className="w-auto px-3 py-1.5 bg-[#1DB954] hover:bg-[#19a34a] text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+                            className="w-auto px-3 py-1.5 bg-[#006A4E] hover:bg-[#19a34a] text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
                           >
                             <Sparkles className="w-3.5 h-3.5 fill-white text-white shrink-0" />
                             <span className="text-white">{isAiOptimizing ? 'AI সাজাচ্ছে...' : 'AI সাজান'}</span>
@@ -5184,7 +5355,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             <select
                               value={newGigCategory}
                               onChange={(e) => setNewGigCategory(e.target.value)}
-                              className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
+                              className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                             >
                               <option value="Programming & Tech">Programming & Tech</option>
                               <option value="AI Services">AI Services</option>
@@ -5202,7 +5373,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             <select
                               value={newGigOfferBadge}
                               onChange={(e) => setNewGigOfferBadge(e.target.value)}
-                              className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954] font-bold"
+                              className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E] font-bold"
                             >
                               <option value="৩০% ছাড়">{t('🎁 ৩০% ছাড়', '🎁 30% Discount')}</option>
                               <option value="২০% ছাড়">{t('🎁 ২০% ছাড়', '🎁 20% Discount')}</option>
@@ -5221,7 +5392,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 newGigTitle.length > 90 
                                   ? 'bg-rose-100 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400' 
                                   : newGigTitle.length >= 45 && newGigTitle.length <= 90 
-                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400' 
+                                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-sky-400' 
                                     : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
                               }`}>
                                 {newGigTitle.length}/৯০ ক্যারেক্টার
@@ -5234,7 +5405,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               placeholder="যেমন: আমি আধুনিক ফুল-স্ট্যাক ওয়েব অ্যাপ্লিকেশন ডেভেলপ করবো"
                               value={newGigTitle}
                               onChange={(e) => setNewGigTitle(e.target.value)}
-                              className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
+                              className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                             />
                             <div className="p-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/50 rounded-lg text-[11px] leading-relaxed text-amber-800 dark:text-amber-300 flex items-start gap-1.5">
                               <span className="text-sm shrink-0">💡</span>
@@ -5253,7 +5424,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             placeholder="যেমন: React, Next.js, AI, FullStack, Node.js (কমা দিয়ে লিখুন)"
                             value={newGigTags}
                             onChange={(e) => setNewGigTags(e.target.value)}
-                            className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
+                            className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                           />
                         </div>
                       </div>
@@ -5262,7 +5433,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <div className="p-3.5 sm:p-5 bg-slate-50 dark:bg-slate-950/70 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
                         <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2.5 gap-2">
                           <div>
-                            <h3 className="text-xs sm:text-sm font-black uppercase text-[#1DB954] flex items-center gap-1.5">
+                            <h3 className="text-xs sm:text-sm font-black uppercase text-[#38BDF8] flex items-center gap-1.5">
                               <DollarSign className="w-4 h-4 shrink-0" />
                               <span>২. প্যাকেজ প্রাইসিং (৩টি)</span>
                             </h3>
@@ -5276,14 +5447,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             <button
                               type="button"
                               onClick={() => setPackageLayoutMode('stepped')}
-                              className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${packageLayoutMode === 'stepped' ? 'bg-white dark:bg-slate-800 text-[#1DB954] shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                              className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${packageLayoutMode === 'stepped' ? 'bg-white dark:bg-slate-800 text-[#38BDF8] shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                             >
                               স্টেপ ট্যাব
                             </button>
                             <button
                               type="button"
                               onClick={() => setPackageLayoutMode('columns')}
-                              className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${packageLayoutMode === 'columns' ? 'bg-white dark:bg-slate-800 text-[#1DB954] shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                              className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${packageLayoutMode === 'columns' ? 'bg-white dark:bg-slate-800 text-[#38BDF8] shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                             >
                               ৩ কলাম ভিউ
                             </button>
@@ -5298,11 +5469,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             onClick={() => setActivePackageStep('basic')}
                             className={`py-2 sm:py-2.5 px-1 rounded-xl transition flex flex-col items-center justify-center gap-1 cursor-pointer text-center ${
                               activePackageStep === 'basic'
-                                ? 'bg-white dark:bg-slate-800 text-[#1DB954] shadow-md ring-2 ring-[#1DB954] font-black'
+                                ? 'bg-white dark:bg-slate-800 text-[#38BDF8] shadow-md ring-2 ring-[#006A4E] font-black'
                                 : 'hover:bg-white/50 dark:hover:bg-slate-800/60 text-slate-600 dark:text-slate-400 font-bold'
                             }`}
                           >
-                            <Zap className={`w-4 h-4 shrink-0 ${activePackageStep === 'basic' ? 'text-[#1DB954]' : 'text-slate-500'}`} />
+                            <Zap className={`w-4 h-4 shrink-0 ${activePackageStep === 'basic' ? 'text-[#38BDF8]' : 'text-slate-500'}`} />
                             <span className="text-xs leading-none">১. বেসিক</span>
                           </button>
 
@@ -5340,10 +5511,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           /* SIDE-BY-SIDE 3 COLUMNS VIEW (FOR DESKTOP) */
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
                             {/* 1. BASIC CARD */}
-                            <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-[#1DB954] rounded-2xl p-3.5 space-y-3 shadow-xs transition">
+                            <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-blue-600/50 rounded-2xl p-3.5 space-y-3 shadow-xs transition">
                               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
                                 <div className="flex items-center gap-1.5">
-                                  <Zap className="w-4 h-4 text-[#1DB954]" />
+                                  <Zap className="w-4 h-4 text-[#38BDF8]" />
                                   <span className="text-xs font-black text-slate-900 dark:text-white">Basic প্যাকেজ</span>
                                 </div>
                                 
@@ -5368,7 +5539,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     placeholder="যেমন: ২৫০০"
                                     value={newBasicPrice}
                                     onChange={(e) => setNewBasicPrice(e.target.value === '' ? '' : Number(e.target.value))}
-                                    className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-bold text-[#1DB954]"
+                                    className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-bold text-[#38BDF8]"
                                   />
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
@@ -5561,7 +5732,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               <div className="space-y-3.5 animate-fadeIn">
                                 <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
                                   <div className="flex items-center gap-2">
-                                    <div className="w-7 h-7 rounded-lg bg-[#1DB954]/20 text-[#1DB954] flex items-center justify-center font-black">
+                                    <div className="w-7 h-7 rounded-lg bg-[#006A4E]/20 text-[#38BDF8] flex items-center justify-center font-black">
                                       <Zap className="w-4 h-4" />
                                     </div>
                                     <div>
@@ -5583,7 +5754,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       placeholder="যেমন: Basic Starter"
                                       value={newBasicTitle}
                                       onChange={(e) => setNewBasicTitle(e.target.value)}
-                                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
+                                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                                     />
                                   </div>
 
@@ -5598,7 +5769,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       value={newBasicPrice}
                                       onChange={(e) => setNewBasicPrice(e.target.value === '' ? '' : Number(e.target.value))}
                                       placeholder="যেমন: ২৫০০"
-                                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-black text-[#1DB954] focus:ring-2 focus:ring-[#1DB954]"
+                                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-black text-[#38BDF8] focus:ring-2 focus:ring-[#006A4E]"
                                     />
                                   </div>
 
@@ -5640,7 +5811,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     placeholder="যেমন: Single page responsive landing page + clean code + 3 days support..."
                                     value={newBasicDesc}
                                     onChange={(e) => setNewBasicDesc(e.target.value)}
-                                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm resize-none focus:ring-2 focus:ring-[#1DB954]"
+                                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm resize-none focus:ring-2 focus:ring-[#006A4E]"
                                   />
                                 </div>
 
@@ -5649,7 +5820,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <button
                                     type="button"
                                     onClick={() => setActivePackageStep('standard')}
-                                    className="w-full sm:w-auto px-4 py-2.5 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-md active:scale-95"
+                                    className="w-full sm:w-auto px-4 py-2.5 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-md active:scale-95"
                                   >
                                     <span>Standard</span>
                                     <ArrowRight className="w-4 h-4" />
@@ -5865,8 +6036,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     <ArrowLeft className="w-3.5 h-3.5" />
                                     <span>Standard</span>
                                   </button>
-                                  <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-500 bg-emerald-500/10 px-3 py-2 rounded-xl">
-                                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                                  <div className="flex items-center gap-1.5 text-xs font-bold text-blue-500 bg-blue-500/10 px-3 py-2 rounded-xl">
+                                    <CheckCircle2 className="w-4 h-4 text-blue-500" />
                                     <span>প্যাকেজ সম্পন্ন</span>
                                   </div>
                                 </div>
@@ -5878,7 +6049,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                       {/* SECTION 3: মিডিয়া ও থাম্বনেইল (MEDIA) */}
                       <div className="p-3.5 sm:p-5 bg-slate-50 dark:bg-slate-950/70 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3">
-                        <h3 className="text-xs sm:text-sm font-black uppercase text-[#1DB954] flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-2">
+                        <h3 className="text-xs sm:text-sm font-black uppercase text-[#38BDF8] flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-2">
                           <ImageIcon className="w-4 h-4 shrink-0" />
                           <span>৩. থাম্বনেইল ও মিডিয়া লিঙ্ক</span>
                         </h3>
@@ -5927,7 +6098,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                       {/* SECTION 4: বিবরণ, রিকোয়ারমেন্ট ও FAQ (DETAILS) */}
                       <div className="p-3.5 sm:p-5 bg-slate-50 dark:bg-slate-950/70 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3">
-                        <h3 className="text-xs sm:text-sm font-black uppercase text-[#1DB954] flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-2">
+                        <h3 className="text-xs sm:text-sm font-black uppercase text-[#38BDF8] flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-2">
                           <FileText className="w-4 h-4 shrink-0" />
                           <span>৪. সার্ভিস বিবরণ ও বায়ার নির্দেশিকা</span>
                         </h3>
@@ -5943,7 +6114,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               placeholder="আপনার সার্ভিস, কাজের অভিজ্ঞতা ও বায়ার কেন আপনাকে বেছে নেবে বিস্তারিত লিখুন..."
                               value={newGigDesc}
                               onChange={(e) => setNewGigDesc(e.target.value)}
-                              className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954] resize-y"
+                              className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E] resize-y"
                             />
                           </div>
 
@@ -5969,7 +6140,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               <button
                                 type="button"
                                 onClick={() => setNewGigFaqs(prev => [...prev, { id: Date.now().toString(), question: "", answer: "" }])}
-                                className="px-2.5 py-1 bg-[#1DB954]/10 hover:bg-[#1DB954]/20 text-[#1DB954] font-bold text-[11px] rounded-lg transition flex items-center gap-1 cursor-pointer active:scale-95"
+                                className="px-2.5 py-1 bg-[#006A4E]/10 hover:bg-[#006A4E]/20 text-[#38BDF8] font-bold text-[11px] rounded-lg transition flex items-center gap-1 cursor-pointer active:scale-95"
                               >
                                 <Plus className="w-3.5 h-3.5" />
                                 <span>প্রশ্ন যোগ করুন</span>
@@ -6020,7 +6191,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       </div>
 
                       {createGigSuccess && (
-                        <div className="p-3 bg-emerald-500/20 text-[#1DB954] font-bold text-xs sm:text-sm rounded-xl text-center border border-[#1DB954] animate-fadeIn">
+                        <div className="p-3 bg-blue-500/20 text-[#38BDF8] font-bold text-xs sm:text-sm rounded-xl text-center border border-blue-600/50 animate-fadeIn">
                           আপনার গিগ ও প্যাকেজ সফলভাবে পোস্ট করা হয়েছে!
                         </div>
                       )}
@@ -6040,7 +6211,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         </button>
                         <button
                           type="submit"
-                          className="flex-1 sm:flex-initial px-6 sm:px-8 py-2.5 bg-gradient-to-r from-[#1DB954] to-emerald-600 hover:from-[#19a34a] hover:to-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-[#1DB954]/25 transition flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                          className="flex-1 sm:flex-initial px-6 sm:px-8 py-2.5 bg-gradient-to-r from-[#006A4E] to-blue-600 hover:from-[#19a34a] hover:to-blue-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-blue-500/25 transition flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                         >
                           <Sparkles className="w-4 h-4 fill-white text-white" />
                           <span className="text-white">পাবলিশ</span>
@@ -6071,7 +6242,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                     {/* Modal Header */}
                     <div className="flex items-start gap-3.5 pr-8">
-                      <div className="w-12 h-12 rounded-2xl bg-slate-800 text-emerald-400 flex items-center justify-center border-2 border-[#1DB954] shrink-0 shadow-md">
+                      <div className="w-12 h-12 rounded-2xl bg-slate-800 text-sky-400 flex items-center justify-center border-2 border-blue-600/50 shrink-0 shadow-md">
                         <User className="w-6 h-6" />
                       </div>
                       <div className="space-y-1">
@@ -6082,8 +6253,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               <span>ডিরেক্ট পার্সোনাল অর্ডার</span>
                             </span>
                           ) : (
-                            <span className="text-[10px] sm:text-xs font-black px-3 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/20 text-emerald-300 flex items-center gap-1.5 shadow-sm">
-                              <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span className="text-[10px] sm:text-xs font-black px-3 py-1 rounded-full border border-blue-500/40 bg-blue-500/20 text-sky-300 flex items-center gap-1.5 shadow-sm">
+                              <Sparkles className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                               <span>{selectedOfferForModal.typeLabel.replace(/^[⚡🔒]\s*/, '')}</span>
                             </span>
                           )}
@@ -6106,7 +6277,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         <span className="text-[10px] text-slate-400 font-bold block">
                           {selectedOfferForModal.type === 'course' || selectedOfferForModal.typeLabel.includes('কোর্স') ? t('কোর্স ফি', 'Course Fee') : t('বাজেট', 'Budget')}
                         </span>
-                        <span className="text-base sm:text-lg font-black text-[#1DB954]">৳{selectedOfferForModal.budget.toLocaleString()}</span>
+                        <span className="text-base sm:text-lg font-black text-[#38BDF8]">৳{selectedOfferForModal.budget.toLocaleString()}</span>
                       </div>
                       <div>
                         <span className="text-[10px] text-slate-400 font-bold block">
@@ -6123,7 +6294,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     {/* Requirements & Description */}
                     <div className="space-y-2">
                       <h4 className="text-xs sm:text-sm font-black text-slate-200 flex items-center gap-1.5">
-                        <FileText className="w-4 h-4 text-[#1DB954]" />
+                        <FileText className="w-4 h-4 text-[#38BDF8]" />
                         {selectedOfferForModal.type === 'course' || selectedOfferForModal.typeLabel.includes('কোর্স') ? 'কোর্সের বিস্তারিত বিবরণ ও ইন্সট্রাক্টর নির্দেশনা:' : 'প্রজেক্টের রিকোয়ারমেন্টস ও কাজের বিবরণ:'}
                       </h4>
                       <div className="p-4 bg-slate-950/50 border border-slate-800/80 rounded-2xl text-xs sm:text-sm text-slate-300 leading-relaxed">
@@ -6135,13 +6306,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     {selectedOfferForModal.deliverables && selectedOfferForModal.deliverables.length > 0 && (
                       <div className="space-y-2">
                         <h4 className="text-xs sm:text-sm font-black text-slate-200 flex items-center gap-1.5">
-                          <CheckCircle2 className="w-4 h-4 text-[#1DB954]" />
+                          <CheckCircle2 className="w-4 h-4 text-[#38BDF8]" />
                           {selectedOfferForModal.type === 'course' || selectedOfferForModal.typeLabel.includes('কোর্স') ? 'মডিউল, ক্লাস ও ডেলিভারেবল টার্গেট:' : 'যা যা ডেলিভারি দিতে হবে:'}
                         </h4>
                         <div className="space-y-1.5">
                           {selectedOfferForModal.deliverables.map((item, idx) => (
                             <div key={idx} className="flex items-center gap-2 p-2 bg-slate-950/40 rounded-xl border border-slate-800/60 text-xs text-slate-300">
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954]"></span>
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#006A4E]"></span>
                               <span>{item}</span>
                             </div>
                           ))}
@@ -6151,9 +6322,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                     {/* Received status banner inside modal */}
                     {receivedOfferIds.includes(selectedOfferForModal.id) && (
-                      <div className="p-3.5 bg-emerald-500/15 border border-[#1DB954]/50 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-emerald-300 animate-fadeIn">
+                      <div className="p-3.5 bg-blue-500/15 border border-blue-600/50/50 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sky-300 animate-fadeIn">
                         <div className="flex items-center gap-2">
-                          <CheckCircle2 className="w-5 h-5 text-[#1DB954] shrink-0" />
+                          <CheckCircle2 className="w-5 h-5 text-[#38BDF8] shrink-0" />
                           <span className="text-xs sm:text-sm font-black">
                             🎉 অফারটি সফলভাবে রিসিভ করা হয়েছে! প্রজেক্টটি আপনার ক্লায়েন্ট অর্ডার তালিকায় সক্রিয় আছে।
                           </span>
@@ -6165,7 +6336,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             setSpecialistMainTab('marketplace');
                             setSellerSubTab('orders');
                           }}
-                          className="px-3.5 py-1.5 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-md transition cursor-pointer self-end sm:self-auto shrink-0"
+                          className="px-3.5 py-1.5 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-md transition cursor-pointer self-end sm:self-auto shrink-0"
                         >
                           অর্ডার দেখুন
                         </button>
@@ -6175,8 +6346,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     {/* Footer Actions: Receive (Green) vs Reject (Red) vs Received State */}
                     {receivedOfferIds.includes(selectedOfferForModal.id) ? (
                       <div className="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-                        <span className="text-xs sm:text-sm font-black text-emerald-400 flex items-center gap-1.5">
-                          <CheckCircle2 className="w-4 h-4 text-[#1DB954]" />
+                        <span className="text-xs sm:text-sm font-black text-sky-400 flex items-center gap-1.5">
+                          <CheckCircle2 className="w-4 h-4 text-[#38BDF8]" />
                           <span>অর্ডার সফলভাবে রিসিভড & অ্যাক্টিভ</span>
                         </span>
                         <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -6194,7 +6365,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               setSpecialistMainTab('marketplace');
                               setSellerSubTab('orders');
                             }}
-                            className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs sm:text-sm transition cursor-pointer shadow-md"
+                            className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs sm:text-sm transition cursor-pointer shadow-md"
                           >
                             কাজে যান
                           </button>
@@ -6217,7 +6388,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         <button
                           type="button"
                           onClick={() => handleReceiveLiveOffer(selectedOfferForModal)}
-                          className="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-[#1DB954] to-emerald-400 hover:from-emerald-400 hover:to-[#1DB954] text-white font-black rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#1DB954]/25 hover:scale-105 active:scale-95 transition cursor-pointer"
+                          className="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-[#006A4E] to-sky-400 hover:from-sky-400 hover:to-[#7C3AED] text-white font-black rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 hover:scale-105 active:scale-95 transition cursor-pointer"
                         >
                           <Zap className="w-4 h-4 fill-slate-950 text-slate-950" />
                           <span>রিসিভ করুন (৳{selectedOfferForModal.budget.toLocaleString()})</span>
@@ -6236,7 +6407,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <div className="flex items-center justify-between pb-3 border-b border-slate-800">
                       <div>
                         <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
-                          <Zap className="w-5 h-5 text-[#1DB954]" />
+                          <Zap className="w-5 h-5 text-[#38BDF8]" />
                           <span>সকল পেন্ডিং লাইভ অফার ও অর্ডার সমূহ ({activeOffersList.length})</span>
                         </h3>
                         <p className="text-xs text-slate-400 mt-0.5">
@@ -6261,11 +6432,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         activeOffersList.map((offer) => (
                           <div
                             key={offer.id}
-                            className="p-4 bg-slate-950/70 border border-slate-800 hover:border-[#1DB954]/50 rounded-2xl transition space-y-3"
+                            className="p-4 bg-slate-950/70 border border-slate-800 hover:border-blue-600/50/50 rounded-2xl transition space-y-3"
                           >
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                               <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
-                                <div className="w-10 h-10 rounded-full bg-slate-900 text-emerald-400 flex items-center justify-center border-2 border-[#1DB954] shrink-0">
+                                <div className="w-10 h-10 rounded-full bg-slate-900 text-sky-400 flex items-center justify-center border-2 border-blue-600/50 shrink-0">
                                   <User className="w-5 h-5" />
                                 </div>
                                 <div className="min-w-0 flex-1">
@@ -6277,8 +6448,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                         <span>ডিরেক্ট পার্সোনাল অর্ডার</span>
                                       </span>
                                     ) : (
-                                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full border border-emerald-500/40 bg-emerald-500/20 text-emerald-300 flex items-center gap-1 shadow-xs">
-                                        <Sparkles className="w-3 h-3 text-emerald-400 shrink-0" />
+                                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full border border-blue-500/40 bg-blue-500/20 text-sky-300 flex items-center gap-1 shadow-xs">
+                                        <Sparkles className="w-3 h-3 text-sky-400 shrink-0" />
                                         <span>{offer.typeLabel.replace(/^[⚡🔒]\s*/, '')}</span>
                                       </span>
                                     )}
@@ -6292,7 +6463,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                               <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
                                 <div className="text-left sm:text-right">
-                                  <span className="text-sm sm:text-base font-black text-[#1DB954]">
+                                  <span className="text-sm sm:text-base font-black text-[#38BDF8]">
                                     ৳{offer.budget.toLocaleString()}
                                   </span>
                                   <span className="text-[10px] text-slate-400 block">
@@ -6313,15 +6484,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   </button>
 
                                   {receivedOfferIds.includes(offer.id) ? (
-                                    <span className="px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 font-bold text-xs border border-emerald-500/30 flex items-center gap-1">
-                                      <CheckCircle2 className="w-3.5 h-3.5 text-[#1DB954]" />
+                                    <span className="px-3 py-1.5 rounded-xl bg-blue-500/20 text-sky-300 font-bold text-xs border border-blue-500/30 flex items-center gap-1">
+                                      <CheckCircle2 className="w-3.5 h-3.5 text-[#38BDF8]" />
                                       <span>রিসিভড</span>
                                     </span>
                                   ) : (
                                     <button
                                       type="button"
                                       onClick={() => handleReceiveLiveOffer(offer)}
-                                      className="px-3.5 py-1.5 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black rounded-xl text-xs flex items-center gap-1 shadow-md cursor-pointer"
+                                      className="px-3.5 py-1.5 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black rounded-xl text-xs flex items-center gap-1 shadow-md cursor-pointer"
                                     >
                                       <Zap className="w-3.5 h-3.5 fill-slate-950" />
                                       <span>রিসিভ</span>
@@ -6352,14 +6523,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <img
                       src={currentUser?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
                       alt={currentUser?.name || 'User'}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-[#1DB954]"
+                      className="w-12 h-12 rounded-full object-cover border-2 border-blue-600/50"
                     />
                     <div className="min-w-0 flex-1">
                       <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate">
                         {currentUser?.name || 'Mds Kazi Sohag'}
                       </h3>
-                      <p className="text-xs text-[#1DB954] font-semibold flex items-center gap-1 mt-0.5">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+                      <p className="text-xs text-[#38BDF8] font-semibold flex items-center gap-1 mt-0.5">
+                        <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
                         <span>ভেরিফায়েড সেলার (Level 2)</span>
                       </p>
                     </div>
@@ -6404,11 +6575,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition text-left cursor-pointer ${
                       specialistMainTab === 'marketplace' && (sellerSubTab === 'gigs' || sellerSubTab === 'overview')
-                        ? 'bg-[#1DB954]/10 text-[#1DB954]'
+                        ? 'bg-[#006A4E]/10 text-[#38BDF8]'
                         : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/70'
                     }`}
                   >
-                    <Home className="w-4.5 h-4.5 text-[#1DB954] shrink-0" />
+                    <Home className="w-4.5 h-4.5 text-[#38BDF8] shrink-0" />
                     <span>সেলার ড্যাশবোর্ড</span>
                   </button>
 
@@ -6421,16 +6592,16 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold transition text-left cursor-pointer ${
                       specialistMainTab === 'marketplace' && sellerSubTab === 'orders'
-                        ? 'bg-[#1DB954]/10 text-[#1DB954]'
+                        ? 'bg-[#006A4E]/10 text-[#38BDF8]'
                         : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/70'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <ShoppingBag className="w-4.5 h-4.5 text-emerald-500 shrink-0" />
+                      <ShoppingBag className="w-4.5 h-4.5 text-blue-500 shrink-0" />
                       <span>ক্লায়েন্ট অর্ডারসমূহ</span>
                     </div>
                     {marketplaceOrders.length > 0 && (
-                      <span className="px-1.5 py-0.5 rounded-full bg-[#1DB954] text-white text-[10px] font-bold">
+                      <span className="px-1.5 py-0.5 rounded-full bg-[#006A4E] text-white text-[10px] font-bold">
                         {marketplaceOrders.length}
                       </span>
                     )}
@@ -6494,11 +6665,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition text-left cursor-pointer ${
                       specialistMainTab === 'mentor'
-                        ? 'bg-teal-500/10 text-teal-500'
+                        ? 'bg-indigo-500/10 text-indigo-500'
                         : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/70'
                     }`}
                   >
-                    <GraduationCap className="w-4.5 h-4.5 text-teal-500 shrink-0" />
+                    <GraduationCap className="w-4.5 h-4.5 text-indigo-500 shrink-0" />
                     <span>মেন্টর ড্যাশবোর্ড</span>
                   </button>
 
@@ -6509,7 +6680,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         setSellerSubTab('create_gig');
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-[#1DB954] hover:bg-[#19a34a] text-white text-xs font-bold transition shadow-xs cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-[#006A4E] hover:bg-[#19a34a] text-white text-xs font-bold transition shadow-xs cursor-pointer"
                     >
                       <PlusCircle className="w-4 h-4" />
                       <span>নতুন সার্ভিস পোস্ট করুন</span>
@@ -6537,15 +6708,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   </h4>
                   <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
                     <div className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#1DB954] shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#38BDF8] shrink-0 mt-0.5" />
                       <span>১ ঘণ্টার মধ্যে ক্লায়েন্টের রিপ্লাই দিন</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#1DB954] shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#38BDF8] shrink-0 mt-0.5" />
                       <span>৩টি আকর্ষণীয় প্যাকেজ সেট করুন</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#1DB954] shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#38BDF8] shrink-0 mt-0.5" />
                       <span>সময়মতো প্রজেক্ট ডেলিভারি সম্পন্ন করুন</span>
                     </div>
                   </div>
@@ -6559,9 +6730,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 {/* Header Info Strip */}
                 <div className="flex items-center justify-between text-xs sm:text-sm pb-2 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-2">
-                    <span className="uppercase tracking-wider text-xs sm:text-sm md:text-base font-black text-[#1DB954] flex items-center gap-2">
-                      {specialistMainTab === 'marketplace' && <><Briefcase className="w-4 h-4 text-[#1DB954] shrink-0" /><span><span className="sm:hidden">ক্লায়েন্ট অর্ডারস</span><span className="hidden sm:inline">১. সেলার মার্কেটপ্লেস</span></span></>}
-                      {specialistMainTab === 'mentor' && <><GraduationCap className="w-5 h-5 text-teal-600 dark:text-teal-400 shrink-0" /><span className="text-teal-600 dark:text-teal-400 font-black">মেন্টর সার্ভিসেস</span></>}
+                    <span className="uppercase tracking-wider text-xs sm:text-sm md:text-base font-black text-[#38BDF8] flex items-center gap-2">
+                      {specialistMainTab === 'marketplace' && <><Briefcase className="w-4 h-4 text-[#38BDF8] shrink-0" /><span><span className="sm:hidden">ক্লায়েন্ট অর্ডারস</span><span className="hidden sm:inline">১. সেলার মার্কেটপ্লেস</span></span></>}
+                      {specialistMainTab === 'mentor' && <><GraduationCap className="w-5 h-5 text-indigo-600 dark:text-sky-400 shrink-0" /><span className="text-indigo-600 dark:text-sky-400 font-black">মেন্টর সার্ভিসেস</span></>}
                       {specialistMainTab === 'payments' && <><Wallet className="w-4 h-4 text-amber-500 shrink-0" /><span className="text-amber-600 dark:text-amber-400"><span className="sm:hidden">স্টেটমেন্ট</span><span className="hidden sm:inline">৩. একাউন্ট স্টেটমেন্ট</span></span></>}
                       {specialistMainTab === 'ai_toolkit' && <><Sparkles className="w-4 h-4 text-purple-500 shrink-0" /><span className="text-purple-600 dark:text-purple-400">৪. ফ্রি টুলস</span></>}
                     </span>
@@ -6578,7 +6749,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           onClick={() => setSellerSubTab('orders')}
                           className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center gap-2 whitespace-nowrap border ${
                             sellerSubTab === 'orders'
-                              ? 'bg-[#1DB954] text-white shadow-xs border-emerald-400'
+                              ? 'bg-[#006A4E] text-white shadow-xs border-sky-400'
                               : 'bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700/80 border-slate-200 dark:border-slate-700/70'
                           }`}
                         >
@@ -6590,7 +6761,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           onClick={() => setSellerSubTab('gigs')}
                           className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center gap-2 whitespace-nowrap border ${
                             sellerSubTab === 'gigs' || sellerSubTab === 'overview'
-                              ? 'bg-[#1DB954] text-white shadow-xs border-emerald-400'
+                              ? 'bg-[#006A4E] text-white shadow-xs border-sky-400'
                               : 'bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700/80 border-slate-200 dark:border-slate-700/70'
                           }`}
                         >
@@ -6604,7 +6775,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         className={`px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-black rounded-xl shadow-xs transition cursor-pointer flex items-center gap-2 whitespace-nowrap border active:scale-95 ${
                           sellerSubTab === 'create_gig'
                             ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-950 border-slate-900 dark:border-white'
-                            : 'bg-gradient-to-r from-[#1DB954] to-emerald-400 text-white hover:opacity-90 border-emerald-400/40'
+                            : 'bg-gradient-to-r from-[#006A4E] to-sky-400 text-white hover:opacity-90 border-sky-400/40'
                         }`}
                       >
                         <PlusCircle className="w-4 h-4 shrink-0" />
@@ -6625,7 +6796,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             }}
                             className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm md:text-base font-black transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shrink-0 border ${
                               sellerSubTab === 'courses'
-                                ? 'bg-teal-600 text-white shadow-md border-teal-500 ring-2 ring-teal-500/30'
+                                ? 'bg-indigo-600 text-white shadow-md border-indigo-500 ring-2 ring-indigo-500/30'
                                 : 'bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700/80 border-slate-200 dark:border-slate-700/70'
                             }`}
                           >
@@ -6684,8 +6855,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     ) : (
                       <div className="flex items-center justify-between gap-3 w-full py-1">
                         <div className="flex items-center gap-2.5">
-                          <span className="text-sm sm:text-base text-teal-600 dark:text-teal-300 font-black flex items-center gap-2">
-                            <GraduationCap className="w-5 h-5 text-teal-600 dark:text-teal-400 shrink-0" />
+                          <span className="text-sm sm:text-base text-indigo-600 dark:text-sky-300 font-black flex items-center gap-2">
+                            <GraduationCap className="w-5 h-5 text-indigo-600 dark:text-sky-400 shrink-0" />
                             <span>মেন্টরশিপ অ্যাপ্লিকেশন হাব</span>
                           </span>
                           {isMentorPending && (
@@ -6696,7 +6867,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         </div>
                         <button
                           onClick={() => isMentorPending ? setIsMentorStatusModalOpen(true) : setIsMentorAppModalOpen(true)}
-                          className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-black bg-teal-500 hover:bg-teal-400 text-slate-950 transition cursor-pointer shadow-xs border border-teal-400/50 active:scale-95"
+                          className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-black bg-indigo-500 hover:bg-sky-400 text-slate-950 transition cursor-pointer shadow-xs border border-sky-400/50 active:scale-95"
                         >
                           {isMentorPending ? 'আবেদনের তথ্য' : 'আবেদন ফরম'}
                         </button>
@@ -6713,7 +6884,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         onClick={() => setPayoutSubTab('overview')}
                         className={`py-2 px-2 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap active:scale-95 text-center ${
                           payoutSubTab === 'overview' || payoutSubTab === 'sources'
-                            ? 'bg-[#1DB954] text-white shadow-md'
+                            ? 'bg-[#006A4E] text-white shadow-md'
                             : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/80'
                         }`}
                       >
@@ -6727,7 +6898,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         onClick={() => setPayoutSubTab('history')}
                         className={`py-2 px-2 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap active:scale-95 text-center ${
                           payoutSubTab === 'history'
-                            ? 'bg-[#1DB954] text-white shadow-md'
+                            ? 'bg-[#006A4E] text-white shadow-md'
                             : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/80'
                         }`}
                       >
@@ -6742,7 +6913,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           setWithdrawSuccess(false);
                           setIsWithdrawModalOpen(true);
                         }}
-                        className="py-2 px-2 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap bg-gradient-to-r from-[#1DB954] to-emerald-500 hover:from-[#18a649] hover:to-emerald-600 text-white shadow-md active:scale-95 text-center"
+                        className="py-2 px-2 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap bg-gradient-to-r from-[#006A4E] to-blue-500 hover:from-[#18a649] hover:to-blue-600 text-white shadow-md active:scale-95 text-center"
                       >
                         <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                         <span>ক্যাশআউট</span>
@@ -6831,8 +7002,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   {/* Header */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-[#1DB954]/15 text-[#1DB954] flex items-center justify-center font-bold shadow-xs shrink-0">
-                        <Sparkles className="w-6 h-6 text-[#1DB954]" />
+                      <div className="w-12 h-12 rounded-2xl bg-[#006A4E]/15 text-[#38BDF8] flex items-center justify-center font-bold shadow-xs shrink-0">
+                        <Sparkles className="w-6 h-6 text-[#38BDF8]" />
                       </div>
                       <div>
                         <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-wide">
@@ -6844,7 +7015,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       </div>
                     </div>
                     <div className="flex items-center gap-2.5 flex-wrap">
-                      <span className="self-start sm:self-auto text-xs font-black bg-[#1DB954]/15 text-[#1DB954] px-4 py-1.5 rounded-full border border-[#1DB954]/30 shadow-xs">
+                      <span className="self-start sm:self-auto text-xs font-black bg-[#006A4E]/15 text-[#38BDF8] px-4 py-1.5 rounded-full border border-blue-600/50/30 shadow-xs">
                         ⚡ ১০০% ফ্রী এআই
                       </span>
                     </div>
@@ -6865,12 +7036,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           placeholder="যেমন: Fullstack E-commerce Website in React & Node.js"
                           value={proposalJobTopic}
                           onChange={(e) => setProposalJobTopic(e.target.value)}
-                          className="flex-1 px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1DB954] transition"
+                          className="flex-1 px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006A4E] transition"
                         />
                         <button
                           onClick={handleGenerateProposal}
                           disabled={isGeneratingProposal || !proposalJobTopic.trim()}
-                          className="px-6 py-3 bg-[#1DB954] hover:bg-[#19a34a] disabled:opacity-50 text-white font-black text-sm rounded-2xl transition flex items-center justify-center gap-2 cursor-pointer shadow-md shrink-0 active:scale-95"
+                          className="px-6 py-3 bg-[#006A4E] hover:bg-[#19a34a] disabled:opacity-50 text-white font-black text-sm rounded-2xl transition flex items-center justify-center gap-2 cursor-pointer shadow-md shrink-0 active:scale-95"
                         >
                           <Sparkles className="w-5 h-5 text-slate-950" />
                           <span>{isGeneratingProposal ? 'জেনারেট হচ্ছে...' : 'AI Proposal তৈরি করুন'}</span>
@@ -6880,7 +7051,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       {proposalResult && (
                         <div className="p-5 sm:p-6 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-4 shadow-inner">
                           <div className="flex justify-between items-center pb-3 border-b border-slate-200 dark:border-slate-800">
-                            <span className="text-sm font-black text-emerald-600 dark:text-[#1DB954] flex items-center gap-2">
+                            <span className="text-sm font-black text-[#006A4E] dark:text-sky-400 flex items-center gap-2">
                               <CheckCircle2 className="w-5 h-5" /> AI Proposal প্রস্তুত!
                             </span>
                             <button
@@ -6889,9 +7060,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 setProposalCopied(true);
                                 setTimeout(() => setProposalCopied(false), 2000);
                               }}
-                              className="text-xs bg-[#1DB954]/20 text-[#1DB954] hover:bg-[#1DB954]/30 px-4 py-2 rounded-xl font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                              className="text-xs bg-[#006A4E]/20 text-[#38BDF8] hover:bg-[#006A4E]/30 px-4 py-2 rounded-xl font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs"
                             >
-                              {proposalCopied ? <Check className="w-4 h-4 text-[#1DB954]" /> : <Copy className="w-4 h-4 text-[#1DB954]" />}
+                              {proposalCopied ? <Check className="w-4 h-4 text-[#38BDF8]" /> : <Copy className="w-4 h-4 text-[#38BDF8]" />}
                               <span>{proposalCopied ? 'কপি হয়েছে!' : 'কপি করুন'}</span>
                             </button>
                           </div>
@@ -6915,7 +7086,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             type="text"
                             value={invClientName}
                             onChange={(e) => setInvClientName(e.target.value)}
-                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1DB954]"
+                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006A4E]"
                           />
                         </div>
                         <div>
@@ -6926,14 +7097,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             type="number"
                             value={invAmount}
                             onChange={(e) => setInvAmount(Number(e.target.value))}
-                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1DB954]"
+                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006A4E]"
                           />
                         </div>
                       </div>
 
-                      <div className="p-6 bg-slate-50 dark:bg-slate-950 border-2 border-dashed border-[#1DB954]/50 rounded-2xl space-y-3 text-sm shadow-sm">
+                      <div className="p-6 bg-slate-50 dark:bg-slate-950 border-2 border-dashed border-blue-600/50/50 rounded-2xl space-y-3 text-sm shadow-sm">
                         <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
-                          <span className="font-black text-[#1DB954] text-sm tracking-wide">INVOICE #INV-2026-088</span>
+                          <span className="font-black text-[#38BDF8] text-sm tracking-wide">INVOICE #INV-2026-088</span>
                           <span className="text-xs text-slate-400 font-mono">তারিখ: 2026-08-14</span>
                         </div>
                         <p className="text-slate-700 dark:text-slate-300">
@@ -6944,11 +7115,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         </p>
                         <div className="flex justify-between items-center pt-3 border-t border-slate-200 dark:border-slate-800 font-black text-base">
                           <span>মোট সর্বমোট বিল:</span>
-                          <span className="text-[#1DB954] text-lg">৳{invAmount.toLocaleString('bn-BD')}</span>
+                          <span className="text-[#38BDF8] text-lg">৳{invAmount.toLocaleString('bn-BD')}</span>
                         </div>
                         <button
                           onClick={() => alert(`✓ ইনভয়েস #INV-2026-088 সফলভাবে ডাউনলোড হয়েছে!`)}
-                          className="w-full mt-3 py-3 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black rounded-2xl text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-md active:scale-95"
+                          className="w-full mt-3 py-3 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black rounded-2xl text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-md active:scale-95"
                         >
                           <FileText className="w-5 h-5 text-slate-950" />
                           <span>ইনভয়েস ডাউনলোড (PDF)</span>
@@ -6968,7 +7139,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           type="number"
                           value={calcGrossPrice}
                           onChange={(e) => setCalcGrossPrice(Number(e.target.value))}
-                          className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-base font-black text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1DB954]"
+                          className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-base font-black text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006A4E]"
                         />
                       </div>
 
@@ -6983,7 +7154,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         </div>
                         <div className="flex justify-between pt-3 border-t border-slate-200 dark:border-slate-800 text-base font-black text-slate-900 dark:text-white">
                           <span>আপনার মূল নিট আয়:</span>
-                          <span className="text-[#1DB954] text-lg font-black">৳{(calcGrossPrice * 0.932).toLocaleString('bn-BD')}</span>
+                          <span className="text-[#38BDF8] text-lg font-black">৳{(calcGrossPrice * 0.932).toLocaleString('bn-BD')}</span>
                         </div>
                       </div>
                     </div>
@@ -6997,8 +7168,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       </p>
                       <div className="p-6 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-3 text-sm">
                         <div className="font-bold text-slate-900 dark:text-white flex items-center justify-between flex-wrap gap-2">
-                          <span className="flex items-center gap-2 text-[#1DB954] font-black text-sm">
-                            <ShieldCheck className="w-5 h-5 text-[#1DB954]" /> Standard NDA & Service Contract.pdf
+                          <span className="flex items-center gap-2 text-[#38BDF8] font-black text-sm">
+                            <ShieldCheck className="w-5 h-5 text-[#38BDF8]" /> Standard NDA & Service Contract.pdf
                           </span>
                           <span className="text-slate-400 text-xs font-medium">Verified Legal Format</span>
                         </div>
@@ -7009,7 +7180,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         </p>
                         <button
                           onClick={() => alert("✓ স্ট্যান্ডার্ড ফ্রিল্যান্সিং চুক্তিপত্র ডাউনলোডের জন্য প্রস্তুত!")}
-                          className="w-full mt-2 py-3 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-sm rounded-2xl transition flex items-center justify-center gap-2 cursor-pointer shadow-md active:scale-95"
+                          className="w-full mt-2 py-3 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-sm rounded-2xl transition flex items-center justify-center gap-2 cursor-pointer shadow-md active:scale-95"
                         >
                           <FileText className="w-5 h-5 text-slate-950" />
                           <span>চুক্তিপত্র ডাউনলোড (PDF)</span>
@@ -7051,7 +7222,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 flex-1">
                             <div>
                               <h3 className="text-sm sm:text-base lg:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                                <Package className="w-5 h-5 text-[#1DB954]" />
+                                <Package className="w-5 h-5 text-[#38BDF8]" />
                                 <span>ক্লায়েন্ট অর্ডারস</span>
                               </h3>
                             </div>
@@ -7071,7 +7242,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               { id: 'pending', label: 'পেন্ডিং', count: pendingOrdersCount, icon: Clock, color: 'text-amber-500' },
                               { id: 'in_progress', label: 'চলমান কাজ', count: inProgressCount, icon: Zap, color: 'text-blue-500' },
                               { id: 'in_review', label: 'রিভিউ অপেক্ষায়', count: inReviewCount, icon: FileText, color: 'text-purple-500' },
-                              { id: 'completed', label: 'সম্পন্ন', count: completedCount, icon: CheckCircle2, color: 'text-emerald-500' },
+                              { id: 'completed', label: 'সম্পন্ন', count: completedCount, icon: CheckCircle2, color: 'text-blue-500' },
                             ].map(tab => {
                               const isSelected = sellerOrderFilter === tab.id;
                               const TabIcon = tab.icon;
@@ -7081,7 +7252,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   onClick={() => setSellerOrderFilter(tab.id as any)}
                                   className={`py-2 px-1 sm:px-2 rounded-xl sm:rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 min-w-0 ${
                                     isSelected
-                                      ? 'bg-slate-100 dark:bg-slate-800 border-[#1DB954] text-slate-950 dark:text-white shadow-xs font-black ring-1 sm:ring-2 ring-[#1DB954]/30'
+                                      ? 'bg-slate-100 dark:bg-slate-800 border-blue-600/50 text-slate-950 dark:text-white shadow-xs font-black ring-1 sm:ring-2 ring-[#006A4E]/30'
                                       : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700'
                                   }`}
                                 >
@@ -7090,7 +7261,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     <span className="text-[9px] min-[360px]:text-[10px] sm:text-xs font-black leading-tight truncate">{tab.label}</span>
                                   </div>
                                   <span className={`text-xs sm:text-sm lg:text-base font-black leading-tight ${
-                                    isSelected ? 'text-[#1DB954]' : 'text-slate-800 dark:text-slate-200'
+                                    isSelected ? 'text-[#38BDF8]' : 'text-slate-800 dark:text-slate-200'
                                   }`}>
                                     {tab.count}
                                   </span>
@@ -7155,9 +7326,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   statusLabel = "রিভিউধীন";
                                   StatusIcon = FileText;
                                 } else if (isCompleted) {
-                                  glowGradient = "from-emerald-400 via-teal-300 to-[#1DB954]";
-                                  leftAccentBorder = "border-l-[6px] border-l-[#1DB954]";
-                                  badgeClasses = "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-[#1DB954] border-emerald-200 dark:border-emerald-800";
+                                  glowGradient = "from-sky-400 via-sky-300 to-[#7C3AED]";
+                                  leftAccentBorder = "border-l-[6px] border-l-[#006A4E]";
+                                  badgeClasses = "bg-blue-50 dark:bg-slate-950/50 text-blue-700 dark:text-sky-400 border-blue-200 dark:border-blue-900";
                                   statusLabel = "সম্পন্ন";
                                   StatusIcon = CheckCircle2;
                                 } else if (ord.status === 'cancelled') {
@@ -7187,7 +7358,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 return (
                                   <div
                                     key={ord.id}
-                                    className={`relative overflow-hidden bg-gradient-to-b from-white via-slate-50/60 to-emerald-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-950 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs hover:shadow-md transition-all p-3 sm:p-3.5 text-slate-800 dark:text-slate-100 ${leftAccentBorder}`}
+                                    className={`relative overflow-hidden bg-gradient-to-b from-white via-slate-50/60 to-blue-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-950 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs hover:shadow-md transition-all p-3 sm:p-3.5 text-slate-800 dark:text-slate-100 ${leftAccentBorder}`}
                                   >
 
 
@@ -7196,17 +7367,17 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       {/* Sender Info */}
                                       <div className="flex items-center gap-2 min-w-0">
                                         <div className="relative shrink-0">
-                                          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-white font-black text-xs flex items-center justify-center ring-2 ring-emerald-500 shadow-xs">
+                                          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-blue-500 to-sky-400 text-white font-black text-xs flex items-center justify-center ring-2 ring-[#006A4E] shadow-xs">
                                             <User className="w-3.5 h-3.5 text-white" />
                                           </div>
-                                          <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900" />
+                                          <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-blue-500 rounded-full border-2 border-white dark:border-slate-900" />
                                         </div>
                                         <div className="min-w-0">
                                           <div className="flex items-center gap-1">
                                             <span className="text-xs sm:text-[13px] font-black text-slate-900 dark:text-white truncate">
                                               {ord.buyerName || "ক্লায়েন্ট বায়ার"}
                                             </span>
-                                            <BadgeCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-[#1DB954] shrink-0" />
+                                            <BadgeCheck className="w-3.5 h-3.5 text-[#006A4E] dark:text-sky-400 shrink-0" />
                                           </div>
                                           <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold block leading-none">
                                             বায়ার • {getTimeAgoBengali(ord.createdAt)}
@@ -7259,11 +7430,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       <div className="border-l border-dashed border-slate-300 dark:border-slate-700 pl-2.5 flex items-center justify-between">
                                         <div>
                                           <span className="text-[9px] text-rose-600 dark:text-rose-400 font-bold block leading-none">আপনার আয় (৯০%)</span>
-                                          <span className="text-xs sm:text-sm font-black font-mono text-emerald-700 dark:text-[#1DB954] leading-tight">
+                                          <span className="text-xs sm:text-sm font-black font-mono text-blue-700 dark:text-sky-400 leading-tight">
                                             ৳{sellerPayout.toLocaleString("bn-BD")}
                                           </span>
                                         </div>
-                                        <span className="hidden sm:inline-block px-1.5 py-0.5 bg-emerald-600 text-white text-[8px] font-black rounded">
+                                        <span className="hidden sm:inline-block px-1.5 py-0.5 bg-[#047857] text-white text-[8px] font-black rounded">
                                           ইনস্ট্যান্ট
                                         </span>
                                       </div>
@@ -7276,7 +7447,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                         <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 mb-2.5 space-y-1.5">
                                           <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-bold">
                                             <div className="flex items-center gap-1 text-slate-700 dark:text-slate-300">
-                                              <Clock className="w-3.5 h-3.5 text-[#1DB954]" />
+                                              <Clock className="w-3.5 h-3.5 text-[#38BDF8]" />
                                               <span>কাজের টাইমলাইন</span>
                                             </div>
                                             <span className={`px-2 py-0.5 rounded-md font-mono text-[9px] sm:text-[10px] font-black flex items-center gap-1 ${orderCountdown?.badgeColor || "bg-blue-100 text-blue-700"}`}>
@@ -7292,7 +7463,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                                             {/* Active Colored Progress Line */}
                                             <div
-                                              className="absolute top-[13px] left-4 h-1 bg-[#1DB954] z-0 rounded-full transition-all duration-300"
+                                              className="absolute top-[13px] left-4 h-1 bg-[#006A4E] z-0 rounded-full transition-all duration-300"
                                               style={{ width: `${Math.max(4, (currentStepIndex / 3) * 88)}%` }}
                                             />
 
@@ -7307,15 +7478,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                                   <div key={idx} className="flex flex-col items-center text-center">
                                                     <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black border transition-all ${
                                                       isDone
-                                                        ? "bg-[#1DB954] text-white border-[#1DB954]"
+                                                        ? "bg-[#006A4E] text-white border-blue-600/50"
                                                         : isCurrent
-                                                        ? "bg-white dark:bg-slate-900 text-[#1DB954] border-2 border-[#1DB954] ring-2 ring-[#1DB954]/30 shadow-xs"
+                                                        ? "bg-white dark:bg-slate-900 text-[#38BDF8] border-2 border-blue-600/50 ring-2 ring-[#006A4E]/30 shadow-xs"
                                                         : "bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-300 dark:border-slate-700"
                                                     }`}>
                                                       {isDone ? <Check className="w-3 h-3 stroke-[3]" /> : <StepIcon className="w-2.5 h-2.5" />}
                                                     </div>
                                                     <span className={`text-[8px] sm:text-[9px] font-bold mt-1 leading-none truncate max-w-full ${
-                                                      isCurrent ? "text-[#1DB954] font-black" : isDone ? "text-slate-800 dark:text-slate-200" : "text-slate-400"
+                                                      isCurrent ? "text-[#38BDF8] font-black" : isDone ? "text-slate-800 dark:text-slate-200" : "text-slate-400"
                                                     }`}>
                                                       {step.label}
                                                     </span>
@@ -7378,7 +7549,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                               initialMessage: `আসসালামু আলাইকুম ${ord.buyerName}! প্রজেক্ট #${ord.id.slice(-6)} ("${ord.title}") নিয়ে কথা বলার জন্য আপনাকে মেসেজ পাঠাচ্ছি।`
                                             });
                                           }}
-                                          className="flex-1 py-1.5 sm:py-2 px-2 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-[10px] sm:text-xs rounded-xl transition cursor-pointer flex items-center justify-center gap-1 shadow-xs active:scale-95 whitespace-nowrap"
+                                          className="flex-1 py-1.5 sm:py-2 px-2 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-[10px] sm:text-xs rounded-xl transition cursor-pointer flex items-center justify-center gap-1 shadow-xs active:scale-95 whitespace-nowrap"
                                           title="বায়ারকে মেসেজ দিন"
                                         >
                                           <div className="relative shrink-0">
@@ -7402,7 +7573,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             updateMarketplaceOrderStatus(ord.id, "in_progress", "অর্ডার রিসিভ করা হয়েছে এবং কাজ শুরু করা হয়েছে।");
                                             updateMarketplaceOrder(ord.id, { unreadMessageCount: 3 });
                                           }}
-                                          className="flex-1 py-1.5 sm:py-2 px-2 bg-gradient-to-r from-[#1DB954] to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-[10px] sm:text-xs rounded-xl transition cursor-pointer flex items-center justify-center gap-1 shadow-xs active:scale-95 whitespace-nowrap"
+                                          className="flex-1 py-1.5 sm:py-2 px-2 bg-gradient-to-r from-[#006A4E] to-blue-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-[10px] sm:text-xs rounded-xl transition cursor-pointer flex items-center justify-center gap-1 shadow-xs active:scale-95 whitespace-nowrap"
                                         >
                                           <Play className="w-3.5 h-3.5 fill-white text-white" />
                                           <span>শুরু করুন</span>
@@ -7464,7 +7635,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             setDeliveryFileUrl(ord.deliveryFileUrl || "");
                                             setDeliveryFileName(ord.deliveryFileName || "delivered-file.zip");
                                           }}
-                                          className="flex-1 py-1.5 sm:py-2 px-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-[10px] sm:text-xs rounded-xl transition cursor-pointer flex items-center justify-center gap-1 shadow-xs active:scale-95 whitespace-nowrap"
+                                          className="flex-1 py-1.5 sm:py-2 px-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-teal-700 text-white font-black text-[10px] sm:text-xs rounded-xl transition cursor-pointer flex items-center justify-center gap-1 shadow-xs active:scale-95 whitespace-nowrap"
                                         >
                                           <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                                           <span>সম্পন্ন ফাইল</span>
@@ -7500,7 +7671,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-2 animate-fadeIn text-xs sm:text-sm mt-2.5">
                                         <div className="bg-slate-50/90 dark:bg-slate-950 p-2.5 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1">
                                           <h4 className="font-black text-slate-900 dark:text-white flex items-center gap-1.5 text-xs">
-                                            <FileText className="w-3.5 h-3.5 text-[#1DB954]" />
+                                            <FileText className="w-3.5 h-3.5 text-[#38BDF8]" />
                                             <span>বায়ারের রিকোয়ারমেন্ট & প্রজেক্ট নোট:</span>
                                           </h4>
                                           <p className="text-slate-600 dark:text-slate-300 font-medium leading-relaxed text-[10px] sm:text-xs">
@@ -7509,12 +7680,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                         </div>
 
                                         {ord.deliveryNote && (
-                                          <div className="bg-emerald-50/90 dark:bg-emerald-950/30 p-2.5 sm:p-3 rounded-xl border border-emerald-500/30 space-y-1">
-                                            <h4 className="font-black text-emerald-800 dark:text-emerald-400 flex items-center gap-1.5 text-xs">
-                                              <CheckCircle2 className="w-3.5 h-3.5 text-[#1DB954]" />
+                                          <div className="bg-blue-50/90 dark:bg-slate-950/30 p-2.5 sm:p-3 rounded-xl border border-blue-500/30 space-y-1">
+                                            <h4 className="font-black text-blue-900 dark:text-sky-400 flex items-center gap-1.5 text-xs">
+                                              <CheckCircle2 className="w-3.5 h-3.5 text-[#38BDF8]" />
                                               <span>আপনার প্রেরিত ডেলিভারি বার্তা:</span>
                                             </h4>
-                                            <p className="text-emerald-900 dark:text-emerald-200 font-medium text-[10px] sm:text-xs">
+                                            <p className="text-blue-950 dark:text-blue-200 font-medium text-[10px] sm:text-xs">
                                               {ord.deliveryNote}
                                             </p>
                                           </div>
@@ -7540,8 +7711,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold block">সক্রিয় অর্ডার</span>
                           <span className="text-lg font-black text-slate-900 dark:text-white mt-0.5 block">{marketplaceOrders.length}টি</span>
                         </div>
-                        <div className="p-3 bg-emerald-50/70 dark:bg-emerald-900/20 rounded-xl border border-emerald-100 dark:border-emerald-800/50">
-                          <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold block">লাইভ গিগসমূহ</span>
+                        <div className="p-3 bg-blue-50/70 dark:bg-blue-950/20 rounded-xl border border-blue-100 dark:border-blue-900/50">
+                          <span className="text-[10px] text-[#006A4E] dark:text-sky-400 font-bold block">লাইভ গিগসমূহ</span>
                           <span className="text-lg font-black text-slate-900 dark:text-white mt-0.5 block">{sellerGigs.length}টি</span>
                         </div>
                         <div className="p-3 bg-purple-50/70 dark:bg-purple-900/20 rounded-xl border border-purple-100 dark:border-purple-800/50">
@@ -7559,7 +7730,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         <div className="flex items-center justify-between gap-2 w-full py-1 flex-nowrap">
                           <h1 className="text-xs sm:text-base md:text-lg font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-1 sm:gap-1.5 min-w-0 truncate whitespace-nowrap">
                             <span className="shrink-0">Welcome back,</span>
-                            <span className="text-[#1DB954] font-extrabold truncate">
+                            <span className="text-[#38BDF8] font-extrabold truncate">
                               {(activeAccount.name || currentUser?.name || 'Mds Kazi Sohag')
                                 .replace(/\s*\((?:ফ্রিলা্যান্সার\s*)?সেলার\)/gi, '')
                                 .replace(/\s*\((?:গ্রাহক\s*)?বায়ার\)/gi, '')
@@ -7583,10 +7754,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               setSelectedGig(null);
                               window.scrollTo({ top: 0, behavior: 'smooth' });
                             }}
-                            className="p-3 sm:p-3.5 bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-2xs hover:border-[#1DB954] dark:hover:border-[#1DB954] transition cursor-pointer group"
+                            className="p-3 sm:p-3.5 bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-2xs hover:border-blue-600/50 dark:hover:border-blue-600/50 transition cursor-pointer group"
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
-                              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#1DB954]/15 dark:bg-[#1DB954]/25 text-[#1DB954] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#006A4E]/15 dark:bg-[#006A4E]/25 text-[#38BDF8] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                                 <PlusCircle className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
                               </div>
                               <div className="min-w-0 flex-1">
@@ -7603,7 +7774,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 setSelectedGig(null);
                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                               }}
-                              className="w-full sm:w-auto px-2.5 py-1 sm:px-3.5 sm:py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-[#1DB954] dark:hover:border-[#1DB954] text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-bold rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-2xs group-hover:bg-[#1DB954] group-hover:text-white group-hover:border-[#1DB954]"
+                              className="w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 bg-[#006A4E] hover:bg-[#00523d] active:bg-[#004432] text-white text-xs sm:text-sm font-bold rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-sm active:scale-95 border border-[#006A4E]"
                             >
                               Get started
                             </button>
@@ -7663,12 +7834,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 {/* 1. CENTERED AUTO-SEARCH STYLE LIVE TEXT WITH SEQUENTIAL ANIMATED DOTS (SAME FONT SIZE AS LIVE ORDER SEARCH) */}
                                 <div className="flex items-center justify-center gap-2 mb-2 px-3 py-1 w-fit mx-auto select-none">
                                   <div className="relative flex items-center justify-center">
-                                    <Radio className="w-4 h-4 text-emerald-500 animate-pulse" />
-                                    <span className="animate-ping absolute inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 opacity-60" />
+                                    <Radio className="w-4 h-4 text-blue-500 animate-pulse" />
+                                    <span className="animate-ping absolute inline-flex h-2.5 w-2.5 rounded-full bg-sky-400 opacity-60" />
                                   </div>
                                   <h4 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center justify-center tracking-tight">
                                     <span>নতুন অর্ডার এসেছে</span>
-                                    <span className="inline-flex items-center ml-1 font-black text-emerald-500 dark:text-[#1DB954] text-base sm:text-lg select-none">
+                                    <span className="inline-flex items-center ml-1 font-black text-blue-500 dark:text-sky-400 text-base sm:text-lg select-none">
                                       <span className="animate-pulse inline-block" style={{ animationDelay: "0ms", animationDuration: "1.2s" }}>.</span>
                                       <span className="animate-pulse inline-block" style={{ animationDelay: "300ms", animationDuration: "1.2s" }}>.</span>
                                       <span className="animate-pulse inline-block" style={{ animationDelay: "600ms", animationDuration: "1.2s" }}>.</span>
@@ -7677,19 +7848,19 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 </div>
 
                                 {/* 2. 3D COMPACT ORDER CARD (REDUCED HEIGHT, EXPANDED WIDTH, CRISP TYPOGRAPHY) */}
-                                <div className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/60 to-emerald-50/20 rounded-2xl sm:rounded-3xl border-t-2 border-l-2 border-r-2 border-b-4 border-slate-200 hover:border-emerald-300 shadow-[0_12px_28px_-8px_rgba(16,185,129,0.14),0_4px_12px_-2px_rgba(0,0,0,0.05)] p-3 sm:p-3.5 text-slate-800 transition-all font-bengali">
+                                <div className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/60 to-blue-50/20 rounded-2xl sm:rounded-3xl border-t-2 border-l-2 border-r-2 border-b-4 border-slate-200 hover:border-sky-300 shadow-[0_12px_28px_-8px_rgba(16,185,129,0.14),0_4px_12px_-2px_rgba(0,0,0,0.05)] p-3 sm:p-3.5 text-slate-800 transition-all font-bengali">
                                   {/* Ambient Top Glow Line */}
-                                  <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400" />
+                                  <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-sky-400 via-sky-300 to-cyan-400" />
 
                                   {/* Row 1: Sender Profile & Multi-Order Switcher */}
                                   <div className="flex items-center justify-between gap-2 pb-1.5 border-b border-slate-100 mt-0.5">
                                     {/* Sender Info */}
                                     <div className="flex items-center gap-2 min-w-0">
                                       <div className="relative shrink-0">
-                                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-white font-black text-xs flex items-center justify-center ring-2 ring-emerald-500 shadow-xs">
+                                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-blue-500 to-sky-400 text-white font-black text-xs flex items-center justify-center ring-2 ring-[#006A4E] shadow-xs">
                                           <User className="w-3.5 h-3.5 text-white" />
                                         </div>
-                                        <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white" />
+                                        <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-blue-500 rounded-full border-2 border-white" />
                                       </div>
                                       <div className="min-w-0">
                                         <div className="flex items-center gap-1">
@@ -7697,11 +7868,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             {currentOffer.clientName || "PTENit IT Academy"}
                                           </span>
                                           {currentOffer.isVerified && (
-                                            <BadgeCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                            <BadgeCheck className="w-3.5 h-3.5 text-[#006A4E] shrink-0" />
                                           )}
                                         </div>
-                                        <span className="text-[9px] sm:text-[10px] text-emerald-700 font-bold block leading-none">
-                                          {currentOffer.type === "personal" ? "ডিরেক্ট পার্সোনাল অর্ডার" : "মেইন এডমিন • লাইভ মার্কেটপ্লেস অর্ডার"}
+                                        <span className="text-[9px] sm:text-[10px] text-blue-700 font-bold block leading-none truncate">
+                                          {currentOffer.type === "personal"
+                                            ? "🔒 ডিরেক্ট ক্লায়েন্ট অফার"
+                                            : currentOffer.type === "course"
+                                            ? "🏛️ অফিস কোর্স অর্ডার • মেইন এডমিন"
+                                            : "⚡ প্রজেক্ট অর্ডার • লাইভ ক্লায়েন্ট"}
                                         </span>
                                       </div>
                                     </div>
@@ -7711,12 +7886,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       <button
                                         type="button"
                                         onClick={() => setIsSeeAllOffersModalOpen(true)}
-                                        className="px-2 py-0.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-full text-[10px] font-bold transition flex items-center gap-1 cursor-pointer active:scale-95 shadow-2xs"
+                                        className="px-2 py-0.5 bg-blue-50 hover:bg-blue-100 text-blue-900 rounded-full text-[10px] font-bold transition flex items-center gap-1 cursor-pointer active:scale-95 shadow-2xs"
                                         title="সকল লাইভ অফার একসাথে দেখুন"
                                       >
                                         <span className="font-mono">{activeOffersList.length}</span>
                                         <span>অর্ডার</span>
-                                        <ChevronRight className="w-3 h-3 text-emerald-700" />
+                                        <ChevronRight className="w-3 h-3 text-blue-700" />
                                       </button>
                                     </div>
                                   </div>
@@ -7754,11 +7929,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     <div className="border-l border-dashed border-slate-300 dark:border-slate-700 pl-2.5 flex items-center justify-between">
                                       <div>
                                         <span className="text-[9px] text-rose-600 font-bold block leading-none">আপনার আয় (৯০%)</span>
-                                        <span className="text-sm sm:text-base font-black font-mono text-emerald-700 leading-tight">
+                                        <span className="text-sm sm:text-base font-black font-mono text-blue-700 leading-tight">
                                           ৳{sellerPayout.toLocaleString("bn-BD")}
                                         </span>
                                       </div>
-                                      <span className="hidden sm:inline-block px-1.5 py-0.5 bg-emerald-600 text-white text-[8px] font-black rounded">
+                                      <span className="hidden sm:inline-block px-1.5 py-0.5 bg-[#047857] text-white text-[8px] font-black rounded">
                                         ইনস্ট্যান্ট
                                       </span>
                                     </div>
@@ -7786,7 +7961,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     {isBeingActioned && offerActionType === "received" ? (
                                       <button
                                         disabled
-                                        className="flex-1 py-2 px-2.5 bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-sm shadow-emerald-500/20 flex items-center justify-center gap-1 animate-pulse"
+                                        className="flex-1 py-2 px-2.5 bg-blue-500 text-white rounded-xl text-xs font-bold shadow-sm shadow-blue-500/20 flex items-center justify-center gap-1 animate-pulse"
                                       >
                                         <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                                         <span>রিসিভড!</span>
@@ -7795,7 +7970,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       <button
                                         type="button"
                                         onClick={() => handleReceiveLiveOffer(currentOffer)}
-                                        className="flex-1 py-2 px-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl text-xs font-bold shadow-sm shadow-emerald-600/20 transition flex items-center justify-center gap-1 cursor-pointer"
+                                        className="flex-1 py-2 px-2.5 bg-[#047857] hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold shadow-sm shadow-blue-600/20 transition flex items-center justify-center gap-1 cursor-pointer"
                                       >
                                         <Zap className="w-3.5 h-3.5 fill-white text-white" />
                                         <span>রিসিভ করুন</span>
@@ -7806,7 +7981,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   {/* Micro Animated Progress Line */}
                                   <div className="w-full bg-slate-100 rounded-full h-1 mt-2.5 overflow-hidden">
                                     <div
-                                      className="bg-gradient-to-r from-amber-500 via-rose-500 to-emerald-500 h-full rounded-full transition-all duration-1000 ease-linear"
+                                      className="bg-gradient-to-r from-amber-500 via-rose-500 to-blue-500 h-full rounded-full transition-all duration-1000 ease-linear"
                                       style={{ width: `${timerPercentage}%` }}
                                     />
                                   </div>
@@ -7827,18 +8002,18 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           /* SEARCHING STATE WHEN NO LIVE OFFERS ACTIVE */
                           /* SEARCHING STATE WHEN NO LIVE OFFERS ACTIVE */
                           /* SEARCHING STATE WHEN NO LIVE OFFERS ACTIVE */
-                          <div className="p-4 sm:p-5 bg-emerald-50/25 dark:bg-emerald-950/20 border border-dashed border-emerald-500/30 rounded-2xl sm:rounded-3xl text-center space-y-2 relative overflow-hidden shadow-2xs font-bengali">
+                          <div className="p-4 sm:p-5 bg-blue-50/25 dark:bg-slate-950/20 border border-dashed border-blue-500/30 rounded-2xl sm:rounded-3xl text-center space-y-2 relative overflow-hidden shadow-2xs font-bengali">
                             {/* Animated Radio Radar Icon */}
                             <div className="relative w-10 h-10 mx-auto flex items-center justify-center">
-                              <div className="absolute inset-0 rounded-full bg-emerald-500/20 animate-ping" />
-                              <div className="w-9 h-9 rounded-full bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/40 flex items-center justify-center relative z-10">
+                              <div className="absolute inset-0 rounded-full bg-blue-500/20 animate-ping" />
+                              <div className="w-9 h-9 rounded-full bg-[#006A4E]/20 text-[#38BDF8] border border-blue-600/50/40 flex items-center justify-center relative z-10">
                                 <Radio className="w-4 h-4 animate-pulse" />
                               </div>
                             </div>
                             <div className="space-y-1">
                               <h4 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center justify-center tracking-tight">
                                 <span>Live order সার্চ হচ্ছে</span>
-                                <span className="inline-flex items-center ml-1 font-black text-emerald-500 dark:text-[#1DB954] text-base sm:text-lg select-none">
+                                <span className="inline-flex items-center ml-1 font-black text-blue-500 dark:text-sky-400 text-base sm:text-lg select-none">
                                   <span className="animate-pulse inline-block" style={{ animationDelay: '0ms', animationDuration: '1.2s' }}>.</span>
                                   <span className="animate-pulse inline-block" style={{ animationDelay: '300ms', animationDuration: '1.2s' }}>.</span>
                                   <span className="animate-pulse inline-block" style={{ animationDelay: '600ms', animationDuration: '1.2s' }}>.</span>
@@ -7852,266 +8027,52 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           </div>
                         )}
                       </div>
-                      {/* ⚡ ⚡ আপলোডকৃত গিগসমূহ SHOWCASE (HEADER + 2 COLUMNS 2-3 ROWS) */}
-                        <div className="pt-2 sm:pt-3 space-y-3 font-bengali">
-                          {/* Header: Title on Left, See All & Add Buttons on Right */}
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-2">
-                              <div className="w-7 h-7 rounded-xl bg-emerald-500/10 text-[#1DB954] flex items-center justify-center shrink-0">
-                                <Package className="w-4 h-4" />
-                              </div>
-                              <h3 className="text-xs sm:text-sm md:text-base font-black text-slate-900 dark:text-white flex items-center gap-1.5">
-                                <span>আপলোডকৃত গিগসমূহ</span>
-                                <span className="px-2 py-0.5 bg-emerald-500/10 text-[#1DB954] text-[10px] font-black rounded-full">
-                                  {sellerGigs.length}টি
-                                </span>
-                              </h3>
-                            </div>
+                      {/* বায়ারদের পাবলিক অফার পোস্ট ফিড */}
+                      <div className="pt-2 sm:pt-3 space-y-3 font-bengali">
+                        {/* Header: Title only */}
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-xl bg-blue-500/10 text-sky-500 flex items-center justify-center shrink-0">
+                            <Sparkles className="w-4 h-4" />
+                          </div>
+                          <h3 className="text-xs sm:text-sm md:text-base font-black text-slate-900 dark:text-white">
+                            বায়ারদের পাবলিক অফার
+                          </h3>
+                        </div>
 
-                            <div className="flex items-center gap-1.5">
-                              {/* সবগুলো দেখুন Button that takes to the full gigs page */}
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setViewMode('selling');
-                                  setSpecialistMainTab('marketplace');
-                                  setSellerSubTab('gigs');
-                                  setSelectedGig(null);
-                                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                                }}
-                                className="px-2.5 py-1 sm:px-3 sm:py-1.5 bg-[#1DB954] hover:bg-emerald-500 text-white text-[10px] sm:text-xs font-black rounded-lg shadow-xs transition flex items-center gap-1 cursor-pointer active:scale-95 whitespace-nowrap border-0"
-                              >
-                                <span>সবগুলো দেখুন</span>
-                                <ArrowRight className="w-3.5 h-3.5" />
-                              </button>
+                        {/* Public Buyer Offers Feed Stream */}
+                        {filteredGigs.length === 0 ? (
+                          <div className="p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-center space-y-2.5 font-bengali shadow-sm">
+                            <div className="w-12 h-12 rounded-full bg-blue-500/10 text-sky-500 flex items-center justify-center mx-auto ring-4 ring-[#006A4E]/5">
+                              <Sparkles className="w-6 h-6" />
+                            </div>
+                            <div className="space-y-0.5">
+                              <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
+                                কোনো পাবলিক অফার পোস্ট পাওয়া যায়নি
+                              </h4>
+                              <p className="text-[11px] text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
+                                বায়ারদের নতুন পাবলিক অফার ও পোস্ট আসামাত্রই এখানে প্রদর্শিত হবে।
+                              </p>
                             </div>
                           </div>
-
-                          {/* 2-Column Responsive Gigs Grid (2 to 3 rows) */}
-                          {sellerGigs.length === 0 ? (
-                            <div className="p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-center space-y-2.5 font-bengali shadow-sm">
-                              <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-[#1DB954] flex items-center justify-center mx-auto ring-4 ring-emerald-500/5">
-                                <UploadCloud className="w-6 h-6" />
-                              </div>
-                              <div className="space-y-0.5">
-                                <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
-                                  আপনার এখন পর্যন্ত কোনো আপলোডকৃত গিগ নেই
-                                </h4>
-                                <p className="text-[11px] text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
-                                  আপনার সার্ভিস ও স্কিল নিয়ে আকর্ষণীয় প্যাকেজ সহ নতুন গিগ আপলোড করুন।
-                                </p>
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setViewMode('selling');
-                                  setSellerSubTab('create_gig');
-                                  setSelectedGig(null);
-                                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                                }}
-                                className="px-4 py-2 bg-[#1DB954] hover:bg-emerald-500 text-white font-black text-xs rounded-xl shadow-md transition cursor-pointer inline-flex items-center gap-1.5 active:scale-95"
-                              >
-                                <PlusCircle className="w-3.5 h-3.5" />
-                                <span>প্রথম গিগ পোস্ট করুন</span>
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3.5">
-                              {(showAllSellerGigs ? sellerGigs : sellerGigs.slice(0, 6)).map(g => (
-                                <div
-                                  key={g.id}
-                                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-[#1DB954] transition-all duration-200 shadow-2xs hover:shadow-lg flex flex-col justify-between group relative"
-                                >
-                                  {/* Thumbnail & Badges */}
-                                  <div className="relative h-28 sm:h-36 overflow-hidden bg-slate-900">
-                                    <img
-                                      src={g.thumbnail}
-                                      alt={g.title}
-                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-black/20 pointer-events-none" />
-
-                                    {/* Top Left: Category & Active Badge */}
-                                    <div className="absolute top-1.5 left-1.5 z-10 flex items-center gap-1">
-                                      <span className="bg-slate-950/85 backdrop-blur-md text-[#1DB954] text-[8px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-full border border-[#1DB954]/30 shadow-xs truncate max-w-[80px]">
-                                        {g.category}
-                                      </span>
-                                      <span className="bg-emerald-500/90 text-white text-[7px] sm:text-[8px] font-black px-1 py-0.2 rounded-full shadow-xs flex items-center gap-0.5">
-                                        <span className="w-1 h-1 rounded-full bg-white animate-pulse" />
-                                        <span>লাইভ</span>
-                                      </span>
-                                    </div>
-
-                                    {/* Top Right: 3-Dot Options Dropdown */}
-                                    <div className="absolute top-1.5 right-1.5 z-20">
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setActiveGigMenuId(activeGigMenuId === g.id ? null : g.id);
-                                        }}
-                                        className="w-6 h-6 rounded-full bg-slate-950/80 hover:bg-slate-900 text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition cursor-pointer active:scale-95"
-                                        title="অপশন"
-                                      >
-                                        <MoreVertical className="w-3 h-3" />
-                                      </button>
-
-                                      {activeGigMenuId === g.id && (
-                                        <>
-                                          <div
-                                            className="fixed inset-0 z-20 cursor-default"
-                                            onClick={() => setActiveGigMenuId(null)}
-                                          />
-                                          <div
-                                            className="absolute right-0 top-7 z-30 w-40 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl p-1.5 space-y-1 font-bengali animate-fadeIn"
-                                            onClick={(e) => e.stopPropagation()}
-                                          >
-                                            <button
-                                              type="button"
-                                              onClick={() => {
-                                                handleOpenEditGig(g);
-                                                setActiveGigMenuId(null);
-                                              }}
-                                              className="w-full flex items-center gap-2 px-2 py-1 text-[11px] font-bold text-slate-700 dark:text-slate-200 hover:bg-emerald-500/10 hover:text-[#1DB954] rounded-lg transition text-left cursor-pointer"
-                                            >
-                                              <Edit className="w-3 h-3" />
-                                              <span>গিগ এডিট</span>
-                                            </button>
-
-                                            <button
-                                              type="button"
-                                              onClick={() => {
-                                                setPerformanceGig(g);
-                                                setActiveGigMenuId(null);
-                                              }}
-                                              className="w-full flex items-center gap-2 px-2 py-1 text-[11px] font-bold text-slate-700 dark:text-slate-200 hover:bg-blue-500/10 hover:text-blue-500 rounded-lg transition text-left cursor-pointer"
-                                            >
-                                              <BarChart2 className="w-3 h-3" />
-                                              <span>রিচ/ভিউ</span>
-                                            </button>
-
-                                            <button
-                                              type="button"
-                                              onClick={() => {
-                                                setSelectedGig(g);
-                                                setActiveGigMenuId(null);
-                                              }}
-                                              className="w-full flex items-center gap-2 px-2 py-1 text-[11px] font-bold text-slate-700 dark:text-slate-200 hover:bg-amber-500/10 hover:text-amber-500 rounded-lg transition text-left cursor-pointer"
-                                            >
-                                              <Eye className="w-3 h-3" />
-                                              <span>বায়ার প্রিভিউ</span>
-                                            </button>
-
-                                            <div className="border-t border-slate-100 dark:border-slate-800 my-1" />
-
-                                            <button
-                                              type="button"
-                                              onClick={() => {
-                                                handleDeleteGig(g.id, g.title);
-                                                setActiveGigMenuId(null);
-                                              }}
-                                              className="w-full flex items-center gap-2 px-2 py-1 text-[11px] font-bold text-rose-600 hover:bg-rose-500/10 rounded-lg transition text-left cursor-pointer"
-                                            >
-                                              <Trash2 className="w-3 h-3" />
-                                              <span>ডিলিট করুন</span>
-                                            </button>
-                                          </div>
-                                        </>
-                                      )}
-                                    </div>
-                                  </div>
-
-                                  {/* Card Content & Details */}
-                                  <div className="p-2 sm:p-3 flex-1 flex flex-col justify-between space-y-2">
-                                    <div>
-                                      <h4 className="text-[11px] sm:text-xs md:text-sm font-black text-slate-900 dark:text-white line-clamp-3 sm:line-clamp-2 leading-snug group-hover:text-[#1DB954] transition-colors min-h-[2.6rem] sm:min-h-[2.2rem]">
-                                        {g.title}
-                                      </h4>
-                                      <div className="mt-1 flex items-center justify-between">
-                                        <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold">শুরু মাত্র</span>
-                                        <span className="text-[11px] sm:text-xs font-black text-[#1DB954] font-mono">
-                                          ৳{(g.packages?.basic?.price ?? g.price ?? 2500).toLocaleString('bn-BD')}
-                                        </span>
-                                      </div>
-                                    </div>
-
-                                    {/* Performance & Reach Mini Grid */}
-                                    <div className="p-1.5 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200/70 dark:border-slate-700/70 grid grid-cols-2 gap-1 text-[8px] sm:text-[9px]">
-                                      <div>
-                                        <span className="text-slate-400 block text-[7px] sm:text-[8px]">👁️ ভিউ</span>
-                                        <span className="font-extrabold text-slate-900 dark:text-white">
-                                          {((g.salesCount || 1) * 120 + 85).toLocaleString('bn-BD')}
-                                        </span>
-                                      </div>
-                                      <div>
-                                        <span className="text-slate-400 block text-[7px] sm:text-[8px]">📈 রিচ</span>
-                                        <span className="font-extrabold text-slate-900 dark:text-white">
-                                          {((g.salesCount || 1) * 450 + 320).toLocaleString('bn-BD')}
-                                        </span>
-                                      </div>
-                                      <div>
-                                        <span className="text-slate-400 block text-[7px] sm:text-[8px]">📦 অর্ডার</span>
-                                        <span className="font-extrabold text-emerald-600 dark:text-[#1DB954]">
-                                          {(g.salesCount || 12).toLocaleString('bn-BD')}টি
-                                        </span>
-                                      </div>
-                                      <div>
-                                        <span className="text-slate-400 block text-[7px] sm:text-[8px]">💰 আয়</span>
-                                        <span className="font-extrabold text-emerald-600 dark:text-[#1DB954] truncate block">
-                                          ৳{((g.price || g.packages?.basic?.price || 2500) * (g.salesCount || 12)).toLocaleString('bn-BD')}
-                                        </span>
-                                      </div>
-                                    </div>
-
-                                    {/* Mobile-Friendly Quick Interactive Action Buttons */}
-                                    <div className="pt-1.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-1">
-                                      <button
-                                        type="button"
-                                        onClick={() => handleOpenEditGig(g)}
-                                        className="flex-1 py-1 px-1 bg-emerald-500/10 hover:bg-[#1DB954] text-emerald-700 dark:text-[#1DB954] hover:text-white font-black text-[9px] sm:text-[10px] rounded-lg transition border border-[#1DB954]/30 flex items-center justify-center gap-0.5 cursor-pointer active:scale-95"
-                                        title="গিগ এডিট করুন"
-                                      >
-                                        <Edit className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                                        <span>এডিট</span>
-                                      </button>
-
-                                      <button
-                                        type="button"
-                                        onClick={() => setPerformanceGig(g)}
-                                        className="flex-1 py-1 px-1 bg-blue-500/10 hover:bg-blue-600 text-blue-700 dark:text-blue-400 hover:text-white font-black text-[9px] sm:text-[10px] rounded-lg transition border border-blue-500/30 flex items-center justify-center gap-0.5 cursor-pointer active:scale-95"
-                                        title="রিচ ও পারফরমেন্স দেখুন"
-                                      >
-                                        <BarChart2 className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                                        <span>রিচ</span>
-                                      </button>
-
-                                      <button
-                                        type="button"
-                                        onClick={() => setSelectedGig(g)}
-                                        className="flex-1 py-1 px-1 bg-amber-500/10 hover:bg-amber-500 text-amber-700 dark:text-amber-400 hover:text-slate-950 font-black text-[9px] sm:text-[10px] rounded-lg transition border border-amber-500/30 flex items-center justify-center gap-0.5 cursor-pointer active:scale-95"
-                                        title="বায়ার মোডে প্রিভিউ"
-                                      >
-                                        <Eye className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                                        <span>প্রিভিউ</span>
-                                      </button>
-
-                                      <button
-                                        type="button"
-                                        onClick={() => {
-                                          handleDeleteGig(g.id, g.title);
-                                        }}
-                                        className="p-1 bg-rose-500/10 hover:bg-rose-600 text-rose-600 dark:text-rose-400 hover:text-white font-black rounded-lg transition border border-rose-500/30 flex items-center justify-center cursor-pointer active:scale-95 shrink-0"
-                                        title="গিগ ডিলিট"
-                                      >
-                                        <Trash2 className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
+                        ) : (
+                          <div className="space-y-3 sm:space-y-4">
+                            {filteredGigs.map(gig => (
+                              <GigCard
+                                key={gig.id}
+                                gig={gig}
+                                onClick={() => openMarketplaceGigDetail(gig, 'standard')}
+                                currentUser={currentUser}
+                                savedGigIds={savedGigIds}
+                                toggleFavorite={toggleFavorite}
+                                deleteGig={deleteGig}
+                                layoutMode="feed"
+                                openAuthModal={openAuthModal}
+                                isBuyerPost={true}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
                       </div>
 
                   )}
@@ -8217,12 +8178,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             {/* SUCCESS ALERT BANNER */}
                             {cashoutSuccessMsg && (
                               <div className="space-y-3 animate-fadeIn">
-                                <div className="p-4 bg-emerald-500/15 text-[#1DB954] font-black text-xs sm:text-sm rounded-2xl border-2 border-[#1DB954]/50 shadow-md flex items-center justify-between gap-3">
+                                <div className="p-4 bg-blue-500/15 text-[#38BDF8] font-black text-xs sm:text-sm rounded-2xl border-2 border-blue-600/50/50 shadow-md flex items-center justify-between gap-3">
                                   <div className="flex items-center gap-2.5">
-                                    <CheckCircle2 className="w-5 h-5 shrink-0 fill-[#1DB954] text-slate-950 animate-bounce" />
+                                    <CheckCircle2 className="w-5 h-5 shrink-0 fill-sky-400 text-slate-950 animate-bounce" />
                                     <span>{cashoutSuccessMsg}</span>
                                   </div>
-                                  <button onClick={() => setCashoutSuccessMsg('')} className="p-1 hover:bg-emerald-500/20 rounded-lg text-slate-400 hover:text-white transition cursor-pointer">✕</button>
+                                  <button onClick={() => setCashoutSuccessMsg('')} className="p-1 hover:bg-blue-500/20 rounded-lg text-slate-400 hover:text-white transition cursor-pointer">✕</button>
                                 </div>
                               </div>
                             )}
@@ -8236,7 +8197,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <div className="p-3.5 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-1 shadow-xs">
                                     <div className="flex items-center justify-between">
                                       <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 truncate">
-                                        <DollarSign className="w-3.5 h-3.5 text-[#1DB954] shrink-0" /> সর্বমোট আয়
+                                        <DollarSign className="w-3.5 h-3.5 text-[#38BDF8] shrink-0" /> সর্বমোট আয়
                                       </span>
                                       <span className="text-[9px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-bold shrink-0">যৌথ</span>
                                     </div>
@@ -8247,17 +8208,17 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   </div>
 
                                   {/* Card 2: Cashout Ready Balance */}
-                                  <div className="p-3.5 sm:p-4 bg-emerald-500/10 dark:bg-emerald-950/30 border-2 border-[#1DB954] rounded-2xl space-y-1 shadow-xs">
+                                  <div className="p-3.5 sm:p-4 bg-blue-500/10 dark:bg-slate-950/30 border-2 border-blue-600/50 rounded-2xl space-y-1 shadow-xs">
                                     <div className="flex items-center justify-between">
-                                      <span className="text-xs font-black text-emerald-800 dark:text-[#1DB954] flex items-center gap-1.5 truncate">
-                                        <Wallet className="w-3.5 h-3.5 text-[#1DB954] shrink-0" /> ক্যাশআউট ব্যালেন্স
+                                      <span className="text-xs font-black text-blue-900 dark:text-sky-400 flex items-center gap-1.5 truncate">
+                                        <Wallet className="w-3.5 h-3.5 text-[#38BDF8] shrink-0" /> ক্যাশআউট ব্যালেন্স
                                       </span>
-                                      <span className="text-[9px] text-[#1DB954] bg-[#1DB954]/20 px-1.5 py-0.5 rounded font-black shrink-0">উইথড্র রেডি</span>
+                                      <span className="text-[9px] text-[#38BDF8] bg-[#006A4E]/20 px-1.5 py-0.5 rounded font-black shrink-0">উইথড্র রেডি</span>
                                     </div>
-                                    <div className="text-lg sm:text-xl font-black text-[#1DB954] tracking-tight">
+                                    <div className="text-lg sm:text-xl font-black text-[#38BDF8] tracking-tight">
                                       ৳{availableBalance.toLocaleString('bn-BD')}
                                     </div>
-                                    <div className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold truncate">উইথড্র করার জন্য প্রস্তুত</div>
+                                    <div className="text-[10px] text-blue-700 dark:text-sky-400 font-bold truncate">উইথড্র করার জন্য প্রস্তুত</div>
                                   </div>
 
                                   {/* Card 3: Marketplace Earnings */}
@@ -8278,9 +8239,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <div className="p-3.5 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-1 shadow-xs">
                                     <div className="flex items-center justify-between">
                                       <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 truncate">
-                                        <GraduationCap className="w-3.5 h-3.5 text-teal-400 shrink-0" /> ২. মেন্টর ও কোর্স
+                                        <GraduationCap className="w-3.5 h-3.5 text-sky-400 shrink-0" /> ২. মেন্টর ও কোর্স
                                       </span>
-                                      <span className="text-[9px] text-teal-400 bg-teal-500/10 px-1.5 py-0.5 rounded font-bold shrink-0">কোর্স ফি</span>
+                                      <span className="text-[9px] text-sky-400 bg-indigo-500/10 px-1.5 py-0.5 rounded font-bold shrink-0">কোর্স ফি</span>
                                     </div>
                                     <div className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
                                       ৳{mntEarned.toLocaleString('bn-BD')}
@@ -8293,12 +8254,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-xs font-bengali">
                                   <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
                                     <div className="flex items-center gap-2">
-                                      <Sparkles className="w-4 h-4 text-[#1DB954]" />
+                                      <Sparkles className="w-4 h-4 text-[#38BDF8]" />
                                       <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
                                         লাইভ কাজ ও আয়ের তালিকা ({courses.length + (marketplaceOrders.length || sellerGigs.length)})
                                       </h3>
                                     </div>
-                                    <span className="text-[11px] font-black text-[#1DB954]">
+                                    <span className="text-[11px] font-black text-[#38BDF8]">
                                       যৌথ মোট: ৳{totalEarned.toLocaleString('bn-BD')}
                                     </span>
                                   </div>
@@ -8317,15 +8278,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           key={`crs-${course.id || idx}`}
                                           className={`p-3 sm:p-3.5 rounded-xl border transition flex flex-col justify-between gap-2.5 shadow-xs ${
                                             isCompleted
-                                              ? 'border-l-4 border-l-[#1DB954] bg-emerald-500/5 dark:bg-emerald-950/20 border-slate-200 dark:border-slate-800'
-                                              : 'border-l-4 border-l-teal-500 bg-teal-500/5 dark:bg-teal-950/20 border-slate-200 dark:border-slate-800'
+                                              ? 'border-l-4 border-l-[#006A4E] bg-blue-500/5 dark:bg-slate-950/20 border-slate-200 dark:border-slate-800'
+                                              : 'border-l-4 border-l-indigo-500 bg-indigo-500/5 dark:bg-teal-950/20 border-slate-200 dark:border-slate-800'
                                           }`}
                                         >
                                           {/* Title, Badge & Tag */}
                                           <div className="flex items-start justify-between gap-2">
                                             <div className="min-w-0">
                                               <div className="flex items-center gap-1.5 mb-1">
-                                                <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
+                                                <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-indigo-500/10 text-indigo-600 dark:text-sky-400 border border-indigo-500/20">
                                                   🎓 কোর্স
                                                 </span>
                                               </div>
@@ -8339,8 +8300,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             <span
                                               className={`px-2 py-0.5 rounded-full text-[10px] font-black shrink-0 ${
                                                 isCompleted
-                                                  ? 'bg-emerald-500/15 text-[#1DB954] border border-[#1DB954]/30'
-                                                  : 'bg-teal-500/15 text-teal-600 dark:text-teal-400 border border-teal-500/30'
+                                                  ? 'bg-blue-500/15 text-[#38BDF8] border border-blue-600/50/30'
+                                                  : 'bg-indigo-500/15 text-indigo-600 dark:text-sky-400 border border-indigo-500/30'
                                               }`}
                                             >
                                               {isCompleted ? '✓ সম্পন্ন' : `${progressPct}% প্রোগ্রেস`}
@@ -8352,13 +8313,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             <div className="flex items-center gap-2">
                                               <div className="w-20 bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
                                                 <div
-                                                  className={`h-full rounded-full ${isCompleted ? 'bg-[#1DB954]' : 'bg-teal-500'}`}
+                                                  className={`h-full rounded-full ${isCompleted ? 'bg-[#006A4E]' : 'bg-indigo-500'}`}
                                                   style={{ width: `${progressPct}%` }}
                                                 />
                                               </div>
                                               <span className="text-[10px] text-slate-400 font-bold">{progressPct}%</span>
                                             </div>
-                                            <span className="text-xs sm:text-sm font-black text-[#1DB954]">
+                                            <span className="text-xs sm:text-sm font-black text-[#38BDF8]">
                                               ৳{crsTotal.toLocaleString('bn-BD')}
                                             </span>
                                           </div>
@@ -8380,7 +8341,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           key={`mkt-${orderId}`}
                                           className={`p-3 sm:p-3.5 rounded-xl border transition flex flex-col justify-between gap-2.5 shadow-xs ${
                                             isCompleted
-                                              ? 'border-l-4 border-l-[#1DB954] bg-emerald-500/5 dark:bg-emerald-950/20 border-slate-200 dark:border-slate-800'
+                                              ? 'border-l-4 border-l-[#006A4E] bg-blue-500/5 dark:bg-slate-950/20 border-slate-200 dark:border-slate-800'
                                               : 'border-l-4 border-l-purple-500 bg-purple-500/5 dark:bg-purple-950/20 border-slate-200 dark:border-slate-800'
                                           }`}
                                         >
@@ -8402,7 +8363,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             <span
                                               className={`px-2 py-0.5 rounded-full text-[10px] font-black shrink-0 ${
                                                 isCompleted
-                                                  ? 'bg-emerald-500/15 text-[#1DB954] border border-[#1DB954]/30'
+                                                  ? 'bg-blue-500/15 text-[#38BDF8] border border-blue-600/50/30'
                                                   : 'bg-purple-500/15 text-purple-400 border border-purple-500/30'
                                               }`}
                                             >
@@ -8415,7 +8376,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             <div className="flex items-center gap-2">
                                               <div className="w-20 bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
                                                 <div
-                                                  className={`h-full rounded-full ${isCompleted ? 'bg-[#1DB954]' : 'bg-purple-500'}`}
+                                                  className={`h-full rounded-full ${isCompleted ? 'bg-[#006A4E]' : 'bg-purple-500'}`}
                                                   style={{ width: `${progressPct}%` }}
                                                 />
                                               </div>
@@ -8439,10 +8400,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 space-y-5 shadow-sm">
                                   <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
                                     <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                                      <CreditCard className="w-5 h-5 text-[#1DB954]" />
+                                      <CreditCard className="w-5 h-5 text-[#38BDF8]" />
                                       <span>বিল ক্যাশআউট উইথড্রয়াল ফরম</span>
                                     </h3>
-                                    <span className="text-[10px] font-bold px-2.5 py-0.5 bg-emerald-500/10 text-[#1DB954] rounded-full border border-[#1DB954]/30">
+                                    <span className="text-[10px] font-bold px-2.5 py-0.5 bg-blue-500/10 text-[#38BDF8] rounded-full border border-blue-600/50/30">
                                       ইনস্ট্যান্ট পেআউট
                                     </span>
                                   </div>
@@ -8465,7 +8426,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             onClick={() => setCashoutMethod(m.id as any)}
                                             className={`p-2.5 rounded-xl border font-bold transition flex items-center justify-center gap-2 cursor-pointer ${
                                               cashoutMethod === m.id
-                                                ? 'bg-[#1DB954] text-white border-[#1DB954] shadow-sm'
+                                                ? 'bg-[#006A4E] text-white border-blue-600/50 shadow-sm'
                                                 : 'bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800'
                                             }`}
                                           >
@@ -8516,7 +8477,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           max={availableBalance}
                                           value={cashoutAmount}
                                           onChange={(e) => setCashoutAmount(Number(e.target.value))}
-                                          className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl font-black text-[#1DB954]"
+                                          className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl font-black text-[#38BDF8]"
                                         />
                                         <div className="flex gap-1 mt-1.5">
                                           {[1000, 5000, 10000, availableBalance].map((amt, idx) => (
@@ -8524,7 +8485,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                               key={idx}
                                               type="button"
                                               onClick={() => setCashoutAmount(amt)}
-                                              className="px-2 py-0.5 bg-slate-100 hover:bg-[#1DB954] dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-white text-[10px] font-bold rounded transition"
+                                              className="px-2 py-0.5 bg-slate-100 hover:bg-[#006A4E] dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-white text-[10px] font-bold rounded transition"
                                             >
                                               ৳{amt.toLocaleString('bn-BD')} {amt === availableBalance ? '(Max)' : ''}
                                             </button>
@@ -8549,7 +8510,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     <div className="flex items-center justify-end gap-2 pt-2">
                                       <button
                                         type="submit"
-                                        className="px-6 py-2.5 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                                        className="px-6 py-2.5 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer"
                                       >
                                         <Send className="w-4 h-4 fill-slate-950" />
                                         <span>ক্যাশআউট রিকোয়েস্ট সাবমিট করুন</span>
@@ -8569,9 +8530,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     {/* STATUS FILTER PILLS IN 1 COMPACT LINE */}
                                     <div className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold shrink-0">
                                       {[
-                                        { id: 'All', label: 'সবগুলো', count: sellerPayouts.length, activeBg: 'bg-[#1DB954] text-white', defaultBg: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700' },
+                                        { id: 'All', label: 'সবগুলো', count: sellerPayouts.length, activeBg: 'bg-[#006A4E] text-white', defaultBg: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700' },
                                         { id: 'Pending', label: '⏳ পেন্ডিং', count: sellerPayouts.filter(p => p.status === 'Pending').length, activeBg: 'bg-amber-500 text-white', defaultBg: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20' },
-                                        { id: 'Approved', label: '✓ পরিশোধিত', count: sellerPayouts.filter(p => p.status === 'Approved' || p.status === 'Paid').length, activeBg: 'bg-emerald-500 text-white', defaultBg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20' }
+                                        { id: 'Approved', label: '✓ পরিশোধিত', count: sellerPayouts.filter(p => p.status === 'Approved' || p.status === 'Paid').length, activeBg: 'bg-blue-500 text-white', defaultBg: 'bg-blue-500/10 text-[#006A4E] dark:text-sky-400 hover:bg-blue-500/20' }
                                       ].map(btn => (
                                         <button
                                           key={btn.id}
@@ -8639,7 +8600,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                                   </div>
                                                   <span className={`px-2.5 py-1 rounded-full text-[11px] font-black shrink-0 ${
                                                     isPaid
-                                                      ? 'bg-emerald-500/15 text-[#1DB954] border border-emerald-500/30'
+                                                      ? 'bg-blue-500/15 text-[#38BDF8] border border-blue-500/30'
                                                       : isPending
                                                       ? 'bg-amber-500/20 text-amber-500 border border-amber-500/40'
                                                       : 'bg-rose-500/15 text-rose-500 border border-rose-500/30'
@@ -8652,7 +8613,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                                 <div className="flex items-start justify-between gap-3">
                                                   <div className="space-y-1 min-w-0">
                                                     <div className="text-xs font-black text-slate-900 dark:text-white flex flex-wrap items-center gap-1.5">
-                                                      <span className="text-[#1DB954]">{p.paymentMethod}</span>
+                                                      <span className="text-[#38BDF8]">{p.paymentMethod}</span>
                                                       <span className="font-mono text-slate-500 text-xs">({p.accountNumber})</span>
                                                     </div>
                                                     <p className="text-xs text-slate-500 dark:text-slate-400 font-medium line-clamp-2">
@@ -8660,7 +8621,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                                     </p>
                                                   </div>
                                                   <div className="text-right shrink-0">
-                                                    <span className="text-base sm:text-lg font-black text-[#1DB954] font-mono block">
+                                                    <span className="text-base sm:text-lg font-black text-[#38BDF8] font-mono block">
                                                       ৳{p.amount.toLocaleString('bn-BD')}
                                                     </span>
                                                   </div>
@@ -8700,7 +8661,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                                 ) : (
                                                   <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400">
                                                     <span>{isPaid ? 'পেমেন্ট প্রসেস সম্পন্ন হয়েছে' : 'স্ট্যাটাস চূড়ান্ত'}</span>
-                                                    <span className="flex items-center gap-1 text-emerald-500 font-bold">
+                                                    <span className="flex items-center gap-1 text-blue-500 font-bold">
                                                       <CheckCircle2 className="w-3.5 h-3.5" />
                                                       লকড
                                                     </span>
@@ -8748,13 +8709,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                                     <td className="py-3 text-slate-500 dark:text-slate-400 line-clamp-1 max-w-[200px]">
                                                       {p.note || 'ইনস্ট্যান্ট পেআউট'}
                                                     </td>
-                                                    <td className="py-3 text-right text-[#1DB954] font-black text-sm whitespace-nowrap">
+                                                    <td className="py-3 text-right text-[#38BDF8] font-black text-sm whitespace-nowrap">
                                                       ৳{p.amount.toLocaleString('bn-BD')}
                                                     </td>
                                                     <td className="py-3 text-center whitespace-nowrap">
                                                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-black ${
                                                         isPaid
-                                                          ? 'bg-emerald-500/20 text-[#1DB954]'
+                                                          ? 'bg-blue-500/20 text-[#38BDF8]'
                                                           : isPending
                                                           ? 'bg-amber-500/20 text-amber-500 border border-amber-500/30'
                                                           : 'bg-rose-500/20 text-rose-500'
@@ -8822,7 +8783,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                                               </>
                                                             ) : (
                                                               <>
-                                                                <div className="px-2 py-1 border-b border-slate-100 dark:border-slate-800 flex items-center gap-1.5 text-[10px] font-bold text-emerald-500">
+                                                                <div className="px-2 py-1 border-b border-slate-100 dark:border-slate-800 flex items-center gap-1.5 text-[10px] font-bold text-blue-500">
                                                                   <CheckCircle2 className="w-3 h-3" />
                                                                   <span>{isPaid ? 'পরিশোধিত' : 'স্ট্যাটাস চূড়ান্ত'}</span>
                                                                 </div>
@@ -8877,14 +8838,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="relative flex h-2.5 w-2.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
                         </span>
                         <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                           লাইভ ক্লায়েন্ট রিকোয়েস্ট
                         </h4>
                       </div>
-                      <span className="text-[10px] text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] text-blue-500 font-bold bg-blue-500/10 px-2 py-0.5 rounded-full">
                         পাবলিক
                       </span>
                     </div>
@@ -8894,7 +8855,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         <div key={item.id} className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 space-y-1.5">
                           <div className="flex items-center justify-between">
                             <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 truncate max-w-[120px]">{item.clientName}</span>
-                            <span className="text-xs text-[#1DB954] font-black">৳{item.budget.toLocaleString('bn-BD')}</span>
+                            <span className="text-xs text-[#38BDF8] font-black">৳{item.budget.toLocaleString('bn-BD')}</span>
                           </div>
                           <p className="text-xs font-bold text-slate-900 dark:text-white leading-snug">{item.title}</p>
                           <div className="flex items-center justify-between pt-1">
@@ -8902,7 +8863,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             <button
                               type="button"
                               onClick={() => setSelectedOfferForModal(item)}
-                              className="px-2 py-0.5 rounded-lg bg-[#1DB954]/10 hover:bg-[#1DB954] hover:text-white text-[#1DB954] text-[10px] font-bold transition cursor-pointer"
+                              className="px-2 py-0.5 rounded-lg bg-[#006A4E]/10 hover:bg-[#006A4E] hover:text-white text-[#38BDF8] text-[10px] font-bold transition cursor-pointer"
                             >
                               রিসিভ / বিড
                             </button>
@@ -8918,14 +8879,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                         লেভেল ২ ব্যাজ প্রগ্রেস
                       </h4>
-                      <span className="text-[10px] font-extrabold text-[#1DB954] bg-[#1DB954]/10 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] font-extrabold text-[#38BDF8] bg-[#006A4E]/10 px-2 py-0.5 rounded-full">
                         ৮৫%
                       </span>
                     </div>
 
                     <div className="space-y-2">
                       <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                        <div className="bg-gradient-to-r from-emerald-500 to-[#1DB954] h-full rounded-full w-[85%]" />
+                        <div className="bg-gradient-to-r from-blue-500 to-[#7C3AED] h-full rounded-full w-[85%]" />
                       </div>
                       <div className="flex justify-between text-[11px] text-slate-500 dark:text-slate-400">
                         <span>অর্ডার কমপ্লিশন: ১০০%</span>
@@ -8933,14 +8894,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       </div>
                     </div>
 
-                    <div className="p-2.5 bg-emerald-50/50 dark:bg-emerald-950/30 rounded-xl border border-emerald-500/20 text-[11px] text-emerald-800 dark:text-emerald-300">
+                    <div className="p-2.5 bg-blue-50/50 dark:bg-slate-950/30 rounded-xl border border-blue-500/20 text-[11px] text-blue-900 dark:text-sky-300">
                       🌟 আর মাত্র ২টি অর্ডার সম্পন্ন করলেই আপনি পাবেন <strong>PTENit টপ রেটেড সেলার</strong> ব্যাজ!
                     </div>
                   </div>
 
                   {/* Payout & Escrow Protection */}
                   <div className="bg-slate-900 text-white rounded-2xl p-4 space-y-2 border border-slate-800">
-                    <div className="flex items-center gap-2 text-[#1DB954] font-bold text-xs">
+                    <div className="flex items-center gap-2 text-[#38BDF8] font-bold text-xs">
                       <ShieldCheck className="w-4.5 h-4.5 shrink-0" />
                       <span>ইনস্ট্যান্ট পেআউট গ্যারান্টি</span>
                     </div>
@@ -8958,7 +8919,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
   </div>
       ) : (
         /* BUYER MARKETPLACE VIEW — MODERN FIVERR & FACEBOOK DESKTOP DESIGN */
-        <div className="w-full space-y-4 sm:space-y-6 animate-fadeIn font-bengali !mt-1 sm:!mt-3 px-1 sm:px-2">
+        <div className="w-full space-y-3 sm:space-y-6 animate-fadeIn font-bengali mt-0.5 sm:mt-3 px-1 sm:px-2">
           
           {/* MESSENGER VIEW (STANDALONE / EMBEDDED IN BROWSE MODE) */}
           {activeSubTab === 'messenger' && (
@@ -8975,20 +8936,20 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
           {/* CATALOG SECTION (HERO + RECOMMENDATIONS + PRO SERVICES + SUBTABS) - ONLY IN MARKETPLACE BROWSE MODE */}
           {activeSubTab === 'gigs' && (
-            <div className="space-y-4 sm:space-y-8 !mt-1 sm:!mt-3">
+            <div className="space-y-3 sm:space-y-8 mt-0.5 sm:mt-3">
               {/* WELCOME BACK USER HERO BANNER (BALANCED SIZING AS REQUESTED - ONLY ON MOBILE) */}
-              <div className="space-y-2 sm:space-y-3 lg:hidden">
-                <div className="flex items-center justify-between gap-2 w-full py-1 flex-nowrap">
+              <div className="space-y-2 sm:space-y-3 lg:hidden pt-0.5">
+                <div className="flex items-center justify-between gap-2 w-full py-0.5 flex-nowrap">
                   <h1 className="text-sm sm:text-base md:text-lg font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-1 sm:gap-1.5 min-w-0 truncate whitespace-nowrap">
                     <span className="shrink-0">Welcome back,</span>
-                    <span className="text-[#1DB954] font-extrabold truncate">
+                    <span className="text-[#38BDF8] font-extrabold truncate">
                       {(currentUser?.name || activeAccount.name || 'Mds Kazi Sohag')
                         .replace(/\s*\((?:ফ্রিলা্যান্সার\s*)?সেলার\)/gi, '')
                         .replace(/\s*\((?:গ্রাহক\s*)?বায়ার\)/gi, '')
                         .replace(/\s*\(Student\s*\/\s*Buyer\)/gi, '')
                         .trim()}
                     </span>
-                    <span className="text-emerald-700 dark:text-[#1DB954] font-bold text-xs sm:text-sm shrink-0">
+                    <span className="text-blue-700 dark:text-sky-400 font-bold text-xs sm:text-sm shrink-0">
                       (বায়ার)
                     </span>
                   </h1>
@@ -9000,10 +8961,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   {/* CARD 1: POST A PROJECT BRIEF */}
                   <div 
                     onClick={() => setIsPostProjectModalOpen(true)}
-                    className="p-3 sm:p-3.5 bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-2xs hover:border-[#1DB954] dark:hover:border-[#1DB954] transition cursor-pointer group"
+                    className="p-3 sm:p-3.5 bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-2xs hover:border-blue-600/50 dark:hover:border-blue-600/50 transition cursor-pointer group"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#1DB954]/15 dark:bg-[#1DB954]/25 text-[#1DB954] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#006A4E]/15 dark:bg-[#006A4E]/25 text-[#38BDF8] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                         <FileText className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
                       </div>
                       <div className="min-w-0 flex-1">
@@ -9017,7 +8978,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         e.stopPropagation();
                         setIsPostProjectModalOpen(true);
                       }}
-                      className="w-full sm:w-auto px-2.5 py-1 sm:px-3.5 sm:py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-[#1DB954] dark:hover:border-[#1DB954] text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-bold rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-2xs group-hover:bg-[#1DB954] group-hover:text-white group-hover:border-[#1DB954]"
+                      className="w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 bg-[#006A4E] hover:bg-[#00523d] active:bg-[#004432] text-white text-xs sm:text-sm font-bold rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-sm active:scale-95 border border-[#006A4E]"
                     >
                       Get started
                     </button>
@@ -9082,7 +9043,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           {currentUser?.name || 'Mds Kazi Sohag'}
                         </h3>
                         <p className="text-sm text-[#1877F2] font-semibold flex items-center gap-1.5 mt-0.5">
-                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" />
                           <span>{viewMode === 'selling' ? 'ভেরিফায়েড সেলার' : 'ভেরিফায়েড বায়ার'}</span>
                         </p>
                       </div>
@@ -9140,11 +9101,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[15px] font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/70 transition text-left cursor-pointer"
                     >
                       <div className="flex items-center gap-3.5">
-                        <ShoppingBag className="w-5 h-5 text-emerald-500 shrink-0" />
+                        <ShoppingBag className="w-5 h-5 text-blue-500 shrink-0" />
                         <span>আমার অর্ডারসমূহ</span>
                       </div>
                       {allBuyerOrders.length > 0 && (
-                        <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-xs font-bold">
+                        <span className="px-2 py-0.5 rounded-full bg-blue-500 text-white text-xs font-bold">
                           {allBuyerOrders.length}
                         </span>
                       )}
@@ -9189,7 +9150,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       onClick={() => setActiveSubTab('courses')}
                       className="w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[15px] font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/70 transition text-left cursor-pointer"
                     >
-                      <GraduationCap className="w-5 h-5 text-teal-500 shrink-0" />
+                      <GraduationCap className="w-5 h-5 text-indigo-500 shrink-0" />
                       <span>একাডেমি কোর্সসমূহ</span>
                     </button>
 
@@ -9232,8 +9193,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   </div>
 
                   {/* Trust Badge */}
-                  <div className="p-4 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-emerald-500/20 rounded-2xl">
-                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-sm">
+                  <div className="p-4 bg-gradient-to-br from-blue-500/10 to-blue-500/10 border border-blue-500/20 rounded-2xl">
+                    <div className="flex items-center gap-2 text-[#006A4E] dark:text-sky-400 font-bold text-sm">
                       <ShieldCheck className="w-5 h-5 shrink-0" />
                       <span>১০০% নিরাপদ এসক্রো গ্যারান্টি</span>
                     </div>
@@ -9245,8 +9206,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                 {/* 2. CENTER FEED (FACEBOOK POST STREAM ON BOTH PC & PHONE) */}
                 <div className="w-full lg:col-span-6 space-y-4 sm:space-y-5 min-w-0">
-                  {/* FACEBOOK "WHAT'S ON YOUR MIND" POST CREATION CARD */}
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs">
+                  {/* FACEBOOK "WHAT'S ON YOUR MIND" POST CREATION CARD - HIDDEN ON PHONE VIEW */}
+                  <div className="hidden md:block bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs">
                     <div className="flex items-center gap-3">
                       <img
                         src={currentUser?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
@@ -9296,8 +9257,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     </div>
                   </div>
 
-                  {/* FEED CONTROL BAR: TOGGLE BETWEEN FEED AND GRID */}
-                  <div className="flex items-center justify-between px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
+                  {/* FEED CONTROL BAR: TOGGLE BETWEEN FEED AND GRID - HIDDEN ON PHONE VIEW */}
+                  <div className="hidden md:flex items-center justify-between px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
                     <div className="flex items-center gap-2 min-w-0">
                       <div className="w-7 h-7 rounded-full bg-[#1877F2]/15 text-[#1877F2] flex items-center justify-center">
                         <Globe className="w-4 h-4" />
@@ -9380,7 +9341,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       </div>
                       <button
                         onClick={() => setActiveSubTab('gigs')}
-                        className="text-[11px] sm:text-xs font-bold text-[#1DB954] hover:underline cursor-pointer shrink-0"
+                        className="text-[11px] sm:text-xs font-bold text-[#38BDF8] hover:underline cursor-pointer shrink-0"
                       >
                         সবগুলো →
                       </button>
@@ -9412,14 +9373,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="relative flex h-2.5 w-2.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
                         </span>
                         <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                           লাইভ বায়ার রিকুয়েস্ট
                         </h4>
                       </div>
-                      <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/15 px-2.5 py-0.5 rounded-full">
+                      <span className="text-xs text-[#006A4E] dark:text-sky-400 font-bold bg-blue-500/15 px-2.5 py-0.5 rounded-full">
                         সক্রিয়
                       </span>
                     </div>
@@ -9454,7 +9415,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                         অনলাইন বিশেষজ্ঞ ফ্রিল্যান্সার
                       </h4>
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
                     </div>
 
                     <div className="space-y-3.5">
@@ -9467,7 +9428,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 alt={gig.sellerName}
                                 className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700"
                               />
-                              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-1 ring-white dark:ring-slate-900" />
+                              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-blue-500 ring-1 ring-white dark:ring-slate-900" />
                             </div>
                             <div className="min-w-0">
                               <p className="text-[14px] sm:text-[15px] font-bold text-slate-900 dark:text-white truncate">{gig.sellerName}</p>
@@ -9528,16 +9489,16 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       setSelectedService(serv);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 hover:border-[#1DB954] transition shadow-sm hover:shadow-md cursor-pointer flex flex-col justify-between space-y-4 group"
+                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 hover:border-blue-600/50 transition shadow-sm hover:shadow-md cursor-pointer flex flex-col justify-between space-y-4 group"
                   >
                     <div className="space-y-3">
                       <div className="relative h-40 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-950">
                         <img src={serv.thumbnail} alt={serv.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                        <span className="absolute top-3 right-3 px-2.5 py-1 bg-[#1DB954] text-white text-[10px] font-black rounded-full shadow">
+                        <span className="absolute top-3 right-3 px-2.5 py-1 bg-[#006A4E] text-white text-[10px] font-black rounded-full shadow">
                           অফিশিয়াল সেবা
                         </span>
                       </div>
-                      <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-[#1DB954] transition">
+                      <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-sky-400 transition">
                         {serv.title}
                       </h3>
                       <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
@@ -9546,7 +9507,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <div className="space-y-1">
                         {(serv.features || []).slice(0, 3).map((feat, fIdx) => (
                           <div key={fIdx} className="flex items-center gap-1.5 text-[11px] text-slate-700 dark:text-slate-300">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-[#1DB954] shrink-0" />
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#38BDF8] shrink-0" />
                             <span>{feat}</span>
                           </div>
                         ))}
@@ -9555,7 +9516,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                     <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                       <span className="text-xs font-bold text-slate-500">শুরু মাত্র:</span>
-                      <span className="text-sm font-black text-[#1DB954]">{serv.priceText}</span>
+                      <span className="text-sm font-black text-[#38BDF8]">{serv.priceText}</span>
                     </div>
                   </div>
                 ))}
@@ -9582,19 +9543,19 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     onClick={() => {
                       if (setActiveTab) setActiveTab('courses');
                     }}
-                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 hover:border-[#1DB954] transition shadow-sm hover:shadow-md cursor-pointer flex flex-col justify-between space-y-4 group"
+                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 hover:border-blue-600/50 transition shadow-sm hover:shadow-md cursor-pointer flex flex-col justify-between space-y-4 group"
                   >
                     <div className="space-y-3">
                       <div className="relative h-40 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-950">
                         <img src={crs.thumbnail} alt={crs.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                       </div>
                       <div className="flex items-center justify-between text-xs">
-                        <span className="px-2 py-0.5 rounded-md bg-[#1DB954]/10 text-[#1DB954] dark:bg-[#1DB954]/20 font-bold text-[10px]">
+                        <span className="px-2 py-0.5 rounded-md bg-[#006A4E]/10 text-[#38BDF8] dark:bg-[#006A4E]/20 font-bold text-[10px]">
                           {crs.level === 'live_batch' ? 'লাইভ ব্যাচ' : 'সার্টিফাইড কোর্স'}
                         </span>
                         <span className="text-[11px] text-slate-500 font-semibold">{crs.category}</span>
                       </div>
-                      <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-[#1DB954] transition line-clamp-1">
+                      <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-sky-400 transition line-clamp-1">
                         {crs.title}
                       </h3>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
@@ -9613,7 +9574,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     </div>
 
                     <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                      <span className="text-xs font-bold text-[#1DB954]">কোর্স ফি:</span>
+                      <span className="text-xs font-bold text-[#38BDF8]">কোর্স ফি:</span>
                       <span className="text-base font-black text-slate-900 dark:text-white">
                         {crs.isFree ? 'ফ্রি কোর্স' : `৳${(crs.discountPrice || crs.price || 0).toLocaleString('bn-BD')}`}
                       </span>
@@ -9648,7 +9609,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     onClick={() => setIsSavedGigsSettingsModalOpen(true)}
                     className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition cursor-pointer flex items-center gap-2 border border-slate-200 dark:border-slate-700"
                   >
-                    <SlidersHorizontal className="w-4 h-4 text-[#1DB954]" />
+                    <SlidersHorizontal className="w-4 h-4 text-[#38BDF8]" />
                     <span>উইশলিস্ট সেটিংস ও ফিল্টার</span>
                   </button>
                 </div>
@@ -9658,10 +9619,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               {(savedGigsSort !== 'recent' || savedCategoryFilter !== 'all' || savedSearchQuery.trim() !== '') && (
                 <div className="flex items-center justify-between gap-2 p-2.5 px-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-bold shadow-xs">
                   <div className="flex items-center gap-2 overflow-x-auto scrollbar-none">
-                    <SlidersHorizontal className="w-3.5 h-3.5 text-[#1DB954] shrink-0" />
+                    <SlidersHorizontal className="w-3.5 h-3.5 text-[#38BDF8] shrink-0" />
                     <span className="text-[11px] text-slate-500 dark:text-slate-400">সক্রিয় ফিল্টার:</span>
                     {savedGigsSort !== 'recent' && (
-                      <span className="px-2 py-0.5 bg-[#1DB954]/15 text-emerald-700 dark:text-[#1DB954] border border-[#1DB954]/30 rounded-lg text-[10px] whitespace-nowrap">
+                      <span className="px-2 py-0.5 bg-[#006A4E]/15 text-blue-700 dark:text-sky-400 border border-blue-600/50/30 rounded-lg text-[10px] whitespace-nowrap">
                         {savedGigsSort === 'price_asc' ? '💵 কম দাম' : savedGigsSort === 'price_desc' ? '💎 বেশি দাম' : savedGigsSort === 'rating' ? '⭐ সেরা রেটিং' : '🔥 জনপ্রিয়'}
                       </span>
                     )}
@@ -9729,7 +9690,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       setActiveSubTab('gigs');
                       setSelectedCategory('All');
                     }}
-                    className="px-6 py-2.5 bg-[#1DB954] hover:bg-[#19a34a] text-white text-xs font-black rounded-xl transition cursor-pointer shadow-md inline-flex items-center gap-2"
+                    className="px-6 py-2.5 bg-[#006A4E] hover:bg-[#19a34a] text-white text-xs font-black rounded-xl transition cursor-pointer shadow-md inline-flex items-center gap-2"
                   >
                     <ShoppingBag className="w-4 h-4 text-white" />
                     <span>মার্কেটপ্লেস গিগসমূহ ব্রাউজ করুন</span>
@@ -9742,7 +9703,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
           {/* MY ACTIVE DASHBOARD TABS (LOGGED OUT VIEW) */}
           {(initialCategory === 'my-orders' || ['overview', 'my-orders', 'my-courses', 'settings', 'post-project', 'public-offers', 'messenger'].includes(activeSubTab)) && !currentUser && (
             <div className="p-8 sm:p-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl text-center space-y-5 font-bengali max-w-lg mx-auto my-8 sm:my-12 shadow-xl animate-fadeIn">
-              <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 text-[#1DB954] flex items-center justify-center mx-auto shadow-inner">
+              <div className="w-16 h-16 rounded-2xl bg-blue-500/10 text-[#38BDF8] flex items-center justify-center mx-auto shadow-inner">
                 <Lock className="w-8 h-8" />
               </div>
               <div className="space-y-2">
@@ -9756,7 +9717,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                 <button
                   onClick={openAuthModal}
-                  className="w-full sm:w-auto px-6 py-3 bg-[#1DB954] hover:bg-emerald-600 text-white text-xs font-black rounded-xl transition cursor-pointer shadow-lg inline-flex items-center justify-center gap-2 active:scale-95"
+                  className="w-full sm:w-auto px-6 py-3 bg-[#006A4E] hover:bg-[#047857] text-white text-xs font-black rounded-xl transition cursor-pointer shadow-lg inline-flex items-center justify-center gap-2 active:scale-95"
                 >
                   <User className="w-4 h-4 text-white" />
                   <span>লগইন বা রেজিস্টার করুন</span>
@@ -9800,9 +9761,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   setActiveSubTab('my-orders');
                                   setBuyerOrderStatusFilter('all');
                                 }}
-                                className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center hover:border-emerald-500/80 hover:shadow-sm transition-all transform hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer group"
+                                className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center hover:border-blue-500/80 hover:shadow-sm transition-all transform hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer group"
                               >
-                                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-blue-500/10 text-[#006A4E] dark:text-sky-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                   <Briefcase className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-lg sm:text-2xl font-black font-heading text-slate-900 dark:text-white leading-none">
@@ -9881,7 +9842,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               <div className="pb-3 border-b border-slate-200/90 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                                 <div className="space-y-0.5">
                                   <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-1.5">
-                                    <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-[#1DB954]" />
+                                    <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-[#38BDF8]" />
                                     <span>পেমেন্ট হিস্টোরি</span>
                                   </h3>
                                   <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
@@ -9907,8 +9868,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     onClick={() => setOverviewInnerTab('orders')}
                                     className={`px-3 py-1 rounded-full text-xs font-black transition cursor-pointer shrink-0 ${
                                       overviewInnerTab === 'orders'
-                                        ? 'bg-emerald-600 text-white shadow-xs'
-                                        : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/80 hover:bg-emerald-100'
+                                        ? 'bg-[#047857] text-white shadow-xs'
+                                        : 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-sky-300 border border-blue-200 dark:border-blue-900/80 hover:bg-blue-100'
                                     }`}
                                   >
                                     প্রজেক্ট
@@ -10038,25 +9999,25 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     const isCourse = trx.type === 'courses';
 
                                     const cardThemeClass = isProject
-                                      ? 'bg-white dark:bg-slate-900 border-emerald-200/90 dark:border-emerald-800/60 hover:border-emerald-500/80 hover:bg-emerald-50/10 dark:hover:bg-emerald-950/20'
+                                      ? 'bg-white dark:bg-slate-900 border-blue-200/90 dark:border-blue-900/60 hover:border-blue-500/80 hover:bg-blue-50/10 dark:hover:bg-slate-950/20'
                                       : isCourse
                                       ? 'bg-white dark:bg-slate-900 border-blue-200/90 dark:border-blue-800/60 hover:border-blue-500/80 hover:bg-blue-50/10 dark:hover:bg-blue-950/20'
                                       : 'bg-white dark:bg-slate-900 border-amber-200/90 dark:border-amber-800/60 hover:border-amber-500/80 hover:bg-amber-50/10 dark:hover:bg-amber-950/20';
 
                                     const iconBgClass = isProject
-                                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                                      ? 'bg-blue-500/10 text-[#006A4E] dark:text-sky-400'
                                       : isCourse
                                       ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400'
                                       : 'bg-amber-500/10 text-amber-600 dark:text-amber-400';
 
                                     const typeBadgeClass = isProject
-                                      ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-800/60'
+                                      ? 'bg-blue-500/15 text-blue-700 dark:text-sky-300 border border-sky-300/60 dark:border-blue-900/60'
                                       : isCourse
                                       ? 'bg-blue-500/15 text-blue-700 dark:text-blue-300 border border-blue-300/60 dark:border-blue-800/60'
                                       : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300/60 dark:border-amber-800/60';
 
                                     const serialBadgeClass = isProject
-                                      ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-mono font-black'
+                                      ? 'bg-blue-500/10 text-blue-700 dark:text-sky-300 font-mono font-black'
                                       : isCourse
                                       ? 'bg-blue-500/10 text-blue-700 dark:text-blue-300 font-mono font-black'
                                       : 'bg-amber-500/10 text-amber-700 dark:text-amber-300 font-mono font-black';
@@ -10111,7 +10072,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           <span className={`px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold ${
                                             trx.isEscrow
                                               ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300/60 dark:border-amber-700/60'
-                                              : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-700/60'
+                                              : 'bg-blue-500/15 text-blue-700 dark:text-sky-300 border border-sky-300/60 dark:border-blue-700/60'
                                           }`}>
                                             {trx.status}
                                           </span>
@@ -10134,7 +10095,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           {/* Header Line: স্টুডেন্ট মেনুবার & নতুন কোর্স ব্রাউজ → */}
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-2 font-black text-slate-900 dark:text-white text-xs sm:text-sm">
-                              <div className="w-7 h-7 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-[#1DB954] flex items-center justify-center border border-emerald-200 dark:border-emerald-800 shrink-0">
+                              <div className="w-7 h-7 rounded-xl bg-blue-50 dark:bg-slate-950/80 text-[#38BDF8] flex items-center justify-center border border-blue-200 dark:border-blue-900 shrink-0">
                                 <GraduationCap className="w-4 h-4" />
                               </div>
                               <span className="font-black text-sm sm:text-base">স্টুডেন্ট মেনুবার</span>
@@ -10150,7 +10111,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   setActiveSubTab('courses');
                                 }
                               }}
-                              className="text-[#1DB954] hover:text-emerald-400 font-black text-xs sm:text-sm flex items-center gap-1 transition cursor-pointer hover:underline underline-offset-2 shrink-0 ml-auto"
+                              className="text-[#38BDF8] hover:text-sky-400 font-black text-xs sm:text-sm flex items-center gap-1 transition cursor-pointer hover:underline underline-offset-2 shrink-0 ml-auto"
                             >
                               <span>নতুন কোর্স ব্রাউজ →</span>
                             </button>
@@ -10164,13 +10125,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               onClick={() => setStudentHubActiveTab('my-courses')}
                               className={`py-2 sm:py-2.5 px-2 sm:px-3 rounded-xl sm:rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 sm:gap-1 min-w-0 ${
                                 studentHubActiveTab === 'my-courses'
-                                  ? 'bg-[#1DB954] border-[#1DB954] text-white shadow-md font-black ring-2 ring-[#1DB954]/40'
+                                  ? 'bg-[#006A4E] border-blue-600/50 text-white shadow-md font-black ring-2 ring-[#006A4E]/40'
                                   : 'bg-slate-50/70 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700'
                               }`}
                             >
                               <div className="flex items-center justify-center gap-1 sm:gap-1.5 max-w-full">
                                 <BookOpen className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${
-                                  studentHubActiveTab === 'my-courses' ? 'text-white' : 'text-[#1DB954]'
+                                  studentHubActiveTab === 'my-courses' ? 'text-white' : 'text-[#38BDF8]'
                                 }`} />
                                 <span className={`text-xs sm:text-sm font-black leading-tight truncate ${
                                   studentHubActiveTab === 'my-courses' ? 'text-white' : ''
@@ -10285,12 +10246,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   onClick={() => setAssignmentStatusFilter('success')}
                                   className={`py-1.5 sm:py-2 px-2.5 sm:px-4 rounded-full text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer min-w-0 flex-1 ${
                                     assignmentStatusFilter === 'success'
-                                      ? 'bg-[#1DB954] text-white shadow-xs font-black'
+                                      ? 'bg-[#006A4E] text-white shadow-xs font-black'
                                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                                   }`}
                                 >
                                   <CheckCircle className={`w-3.5 h-3.5 shrink-0 ${
-                                    assignmentStatusFilter === 'success' ? 'text-white' : 'text-[#1DB954]'
+                                    assignmentStatusFilter === 'success' ? 'text-white' : 'text-[#38BDF8]'
                                   }`} />
                                   <span className="truncate">সাকসেস</span>
                                   <span className="font-black text-xs">
@@ -10307,10 +10268,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           <div className="space-y-3 font-bengali">
                             <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-800 dark:text-slate-200 text-xs font-bold flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <Award className="w-5 h-5 text-[#1DB954]" />
+                                <Award className="w-5 h-5 text-[#38BDF8]" />
                                 <span>অর্জিত ভেরিফাইড কোর্স সার্টিফিকেট ({studentCertificatesList.length} টি)</span>
                               </div>
-                              <span className="bg-[#1DB954] text-white font-black px-2.5 py-1 rounded-md text-[10px]">PTENit Verified</span>
+                              <span className="bg-[#006A4E] text-white font-black px-2.5 py-1 rounded-md text-[10px]">PTENit Verified</span>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
@@ -10318,7 +10279,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 <div key={cert.id} className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3 hover:border-blue-400/50 transition">
                                   <div className="flex items-start justify-between gap-3">
                                     <div>
-                                      <span className="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-[#1DB954] text-[10px] font-bold border border-emerald-200 dark:border-emerald-800/80">
+                                      <span className="px-2 py-0.5 rounded-md bg-blue-50 dark:bg-slate-950/60 text-[#38BDF8] text-[10px] font-bold border border-blue-200 dark:border-blue-900/80">
                                         {cert.certId}
                                       </span>
                                       <h3 className="text-sm font-black text-slate-900 dark:text-white mt-1.5">{cert.title}</h3>
@@ -10331,7 +10292,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <div className="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
                                     <button
                                       onClick={() => alert(`সার্টিফিকেট ${cert.certId} ডাউনলোড শুরু হয়েছে!`)}
-                                      className="flex-1 py-2 bg-[#1DB954] hover:bg-emerald-500 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition"
+                                      className="flex-1 py-2 bg-[#006A4E] hover:bg-blue-500 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition"
                                     >
                                       <Download className="w-3.5 h-3.5" />
                                       <span>PDF সার্টিফিকেট</span>
@@ -10412,7 +10373,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       </div>
                                     ) : (
                                       <div className="p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center space-y-2">
-                                        <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950 text-[#1DB954] flex items-center justify-center mx-auto">
+                                        <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-slate-950 text-[#38BDF8] flex items-center justify-center mx-auto">
                                           <CheckCircle2 className="w-6 h-6" />
                                         </div>
                                         <h4 className="text-sm font-black text-slate-900 dark:text-white">সব অ্যাসাইনমেন্ট জমা সম্পন্ন!</h4>
@@ -10492,18 +10453,18 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             <div
                                               key={task.id}
                                               onClick={() => setSelectedAssignmentDetail(task)}
-                                              className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-l-[5px] border-l-[#1DB954] dark:border-l-emerald-500 shadow-xs hover:shadow-md hover:border-emerald-300 dark:hover:border-emerald-700/60 transition-all group cursor-pointer flex flex-col justify-between"
+                                              className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-l-[5px] border-l-[#006A4E] dark:border-l-blue-500 shadow-xs hover:shadow-md hover:border-sky-300 dark:hover:border-blue-700/60 transition-all group cursor-pointer flex flex-col justify-between"
                                             >
                                               <div className="space-y-2">
                                                 {/* Top row */}
                                                 <div className="flex items-center justify-between gap-1.5 flex-wrap">
-                                                  <span className="text-[10px] font-black text-[#1DB954] bg-emerald-50 dark:bg-emerald-950/70 px-2 py-0.5 rounded-md border border-emerald-200/70 dark:border-emerald-900/50 flex items-center gap-1">
-                                                    <CheckCircle className="w-3 h-3 text-[#1DB954]" />
+                                                  <span className="text-[10px] font-black text-[#38BDF8] bg-blue-50 dark:bg-slate-950/70 px-2 py-0.5 rounded-md border border-blue-200/70 dark:border-blue-950/50 flex items-center gap-1">
+                                                    <CheckCircle className="w-3 h-3 text-[#38BDF8]" />
                                                     <span>মূল্যায়ন সম্পন্ন</span>
                                                   </span>
                                                   <div className="flex items-center gap-1.5">
                                                     {task.marks && (
-                                                      <span className="text-[10px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100/70 dark:bg-emerald-900/60 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
+                                                      <span className="text-[10px] font-black text-blue-700 dark:text-sky-300 bg-blue-100/70 dark:bg-blue-950/60 px-2 py-0.5 rounded-md border border-blue-200 dark:border-blue-900">
                                                         মার্কস: {task.marks}
                                                       </span>
                                                     )}
@@ -10514,7 +10475,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                                 </div>
 
                                                 {/* Title & Course */}
-                                                <h5 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white leading-snug group-hover:text-[#1DB954] transition">
+                                                <h5 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white leading-snug group-hover:text-sky-400 transition">
                                                   {task.title}
                                                 </h5>
                                                 <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -10527,7 +10488,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                                 <span className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
                                                   💬 {task.feedback}
                                                 </span>
-                                                <span className="text-xs font-black text-[#1DB954] group-hover:translate-x-0.5 transition-transform shrink-0 flex items-center gap-0.5">
+                                                <span className="text-xs font-black text-[#38BDF8] group-hover:translate-x-0.5 transition-transform shrink-0 flex items-center gap-0.5">
                                                   <span>রেজাল্ট</span>
                                                   <span>→</span>
                                                 </span>
@@ -10537,7 +10498,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       </div>
                                     ) : (
                                       <div className="p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center space-y-2">
-                                        <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950 text-[#1DB954] flex items-center justify-center mx-auto">
+                                        <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-slate-950 text-[#38BDF8] flex items-center justify-center mx-auto">
                                           <Award className="w-6 h-6" />
                                         </div>
                                         <h4 className="text-sm font-black text-slate-900 dark:text-white">এখনও কোনো মূল্যায়ন সম্পন্ন অ্যাসাইনমেন্ট নেই</h4>
@@ -10708,7 +10669,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                                         <div className={`p-3.5 rounded-xl border space-y-1.5 ${
                                           selectedAssignmentDetail.status === 'completed'
-                                            ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-950 dark:text-emerald-200'
+                                            ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-900 text-slate-950 dark:text-blue-200'
                                             : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-950 dark:text-amber-200'
                                         }`}>
                                           <div className="flex items-center justify-between text-xs font-black">
@@ -10755,7 +10716,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
                                         লাইভ ক্লাস
                                       </h3>
-                                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 shrink-0">
+                                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 dark:bg-slate-950 text-[#006A4E] dark:text-sky-400 border border-blue-200 dark:border-blue-900 shrink-0">
                                         Google Meet
                                       </span>
                                     </div>
@@ -10766,7 +10727,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 </div>
 
                                 {liveClassToastMsg && (
-                                  <div className="px-3 py-1.5 rounded-xl bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm">
+                                  <div className="px-3 py-1.5 rounded-xl bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm">
                                     <CheckCircle2 className="w-4 h-4 shrink-0" />
                                     <span>{liveClassToastMsg}</span>
                                   </div>
@@ -10810,17 +10771,17 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     btnIcon: 'max-sm:text-white',
                                   },
                                   {
-                                    cardBg: 'max-sm:bg-gradient-to-br max-sm:from-emerald-500/15 max-sm:via-teal-500/10 max-sm:to-cyan-500/15 max-sm:border-emerald-300 dark:max-sm:border-emerald-700 max-sm:shadow-md max-sm:shadow-emerald-500/10',
-                                    topBar: 'bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500',
-                                    badge: 'max-sm:bg-emerald-100 dark:max-sm:bg-emerald-950/90 max-sm:text-emerald-700 dark:max-sm:text-emerald-300 max-sm:border-emerald-300 dark:max-sm:border-emerald-700',
-                                    tagBadge: 'max-sm:bg-teal-100 dark:max-sm:bg-teal-950/90 max-sm:text-teal-700 dark:max-sm:text-teal-300 max-sm:border-teal-200 dark:max-sm:border-teal-800',
-                                    topicBox: 'max-sm:bg-white/95 dark:max-sm:bg-slate-900/90 max-sm:border-emerald-200 dark:max-sm:border-emerald-800/70',
-                                    topicIcon: 'max-sm:text-emerald-600 dark:max-sm:text-emerald-400',
-                                    serialBadge: 'max-sm:bg-emerald-600 max-sm:text-white max-sm:border-emerald-600',
+                                    cardBg: 'max-sm:bg-gradient-to-br max-sm:from-blue-500/15 max-sm:via-indigo-500/10 max-sm:to-cyan-500/15 max-sm:border-sky-300 dark:max-sm:border-blue-700 max-sm:shadow-md max-sm:shadow-blue-500/10',
+                                    topBar: 'bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-500',
+                                    badge: 'max-sm:bg-blue-100 dark:max-sm:bg-slate-950/90 max-sm:text-blue-700 dark:max-sm:text-sky-300 max-sm:border-sky-300 dark:max-sm:border-blue-700',
+                                    tagBadge: 'max-sm:bg-teal-100 dark:max-sm:bg-teal-950/90 max-sm:text-teal-700 dark:max-sm:text-sky-300 max-sm:border-teal-200 dark:max-sm:border-teal-800',
+                                    topicBox: 'max-sm:bg-white/95 dark:max-sm:bg-slate-900/90 max-sm:border-blue-200 dark:max-sm:border-blue-900/70',
+                                    topicIcon: 'max-sm:text-[#006A4E] dark:max-sm:text-sky-400',
+                                    serialBadge: 'max-sm:bg-[#047857] max-sm:text-white max-sm:border-blue-600',
                                     scheduleBox: 'max-sm:bg-white/95 dark:max-sm:bg-slate-900/90 max-sm:border-teal-200 dark:max-sm:border-teal-800/70',
-                                    scheduleText: 'max-sm:text-emerald-700 dark:max-sm:text-emerald-300',
-                                    btnPrimary: 'max-sm:bg-gradient-to-r max-sm:from-emerald-600 max-sm:to-teal-600 max-sm:hover:from-emerald-700 max-sm:hover:to-teal-700 max-sm:text-white max-sm:border-transparent max-sm:shadow-md max-sm:shadow-emerald-500/25',
-                                    btnSecondary: 'max-sm:bg-emerald-100 dark:max-sm:bg-emerald-950/80 max-sm:text-emerald-700 dark:max-sm:text-emerald-300 max-sm:border-emerald-300 dark:max-sm:border-emerald-700',
+                                    scheduleText: 'max-sm:text-blue-700 dark:max-sm:text-sky-300',
+                                    btnPrimary: 'max-sm:bg-gradient-to-r max-sm:from-blue-600 max-sm:to-indigo-600 max-sm:hover:from-blue-700 max-sm:hover:to-teal-700 max-sm:text-white max-sm:border-transparent max-sm:shadow-md max-sm:shadow-blue-500/25',
+                                    btnSecondary: 'max-sm:bg-blue-100 dark:max-sm:bg-slate-950/80 max-sm:text-blue-700 dark:max-sm:text-sky-300 max-sm:border-sky-300 dark:max-sm:border-blue-700',
                                     btnIcon: 'max-sm:text-white',
                                   },
                                   {
@@ -10924,7 +10885,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           <span className={`px-2 py-0.5 rounded-md text-[10px] font-black border ${cardTheme.badge} ${
                                             isCompleted
                                               ? 'sm:bg-slate-100 sm:dark:bg-slate-800 sm:text-slate-600 sm:dark:text-slate-400 sm:border-slate-200 sm:dark:border-slate-700'
-                                              : 'sm:bg-emerald-50 sm:dark:bg-emerald-950/60 sm:text-[#1DB954] sm:dark:text-emerald-400 sm:border-emerald-200 sm:dark:border-emerald-800'
+                                              : 'sm:bg-blue-50 sm:dark:bg-slate-950/60 sm:text-[#38BDF8] sm:dark:text-sky-400 sm:border-blue-200 sm:dark:border-blue-900'
                                           }`}>
                                             {c.batch}
                                           </span>
@@ -10938,7 +10899,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                         <p className="text-xs text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1">
                                           <span>ইন্সট্রাকটর:</span>
                                           <strong className="text-slate-700 dark:text-slate-200 font-bold">{c.instructor}</strong>
-                                          <BadgeCheck className="w-3.5 h-3.5 text-[#1DB954]" />
+                                          <BadgeCheck className="w-3.5 h-3.5 text-[#38BDF8]" />
                                         </p>
                                       </div>
 
@@ -10964,11 +10925,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           </div>
                                         ) : isCompleted ? (
                                           <div className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full text-[11px] font-bold border border-slate-200 dark:border-slate-700">
-                                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                                            <CheckCircle2 className="w-3.5 h-3.5 text-blue-500" />
                                             <span>আর্কাইভ</span>
                                           </div>
                                         ) : (
-                                          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/60 text-[#1DB954] dark:text-emerald-400 rounded-full text-[11px] font-bold border border-emerald-200 dark:border-emerald-800">
+                                          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 dark:bg-slate-950/60 text-[#38BDF8] dark:text-sky-400 rounded-full text-[11px] font-bold border border-blue-200 dark:border-blue-900">
                                             <Calendar className="w-3.5 h-3.5" />
                                             <span>নির্ধারিত</span>
                                           </div>
@@ -10980,7 +10941,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     <div className={`p-3 rounded-xl border text-xs space-y-2 ${cardTheme.topicBox} sm:bg-slate-50 sm:dark:bg-slate-800/60 sm:border-slate-200 sm:dark:border-slate-700/80`}>
                                       <div className="flex items-center justify-between gap-2 border-b border-slate-200/60 dark:border-slate-700/60 pb-1.5">
                                         <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-bold">
-                                          <Layers className={`w-3.5 h-3.5 ${cardTheme.topicIcon} sm:text-[#1DB954]`} />
+                                          <Layers className={`w-3.5 h-3.5 ${cardTheme.topicIcon} sm:text-[#38BDF8]`} />
                                           <span>
                                             মডিউল {c.liveClassModuleNo || '০১'} • লেসন {c.liveClassLessonNo || '০১'}
                                           </span>
@@ -11037,7 +10998,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             সম্পূর্ণ লাইভ ক্লাস আর্কাইভ ও রেকর্ডিং প্রস্তুত
                                           </span>
                                         ) : (
-                                          <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                                          <span className="font-bold text-[#006A4E] dark:text-sky-400">
                                             Google Meet লিঙ্ক প্রস্তুত রয়েছে
                                           </span>
                                         )}
@@ -11052,7 +11013,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           onClick={() => handleOpenCourseArchive(c)}
                                           className={`w-full py-2.5 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer border ${cardTheme.btnPrimary} sm:bg-slate-100 sm:hover:bg-slate-200 sm:dark:bg-slate-800 sm:dark:hover:bg-slate-700 sm:text-slate-800 sm:dark:text-slate-200 sm:border-slate-300 sm:dark:border-slate-700`}
                                         >
-                                          <PlayCircle className="w-4 h-4 text-[#1DB954]" />
+                                          <PlayCircle className="w-4 h-4 text-[#38BDF8]" />
                                           <span>রেকর্ডিং ও আর্কাইভ দেখুন</span>
                                         </button>
                                       ) : isLiveNow ? (
@@ -11100,7 +11061,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             onClick={() => handleCopyMeetLink(c.liveClassLink)}
                                             className={`flex-1 py-2.5 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer border ${cardTheme.btnPrimary} sm:bg-slate-100 sm:hover:bg-slate-200 sm:dark:bg-slate-800 sm:dark:hover:bg-slate-700 sm:text-slate-800 sm:dark:text-slate-200 sm:border-slate-200 sm:dark:border-slate-700 active:scale-[0.98]`}
                                           >
-                                            <Copy className={`w-4 h-4 ${cardTheme.btnIcon} sm:text-[#1DB954]`} />
+                                            <Copy className={`w-4 h-4 ${cardTheme.btnIcon} sm:text-[#38BDF8]`} />
                                             <span>মিট লিংক কপি করুন</span>
                                           </button>
                                           <button
@@ -11134,7 +11095,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
                                         liveMeetModalData.isLiveNow
                                           ? 'bg-rose-500/10 text-rose-600 dark:bg-rose-500/20'
-                                          : 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20'
+                                          : 'bg-blue-500/10 text-[#006A4E] dark:bg-blue-500/20'
                                       }`}>
                                         <Video className="w-4 h-4" />
                                       </div>
@@ -11183,7 +11144,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       onClick={() => setLiveMeetModalData(null)}
-                                      className="w-full py-2.5 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-md shadow-emerald-500/20 active:scale-[0.98]"
+                                      className="w-full py-2.5 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-md shadow-blue-500/20 active:scale-[0.98]"
                                     >
                                       <Video className="w-4 h-4" />
                                       <span>Google Meet-এ সরাসরি যুক্ত হন</span>
@@ -11210,7 +11171,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           }}
                                           className="flex-1 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer border border-slate-200/70 dark:border-slate-700/60"
                                         >
-                                          <BookOpen className="w-3.5 h-3.5 text-[#1DB954]" />
+                                          <BookOpen className="w-3.5 h-3.5 text-[#38BDF8]" />
                                           <span>ক্লাস স্টুডিও</span>
                                         </button>
                                       )}
@@ -11246,7 +11207,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   key={idx}
                                   className={`p-3 rounded-2xl text-xs leading-relaxed ${
                                     msg.sender === 'user'
-                                      ? 'bg-[#1DB954] text-white ml-auto max-w-[85%]'
+                                      ? 'bg-[#006A4E] text-white ml-auto max-w-[85%]'
                                       : 'bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 max-w-[92%]'
                                   }`}
                                 >
@@ -11281,7 +11242,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   }
                                 }}
                                 placeholder="আপনার যে কোন কোডিং বা কোর্স সম্পর্কিত প্রশ্ন লিখুন..."
-                                className="flex-1 p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#1DB954]"
+                                className="flex-1 p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#006A4E]"
                               />
                               <button
                                 onClick={() => {
@@ -11314,10 +11275,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               <div className="p-4 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 shadow-2xl relative animate-in fade-in zoom-in duration-200 space-y-4">
                                 {/* Header with Close & Badge */}
                                 <div className="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
-                                  <div className="flex items-center gap-2 text-[#1DB954]">
+                                  <div className="flex items-center gap-2 text-[#38BDF8]">
                                     <Sparkles className="w-5 h-5" />
                                     <div>
-                                      <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-50 dark:bg-emerald-950/60 text-[#1DB954] px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
+                                      <span className="text-[10px] font-black uppercase tracking-wider bg-blue-50 dark:bg-slate-950/60 text-[#38BDF8] px-2 py-0.5 rounded-md border border-blue-200 dark:border-blue-900">
                                         {activeMarketplaceCourseModal.featureTitle}
                                       </span>
                                       <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-tight mt-0.5">
@@ -11357,7 +11318,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   {/* Top Overlaid Tags */}
                                   <div className="relative z-10 flex items-center justify-between gap-2">
                                     <div className="flex items-center gap-1.5 flex-wrap">
-                                      <span className="px-2.5 py-0.5 rounded-full bg-[#1DB954] text-white text-[10px] font-black uppercase tracking-wider shadow-sm">
+                                      <span className="px-2.5 py-0.5 rounded-full bg-[#006A4E] text-white text-[10px] font-black uppercase tracking-wider shadow-sm">
                                         {activeMarketplaceCourseModal.badge || 'PRO COURSE'}
                                       </span>
                                       <span className="px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-slate-200 text-[10px] font-bold">
@@ -11375,7 +11336,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     <button
                                       type="button"
                                       onClick={() => setCourseIsPlaying(!courseIsPlaying)}
-                                      className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#1DB954] hover:bg-emerald-400 text-white flex items-center justify-center shadow-2xl transition transform hover:scale-110 active:scale-95 cursor-pointer"
+                                      className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#006A4E] hover:bg-sky-400 text-white flex items-center justify-center shadow-2xl transition transform hover:scale-110 active:scale-95 cursor-pointer"
                                     >
                                       {courseIsPlaying ? (
                                         <div className="flex gap-1">
@@ -11408,7 +11369,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             const nextIdx = (speeds.indexOf(coursePlaybackSpeed) + 1) % speeds.length;
                                             setCoursePlaybackSpeed(speeds[nextIdx]);
                                           }}
-                                          className="px-1.5 py-0.5 bg-black/60 backdrop-blur-md rounded text-[10px] text-emerald-400 font-bold hover:bg-black cursor-pointer"
+                                          className="px-1.5 py-0.5 bg-black/60 backdrop-blur-md rounded text-[10px] text-sky-400 font-bold hover:bg-black cursor-pointer"
                                         >
                                           {coursePlaybackSpeed}x Speed
                                         </button>
@@ -11416,7 +11377,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       </div>
                                     </div>
                                     <div className="w-full bg-slate-700/80 rounded-full h-1.5 overflow-hidden cursor-pointer">
-                                      <div className="bg-[#1DB954] h-1.5 rounded-full transition-all duration-300" style={{ width: '45%' }} />
+                                      <div className="bg-[#006A4E] h-1.5 rounded-full transition-all duration-300" style={{ width: '45%' }} />
                                     </div>
                                   </div>
                                 </div>
@@ -11452,11 +11413,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       }}
                                       className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
                                         courseCompletedLessonsMap[String(activeCourseLessonNumber)]
-                                          ? 'bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700'
+                                          ? 'bg-blue-100 dark:bg-slate-950/70 text-blue-900 dark:text-sky-300 border border-sky-300 dark:border-blue-700'
                                           : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600'
                                       }`}
                                     >
-                                      <CheckCircle2 className={`w-3.5 h-3.5 ${courseCompletedLessonsMap[String(activeCourseLessonNumber)] ? 'text-[#1DB954]' : 'text-slate-400'}`} />
+                                      <CheckCircle2 className={`w-3.5 h-3.5 ${courseCompletedLessonsMap[String(activeCourseLessonNumber)] ? 'text-[#38BDF8]' : 'text-slate-400'}`} />
                                       <span>{courseCompletedLessonsMap[String(activeCourseLessonNumber)] ? 'সম্পন্ন হয়েছে ✓' : 'সম্পন্ন মার্ক করুন'}</span>
                                     </button>
                                   </div>
@@ -11471,7 +11432,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                         alert('অভিনন্দন! আপনি কোর্সের সব লেসন সফলভাবে সম্পন্ন করেছেন। সার্টিফিকেট ডাউনলোড করুন!');
                                       }
                                     }}
-                                    className="px-3.5 py-1.5 bg-[#1DB954] hover:bg-emerald-500 text-white font-black rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+                                    className="px-3.5 py-1.5 bg-[#006A4E] hover:bg-blue-500 text-white font-black rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer shadow-xs"
                                   >
                                     <span>পরবর্তী লেসন</span>
                                     <ArrowRight className="w-3.5 h-3.5" />
@@ -11502,8 +11463,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                         })}
                                         className={`p-2 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center gap-1 cursor-pointer border ${
                                           isActive
-                                            ? 'bg-[#1DB954] text-white border-[#1DB954] shadow-xs'
-                                            : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30'
+                                            ? 'bg-[#006A4E] text-white border-blue-600/50 shadow-xs'
+                                            : 'bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-950/30'
                                         }`}
                                       >
                                         <IconComp className="w-4 h-4" />
@@ -11518,7 +11479,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <div className="space-y-3 bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
                                     <div className="flex items-center justify-between text-xs font-bold">
                                       <span className="text-slate-800 dark:text-slate-200">কোর্সের সম্পূর্ণ সিলেবাস ও লেসনসমূহ</span>
-                                      <span className="text-[#1DB954] font-black">মোট ২০টি লেসন</span>
+                                      <span className="text-[#38BDF8] font-black">মোট ২০টি লেসন</span>
                                     </div>
                                     <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
                                       {[
@@ -11539,13 +11500,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           }}
                                           className={`p-2.5 rounded-xl border flex items-center justify-between gap-2 text-xs transition cursor-pointer ${
                                             activeCourseLessonNumber === l.num
-                                              ? 'bg-emerald-50 dark:bg-emerald-950/70 border-[#1DB954] text-[#1DB954] font-black'
+                                              ? 'bg-blue-50 dark:bg-slate-950/70 border-blue-600/50 text-[#38BDF8] font-black'
                                               : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-slate-300'
                                           }`}
                                         >
                                           <div className="flex items-center gap-2 min-w-0">
                                             {courseCompletedLessonsMap[String(l.num)] ? (
-                                              <CheckCircle2 className="w-4 h-4 text-[#1DB954] shrink-0" />
+                                              <CheckCircle2 className="w-4 h-4 text-[#38BDF8] shrink-0" />
                                             ) : (
                                               <Play className="w-4 h-4 text-slate-400 shrink-0" />
                                             )}
@@ -11578,13 +11539,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       </div>
                                     ) : (
                                       <>
-                                        <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-[#1DB954] flex items-center justify-center mx-auto mb-1 border border-emerald-200 dark:border-emerald-800">
+                                        <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-slate-950/50 text-[#38BDF8] flex items-center justify-center mx-auto mb-1 border border-blue-200 dark:border-blue-900">
                                           <Award className="w-6 h-6" />
                                         </div>
                                         <h5 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">PTENit Verified Digital Course Certificate</h5>
                                         <p className="text-xs text-slate-500 dark:text-slate-400">শিক্ষার্থী: সোহাগ কাজী • ভেরিফাইড সার্টিফিকেট আইডি: PTEN-CERT-8841</p>
                                         <div className="pt-2 flex items-center justify-center gap-2">
-                                          <button onClick={() => alert('সার্টিফিকেট PDF ডাউনলোড শুরু হয়েছে!')} className="px-4 py-2 bg-[#1DB954] hover:bg-emerald-500 text-white font-black rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer shadow-xs">
+                                          <button onClick={() => alert('সার্টিফিকেট PDF ডাউনলোড শুরু হয়েছে!')} className="px-4 py-2 bg-[#006A4E] hover:bg-blue-500 text-white font-black rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer shadow-xs">
                                             <Download className="w-4 h-4" />
                                             <span>PDF সার্টিফিকেট ডাউনলোড</span>
                                           </button>
@@ -11605,16 +11566,16 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <div className="space-y-2.5 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs">
                                     <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
                                       <div className="flex items-center gap-2">
-                                        <FileText className="w-4 h-4 text-[#1DB954]" />
+                                        <FileText className="w-4 h-4 text-[#38BDF8]" />
                                         <span className="font-bold text-slate-900 dark:text-white text-xs">Full Production Source Code (ZIP File)</span>
                                       </div>
-                                      <button onClick={() => alert('সোর্স কোড জিপ ফাইল ডাউনলোড হচ্ছে...')} className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-500 text-white font-black rounded-lg text-xs cursor-pointer shadow-xs">
+                                      <button onClick={() => alert('সোর্স কোড জিপ ফাইল ডাউনলোড হচ্ছে...')} className="px-3 py-1.5 bg-[#006A4E] hover:bg-blue-500 text-white font-black rounded-lg text-xs cursor-pointer shadow-xs">
                                         ডাউনলোড (48 MB)
                                       </button>
                                     </div>
                                     <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
                                       <div className="flex items-center gap-2">
-                                        <Globe className="w-4 h-4 text-[#1DB954]" />
+                                        <Globe className="w-4 h-4 text-[#38BDF8]" />
                                         <span className="font-bold text-slate-900 dark:text-white text-xs">Official GitHub Clean Repository</span>
                                       </div>
                                       <a href="https://github.com" target="_blank" rel="noreferrer" className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-bold rounded-lg text-xs cursor-pointer">
@@ -11663,7 +11624,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <div className="space-y-3 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs font-bengali">
                                     <div className="flex items-center justify-between">
                                       <div className="flex items-center gap-2.5">
-                                        <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-[#1DB954]">
+                                        <div className="p-2 rounded-xl bg-blue-100 dark:bg-slate-950 text-[#38BDF8]">
                                           <FileText className="w-5 h-5" />
                                         </div>
                                         <div>
@@ -11680,7 +11641,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1">
                                         <div className="flex items-center justify-between">
                                           <span className="font-black text-slate-900 dark:text-white text-xs">অ্যাসাইনমেন্ট ১: ই-কমার্স শপ ড্যাশবোর্ড UI ও স্টেট ম্যানেজমেন্ট</span>
-                                          <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded-md">
+                                          <span className="text-[10px] font-bold text-[#006A4E] dark:text-sky-400 bg-blue-50 dark:bg-slate-950 px-2 py-0.5 rounded-md">
                                             প্রাপ্ত মার্কস: ১০০/১০০ ✓
                                           </span>
                                         </div>
@@ -11691,7 +11652,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                         <div className="flex items-center justify-between">
                                           <span className="font-black text-slate-900 dark:text-white text-xs">অ্যাসাইনমেন্ট ২: JWT Auth & Protected Routes ব্যাকএন্ড এপিআই</span>
                                           {assignmentSubmittedMap['asg-2'] ? (
-                                            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded-md">
+                                            <span className="text-[10px] font-bold text-[#006A4E] dark:text-sky-400 bg-blue-50 dark:bg-slate-950 px-2 py-0.5 rounded-md">
                                               জমা দেওয়া হয়েছে ✓
                                             </span>
                                           ) : (
@@ -11710,7 +11671,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             value={assignmentRepoLink}
                                             onChange={(e) => setAssignmentRepoLink(e.target.value)}
                                             placeholder="https://github.com/username/my-project"
-                                            className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#1DB954]"
+                                            className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#006A4E]"
                                           />
                                           <button
                                             onClick={() => {
@@ -11721,7 +11682,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                               setAssignmentSubmittedMap(prev => ({ ...prev, 'asg-2': true }));
                                               alert('অ্যাসাইনমেন্ট ২ সফলভাবে জমা দেওয়া হয়েছে! ইন্সট্রাকটর দ্রুত রিভিউ করবেন।');
                                             }}
-                                            className="w-full py-2.5 bg-[#1DB954] hover:bg-emerald-500 text-white font-black rounded-xl text-xs cursor-pointer shadow-xs transition"
+                                            className="w-full py-2.5 bg-[#006A4E] hover:bg-blue-500 text-white font-black rounded-xl text-xs cursor-pointer shadow-xs transition"
                                           >
                                             {assignmentSubmittedMap['asg-2'] ? 'পুনরায় আপডেট করে জমা দিন' : 'অ্যাসাইনমেন্ট জমা দিন'}
                                           </button>
@@ -11747,25 +11708,25 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             onClick={() => setQuizSelectedOption(idx)}
                                             className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition ${
                                               quizSelectedOption === idx
-                                                ? 'bg-emerald-50 dark:bg-emerald-950/60 border border-[#1DB954] text-slate-900 dark:text-white font-bold'
+                                                ? 'bg-blue-50 dark:bg-slate-950/60 border border-blue-600/50 text-slate-900 dark:text-white font-bold'
                                                 : 'bg-slate-50 dark:bg-slate-800/70 border border-transparent hover:bg-slate-100'
                                             }`}
                                           >
-                                            <input type="radio" name="quiz" checked={quizSelectedOption === idx} onChange={() => setQuizSelectedOption(idx)} className="accent-[#1DB954]" />
+                                            <input type="radio" name="quiz" checked={quizSelectedOption === idx} onChange={() => setQuizSelectedOption(idx)} className="accent-[#006A4E]" />
                                             <span>{opt}</span>
                                           </label>
                                         ))}
                                       </div>
                                     </div>
                                     {quizSubmitted && (
-                                      <div className="p-3 bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-300 dark:border-emerald-700 rounded-xl text-xs text-emerald-800 dark:text-emerald-300 font-bold flex items-center gap-2">
-                                        <CheckCircle2 className="w-4 h-4 text-[#1DB954]" />
+                                      <div className="p-3 bg-blue-50 dark:bg-slate-950/70 border border-sky-300 dark:border-blue-700 rounded-xl text-xs text-blue-900 dark:text-sky-300 font-bold flex items-center gap-2">
+                                        <CheckCircle2 className="w-4 h-4 text-[#38BDF8]" />
                                         <span>সঠিক উত্তর! স্কোর: ১০০% (A+ Grade অর্জিত হয়েছে)</span>
                                       </div>
                                     )}
                                     <button
                                       onClick={() => setQuizSubmitted(true)}
-                                      className="w-full py-2.5 bg-[#1DB954] hover:bg-emerald-500 text-white font-black text-xs rounded-xl cursor-pointer shadow-xs transition"
+                                      className="w-full py-2.5 bg-[#006A4E] hover:bg-blue-500 text-white font-black text-xs rounded-xl cursor-pointer shadow-xs transition"
                                     >
                                       কুইজের উত্তর জমা দিন
                                     </button>
@@ -11776,10 +11737,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
                                     <div className="flex items-center justify-between text-xs font-bold">
                                       <span className="text-slate-900 dark:text-white flex items-center gap-1.5">
-                                        <Bot className="w-4 h-4 text-[#1DB954]" />
+                                        <Bot className="w-4 h-4 text-[#38BDF8]" />
                                         <span>AI লার্নিং টিউটর ও ডাউট সমাধান</span>
                                       </span>
-                                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">Gemini 2.5 Live</span>
+                                      <span className="text-[10px] text-[#006A4E] dark:text-sky-400 font-mono">Gemini 2.5 Live</span>
                                     </div>
                                     <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                                       {aiTutorMessages.map((msg, idx) => (
@@ -11787,7 +11748,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           key={idx}
                                           className={`p-2.5 rounded-xl text-xs ${
                                             msg.sender === 'user'
-                                              ? 'bg-[#1DB954] text-white ml-auto max-w-[85%]'
+                                              ? 'bg-[#006A4E] text-white ml-auto max-w-[85%]'
                                               : 'bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-800 max-w-[90%]'
                                           }`}
                                         >
@@ -11816,7 +11777,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           }
                                         }}
                                         placeholder="কোর্সের যে কোন কোড বা প্রশ্ন লিখুন..."
-                                        className="flex-1 p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#1DB954]"
+                                        className="flex-1 p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#006A4E]"
                                       />
                                       <button
                                         onClick={() => {
@@ -11833,7 +11794,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             setIsAiTutorThinking(false);
                                           }, 700);
                                         }}
-                                        className="px-4 py-2 bg-[#1DB954] hover:bg-emerald-500 text-white font-black text-xs rounded-xl cursor-pointer"
+                                        className="px-4 py-2 bg-[#006A4E] hover:bg-blue-500 text-white font-black text-xs rounded-xl cursor-pointer"
                                       >
                                         পাঠান
                                       </button>
@@ -11873,7 +11834,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     </div>
                                     <div className="min-w-0 flex-1 space-y-1">
                                       <div className="flex items-center gap-1.5 flex-wrap">
-                                        <span className="px-2 py-0.5 rounded-md text-[10px] font-black bg-[#1DB954]/15 text-[#1DB954]">
+                                        <span className="px-2 py-0.5 rounded-md text-[10px] font-black bg-[#006A4E]/15 text-[#38BDF8]">
                                           {course.badge}
                                         </span>
                                         {course.batch && (
@@ -11887,7 +11848,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           if (onOpenDetail) onOpenDetail(course.id);
                                           else if (onStartLearning) onStartLearning(course.id, 'video', activeSubTab);
                                         }}
-                                        className="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-snug truncate hover:text-[#1DB954] transition cursor-pointer"
+                                        className="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-snug truncate hover:text-sky-400 transition cursor-pointer"
                                       >
                                         {course.title}
                                       </h4>
@@ -11901,14 +11862,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <div className="space-y-1.5 pt-1">
                                     <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
                                       <span className="flex items-center gap-1.5">
-                                        <BookOpen className="w-3.5 h-3.5 text-[#1DB954]" />
+                                        <BookOpen className="w-3.5 h-3.5 text-[#38BDF8]" />
                                         <span>অগ্রগতি</span>
                                       </span>
-                                      <span className="text-[#1DB954] font-black">{course.progress}% সম্পন্ন</span>
+                                      <span className="text-[#38BDF8] font-black">{course.progress}% সম্পন্ন</span>
                                     </div>
                                     <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                       <div
-                                        className="h-full bg-gradient-to-r from-[#1DB954] to-emerald-400 rounded-full transition-all duration-500"
+                                        className="h-full bg-gradient-to-r from-[#006A4E] to-sky-400 rounded-full transition-all duration-500"
                                         style={{ width: `${course.progress}%` }}
                                       />
                                     </div>
@@ -11942,7 +11903,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           setCourseIsPlaying(true);
                                         }
                                       }}
-                                      className="flex-1 py-2.5 px-3 rounded-xl bg-[#1DB954] hover:bg-emerald-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm shadow-[#1DB954]/20 transition cursor-pointer active:scale-95"
+                                      className="flex-1 py-2.5 px-3 rounded-xl bg-[#006A4E] hover:bg-blue-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm shadow-blue-500/20 transition cursor-pointer active:scale-95"
                                     >
                                       <PlayCircle className="w-4 h-4 shrink-0" />
                                       <span>ক্লাসে যান</span>
@@ -12093,7 +12054,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               {/* Header Line */}
                               <div className="flex items-center justify-between gap-2">
                                 <div className="flex items-center gap-1.5 sm:gap-2 font-black text-slate-800 dark:text-slate-100 text-xs sm:text-sm">
-                                  <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-[#1DB954] shrink-0" />
+                                  <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-[#38BDF8] shrink-0" />
                                   <span>সার্ভিস অর্ডার</span>
                                 </div>
 
@@ -12112,7 +12073,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     }
                                     window.scrollTo({ top: 0, behavior: 'instant' });
                                   }}
-                                  className="text-[#1DB954] hover:text-emerald-400 font-black text-xs sm:text-sm flex items-center transition cursor-pointer hover:underline underline-offset-2 shrink-0 whitespace-nowrap"
+                                  className="text-[#38BDF8] hover:text-sky-400 font-black text-xs sm:text-sm flex items-center transition cursor-pointer hover:underline underline-offset-2 shrink-0 whitespace-nowrap"
                                 >
                                   <span>নতুন প্রজেক্ট ব্রাউজ →</span>
                                 </button>
@@ -12152,10 +12113,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     id: 'completed',
                                     label: 'সম্পন্ন',
                                     count: allBuyerOrders.filter(o => o.status === 'completed' || o.status === 'cancelled').length,
-                                    activeClass: 'bg-[#1DB954] text-white shadow-xs font-black',
-                                    inactiveClass: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/50',
+                                    activeClass: 'bg-[#006A4E] text-white shadow-xs font-black',
+                                    inactiveClass: 'bg-blue-50 dark:bg-blue-950/40 text-blue-900 dark:text-sky-300 hover:bg-blue-100 dark:hover:bg-blue-950/50',
                                     badgeActive: 'bg-black/20 text-white',
-                                    badgeInactive: 'bg-emerald-200/70 dark:bg-emerald-900 text-emerald-900 dark:text-emerald-200',
+                                    badgeInactive: 'bg-blue-200/70 dark:bg-blue-950 text-blue-950 dark:text-blue-200',
                                   },
                                 ].map((f) => {
                                   const isActive = buyerOrderStatusFilter === f.id;
@@ -12248,8 +12209,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     statusLabel = "রিভিউধীন";
                                     StatusIcon = FileText;
                                   } else if (isCompleted) {
-                                    leftAccentBorder = "border-l-[6px] border-l-[#1DB954]";
-                                    badgeClasses = "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-[#1DB954] border-emerald-200 dark:border-emerald-800";
+                                    leftAccentBorder = "border-l-[6px] border-l-[#006A4E]";
+                                    badgeClasses = "bg-blue-50 dark:bg-slate-950/50 text-blue-700 dark:text-sky-400 border-blue-200 dark:border-blue-900";
                                     statusLabel = "সম্পন্ন";
                                     StatusIcon = CheckCircle2;
                                   }
@@ -12275,7 +12236,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   return (
                                     <div
                                       key={ord.id}
-                                      className={`relative overflow-hidden bg-gradient-to-b from-white via-slate-50/60 to-emerald-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-950 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs hover:shadow-md transition-all p-3 sm:p-3.5 text-slate-800 dark:text-slate-100 font-bengali ${leftAccentBorder}`}
+                                      className={`relative overflow-hidden bg-gradient-to-b from-white via-slate-50/60 to-blue-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-950 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs hover:shadow-md transition-all p-3 sm:p-3.5 text-slate-800 dark:text-slate-100 font-bengali ${leftAccentBorder}`}
                                     >
                                       {/* Row 1: Seller Profile (Left) | Order ID & Status Badge (Right) */}
                                       <div className="flex items-center justify-between gap-2 pb-1.5 border-b border-slate-100 dark:border-slate-800/80 mt-0.5">
@@ -12284,16 +12245,16 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             <img
                                               src={ord.sellerAvatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
                                               alt={ord.sellerName || "সেলার"}
-                                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-[#1DB954] shadow-xs"
+                                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-blue-600/50 shadow-xs"
                                             />
-                                            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900" />
+                                            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-blue-500 rounded-full border-2 border-white dark:border-slate-900" />
                                           </div>
                                           <div className="min-w-0">
                                             <div className="flex items-center gap-1">
                                               <span className="text-xs sm:text-[13px] font-black text-slate-900 dark:text-white truncate">
                                                 {ord.sellerName || "মাহবুবুল আলম"}
                                               </span>
-                                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-[#1DB954] shrink-0" />
+                                              <CheckCircle2 className="w-3.5 h-3.5 text-[#006A4E] dark:text-sky-400 shrink-0" />
                                             </div>
                                             <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold block leading-none">
                                               সেলার • {getTimeAgoBengali(ord.createdAt)}
@@ -12329,7 +12290,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           <span className={`px-2 py-0.5 rounded-md font-bold border ${
                                             isWorkFirst
                                               ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30"
-                                              : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                                              : "bg-blue-500/10 text-[#006A4E] dark:text-sky-400 border-blue-500/30"
                                           }`}>
                                             {isWorkFirst ? "আগে কাজ শুরু" : "পেইড এসক্রো"}
                                           </span>
@@ -12352,11 +12313,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                         <div className="border-l border-dashed border-slate-300 dark:border-slate-700 pl-2.5 flex items-center justify-between">
                                           <div>
                                             <span className="text-[9px] text-slate-500 dark:text-slate-400 font-bold block leading-none">পেমেন্ট সিকিউরিটি</span>
-                                            <span className="text-xs sm:text-sm font-black text-[#1DB954] leading-tight">
+                                            <span className="text-xs sm:text-sm font-black text-[#38BDF8] leading-tight">
                                               {isCompleted ? "রিলিজ সম্পন্ন" : isCancelled ? "রিফান্ড ও বোনাস" : "এসক্রো সুরক্ষিত"}
                                             </span>
                                           </div>
-                                          <span className="hidden sm:inline-block px-1.5 py-0.5 bg-emerald-600 text-white text-[8px] font-black rounded">
+                                          <span className="hidden sm:inline-block px-1.5 py-0.5 bg-[#047857] text-white text-[8px] font-black rounded">
                                             সুরক্ষিত
                                           </span>
                                         </div>
@@ -12377,7 +12338,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                         <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 mb-2.5 space-y-1.5">
                                           <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-bold">
                                             <div className="flex items-center gap-1 text-slate-700 dark:text-slate-300">
-                                              <Clock className="w-3.5 h-3.5 text-[#1DB954]" />
+                                              <Clock className="w-3.5 h-3.5 text-[#38BDF8]" />
                                               <span>কাজের টাইমলাইন</span>
                                             </div>
                                             <span className={`px-2 py-0.5 rounded-md font-mono text-[9px] sm:text-[10px] font-black flex items-center gap-1 ${orderCountdown?.badgeColor || "bg-blue-100 text-blue-700"}`}>
@@ -12390,7 +12351,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           <div className="relative pt-1 pb-0.5">
                                             <div className="absolute top-[13px] left-4 right-4 h-1 bg-slate-200 dark:bg-slate-700 z-0 rounded-full" />
                                             <div
-                                              className="absolute top-[13px] left-4 h-1 bg-[#1DB954] z-0 rounded-full transition-all duration-300"
+                                              className="absolute top-[13px] left-4 h-1 bg-[#006A4E] z-0 rounded-full transition-all duration-300"
                                               style={{ width: `${Math.max(4, (currentStepIndex / 3) * 88)}%` }}
                                             />
                                             <div className="grid grid-cols-4 relative z-10">
@@ -12403,15 +12364,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                                   <div key={idx} className="flex flex-col items-center text-center">
                                                     <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black border transition-all ${
                                                       isDone
-                                                        ? "bg-[#1DB954] text-white border-[#1DB954]"
+                                                        ? "bg-[#006A4E] text-white border-blue-600/50"
                                                         : isCurrent
-                                                        ? "bg-white dark:bg-slate-900 text-[#1DB954] border-2 border-[#1DB954] ring-2 ring-[#1DB954]/30 shadow-xs"
+                                                        ? "bg-white dark:bg-slate-900 text-[#38BDF8] border-2 border-blue-600/50 ring-2 ring-[#006A4E]/30 shadow-xs"
                                                         : "bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-300 dark:border-slate-700"
                                                     }`}>
                                                       {isDone ? <Check className="w-3 h-3 stroke-[3]" /> : <StepIcon className="w-2.5 h-2.5" />}
                                                     </div>
                                                     <span className={`text-[8px] sm:text-[9px] font-bold mt-1 leading-none truncate max-w-full ${
-                                                      isCurrent ? "text-[#1DB954] font-black" : isDone ? "text-slate-800 dark:text-slate-200" : "text-slate-400"
+                                                      isCurrent ? "text-[#38BDF8] font-black" : isDone ? "text-slate-800 dark:text-slate-200" : "text-slate-400"
                                                     }`}>
                                                       {step.label}
                                                     </span>
@@ -12424,7 +12385,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           {/* 3% Bonus Notice For Buyer */}
                                           <div className="pt-1 flex items-center justify-center text-center">
                                             {isCancelled ? (
-                                              <div className="inline-flex items-center justify-center gap-1 font-black text-[10px] sm:text-[11px] text-emerald-600 dark:text-emerald-400">
+                                              <div className="inline-flex items-center justify-center gap-1 font-black text-[10px] sm:text-[11px] text-[#006A4E] dark:text-sky-400">
                                                 <Zap className="w-3 h-3 shrink-0 text-amber-500 fill-amber-500/30" />
                                                 <span>সময়মতো জমা না হওয়ায় ৩% ক্ষতিপূরণ বোনাস ওয়ালেটে জমা</span>
                                               </div>
@@ -12476,7 +12437,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                                 initialMessage: `আসসালামু আলাইকুম ${ord.sellerName || "সেলার"}! আমি আমার প্রজেক্ট #${ord.id.slice(-6)} ("${ord.title}") এর জন্য যোগাযোগ করছি।`
                                               });
                                             }}
-                                            className="flex-1 py-1.5 sm:py-2 px-2 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-[10px] sm:text-xs rounded-xl transition cursor-pointer flex items-center justify-center gap-1 shadow-xs active:scale-95 whitespace-nowrap"
+                                            className="flex-1 py-1.5 sm:py-2 px-2 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-[10px] sm:text-xs rounded-xl transition cursor-pointer flex items-center justify-center gap-1 shadow-xs active:scale-95 whitespace-nowrap"
                                             title="সেলারকে মেসেজ দিন"
                                           >
                                             <div className="relative shrink-0">
@@ -12501,7 +12462,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           <button
                                             type="button"
                                             onClick={() => setViewingOrderDetails(ord)}
-                                            className="flex-1 py-1.5 sm:py-2 px-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-[10px] sm:text-xs rounded-xl transition cursor-pointer flex items-center justify-center gap-1 shadow-xs active:scale-95 whitespace-nowrap"
+                                            className="flex-1 py-1.5 sm:py-2 px-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-teal-700 text-white font-black text-[10px] sm:text-xs rounded-xl transition cursor-pointer flex items-center justify-center gap-1 shadow-xs active:scale-95 whitespace-nowrap"
                                           >
                                             <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                                             <span>সম্পন্ন ফাইল</span>
@@ -12513,7 +12474,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             className={`flex-1 py-1.5 sm:py-2 px-2 ${
                                               isWorkFirst
                                                 ? "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white"
-                                                : "bg-gradient-to-r from-emerald-600 to-[#1DB954] hover:from-emerald-500 hover:to-green-500 text-white"
+                                                : "bg-gradient-to-r from-blue-600 to-[#7C3AED] hover:from-blue-500 hover:to-green-500 text-white"
                                             } font-black text-[10px] sm:text-xs rounded-xl transition cursor-pointer flex items-center justify-center gap-1 shadow-xs active:scale-95 whitespace-nowrap`}
                                           >
                                             <DollarSign className="w-3.5 h-3.5 text-white" />
@@ -12650,7 +12611,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       </span>
                                       <span className={`px-2 py-0.2 rounded-full text-[10px] font-bold ${
                                         ord.status === 'completed'
-                                          ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                                          ? 'bg-blue-500/10 text-[#006A4E] dark:text-sky-400'
                                           : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
                                       }`}>
                                         {ord.status === 'completed' ? '✓ রেডি' : 'অপেক্ষমাণ'}
@@ -12679,7 +12640,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           title="লাইসেন্স কি কপি করুন"
                                         >
                                           {isCopied ? (
-                                            <span className="text-[10px] font-bold text-emerald-600 flex items-center gap-0.5">
+                                            <span className="text-[10px] font-bold text-[#006A4E] flex items-center gap-0.5">
                                               <Check className="w-3 h-3" /> কপিড
                                             </span>
                                           ) : (
@@ -12813,14 +12774,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
           <div className="relative max-w-4xl max-h-[88vh]">
             <button
               onClick={() => setLightboxImage(null)}
-              className="absolute -top-10 right-0 text-white hover:text-[#1DB954] transition cursor-pointer flex items-center gap-1 font-bold text-sm"
+              className="absolute -top-10 right-0 text-white hover:text-sky-400 transition cursor-pointer flex items-center gap-1 font-bold text-sm"
             >
               <X className="w-6 h-6" /> বন্ধ করুন
             </button>
             <img
               src={lightboxImage}
               alt="Full View"
-              className="max-w-full max-h-[82vh] rounded-2xl object-contain shadow-2xl border-2 border-[#1DB954]"
+              className="max-w-full max-h-[82vh] rounded-2xl object-contain shadow-2xl border-2 border-blue-600/50"
             />
           </div>
         </div>
@@ -12829,7 +12790,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       {/* EDIT PROFILE MODAL */}
       {isEditProfileModalOpen && (
         <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 font-bengali animate-fadeIn">
-          <div className="bg-white dark:bg-slate-900 border-2 border-[#1DB954] rounded-3xl max-w-md w-full p-4 sm:p-5 space-y-3 text-slate-900 dark:text-white relative shadow-2xl max-h-[85vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 border-2 border-blue-600/50 rounded-3xl max-w-md w-full p-4 sm:p-5 space-y-3 text-slate-900 dark:text-white relative shadow-2xl max-h-[85vh] overflow-y-auto">
             <button
               onClick={() => setIsEditProfileModalOpen(false)}
               className="absolute top-4 right-4 p-1.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-full transition cursor-pointer"
@@ -12837,13 +12798,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               <X className="w-4 h-4" />
             </button>
 
-            <h3 className="text-sm font-black text-emerald-600 dark:text-[#1DB954] flex items-center gap-1.5">
-              <Edit className="w-4 h-4 text-[#1DB954]" />
+            <h3 className="text-sm font-black text-[#006A4E] dark:text-sky-400 flex items-center gap-1.5">
+              <Edit className="w-4 h-4 text-[#38BDF8]" />
               <span>প্রোফাইল তথ্য আপডেট</span>
             </h3>
 
             {editProfileSuccess ? (
-              <div className="p-3 bg-emerald-500/20 border border-emerald-500/40 rounded-xl text-center font-bold text-xs text-emerald-600 dark:text-[#1DB954]">
+              <div className="p-3 bg-blue-500/20 border border-blue-500/40 rounded-xl text-center font-bold text-xs text-[#006A4E] dark:text-sky-400">
                 ✓ প্রোফাইল আপডেট সফল হয়েছে!
               </div>
             ) : (
@@ -12890,7 +12851,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow cursor-pointer transition font-bengali"
+                  className="w-full py-2.5 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow cursor-pointer transition font-bengali"
                 >
                   {t('প্রোফাইল সেভ করুন', 'Save Profile')}
                 </button>
@@ -12903,7 +12864,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       {/* COMPACT POPUP 1: SAVED GIGS & WISHLIST QUICK SETTINGS */}
       {isSavedGigsSettingsModalOpen && (
         <div className="fixed inset-0 bg-slate-950/75 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 font-bengali animate-fadeIn">
-          <div className="bg-white dark:bg-slate-900 border-2 border-[#1DB954] rounded-3xl max-w-sm w-full p-4 space-y-3 text-slate-900 dark:text-white relative shadow-2xl max-h-[85vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 border-2 border-blue-600/50 rounded-3xl max-w-sm w-full p-4 space-y-3 text-slate-900 dark:text-white relative shadow-2xl max-h-[85vh] overflow-y-auto">
             {/* Close Button */}
             <button
               onClick={() => setIsSavedGigsSettingsModalOpen(false)}
@@ -12923,7 +12884,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   <h3 className="text-sm font-black text-slate-900 dark:text-white truncate">
                     পছন্দের তালিকা সেটিংস
                   </h3>
-                  <span className="px-1.5 py-0.2 bg-[#1DB954]/20 text-[#1DB954] text-[9px] font-black rounded-full">
+                  <span className="px-1.5 py-0.2 bg-[#006A4E]/20 text-[#38BDF8] text-[9px] font-black rounded-full">
                     {savedGigIds.length}
                   </span>
                 </div>
@@ -12936,7 +12897,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             {/* 1. Sort Options */}
             <div className="space-y-1.5 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-700/60">
               <label className="text-[11px] font-black text-slate-700 dark:text-slate-200 flex items-center gap-1">
-                <RotateCcw className="w-3 h-3 text-[#1DB954]" />
+                <RotateCcw className="w-3 h-3 text-[#38BDF8]" />
                 <span>{t('গিগ সাজানোর ক্রম', 'Sort By')}</span>
               </label>
               <div className="grid grid-cols-2 gap-1.5 text-xs">
@@ -12952,8 +12913,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     onClick={() => setSavedGigsSort(opt.id as any)}
                     className={`p-1.5 rounded-xl text-left font-bold transition cursor-pointer border text-[11px] ${
                       savedGigsSort === opt.id
-                        ? 'bg-[#1DB954] text-white border-[#1DB954]'
-                        : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#1DB954]/50'
+                        ? 'bg-[#006A4E] text-white border-blue-600/50'
+                        : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-blue-600/50/50'
                     }`}
                   >
                     {opt.label}
@@ -12965,7 +12926,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             {/* 2. Category Filter */}
             <div className="space-y-1.5 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-700/60">
               <label className="text-[11px] font-black text-slate-700 dark:text-slate-200 flex items-center gap-1">
-                <Filter className="w-3 h-3 text-[#1DB954]" />
+                <Filter className="w-3 h-3 text-[#38BDF8]" />
                 <span>ক্যাটাগরি ফিল্টার</span>
               </label>
               <div className="flex flex-wrap gap-1">
@@ -12983,7 +12944,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     onClick={() => setSavedCategoryFilter(cat.id)}
                     className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition cursor-pointer border ${
                       savedCategoryFilter === cat.id
-                        ? 'bg-[#1DB954] text-white border-[#1DB954]'
+                        ? 'bg-[#006A4E] text-white border-blue-600/50'
                         : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                     }`}
                   >
@@ -13016,7 +12977,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   });
                 }}
                 className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                  savedGigsPriceAlerts ? 'bg-[#1DB954]' : 'bg-slate-300 dark:bg-slate-700'
+                  savedGigsPriceAlerts ? 'bg-[#006A4E]' : 'bg-slate-300 dark:bg-slate-700'
                 }`}
               >
                 <span
@@ -13047,12 +13008,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               >
                 {savedWishlistCopied ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-[#1DB954]" />
-                    <span className="text-[#1DB954]">✓ লিংক কপি হয়েছে!</span>
+                    <Check className="w-3.5 h-3.5 text-[#38BDF8]" />
+                    <span className="text-[#38BDF8]">✓ লিংক কপি হয়েছে!</span>
                   </>
                 ) : (
                   <>
-                    <Share2 className="w-3.5 h-3.5 text-[#1DB954]" />
+                    <Share2 className="w-3.5 h-3.5 text-[#38BDF8]" />
                     <span>পছন্দের তালিকা লিংক কপি করুন</span>
                   </>
                 )}
@@ -13082,7 +13043,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             <button
               type="button"
               onClick={() => setIsSavedGigsSettingsModalOpen(false)}
-              className="w-full py-2 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-xs cursor-pointer transition"
+              className="w-full py-2 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-xs cursor-pointer transition"
             >
               {t('সম্পন্ন', 'Done')}
             </button>
@@ -13093,7 +13054,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       {/* COMPACT POPUP 2: ORDERS & PROJECTS QUICK SETTINGS */}
       {isOrdersSettingsModalOpen && (
         <div className="fixed inset-0 bg-slate-950/75 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 font-bengali animate-fadeIn">
-          <div className="bg-white dark:bg-slate-900 border-2 border-[#1DB954] rounded-3xl max-w-sm w-full p-4 space-y-3 text-slate-900 dark:text-white relative shadow-2xl max-h-[85vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 border-2 border-blue-600/50 rounded-3xl max-w-sm w-full p-4 space-y-3 text-slate-900 dark:text-white relative shadow-2xl max-h-[85vh] overflow-y-auto">
             {/* Close Button */}
             <button
               onClick={() => setIsOrdersSettingsModalOpen(false)}
@@ -13105,7 +13066,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
             {/* Header */}
             <div className="flex items-center gap-2.5 pr-7">
-              <div className="w-8 h-8 rounded-xl bg-[#1DB954]/15 text-[#1DB954] border border-[#1DB954]/30 flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-[#006A4E]/15 text-[#38BDF8] border border-blue-600/50/30 flex items-center justify-center shrink-0">
                 <SlidersHorizontal className="w-4 h-4" />
               </div>
               <div className="min-w-0">
@@ -13121,7 +13082,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             {/* 1. View Type Switch */}
             <div className="space-y-1.5 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-700/60">
               <label className="text-[11px] font-black text-slate-700 dark:text-slate-200 flex items-center gap-1">
-                <Package className="w-3 h-3 text-[#1DB954]" />
+                <Package className="w-3 h-3 text-[#38BDF8]" />
                 <span>{t('ভিউ নির্বাচন', 'View Selection')}</span>
               </label>
               <div className="grid grid-cols-4 gap-1 text-[11px]">
@@ -13137,7 +13098,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     onClick={() => setOverviewInnerTab(tab.id as any)}
                     className={`py-1.5 px-2 rounded-xl font-bold transition cursor-pointer border text-center ${
                       overviewInnerTab === tab.id
-                        ? 'bg-[#1DB954] text-white border-[#1DB954]'
+                        ? 'bg-[#006A4E] text-white border-blue-600/50'
                         : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                     }`}
                   >
@@ -13150,7 +13111,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             {/* 2. Order Status Filter */}
             <div className="space-y-1.5 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-700/60">
               <label className="text-[11px] font-black text-slate-700 dark:text-slate-200 flex items-center gap-1">
-                <Filter className="w-3 h-3 text-[#1DB954]" />
+                <Filter className="w-3 h-3 text-[#38BDF8]" />
                 <span>অর্ডার স্ট্যাটাস ফিল্টার</span>
               </label>
               <div className="grid grid-cols-2 gap-1 text-[10px]">
@@ -13166,7 +13127,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     onClick={() => setBuyerOrderStatusFilter(st.id as any)}
                     className={`p-1.5 rounded-xl font-bold transition cursor-pointer border text-left ${
                       buyerOrderStatusFilter === st.id
-                        ? 'bg-[#1DB954] text-white border-[#1DB954]'
+                        ? 'bg-[#006A4E] text-white border-blue-600/50'
                         : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                     }`}
                   >
@@ -13199,7 +13160,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   });
                 }}
                 className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                  orderNotificationAlerts ? 'bg-[#1DB954]' : 'bg-slate-300 dark:bg-slate-700'
+                  orderNotificationAlerts ? 'bg-[#006A4E]' : 'bg-slate-300 dark:bg-slate-700'
                 }`}
               >
                 <span
@@ -13217,7 +13178,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 setIsOrdersSettingsModalOpen(false);
                 setIsPostProjectModalOpen(true);
               }}
-              className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-[#1DB954] hover:opacity-90 text-white text-xs font-black transition cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
+              className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-[#7C3AED] hover:opacity-90 text-white text-xs font-black transition cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
             >
               <PlusCircle className="w-4 h-4" />
               <span>নতুন কাস্টম প্রজেক্ট / অফার পোস্ট করুন</span>
@@ -13238,7 +13199,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       {/* COMPACT POPUP 3: MESSENGER QUICK SETTINGS */}
       {isMessengerSettingsModalOpen && (
         <div className="fixed inset-0 bg-slate-950/75 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 font-bengali animate-fadeIn">
-          <div className="bg-white dark:bg-slate-900 border-2 border-[#1DB954] rounded-3xl max-w-sm w-full p-4 space-y-3 text-slate-900 dark:text-white relative shadow-2xl max-h-[85vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 border-2 border-blue-600/50 rounded-3xl max-w-sm w-full p-4 space-y-3 text-slate-900 dark:text-white relative shadow-2xl max-h-[85vh] overflow-y-auto">
             {/* Close Button */}
             <button
               onClick={() => setIsMessengerSettingsModalOpen(false)}
@@ -13267,7 +13228,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between gap-2">
               <div className="space-y-0.5">
                 <div className="text-[11px] font-black text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
-                  <span className={`w-2 h-2 rounded-full ${messengerOnlineStatus ? 'bg-[#1DB954]' : 'bg-slate-400'}`} />
+                  <span className={`w-2 h-2 rounded-full ${messengerOnlineStatus ? 'bg-[#006A4E]' : 'bg-slate-400'}`} />
                   <span>{messengerOnlineStatus ? t('অনলাইনে সক্রিয়', 'Online') : t('অফলাইন মোড', 'Away')}</span>
                 </div>
                 <p className="text-[9px] text-slate-500 dark:text-slate-400">
@@ -13278,7 +13239,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 type="button"
                 onClick={() => setMessengerOnlineStatus(prev => !prev)}
                 className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                  messengerOnlineStatus ? 'bg-[#1DB954]' : 'bg-slate-300 dark:bg-slate-700'
+                  messengerOnlineStatus ? 'bg-[#006A4E]' : 'bg-slate-300 dark:bg-slate-700'
                 }`}
               >
                 <span
@@ -13312,7 +13273,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   });
                 }}
                 className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer shrink-0 ${
-                  messengerSoundAlerts ? 'bg-[#1DB954]' : 'bg-slate-300 dark:bg-slate-700'
+                  messengerSoundAlerts ? 'bg-[#006A4E]' : 'bg-slate-300 dark:bg-slate-700'
                 }`}
               >
                 <span
@@ -13326,7 +13287,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             {/* 3. Quick Chat Filter */}
             <div className="space-y-1 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-700/60">
               <label className="text-[11px] font-black text-slate-700 dark:text-slate-200 flex items-center gap-1">
-                <Filter className="w-3 h-3 text-[#1DB954]" />
+                <Filter className="w-3 h-3 text-[#38BDF8]" />
                 <span>ইনবক্স ফিল্টার</span>
               </label>
               <div className="grid grid-cols-3 gap-1 text-[10px]">
@@ -13341,7 +13302,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     onClick={() => setMessengerSubTabFilter(sf.id as any)}
                     className={`py-1 px-1.5 rounded-lg font-bold transition cursor-pointer border text-center ${
                       messengerSubTabFilter === sf.id
-                        ? 'bg-[#1DB954] text-white border-[#1DB954]'
+                        ? 'bg-[#006A4E] text-white border-blue-600/50'
                         : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                     }`}
                   >
@@ -13355,7 +13316,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             <button
               type="button"
               onClick={() => setIsMessengerSettingsModalOpen(false)}
-              className="w-full py-2 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-xs cursor-pointer transition"
+              className="w-full py-2 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-xs cursor-pointer transition"
             >
               {t('সম্পন্ন', 'Done')}
             </button>
@@ -13366,7 +13327,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       {/* SELLER PRO SUBSCRIPTION MODAL */}
       {isSubscriptionModalOpen && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn font-bengali">
-          <div className="bg-white dark:bg-slate-900 border-2 border-[#1DB954] rounded-3xl max-w-md w-full p-4 sm:p-5 space-y-3 shadow-2xl relative max-h-[85vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 border-2 border-blue-600/50 rounded-3xl max-w-md w-full p-4 sm:p-5 space-y-3 shadow-2xl relative max-h-[85vh] overflow-y-auto">
             <button
               onClick={() => setIsSubscriptionModalOpen(false)}
               className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-white rounded-full bg-slate-100 dark:bg-slate-800 transition cursor-pointer"
@@ -13375,8 +13336,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             </button>
 
             <div className="text-center space-y-0.5">
-              <span className="px-2.5 py-0.5 bg-[#1DB954]/20 text-[#1DB954] font-black text-[10px] rounded-full inline-flex items-center gap-1">
-                <Crown className="w-3 h-3 text-[#1DB954]" />
+              <span className="px-2.5 py-0.5 bg-[#006A4E]/20 text-[#38BDF8] font-black text-[10px] rounded-full inline-flex items-center gap-1">
+                <Crown className="w-3 h-3 text-[#38BDF8]" />
                 <span>সেলার কাস্টম অর্ডার সাবস্ক্রিপশন</span>
               </span>
               <h3 className="text-base font-black text-slate-900 dark:text-white">
@@ -13396,9 +13357,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               </div>
 
               {/* Pro Plan */}
-              <div className="p-3 bg-emerald-500/10 rounded-2xl border-2 border-[#1DB954] space-y-1 text-xs relative overflow-hidden">
-                <span className="font-bold text-[#1DB954] block text-[11px]">প্রো সেলার পাস</span>
-                <p className="text-base font-black text-emerald-600 dark:text-[#1DB954]">৳৪৯৯/মাস</p>
+              <div className="p-3 bg-blue-500/10 rounded-2xl border-2 border-blue-600/50 space-y-1 text-xs relative overflow-hidden">
+                <span className="font-bold text-[#38BDF8] block text-[11px]">প্রো সেলার পাস</span>
+                <p className="text-base font-black text-[#006A4E] dark:text-sky-400">৳৪৯৯/মাস</p>
                 <ul className="space-y-1 text-slate-800 dark:text-slate-200 text-[10px] font-bold">
                   <li>✓ কাস্টম অর্ডার আনলক</li>
                   <li>✓ ০% প্ল্যাটফর্ম চার্জ</li>
@@ -13407,7 +13368,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             </div>
 
             {subscriptionSuccess ? (
-              <div className="p-2 bg-emerald-500/20 text-[#1DB954] font-bold text-xs rounded-xl text-center border border-[#1DB954]">
+              <div className="p-2 bg-blue-500/20 text-[#38BDF8] font-bold text-xs rounded-xl text-center border border-blue-600/50">
                 ✓ আপনার প্রো সেলার সাবস্ক্রিপশন সফলভাবে রিনিউ করা হয়েছে!
               </div>
             ) : (
@@ -13418,7 +13379,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   setIsProSubscribed(true);
                   setTimeout(() => setSubscriptionSuccess(false), 2500);
                 }}
-                className="w-full py-2.5 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow cursor-pointer transition flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow cursor-pointer transition flex items-center justify-center gap-1.5"
               >
                 <Crown className="w-3.5 h-3.5 fill-slate-950" />
                 <span>প্রো সাবস্ক্রিপশন সক্রিয় করুন (৳৪৯৯/মাস)</span>
@@ -13431,10 +13392,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       {/* NOTIFICATIONS DROPDOWN MODAL */}
       {isNotificationsOpen && (
         <div className="fixed inset-0 bg-slate-950/40 z-50 flex items-start justify-end p-4 pt-16 font-bengali animate-fadeIn">
-          <div className="bg-white dark:bg-slate-900 border-2 border-[#1DB954] rounded-3xl max-w-sm w-full p-4 space-y-3 shadow-2xl relative">
+          <div className="bg-white dark:bg-slate-900 border-2 border-blue-600/50 rounded-3xl max-w-sm w-full p-4 space-y-3 shadow-2xl relative">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
               <div className="flex items-center gap-2">
-                <Bell className="w-4 h-4 text-[#1DB954]" />
+                <Bell className="w-4 h-4 text-[#38BDF8]" />
                 <h3 className="text-sm font-black text-slate-900 dark:text-white">
                   নোটিফিকেশন সেন্টার
                 </h3>
@@ -13448,7 +13409,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 {notifications.filter(n => !n.read).length > 0 && (
                   <button
                     onClick={markAllNotificationsRead}
-                    className="text-[10px] bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-[#1DB954] font-bold px-2 py-0.5 rounded-lg transition"
+                    className="text-[10px] bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-[#38BDF8] font-bold px-2 py-0.5 rounded-lg transition"
                   >
                     সব পঠিত ✓
                   </button>
@@ -13478,10 +13439,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       let catBadgeClass = 'bg-slate-500/15 text-slate-400 border-slate-500/30';
                       if (cat === 'seller') {
                         catLabel = '💼 বায়ার অর্ডার ও ডেলিভারি';
-                        catBadgeClass = 'bg-emerald-500/15 text-emerald-500 border-emerald-500/30';
+                        catBadgeClass = 'bg-blue-500/15 text-blue-500 border-blue-500/30';
                       } else if (cat === 'mentor') {
                         catLabel = '🎓 মেন্টর ও ক্লাসরুম';
-                        catBadgeClass = 'bg-teal-500/15 text-teal-500 border-teal-500/30';
+                        catBadgeClass = 'bg-indigo-500/15 text-indigo-500 border-indigo-500/30';
                       } else if (cat === 'payout') {
                         catLabel = '💳 ক্যাশআউট ও আর্নিং';
                         catBadgeClass = 'bg-amber-500/15 text-amber-500 border-amber-500/30';
@@ -13506,19 +13467,19 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     className={`p-2.5 rounded-xl border transition cursor-pointer ${
                       n.read
                         ? 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-500'
-                        : 'bg-emerald-50 dark:bg-emerald-950/40 border-[#1DB954]/40 text-slate-900 dark:text-white shadow-sm'
+                        : 'bg-blue-50 dark:bg-blue-950/40 border-blue-600/50/40 text-slate-900 dark:text-white shadow-sm'
                     }`}
                   >
                     <div className="flex items-center justify-between font-bold mb-1">
                       <span className="flex items-center gap-1.5">
-                        {!n.read && <span className="w-2 h-2 rounded-full bg-[#1DB954]" />}
+                        {!n.read && <span className="w-2 h-2 rounded-full bg-[#006A4E]" />}
                         {n.title}
                       </span>
                       <span className="text-[9px] text-slate-400 font-normal">{n.time}</span>
                     </div>
                     <p className="text-[11px] leading-relaxed text-slate-600 dark:text-slate-300 line-clamp-2">{n.message}</p>
                     <div className="flex items-center justify-between pt-1.5 mt-1 border-t border-slate-200 dark:border-slate-800/80 text-[10px]">
-                      <span className="text-[#1DB954] font-bold">বিস্তারিত দেখুন →</span>
+                      <span className="text-[#38BDF8] font-bold">বিস্তারিত দেখুন →</span>
                       <span className="text-slate-400 font-normal">{n.read ? 'পঠিত' : 'অপঠিত'}</span>
                     </div>
                   </div>
@@ -13532,7 +13493,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       {/* MESSAGES INBOX MODAL */}
       {isInboxModalOpen && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 font-bengali animate-fadeIn">
-          <div className="bg-white dark:bg-slate-900 border-2 border-[#1DB954] rounded-3xl max-w-md w-full p-4 sm:p-5 space-y-3 shadow-2xl relative max-h-[85vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 border-2 border-blue-600/50 rounded-3xl max-w-md w-full p-4 sm:p-5 space-y-3 shadow-2xl relative max-h-[85vh] overflow-y-auto">
             <button
               onClick={() => setIsInboxModalOpen(false)}
               className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-white rounded-full bg-slate-100 dark:bg-slate-800 transition cursor-pointer"
@@ -13542,7 +13503,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2.5 pr-8">
               <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-[#1DB954]" />
+                <Mail className="w-4 h-4 text-[#38BDF8]" />
                 <div>
                   <h3 className="text-sm font-black text-slate-900 dark:text-white">ইনবক্স ও কাস্টম অর্ডার মেসেঞ্জার</h3>
                   <p className="text-[10px] text-slate-500 dark:text-slate-400">সেলার ও বায়ারদের সাথে সরাসরি ইনবক্স চ্যাট</p>
@@ -13554,7 +13515,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     markAllDirectMessagesRead(isSellerMode ? 'selling' : 'buying');
                     if (markAllConversationsRead) markAllConversationsRead(isSellerMode ? 'selling' : 'buying');
                   }}
-                  className="text-[10px] bg-slate-100 dark:bg-slate-800 text-[#1DB954] font-bold px-2 py-1 rounded-lg hover:opacity-80 transition cursor-pointer"
+                  className="text-[10px] bg-slate-100 dark:bg-slate-800 text-[#38BDF8] font-bold px-2 py-1 rounded-lg hover:opacity-80 transition cursor-pointer"
                 >
                   সব পড়া ✓
                 </button>
@@ -13590,17 +13551,17 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       className={`p-2.5 rounded-xl border transition cursor-pointer flex items-start gap-2.5 ${
                         isMsgRead
                           ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 opacity-90'
-                          : 'bg-emerald-50 dark:bg-emerald-950/40 border-[#1DB954]/50 shadow-sm'
+                          : 'bg-blue-50 dark:bg-blue-950/40 border-blue-600/50/50 shadow-sm'
                       }`}
                     >
                     <img
                       src={msg.senderAvatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"}
                       alt={msg.senderName}
-                      className="w-8 h-8 rounded-full object-cover border border-[#1DB954] shrink-0 mt-0.5"
+                      className="w-8 h-8 rounded-full object-cover border border-blue-600/50 shrink-0 mt-0.5"
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-center font-bold text-[11px] mb-0.5">
-                        <span className="text-[#1DB954] truncate">{msg.senderName}</span>
+                        <span className="text-[#38BDF8] truncate">{msg.senderName}</span>
                         <span className="text-[9px] text-slate-400 font-mono shrink-0 ml-1">{msg.time}</span>
                       </div>
                       <p className="text-slate-700 dark:text-slate-300 text-[11px] line-clamp-2 leading-snug">
@@ -13608,7 +13569,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       </p>
                       <div className="mt-1 flex items-center justify-between text-[9px]">
                         <span className="text-slate-400 uppercase font-semibold">{msg.senderRole}</span>
-                        <span className="text-emerald-500 font-bold flex items-center gap-1 hover:underline">
+                        <span className="text-blue-500 font-bold flex items-center gap-1 hover:underline">
                           চ্যাট চালু করুন 💬
                         </span>
                       </div>
@@ -13643,18 +13604,18 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 placeholder="ইনবক্স মেসেজ বা প্রজেক্ট আপডেট লিখুন..."
                 value={inboxMessageText}
                 onChange={(e) => setInboxMessageText(e.target.value)}
-                className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1DB954]"
+                className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006A4E]"
               />
 
               {inboxSuccess && (
-                <div className="p-2 bg-emerald-500/20 text-[#1DB954] font-bold text-xs rounded-lg text-center border border-[#1DB954]/40">
+                <div className="p-2 bg-blue-500/20 text-[#38BDF8] font-bold text-xs rounded-lg text-center border border-blue-600/50/40">
                   ✓ মেসেজ সফলভাবে ইনবক্সে পাঠানো হয়েছে!
                 </div>
               )}
 
               <button
                 type="submit"
-                className="w-full py-2.5 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl transition shadow cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-2.5 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl transition shadow cursor-pointer flex items-center justify-center gap-2"
               >
                 <Send className="w-4 h-4" />
                 <span>মেসেজ পাঠান</span>
@@ -13670,7 +13631,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-2xl w-full space-y-6 shadow-2xl relative my-8">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-[#1DB954]/10 text-[#1DB954] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-2xl bg-[#006A4E]/10 text-[#38BDF8] flex items-center justify-center">
                   <Edit className="w-5 h-5" />
                 </div>
                 <div>
@@ -13694,7 +13655,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     editGigTitle.length > 90 
                       ? 'bg-rose-100 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400' 
                       : editGigTitle.length >= 45 && editGigTitle.length <= 90 
-                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400' 
+                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-sky-400' 
                         : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
                   }`}>
                     {editGigTitle.length}/৯০ ক্যারেক্টার
@@ -13706,7 +13667,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   maxLength={95}
                   value={editGigTitle}
                   onChange={(e) => setEditGigTitle(e.target.value)}
-                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
+                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                 />
                 <div className="mt-1.5 p-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/50 rounded-lg text-[11px] leading-relaxed text-amber-800 dark:text-amber-300 flex items-start gap-1.5">
                   <span className="text-sm shrink-0">💡</span>
@@ -13720,7 +13681,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   <select
                     value={editGigCategory}
                     onChange={(e) => setEditGigCategory(e.target.value)}
-                    className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
+                    className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                   >
                     <option value="Programming & Tech">Programming & Tech</option>
                     <option value="Graphics & Design">Graphics & Design</option>
@@ -13740,7 +13701,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     required
                     value={editGigDeliveryDays}
                     onChange={(e) => setEditGigDeliveryDays(Number(e.target.value))}
-                    className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
+                    className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                   />
                 </div>
               </div>
@@ -13748,7 +13709,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               {/* Price Packages */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
                 <div>
-                  <label className="block text-[11px] font-bold text-[#1DB954] mb-1">বেসিক প্রাইস (৳ Basic)</label>
+                  <label className="block text-[11px] font-bold text-[#38BDF8] mb-1">বেসিক প্রাইস (৳ Basic)</label>
                   <input
                     type="number"
                     required
@@ -13786,7 +13747,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   required
                   value={editGigThumbnail}
                   onChange={(e) => setEditGigThumbnail(e.target.value)}
-                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
+                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                 />
               </div>
 
@@ -13796,12 +13757,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   rows={3}
                   value={editGigDesc}
                   onChange={(e) => setEditGigDesc(e.target.value)}
-                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
+                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                 />
               </div>
 
               {editGigSuccess && (
-                <div className="p-3 bg-emerald-500/20 text-[#1DB954] font-bold text-xs rounded-xl text-center border border-[#1DB954]/40 animate-pulse">
+                <div className="p-3 bg-blue-500/20 text-[#38BDF8] font-bold text-xs rounded-xl text-center border border-blue-600/50/40 animate-pulse">
                   ✓ গিগ সফলভাবে আপডেট করা হয়েছে!
                 </div>
               )}
@@ -13816,7 +13777,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 </button>
                 <button
                   type="submit"
-                  className="w-2/3 py-3 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-2/3 py-3 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <CheckCircle2 className="w-4 h-4" />
                   <span>পরিবর্তন সেভ করুন</span>
@@ -13856,7 +13817,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 <span className="text-lg font-black text-slate-900 dark:text-white">
                   {((performanceGig.salesCount || 1) * 450 + 320).toLocaleString('bn-BD')}
                 </span>
-                <span className="text-[9px] text-emerald-500 font-bold block">▲ +18.4% গত ৩০ দিনে</span>
+                <span className="text-[9px] text-blue-500 font-bold block">▲ +18.4% গত ৩০ দিনে</span>
               </div>
 
               <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 space-y-1">
@@ -13864,30 +13825,30 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 <span className="text-lg font-black text-slate-900 dark:text-white">
                   {((performanceGig.salesCount || 1) * 120 + 85).toLocaleString('bn-BD')}
                 </span>
-                <span className="text-[9px] text-emerald-500 font-bold block">▲ +12.1% এই সপ্তাহে</span>
+                <span className="text-[9px] text-blue-500 font-bold block">▲ +12.1% এই সপ্তাহে</span>
               </div>
 
               <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 space-y-1">
                 <span className="text-[10px] text-slate-400 font-bold block">📦 সম্পন্ন অর্ডার</span>
-                <span className="text-lg font-black text-[#1DB954]">
+                <span className="text-lg font-black text-[#38BDF8]">
                   {(performanceGig.salesCount || 12).toLocaleString('bn-BD')}টি
                 </span>
-                <span className="text-[9px] text-emerald-500 font-bold block">100% On-Time</span>
+                <span className="text-[9px] text-blue-500 font-bold block">100% On-Time</span>
               </div>
 
               <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 space-y-1">
                 <span className="text-[10px] text-slate-400 font-bold block">💰 মোট উপার্জিত আয়</span>
-                <span className="text-lg font-black text-[#1DB954]">
+                <span className="text-lg font-black text-[#38BDF8]">
                   ৳{(((performanceGig as any).price || performanceGig.packages?.basic?.price || 2500) * (performanceGig.salesCount || 12)).toLocaleString('bn-BD')}
                 </span>
-                <span className="text-[9px] text-emerald-500 font-bold block">এস্ক্রো সুরক্ষিত</span>
+                <span className="text-[9px] text-blue-500 font-bold block">এস্ক্রো সুরক্ষিত</span>
               </div>
             </div>
 
             {/* Quality Metrics */}
             <div className="p-4 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3">
               <h4 className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-[#1DB954]" />
+                <TrendingUp className="w-4 h-4 text-[#38BDF8]" />
                 <span>{t('মেট্রিক্স ও কোয়ালিটি স্কোর', 'Metrics & Quality Score')}</span>
               </h4>
 
@@ -13895,10 +13856,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 <div>
                   <div className="flex justify-between font-bold text-[11px] mb-1">
                     <span className="text-slate-600 dark:text-slate-300">{t('ক্লিক-থ্রু রেট (CTR)', 'Click-Through Rate (CTR)')}</span>
-                    <span className="text-[#1DB954]">5.8% (Excellent)</span>
+                    <span className="text-[#38BDF8]">5.8% (Excellent)</span>
                   </div>
                   <div className="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-                    <div className="bg-[#1DB954] h-full w-[65%] rounded-full"></div>
+                    <div className="bg-[#006A4E] h-full w-[65%] rounded-full"></div>
                   </div>
                 </div>
 
@@ -13927,7 +13888,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             <div className="flex justify-end pt-2">
               <button
                 onClick={() => setPerformanceGig(null)}
-                className="px-6 py-2.5 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-md transition cursor-pointer"
+                className="px-6 py-2.5 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-md transition cursor-pointer"
               >
                 বন্ধ করুন
               </button>
@@ -13983,7 +13944,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       {/* SELLER ORDER DELIVERY MODAL */}
       {deliveringOrder && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[9999] flex items-center justify-center p-4 font-bengali animate-fadeIn">
-          <div className="bg-white dark:bg-slate-900 border-2 border-[#1DB954]/50 rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-5 shadow-2xl relative">
+          <div className="bg-white dark:bg-slate-900 border-2 border-blue-600/50/50 rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-5 shadow-2xl relative">
             <button
               onClick={() => setDeliveringOrder(null)}
               className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
@@ -13992,7 +13953,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             </button>
 
             <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-[#1DB954] flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-2xl bg-blue-500/10 text-[#38BDF8] flex items-center justify-center shrink-0">
                 <UploadCloud className="w-6 h-6" />
               </div>
               <div>
@@ -14016,7 +13977,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   placeholder="বায়ারকে কাজের মূল ফিচারসমূহ এবং ব্যবহারের নির্দেশনা জানান..."
                   value={deliveryNote}
                   onChange={(e) => setDeliveryNote(e.target.value)}
-                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
+                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                 />
               </div>
 
@@ -14029,7 +13990,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   placeholder="https://github.com/myrepo/release-v1.zip"
                   value={deliveryFileUrl}
                   onChange={(e) => setDeliveryFileUrl(e.target.value)}
-                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
+                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                 />
               </div>
 
@@ -14042,7 +14003,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   placeholder="যেমন: project-source-code-v1.0.zip"
                   value={deliveryFileName}
                   onChange={(e) => setDeliveryFileName(e.target.value)}
-                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-[#1DB954]"
+                  className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                 />
               </div>
             </div>
@@ -14060,7 +14021,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   deliverMarketplaceOrder(deliveringOrder.id, deliveryNote, deliveryFileUrl, deliveryFileName);
                   setDeliveringOrder(null);
                 }}
-                className="px-6 py-2.5 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-lg transition cursor-pointer flex items-center gap-2"
+                className="px-6 py-2.5 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl shadow-lg transition cursor-pointer flex items-center gap-2"
               >
                 <CheckCircle2 className="w-4 h-4" />
                 <span>ডেলিভারি সম্পূর্ণ করুন</span>
@@ -14111,7 +14072,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       isCancelled
                         ? "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/50 dark:text-rose-300 dark:border-rose-800"
                         : isCompleted
-                        ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800"
+                        ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-slate-950/50 dark:text-sky-300 dark:border-blue-900"
                         : isInProgress
                         ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-800"
                         : isInReview
@@ -14121,7 +14082,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <Clock className="w-3 h-3 shrink-0" />
                       <span>{isCancelled ? "বাতিল (সময়োত্তীর্ণ)" : isCompleted ? "সম্পন্ন" : isInProgress ? "চলমান কাজ" : isInReview ? "রিভিউধীন" : isPendingApproval ? "নতুন অফার" : "পেন্ডিং"}</span>
                     </span>
-                    <span className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold rounded-md">
+                    <span className="px-2 py-0.5 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-sky-300 text-[10px] font-bold rounded-md">
                       {viewingOrderDetails.category || "General"}
                     </span>
                   </div>
@@ -14146,8 +14107,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white border border-indigo-500/30 shadow-lg space-y-3">
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-[#1DB954] flex items-center justify-center">
-                        <Clock className="w-4 h-4 text-[#1DB954]" />
+                      <div className="w-7 h-7 rounded-lg bg-blue-500/20 text-[#38BDF8] flex items-center justify-center">
+                        <Clock className="w-4 h-4 text-[#38BDF8]" />
                       </div>
                       <div>
                         <span className="text-xs sm:text-sm font-black text-white block">
@@ -14159,7 +14120,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       </div>
                     </div>
                     {isCompleted ? (
-                      <span className="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-black bg-emerald-500 text-white flex items-center gap-1">
+                      <span className="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-black bg-blue-500 text-white flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5" />
                         <span>অন-টাইম রিলিজ</span>
                       </span>
@@ -14175,25 +14136,25 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   {!isCompleted && !isCancelled && (
                     <div className="grid grid-cols-4 gap-2 sm:gap-3 text-center">
                       <div className="p-2.5 sm:p-3.5 bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl border border-white/10 flex flex-col items-center justify-center shadow-inner">
-                        <span className="block text-xl sm:text-3xl font-black font-mono text-emerald-400 leading-none">
+                        <span className="block text-xl sm:text-3xl font-black font-mono text-sky-400 leading-none">
                           {(detailCountdown?.days || 0).toLocaleString("bn-BD")}
                         </span>
                         <span className="text-[10px] sm:text-xs text-slate-300 font-bold mt-1">দিন</span>
                       </div>
                       <div className="p-2.5 sm:p-3.5 bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl border border-white/10 flex flex-col items-center justify-center shadow-inner">
-                        <span className="block text-xl sm:text-3xl font-black font-mono text-emerald-400 leading-none">
+                        <span className="block text-xl sm:text-3xl font-black font-mono text-sky-400 leading-none">
                           {(detailCountdown?.hours || 0).toLocaleString("bn-BD")}
                         </span>
                         <span className="text-[10px] sm:text-xs text-slate-300 font-bold mt-1">ঘণ্টা</span>
                       </div>
                       <div className="p-2.5 sm:p-3.5 bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl border border-white/10 flex flex-col items-center justify-center shadow-inner">
-                        <span className="block text-xl sm:text-3xl font-black font-mono text-emerald-400 leading-none">
+                        <span className="block text-xl sm:text-3xl font-black font-mono text-sky-400 leading-none">
                           {(detailCountdown?.minutes || 0).toLocaleString("bn-BD")}
                         </span>
                         <span className="text-[10px] sm:text-xs text-slate-300 font-bold mt-1">মিনিট</span>
                       </div>
                       <div className="p-2.5 sm:p-3.5 bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl border border-white/10 flex flex-col items-center justify-center shadow-inner">
-                        <span className="block text-xl sm:text-3xl font-black font-mono text-emerald-400 leading-none">
+                        <span className="block text-xl sm:text-3xl font-black font-mono text-sky-400 leading-none">
                           {(detailCountdown?.seconds || 0).toLocaleString("bn-BD")}
                         </span>
                         <span className="text-[10px] sm:text-xs text-slate-300 font-bold mt-1">সেকেন্ড</span>
@@ -14208,7 +14169,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <span>অটো সিস্টেম পেনাল্টি & বায়ার প্রটেকশন নীতি:</span>
                     </div>
                     <p className="text-[11px] sm:text-xs text-amber-100/90 font-medium">
-                      নির্দিষ্ট সময়ের মধ্যে প্রজেক্ট সম্পন্ন না করলে সিস্টেম থেকে স্বয়ংক্রিয়ভাবে <strong className="text-white font-black">৫% জরিমানা (৳{penalty5Percent.toLocaleString("bn-BD")})</strong> সেলার একাউন্ট থেকে কর্তন হবে। এর মধ্যে <strong className="text-emerald-300 font-black">৩% (৳{buyerBonus3Percent.toLocaleString("bn-BD")})</strong> সরাসরি বায়ারের ওয়ালেটে ক্ষতিপূরণ বোনাস হিসেবে ক্রেডিট হবে।
+                      নির্দিষ্ট সময়ের মধ্যে প্রজেক্ট সম্পন্ন না করলে সিস্টেম থেকে স্বয়ংক্রিয়ভাবে <strong className="text-white font-black">৫% জরিমানা (৳{penalty5Percent.toLocaleString("bn-BD")})</strong> সেলার একাউন্ট থেকে কর্তন হবে। এর মধ্যে <strong className="text-sky-300 font-black">৩% (৳{buyerBonus3Percent.toLocaleString("bn-BD")})</strong> সরাসরি বায়ারের ওয়ালেটে ক্ষতিপূরণ বোনাস হিসেবে ক্রেডিট হবে।
                     </p>
                   </div>
                 </div>
@@ -14216,13 +14177,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 {/* 2. Milestone Progress Tracker */}
                 <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2">
                   <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#1DB954]" />
+                    <CheckCircle2 className="w-4 h-4 text-[#38BDF8]" />
                     <span>প্রজেক্টের কাজের ৪-ধাপের মাইলস্টোন ট্র্যাকার</span>
                   </h4>
                   <div className="relative pt-2 pb-1">
                     <div className="absolute top-[16px] left-5 right-5 h-1 bg-slate-200 dark:bg-slate-700 z-0 rounded-full" />
                     <div
-                      className="absolute top-[16px] left-5 h-1 bg-[#1DB954] z-0 rounded-full transition-all duration-300"
+                      className="absolute top-[16px] left-5 h-1 bg-[#006A4E] z-0 rounded-full transition-all duration-300"
                       style={{ width: `${Math.max(5, (modalStepIndex / 3) * 88)}%` }}
                     />
                     <div className="grid grid-cols-4 relative z-10">
@@ -14239,15 +14200,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           <div key={sIdx} className="flex flex-col items-center text-center">
                             <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black border transition-all ${
                               isDone
-                                ? "bg-[#1DB954] text-white border-[#1DB954]"
+                                ? "bg-[#006A4E] text-white border-blue-600/50"
                                 : isCur
-                                ? "bg-white dark:bg-slate-900 text-[#1DB954] border-2 border-[#1DB954] ring-4 ring-[#1DB954]/20 shadow-sm"
+                                ? "bg-white dark:bg-slate-900 text-[#38BDF8] border-2 border-blue-600/50 ring-4 ring-[#006A4E]/20 shadow-sm"
                                 : "bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-300 dark:border-slate-700"
                             }`}>
                               {isDone ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <StepIcon className="w-3 h-3" />}
                             </div>
                             <span className={`text-[9px] sm:text-[10px] font-bold mt-1.5 leading-none ${
-                              isCur ? "text-[#1DB954] font-black" : isDone ? "text-slate-800 dark:text-slate-200" : "text-slate-400"
+                              isCur ? "text-[#38BDF8] font-black" : isDone ? "text-slate-800 dark:text-slate-200" : "text-slate-400"
                             }`}>
                               {step.label}
                             </span>
@@ -14264,7 +14225,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 {/* 3. Buyer Profile & Direct Messenger Box */}
                 <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center font-black text-sm shrink-0 ring-2 ring-emerald-500/30">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-sky-400 text-white flex items-center justify-center font-black text-sm shrink-0 ring-2 ring-[#006A4E]/30">
                       <User className="w-5 h-5 text-white" />
                     </div>
                     <div className="min-w-0">
@@ -14272,7 +14233,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         <span className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate">
                           {viewingOrderDetails.buyerName || "ক্লায়েন্ট বায়ার"}
                         </span>
-                        <BadgeCheck className="w-4 h-4 text-[#1DB954] shrink-0" />
+                        <BadgeCheck className="w-4 h-4 text-[#38BDF8] shrink-0" />
                       </div>
                       <span className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 block font-medium">
                         অর্ডার প্লেসমেন্ট • {getTimeAgoBengali(viewingOrderDetails.createdAt)}
@@ -14314,7 +14275,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           initialMessage: `আসসালামু আলাইকুম ${viewingOrderDetails.buyerName}! প্রজেক্ট #${viewingOrderDetails.id.slice(-6)} ("${viewingOrderDetails.title}") নিয়ে কথা বলার জন্য আপনাকে মেসেজ পাঠাচ্ছি।`
                         });
                       }}
-                      className="py-2 px-3 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95 shrink-0"
+                      className="py-2 px-3 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95 shrink-0"
                     >
                       <MessageSquare className="w-3.5 h-3.5 text-white" />
                       <span>মেসেজ দিন</span>
@@ -14365,9 +14326,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         ৳{viewingOrderDetails.amount.toLocaleString("bn-BD")}
                       </span>
                     </div>
-                    <div className="p-2.5 bg-emerald-50/70 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800/60">
-                      <span className="text-[10px] text-emerald-700 dark:text-[#1DB954] font-bold block">আপনার নিট আয় (৯০%)</span>
-                      <span className="text-sm sm:text-base font-black font-mono text-emerald-700 dark:text-[#1DB954]">
+                    <div className="p-2.5 bg-blue-50/70 dark:bg-blue-950/40 rounded-xl border border-blue-200 dark:border-blue-900/60">
+                      <span className="text-[10px] text-blue-700 dark:text-sky-400 font-bold block">আপনার নিট আয় (৯০%)</span>
+                      <span className="text-sm sm:text-base font-black font-mono text-blue-700 dark:text-sky-400">
                         ৳{modalSellerPayout.toLocaleString("bn-BD")}
                       </span>
                     </div>
@@ -14382,17 +14343,17 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                 {/* 6. Delivered Work (If already submitted) */}
                 {viewingOrderDetails.deliveryNote && (
-                  <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-500/30 space-y-2">
-                    <h4 className="text-xs sm:text-sm font-black text-emerald-800 dark:text-emerald-400 flex items-center gap-1.5">
-                      <CheckCircle2 className="w-4 h-4 text-[#1DB954]" />
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-blue-50/80 dark:bg-slate-950/30 border border-blue-500/30 space-y-2">
+                    <h4 className="text-xs sm:text-sm font-black text-blue-900 dark:text-sky-400 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-[#38BDF8]" />
                       <span>প্রেরিত ডেলিভারি ফাইল ও নোট:</span>
                     </h4>
-                    <p className="text-xs text-emerald-900 dark:text-emerald-200 font-medium leading-relaxed">
+                    <p className="text-xs text-blue-950 dark:text-blue-200 font-medium leading-relaxed">
                       {viewingOrderDetails.deliveryNote}
                     </p>
                     {viewingOrderDetails.deliveryFileUrl && (
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[10px] font-mono bg-white dark:bg-slate-900 px-2 py-1 rounded border border-emerald-300 text-emerald-700 truncate max-w-full">
+                        <span className="text-[10px] font-mono bg-white dark:bg-slate-900 px-2 py-1 rounded border border-sky-300 text-blue-700 truncate max-w-full">
                           {viewingOrderDetails.deliveryFileUrl}
                         </span>
                       </div>
@@ -14422,7 +14383,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         updateMarketplaceOrder(viewingOrderDetails.id, { unreadMessageCount: 3 });
                         setViewingOrderDetails(null);
                       }}
-                      className="py-2 sm:py-2.5 px-4 bg-gradient-to-r from-[#1DB954] to-emerald-600 text-white font-black text-xs rounded-xl shadow-md transition cursor-pointer flex items-center gap-1.5"
+                      className="py-2 sm:py-2.5 px-4 bg-gradient-to-r from-[#006A4E] to-blue-600 text-white font-black text-xs rounded-xl shadow-md transition cursor-pointer flex items-center gap-1.5"
                     >
                       <Play className="w-3.5 h-3.5 fill-white text-white" />
                       <span>শুরু করুন</span>
@@ -14501,8 +14462,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
             {/* Modal Header */}
             <div className="space-y-1 border-b border-slate-100 dark:border-slate-800 pb-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black bg-[#1DB954]/15 text-[#1DB954]">
-                <BadgeCheck className="w-4 h-4 text-[#1DB954]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black bg-[#006A4E]/15 text-[#38BDF8]">
+                <BadgeCheck className="w-4 h-4 text-[#38BDF8]" />
                 <span>বায়ার প্রোফাইল & সিকিউরিটি সেন্টার</span>
               </div>
               <h3 className="text-lg font-black text-slate-900 dark:text-white">
@@ -14515,8 +14476,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
             {/* Success Banner */}
             {buyerProfileSuccessMsg && (
-              <div className="p-3 bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-[#1DB954] text-xs font-bold rounded-2xl flex items-center gap-2 animate-fadeIn">
-                <CheckCircle className="w-4 h-4 shrink-0 text-[#1DB954]" />
+              <div className="p-3 bg-blue-500/15 border border-blue-500/30 text-blue-700 dark:text-sky-400 text-xs font-bold rounded-2xl flex items-center gap-2 animate-fadeIn">
+                <CheckCircle className="w-4 h-4 shrink-0 text-[#38BDF8]" />
                 <span>{buyerProfileSuccessMsg}</span>
               </div>
             )}
@@ -14528,16 +14489,16 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               <div className="space-y-2 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200/80 dark:border-slate-800">
                 <label className="text-xs font-black text-slate-800 dark:text-slate-200 flex items-center justify-between">
                   <span>{t('প্রোফাইল ছবি', 'Profile Photo')}</span>
-                  <span className="text-[10px] text-[#1DB954]">{t('লাইভ প্রিভিউ', 'Live Preview')}</span>
+                  <span className="text-[10px] text-[#38BDF8]">{t('লাইভ প্রিভিউ', 'Live Preview')}</span>
                 </label>
                 <div className="flex items-center gap-4">
                   <div className="relative shrink-0">
                     <img
                       src={buyerEditAvatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
                       alt="Profile Preview"
-                      className="w-16 h-16 rounded-full object-cover border-2 border-[#1DB954] shadow-md"
+                      className="w-16 h-16 rounded-full object-cover border-2 border-blue-600/50 shadow-md"
                     />
-                    <span className="w-4 h-4 rounded-full bg-[#1DB954] border-2 border-white dark:border-slate-900 absolute bottom-0 right-0"></span>
+                    <span className="w-4 h-4 rounded-full bg-[#006A4E] border-2 border-white dark:border-slate-900 absolute bottom-0 right-0"></span>
                   </div>
                   <div className="flex-1 space-y-1.5">
                     <input
@@ -14545,7 +14506,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       value={buyerEditAvatar}
                       onChange={(e) => setBuyerEditAvatar(e.target.value)}
                       placeholder="ছবি বা ইমেজের ডিরেক্ট লিঙ্ক (URL) দিন..."
-                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                     />
                     <p className="text-[10px] text-slate-400">নিচে থেকে ১-ক্লিকে নমুনা ছবি নির্বাচন করুন:</p>
                     <div className="flex items-center gap-1.5">
@@ -14555,7 +14516,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           type="button"
                           onClick={() => setBuyerEditAvatar(av)}
                           className={`w-7 h-7 rounded-full overflow-hidden border-2 transition cursor-pointer ${
-                            buyerEditAvatar === av ? 'border-[#1DB954] scale-110 shadow-xs' : 'border-transparent opacity-70 hover:opacity-100'
+                            buyerEditAvatar === av ? 'border-blue-600/50 scale-110 shadow-xs' : 'border-transparent opacity-70 hover:opacity-100'
                           }`}
                         >
                           <img src={av} alt="Avatar Preset" className="w-full h-full object-cover" />
@@ -14569,7 +14530,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               {/* 2. Full Name */}
               <div className="space-y-1">
                 <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-[#1DB954]" />
+                  <User className="w-3.5 h-3.5 text-[#38BDF8]" />
                   <span>{t('আপনার নাম', 'Full Name')}</span>
                 </label>
                 <input
@@ -14577,7 +14538,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   required
                   value={buyerEditName}
                   onChange={(e) => setBuyerEditName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                 />
               </div>
 
@@ -14585,10 +14546,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               <div className="space-y-1">
                 <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
-                    <PhoneCall className="w-3.5 h-3.5 text-emerald-500" />
+                    <PhoneCall className="w-3.5 h-3.5 text-blue-500" />
                     <span>{t('হোয়াটসঅ্যাপ নম্বর', 'WhatsApp Number')}</span>
                   </span>
-                  <span className="text-[10px] font-black text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-black text-blue-500 bg-blue-500/10 px-2 py-0.5 rounded-full">
                     WhatsApp Active
                   </span>
                 </label>
@@ -14598,7 +14559,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   value={buyerEditWhatsapp}
                   onChange={(e) => setBuyerEditWhatsapp(e.target.value)}
                   placeholder="+8801700000000"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                 />
               </div>
 
@@ -14614,7 +14575,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   value={buyerEditEmail}
                   onChange={(e) => setBuyerEditEmail(e.target.value)}
                   placeholder="yourname@gmail.com"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                 />
               </div>
 
@@ -14634,7 +14595,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     value={buyerEditPassword}
                     onChange={(e) => setBuyerEditPassword(e.target.value)}
                     placeholder="নতুন পাসওয়ার্ড দিন..."
-                    className="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                   />
                   <button
                     type="button"
@@ -14657,7 +14618,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-[#1DB954] hover:bg-[#19a34a] text-white text-xs font-black rounded-xl transition cursor-pointer shadow-md flex items-center justify-center gap-2"
+                  className="flex-1 py-2.5 bg-[#006A4E] hover:bg-[#19a34a] text-white text-xs font-black rounded-xl transition cursor-pointer shadow-md flex items-center justify-center gap-2"
                 >
                   <ShieldCheck className="w-4 h-4" />
                   <span>পাসওয়ার্ড ও তথ্য সেভ করুন</span>
@@ -14676,7 +14637,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             {/* SLEEK COMPACT HEADER */}
             <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2.5 shrink-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md z-10">
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-8 h-8 rounded-xl bg-[#1DB954]/15 text-[#1DB954] flex items-center justify-center font-black shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-[#006A4E]/15 text-[#38BDF8] flex items-center justify-center font-black shrink-0">
                   <FileText className="w-4.5 h-4.5" />
                 </div>
                 <div className="min-w-0">
@@ -14684,7 +14645,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-tight">
                       প্রজেক্ট পোস্ট করুন
                     </h3>
-                    <span className="px-2 py-0.5 rounded-full bg-[#1DB954]/15 text-[#1DB954] text-[10px] font-black border border-[#1DB954]/30">
+                    <span className="px-2 py-0.5 rounded-full bg-[#006A4E]/15 text-[#38BDF8] text-[10px] font-black border border-blue-600/50/30">
                       কাস্টম অফার
                     </span>
                   </div>
@@ -14706,7 +14667,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             {/* MODAL BODY (PHONE OPTIMIZED SCROLLABLE) */}
             {postSubmittedSuccess ? (
               <div className="p-6 sm:p-10 text-center space-y-3.5 my-auto">
-                <div className="w-14 h-14 bg-[#1DB954]/20 text-[#1DB954] rounded-full flex items-center justify-center mx-auto ring-4 ring-[#1DB954]/10 animate-bounce">
+                <div className="w-14 h-14 bg-[#006A4E]/20 text-[#38BDF8] rounded-full flex items-center justify-center mx-auto ring-4 ring-[#006A4E]/10 animate-bounce">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <div className="space-y-1">
@@ -14718,7 +14679,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   </p>
                 </div>
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300">
-                  <RotateCw className="w-3.5 h-3.5 animate-spin text-[#1DB954]" />
+                  <RotateCw className="w-3.5 h-3.5 animate-spin text-[#38BDF8]" />
                   <span>অর্ডার তালিকায় নেওয়া হচ্ছে...</span>
                 </div>
               </div>
@@ -14728,7 +14689,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 {/* 1. BASIC DETAILS */}
                 <div className="bg-slate-50/70 dark:bg-slate-950/50 border border-slate-200/80 dark:border-slate-800/80 rounded-xl p-3.5 space-y-3">
                   <div className="flex items-center gap-2 pb-1.5 border-b border-slate-200/60 dark:border-slate-800">
-                    <span className="w-5 h-5 rounded-full bg-[#1DB954] text-white flex items-center justify-center text-xs font-black">১</span>
+                    <span className="w-5 h-5 rounded-full bg-[#006A4E] text-white flex items-center justify-center text-xs font-black">১</span>
                     <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
                       মূল বিবরণ
                     </h4>
@@ -14746,7 +14707,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       value={postTitle}
                       onChange={(e) => setPostTitle(e.target.value)}
                       placeholder="যেমন: ই-কমার্স ওয়েবসাইটের জন্য রিঅ্যাক্ট ফ্রন্টএন্ড ডিজাইন"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
 
@@ -14767,7 +14728,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             setPostRequirements(getSmartRequirementsSuggestions(postTitle, newCat));
                           }
                         }}
-                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                       >
                         <option value="">সিলেক্ট করুন</option>
                         <option value="Web Development">ওয়েব ডেভেলপমেন্ট</option>
@@ -14790,7 +14751,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         value={postTags}
                         onChange={(e) => setPostTags(e.target.value)}
                         placeholder="হিন্ট: React, Tailwind, Figma, SEO ইত্যাদি..."
-                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
                   </div>
@@ -14808,7 +14769,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             setPostTags(tagList.length > 0 ? `${postTags}, ${tag}` : tag);
                           }
                         }}
-                        className="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-[#1DB954] text-white text-xs font-bold transition cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-[#006A4E] text-white text-xs font-bold transition cursor-pointer"
                       >
                         +{tag}
                       </button>
@@ -14819,7 +14780,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   <div className="space-y-2 pt-2 border-t border-slate-200/60 dark:border-slate-800">
                     <label className="text-xs sm:text-sm font-black text-slate-700 dark:text-slate-300 flex items-center justify-between">
                       <span className="flex items-center gap-1.5">
-                        <ImageIcon className="w-4 h-4 text-[#1DB954]" />
+                        <ImageIcon className="w-4 h-4 text-[#38BDF8]" />
                         <span>স্যাম্পল ছবি (ঐচ্ছিক)</span>
                       </span>
                       <span className="text-[11px] text-slate-400">আপলোড / লিংক</span>
@@ -14847,8 +14808,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     ) : (
                       <div className="grid grid-cols-2 gap-2">
                         {/* FILE UPLOAD */}
-                        <label className="p-2.5 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-[#1DB954] rounded-xl flex items-center justify-center gap-2 cursor-pointer bg-slate-800 text-white transition text-xs font-bold">
-                          <UploadCloud className="w-4 h-4 text-[#1DB954]" />
+                        <label className="p-2.5 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-blue-600/50 rounded-xl flex items-center justify-center gap-2 cursor-pointer bg-slate-800 text-white transition text-xs font-bold">
+                          <UploadCloud className="w-4 h-4 text-[#38BDF8]" />
                           <span>ছবি আপলোড</span>
                           <input
                             type="file"
@@ -14876,7 +14837,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           placeholder="ইমেজ লিংক (URL)"
                           value={postCoverImage}
                           onChange={(e) => setPostCoverImage(e.target.value)}
-                          className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                          className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                         />
                       </div>
                     )}
@@ -14887,7 +14848,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 <div className="bg-slate-50/70 dark:bg-slate-950/50 border border-slate-200/80 dark:border-slate-800/80 rounded-xl p-3.5 space-y-3">
                   <div className="flex items-center justify-between pb-1.5 border-b border-slate-200/60 dark:border-slate-800">
                     <div className="flex items-center gap-2">
-                      <span className="w-5 h-5 rounded-full bg-[#1DB954] text-white flex items-center justify-center text-xs font-black">২</span>
+                      <span className="w-5 h-5 rounded-full bg-[#006A4E] text-white flex items-center justify-center text-xs font-black">২</span>
                       <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
                         কাজের বিবরণ ও রিকোয়ারমেন্ট
                       </h4>
@@ -14907,7 +14868,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       value={postDescription}
                       onChange={(e) => setPostDescription(e.target.value)}
                       placeholder="কাজের বিস্তারিত বিবরণ ও ফিচার উল্লেখ করুন..."
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954] leading-relaxed"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E] leading-relaxed"
                     />
                   </div>
 
@@ -14926,7 +14887,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             setPostRequirements([...postRequirements, ...newOnes]);
                           }
                         }}
-                        className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition cursor-pointer flex items-center gap-1"
+                        className="px-2.5 py-1 rounded-lg bg-[#047857] hover:bg-blue-500 text-white text-xs font-black transition cursor-pointer flex items-center gap-1"
                       >
                         <Zap className="w-3.5 h-3.5" />
                         <span>⚡ টাইটেল অনুসারে সাজেস্ট</span>
@@ -14948,7 +14909,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           }
                         }}
                         placeholder="যেমন: ১ মাসের ফ্রি সাপোর্ট ও অপ্টিমাইজেশন"
-                        className="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                       />
                       <button
                         type="button"
@@ -14958,7 +14919,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             setNewReqInput("");
                           }
                         }}
-                        className="px-3.5 py-2 rounded-xl bg-[#1DB954] hover:bg-[#19a34a] text-white text-xs sm:text-sm font-black transition cursor-pointer"
+                        className="px-3.5 py-2 rounded-xl bg-[#006A4E] hover:bg-[#19a34a] text-white text-xs sm:text-sm font-black transition cursor-pointer"
                       >
                         + যোগ
                       </button>
@@ -14980,7 +14941,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 key={idx}
                                 type="button"
                                 onClick={() => setPostRequirements([...postRequirements, item])}
-                                className="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-[#1DB954] text-white text-xs font-bold transition cursor-pointer flex items-center gap-1"
+                                className="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-[#006A4E] text-white text-xs font-bold transition cursor-pointer flex items-center gap-1"
                               >
                                 <span>+{item}</span>
                               </button>
@@ -14998,7 +14959,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             className="flex items-center justify-between gap-2 p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs sm:text-sm text-slate-700 dark:text-slate-300"
                           >
                             <div className="flex items-center gap-2 min-w-0">
-                              <CheckCircle2 className="w-4 h-4 text-[#1DB954] shrink-0" />
+                              <CheckCircle2 className="w-4 h-4 text-[#38BDF8] shrink-0" />
                               <span className="truncate">{req}</span>
                             </div>
                             <button
@@ -15017,7 +14978,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   {/* REFERENCE LINK */}
                   <div className="space-y-1.5 pt-1 border-t border-slate-200/60 dark:border-slate-800">
                     <label className="text-xs sm:text-sm font-black text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                      <Paperclip className="w-3.5 h-3.5 text-[#1DB954]" />
+                      <Paperclip className="w-3.5 h-3.5 text-[#38BDF8]" />
                       <span>রেফারেন্স ড্রাইভ বা ফাইল লিংক (ঐচ্ছিক)</span>
                     </label>
                     <input
@@ -15028,7 +14989,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         setPostAttachmentUrl(e.target.value);
                       }}
                       placeholder="যেমন: https://drive.google.com/..."
-                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
                 </div>
@@ -15037,7 +14998,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 <div className="bg-slate-50/70 dark:bg-slate-950/50 border border-slate-200/80 dark:border-slate-800/80 rounded-xl p-3.5 space-y-3">
                   <div className="flex items-center justify-between pb-1.5 border-b border-slate-200/60 dark:border-slate-800">
                     <div className="flex items-center gap-2">
-                      <span className="w-5 h-5 rounded-full bg-[#1DB954] text-white flex items-center justify-center text-xs font-black">৩</span>
+                      <span className="w-5 h-5 rounded-full bg-[#006A4E] text-white flex items-center justify-center text-xs font-black">৩</span>
                       <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
                         বাজেট ও ডেলিভারি
                       </h4>
@@ -15049,7 +15010,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         onClick={() => setPostBudgetMode("range")}
                         className={`px-2.5 py-1 rounded-md transition cursor-pointer ${
                           postBudgetMode === "range"
-                            ? "bg-[#1DB954] text-white font-black"
+                            ? "bg-[#006A4E] text-white font-black"
                             : "bg-slate-700 text-white font-bold"
                         }`}
                       >
@@ -15060,7 +15021,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         onClick={() => setPostBudgetMode("fixed")}
                         className={`px-2.5 py-1 rounded-md transition cursor-pointer ${
                           postBudgetMode === "fixed"
-                            ? "bg-[#1DB954] text-white font-black"
+                            ? "bg-[#006A4E] text-white font-black"
                             : "bg-slate-700 text-white font-bold"
                         }`}
                       >
@@ -15082,7 +15043,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           value={minBudget}
                           onChange={(e) => setMinBudget(e.target.value)}
                           placeholder="৫০০০"
-                          className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                          className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                         />
                       </div>
                       <div>
@@ -15095,7 +15056,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           value={maxBudget}
                           onChange={(e) => setMaxBudget(e.target.value)}
                           placeholder="১৫০০০"
-                          className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                          className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                         />
                       </div>
                     </div>
@@ -15110,7 +15071,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         value={postBudgetFixed}
                         onChange={(e) => setPostBudgetFixed(e.target.value)}
                         placeholder="১০০০০"
-                        className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                        className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                       />
                     </div>
                   )}
@@ -15131,7 +15092,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           setMinBudget(b.min);
                           setMaxBudget(b.max);
                         }}
-                        className="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-[#1DB954] text-white text-xs font-bold transition cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-[#006A4E] text-white text-xs font-bold transition cursor-pointer"
                       >
                         {b.label}
                       </button>
@@ -15151,7 +15112,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           onClick={() => setPostDeliveryDays(day)}
                           className={`py-1.5 px-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
                             postDeliveryDays === day
-                              ? "bg-[#1DB954] text-white font-black shadow-sm"
+                              ? "bg-[#006A4E] text-white font-black shadow-sm"
                               : "bg-slate-700 text-white hover:bg-slate-600"
                           }`}
                         >
@@ -15195,21 +15156,21 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         onClick={() => setPostOfferType("paid")}
                         className={`py-2 px-2.5 rounded-xl border text-left transition cursor-pointer flex items-center justify-between gap-1.5 ${
                           postOfferType === "paid"
-                            ? "border-emerald-500 bg-emerald-500/15 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 ring-1 ring-emerald-500 shadow-xs"
+                            ? "border-blue-500 bg-blue-500/15 dark:bg-blue-950/40 text-blue-950 dark:text-blue-200 ring-1 ring-[#006A4E] shadow-xs"
                             : "border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-400"
                         }`}
                       >
                         <div className="min-w-0">
                           <span className="text-xs font-black flex items-center gap-1 leading-tight truncate">
-                            <CreditCard className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                            <CreditCard className="w-3.5 h-3.5 text-blue-500 shrink-0" />
                             অগ্রিম জমা
                           </span>
-                          <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-bold block truncate mt-0.5">
+                          <span className="text-[11px] text-blue-700 dark:text-sky-300 font-bold block truncate mt-0.5">
                             সিকিউরড এসক্রো
                           </span>
                         </div>
                         {postOfferType === "paid" && (
-                          <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                          <CheckCircle2 className="w-4 h-4 text-blue-500 shrink-0" />
                         )}
                       </button>
                     </div>
@@ -15220,7 +15181,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 <div className="bg-slate-100/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl p-3 space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-black text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                      <Eye className="w-3.5 h-3.5 text-[#1DB954]" />
+                      <Eye className="w-3.5 h-3.5 text-[#38BDF8]" />
                       পোস্ট প্রিভিউ
                     </span>
                     <span className="text-xs px-2 py-0.5 bg-purple-500/15 text-purple-600 dark:text-purple-400 font-bold rounded-full">
@@ -15231,14 +15192,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xs space-y-1.5">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0 flex-1">
-                        <span className="text-xs font-bold text-[#1DB954] block">
+                        <span className="text-xs font-bold text-[#38BDF8] block">
                           {postCategory || "ক্যাটাগরি"}
                         </span>
                         <h5 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate">
                           {postTitle || "প্রজেক্টের শিরোনাম..."}
                         </h5>
                       </div>
-                      <span className="text-xs sm:text-sm font-mono font-black text-[#1DB954] shrink-0">
+                      <span className="text-xs sm:text-sm font-mono font-black text-[#38BDF8] shrink-0">
                         {postBudgetMode === "fixed" && postBudgetFixed
                           ? `৳${Number(postBudgetFixed).toLocaleString("bn-BD")}`
                           : `৳${Number(minBudget || 0).toLocaleString("bn-BD")} - ৳${Number(maxBudget || 0).toLocaleString("bn-BD")}`}
@@ -15267,7 +15228,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 <button
                   type="submit"
                   form="post-project-form"
-                  className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-[#1DB954]/25 active:scale-95"
+                  className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs sm:text-sm transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 active:scale-95"
                 >
                   <PlusCircle className="w-4 h-4 stroke-[2.5]" />
                   <span>
@@ -15320,9 +15281,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 </p>
               </div>
             ) : (
-              <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-2xl space-y-1.5 text-xs">
-                <div className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300 font-black">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+              <div className="p-3.5 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded-2xl space-y-1.5 text-xs">
+                <div className="flex items-center gap-1.5 text-blue-900 dark:text-sky-300 font-black">
+                  <CheckCircle2 className="w-4 h-4 text-blue-500 shrink-0" />
                   <span>অগ্রিম বিল পেমেন্ট নোটিশ</span>
                 </div>
                 <p className="text-slate-700 dark:text-slate-300 font-medium leading-relaxed text-[11px]">
@@ -15339,7 +15300,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               </p>
               <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800 text-xs">
                 <span className="text-slate-400 font-bold">নির্ধারিত বাজেট:</span>
-                <span className="font-mono font-black text-[#1DB954]">৳{minBudget} - ৳{maxBudget}</span>
+                <span className="font-mono font-black text-[#38BDF8]">৳{minBudget} - ৳{maxBudget}</span>
               </div>
             </div>
 
@@ -15362,7 +15323,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               <button
                 type="button"
                 onClick={() => publishProjectNow("paid")}
-                className="w-full py-3 px-4 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs sm:text-sm rounded-2xl transition cursor-pointer shadow-md active:scale-95 flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs sm:text-sm rounded-2xl transition cursor-pointer shadow-md active:scale-95 flex items-center justify-center gap-2"
               >
                 <CheckCircle2 className="w-4 h-4 text-slate-950" />
                 <span>বাজেটের বিল পরিশোধ সম্পন্ন করে পেইড প্রজেক্ট পোস্ট করুন</span>
@@ -15501,7 +15462,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white w-full max-w-lg rounded-3xl p-5 sm:p-6 shadow-2xl relative space-y-5 max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3.5">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 text-[#1DB954] flex items-center justify-center border border-[#1DB954]/30">
+                <div className="w-10 h-10 rounded-2xl bg-blue-500/15 text-[#38BDF8] flex items-center justify-center border border-blue-600/50/30">
                   <Wallet className="w-5 h-5" />
                 </div>
                 <div>
@@ -15523,8 +15484,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             </div>
 
             {withdrawSuccess ? (
-              <div className="p-5 bg-emerald-500/10 border border-[#1DB954]/40 rounded-2xl text-center space-y-3 animate-fadeIn">
-                <div className="w-12 h-12 rounded-full bg-[#1DB954] text-white flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/30">
+              <div className="p-5 bg-blue-500/10 border border-blue-600/50/40 rounded-2xl text-center space-y-3 animate-fadeIn">
+                <div className="w-12 h-12 rounded-full bg-[#006A4E] text-white flex items-center justify-center mx-auto shadow-lg shadow-blue-500/30">
                   <Check className="w-6 h-6 stroke-[3]" />
                 </div>
                 <div>
@@ -15544,7 +15505,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     setSellerSubTab('earnings');
                     setPayoutSubTab('history');
                   }}
-                  className="w-full py-2.5 px-4 bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs rounded-xl transition cursor-pointer"
+                  className="w-full py-2.5 px-4 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl transition cursor-pointer"
                 >
                   হিস্টোরি ও স্ট্যাটাস দেখুন
                 </button>
@@ -15592,12 +15553,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 className="space-y-4 text-xs font-bold"
               >
                 {/* Available Balance Box */}
-                <div className="p-3.5 bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-slate-900/5 dark:to-slate-800/40 border border-[#1DB954]/40 rounded-2xl flex items-center justify-between">
+                <div className="p-3.5 bg-gradient-to-r from-blue-500/15 via-indigo-500/10 to-slate-900/5 dark:to-slate-800/40 border border-blue-600/50/40 rounded-2xl flex items-center justify-between">
                   <div>
                     <span className="text-[11px] text-slate-500 dark:text-slate-400 block font-normal">উত্তোলনযোগ্য ক্যাশআউট ব্যালেন্স</span>
-                    <span className="text-xl font-black text-[#1DB954]">৳{(683919).toLocaleString('bn-BD')}</span>
+                    <span className="text-xl font-black text-[#38BDF8]">৳{(683919).toLocaleString('bn-BD')}</span>
                   </div>
-                  <span className="text-[10px] font-black px-2.5 py-1 bg-[#1DB954]/20 text-[#1DB954] rounded-full">
+                  <span className="text-[10px] font-black px-2.5 py-1 bg-[#006A4E]/20 text-[#38BDF8] rounded-full">
                     ইনস্ট্যান্ট প্রসেস
                   </span>
                 </div>
@@ -15620,7 +15581,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         onClick={() => setWithdrawMethod(m.id as any)}
                         className={`p-2.5 rounded-xl border text-center font-black transition cursor-pointer flex flex-col items-center justify-center gap-1 ${
                           withdrawMethod === m.id
-                            ? 'bg-[#1DB954] text-white border-[#1DB954] shadow-sm'
+                            ? 'bg-[#006A4E] text-white border-blue-600/50 shadow-sm'
                             : `bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700`
                         }`}
                       >
@@ -15641,7 +15602,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     value={withdrawAccount}
                     onChange={(e) => setWithdrawAccount(e.target.value)}
                     placeholder={withdrawMethod === 'Bank' ? 'যেমন: DBBL 205.120.xxxxx (ধানমন্ডি ব্রাঞ্চ)' : 'যেমন: 01700000000'}
-                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-mono text-xs focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-mono text-xs focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -15661,7 +15622,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     value={withdrawAmount}
                     onChange={(e) => setWithdrawAmount(Number(e.target.value))}
                     placeholder="যেমন: 5000"
-                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-mono text-base font-black focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-mono text-base font-black focus:outline-none focus:border-[#006A4E]"
                   />
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {[1000, 2500, 5000, 10000, 25000, 50000].map(amt => (
@@ -15671,7 +15632,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         onClick={() => setWithdrawAmount(amt)}
                         className={`px-2.5 py-1 text-[11px] rounded-lg transition font-mono cursor-pointer border ${
                           withdrawAmount === amt
-                            ? 'bg-[#1DB954] text-white border-[#1DB954]'
+                            ? 'bg-[#006A4E] text-white border-blue-600/50'
                             : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700'
                         }`}
                       >
@@ -15681,7 +15642,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <button
                       type="button"
                       onClick={() => setWithdrawAmount(683919)}
-                      className="px-2.5 py-1 bg-emerald-500/20 hover:bg-[#1DB954] text-[#1DB954] hover:text-white text-[11px] font-black rounded-lg transition font-mono cursor-pointer border border-[#1DB954]/30"
+                      className="px-2.5 py-1 bg-blue-500/20 hover:bg-[#006A4E] text-[#38BDF8] hover:text-white text-[11px] font-black rounded-lg transition font-mono cursor-pointer border border-blue-600/50/30"
                     >
                       {t('সব টাকা', 'All Funds')}
                     </button>
@@ -15698,7 +15659,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-xl text-xs font-black bg-gradient-to-r from-[#1DB954] to-emerald-600 hover:from-[#18a649] hover:to-emerald-700 text-white transition cursor-pointer flex items-center gap-1.5 shadow-md active:scale-98"
+                    className="px-6 py-2.5 rounded-xl text-xs font-black bg-gradient-to-r from-[#006A4E] to-blue-600 hover:from-[#18a649] hover:to-blue-700 text-white transition cursor-pointer flex items-center gap-1.5 shadow-md active:scale-98"
                   >
                     <Send className="w-4 h-4 fill-white" />
                     <span>উত্তোলন নিশ্চিত করুন</span>
@@ -15716,7 +15677,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white w-full max-w-lg rounded-3xl p-5 sm:p-6 shadow-2xl relative space-y-4 max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-teal-500/15 text-teal-500 flex items-center justify-center border border-teal-500/30">
+                <div className="w-10 h-10 rounded-2xl bg-indigo-500/15 text-indigo-500 flex items-center justify-center border border-indigo-500/30">
                   <GraduationCap className="w-5 h-5" />
                 </div>
                 <div>
@@ -15738,8 +15699,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             </div>
 
             {mentorAppSubmittedSuccess ? (
-              <div className="p-5 bg-teal-500/10 border border-teal-500/40 rounded-2xl text-center space-y-3 animate-fadeIn">
-                <div className="w-12 h-12 rounded-full bg-teal-600 text-white flex items-center justify-center mx-auto shadow-lg shadow-teal-500/30">
+              <div className="p-5 bg-indigo-500/10 border border-indigo-500/40 rounded-2xl text-center space-y-3 animate-fadeIn">
+                <div className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/30">
                   <Check className="w-6 h-6 stroke-[3]" />
                 </div>
                 <div>
@@ -15758,7 +15719,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     setSpecialistMainTab('mentor');
                     setSellerSubTab('courses');
                   }}
-                  className="w-full py-2.5 px-4 bg-teal-600 hover:bg-teal-700 text-white font-black text-xs rounded-xl transition cursor-pointer"
+                  className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-teal-700 text-white font-black text-xs rounded-xl transition cursor-pointer"
                 >
                   মেন্টর ড্যাশবোর্ডে প্রবেশ করুন →
                 </button>
@@ -15793,7 +15754,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       value={mentorAppName}
                       onChange={(e) => setMentorAppName(e.target.value)}
                       placeholder="যেমন: প্রকৌশলী মাহমুদুল হাসান"
-                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-teal-500"
+                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
                     />
                   </div>
                   <div>
@@ -15806,7 +15767,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       value={mentorAppEmail}
                       onChange={(e) => setMentorAppEmail(e.target.value)}
                       placeholder="instructor@example.com"
-                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-teal-500 font-mono"
+                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 font-mono"
                     />
                   </div>
                 </div>
@@ -15821,7 +15782,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     value={mentorAppExpertise.join(', ')}
                     onChange={(e) => setMentorAppExpertise(e.target.value.split(',').map(s => s.trim()))}
                     placeholder="Web Development, React, UI/UX"
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-teal-500"
+                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
                   />
                 </div>
 
@@ -15836,7 +15797,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       value={mentorAppExperience}
                       onChange={(e) => setMentorAppExperience(e.target.value)}
                       placeholder="যেমন: ৩+ বছর"
-                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-teal-500"
+                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
                     />
                   </div>
                   <div>
@@ -15849,7 +15810,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       value={mentorAppPhone}
                       onChange={(e) => setMentorAppPhone(e.target.value)}
                       placeholder="017xxxxxxxx"
-                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-teal-500 font-mono"
+                      className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 font-mono"
                     />
                   </div>
                 </div>
@@ -15864,7 +15825,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     value={mentorAppProposedTopic}
                     onChange={(e) => setMentorAppProposedTopic(e.target.value)}
                     placeholder="যেমন: Full-Stack Web Development Bootcamp"
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-teal-500"
+                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
                   />
                 </div>
 
@@ -15877,7 +15838,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     required
                     value={mentorAppBio}
                     onChange={(e) => setMentorAppBio(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-teal-500 resize-none"
+                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 resize-none"
                   />
                 </div>
 
@@ -15890,7 +15851,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     value={mentorAppPortfolio}
                     onChange={(e) => setMentorAppPortfolio(e.target.value)}
                     placeholder="https://github.com/your-handle"
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-teal-500 font-mono"
+                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 font-mono"
                   />
                 </div>
 
@@ -15904,7 +15865,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl text-xs font-black bg-teal-600 hover:bg-teal-700 text-white transition cursor-pointer flex items-center gap-1.5 shadow-md active:scale-98"
+                    className="px-5 py-2 rounded-xl text-xs font-black bg-indigo-600 hover:bg-teal-700 text-white transition cursor-pointer flex items-center gap-1.5 shadow-md active:scale-98"
                   >
                     <Check className="w-4 h-4" />
                     <span>আবেদন জমা দিন</span>
@@ -15922,7 +15883,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white w-full max-w-md rounded-3xl p-5 sm:p-6 shadow-2xl relative space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-indigo-500/20 text-sky-400 flex items-center justify-center">
                   <GraduationCap className="w-5 h-5" />
                 </div>
                 <div>
@@ -15942,10 +15903,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             </div>
 
             <div className="space-y-3 text-xs">
-              <div className="p-3 bg-teal-500/10 border border-teal-500/30 rounded-xl space-y-1">
+              <div className="p-3 bg-indigo-500/10 border border-indigo-500/30 rounded-xl space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-slate-400">অনুমোদনের অবস্থা:</span>
-                  <span className="font-black text-teal-400 bg-teal-500/20 px-2 py-0.5 rounded-full text-[11px]">
+                  <span className="font-black text-sky-400 bg-indigo-500/20 px-2 py-0.5 rounded-full text-[11px]">
                     সক্রিয় ও অনুমোদিত
                   </span>
                 </div>
@@ -15963,7 +15924,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     setSpecialistMainTab('mentor');
                     setSellerSubTab('courses');
                   }}
-                  className="w-full py-2.5 px-4 bg-teal-600 hover:bg-teal-700 text-white font-black text-xs rounded-xl transition cursor-pointer text-center"
+                  className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-teal-700 text-white font-black text-xs rounded-xl transition cursor-pointer text-center"
                 >
                   সরাসরি মেন্টর হাব খুলুন →
                 </button>

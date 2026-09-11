@@ -347,7 +347,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
               <div>
                 <h1 className="text-lg sm:text-xl font-black text-slate-950 dark:text-white tracking-tight flex items-center gap-1.5">
                   <span>Messages</span>
-                  <span className="w-2 h-2 rounded-full bg-[#1DB954]" />
+                  <span className="w-2 h-2 rounded-full bg-[#006A4E]" />
                 </h1>
                 <p className="text-[10px] font-semibold text-slate-400/90 tracking-wide leading-tight mt-0.5 font-sans">
                   PTENit Marketplace Inbox
@@ -379,7 +379,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="সেলার, ক্লায়েন্ট বা সার্ভিস খুঁজুন..."
-                className="w-full pl-9 pr-8 py-2 bg-slate-100 dark:bg-slate-800/80 border-none rounded-full text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1DB954]"
+                className="w-full pl-9 pr-8 py-2 bg-slate-100 dark:bg-slate-800/80 border-none rounded-full text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#006A4E]"
               />
               {searchQuery && (
                 <button
@@ -405,7 +405,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
                   <img
                     src={currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
                     alt="You"
-                    className="w-11 h-11 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700 group-hover:border-[#1DB954] transition"
+                    className="w-11 h-11 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700 group-hover:border-blue-600/50 transition"
                   />
                   <div className="absolute -top-1 -right-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] rounded-full p-0.5 shadow-xs">
                     💬
@@ -426,13 +426,13 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
                   }}
                   className="flex flex-col items-center gap-1 shrink-0 cursor-pointer group"
                 >
-                  <div className="relative p-0.5 rounded-full border-2 border-[#1DB954]">
+                  <div className="relative p-0.5 rounded-full border-2 border-blue-600/50">
                     <img
                       src={story.avatar}
                       alt={story.name}
                       className="w-10 h-10 rounded-full object-cover group-hover:scale-105 transition"
                     />
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-[#18222D]" />
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-blue-500 rounded-full border-2 border-white dark:border-[#18222D]" />
                   </div>
                   <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 truncate max-w-[54px] text-center">
                     {story.name}
@@ -456,7 +456,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
                 onClick={() => setActiveCategoryFilter(tab.id as any)}
                 className={`px-3 py-1 rounded-full text-xs font-bold transition whitespace-nowrap cursor-pointer ${
                   activeCategoryFilter === tab.id
-                    ? 'bg-[#1DB954] text-white font-black shadow-xs'
+                    ? 'bg-[#006A4E] text-white font-black shadow-xs'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
                 }`}
               >
@@ -484,7 +484,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
                     }}
                     className={`p-3 sm:px-4 sm:py-3.5 flex items-center gap-3 cursor-pointer transition-colors ${
                       isSelected
-                        ? 'bg-emerald-50/80 dark:bg-emerald-950/20 border-l-4 border-[#1DB954]'
+                        ? 'bg-blue-50/80 dark:bg-slate-950/20 border-l-4 border-blue-600/50'
                         : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
                     }`}
                   >
@@ -496,7 +496,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
                         className="w-12 h-12 rounded-full object-cover border border-slate-200 dark:border-slate-700"
                       />
                       {c.isOnline ? (
-                        <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white dark:border-[#18222D]" />
+                        <span className="absolute bottom-0 right-0 w-3 h-3 bg-blue-500 rounded-full border-2 border-white dark:border-[#18222D]" />
                       ) : (
                         c.onlineTimeAgo && (
                           <span className="absolute -bottom-1 -right-1 bg-slate-900 text-white text-[8px] font-bold px-1 rounded-full border border-slate-700">
@@ -542,7 +542,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
                           {c.lastMessage}
                         </p>
                         {c.unreadCount ? (
-                          <span className="min-w-5 h-5 px-1.5 bg-[#1DB954] text-white text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-sm ring-2 ring-white dark:ring-slate-900">
+                          <span className="min-w-5 h-5 px-1.5 bg-[#006A4E] text-white text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-sm ring-2 ring-white dark:ring-slate-900">
                             {c.unreadCount}
                           </span>
                         ) : null}
@@ -584,7 +584,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
             />
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-3 text-slate-400">
-              <div className="w-16 h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 text-[#1DB954] flex items-center justify-center">
+              <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-slate-950/30 text-[#38BDF8] flex items-center justify-center">
                 <MessageCircle className="w-8 h-8" />
               </div>
               <h3 className="text-base font-black text-slate-800 dark:text-slate-200">
@@ -610,7 +610,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
             className="bg-white dark:bg-[#1C2733] border border-slate-200 dark:border-slate-700 w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-150">
             <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <h3 className="font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
-                <Settings className="w-5 h-5 text-[#1DB954]" />
+                <Settings className="w-5 h-5 text-[#38BDF8]" />
                 <span>মেসেঞ্জার ও চ্যাট সেটিংস</span>
               </h3>
               <button
@@ -632,7 +632,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
                   type="checkbox"
                   checked={settings.activeStatus}
                   onChange={(e) => setSettings({ ...settings, activeStatus: e.target.checked })}
-                  className="w-5 h-5 accent-[#1DB954] cursor-pointer"
+                  className="w-5 h-5 accent-[#006A4E] cursor-pointer"
                 />
               </div>
 
@@ -645,7 +645,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
                   type="checkbox"
                   checked={settings.messageSound}
                   onChange={(e) => setSettings({ ...settings, messageSound: e.target.checked })}
-                  className="w-5 h-5 accent-[#1DB954] cursor-pointer"
+                  className="w-5 h-5 accent-[#006A4E] cursor-pointer"
                 />
               </div>
 
@@ -658,7 +658,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
                   type="checkbox"
                   checked={settings.orderAlerts}
                   onChange={(e) => setSettings({ ...settings, orderAlerts: e.target.checked })}
-                  className="w-5 h-5 accent-[#1DB954] cursor-pointer"
+                  className="w-5 h-5 accent-[#006A4E] cursor-pointer"
                 />
               </div>
 
@@ -671,7 +671,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
                   type="checkbox"
                   checked={settings.readReceipts}
                   onChange={(e) => setSettings({ ...settings, readReceipts: e.target.checked })}
-                  className="w-5 h-5 accent-[#1DB954] cursor-pointer"
+                  className="w-5 h-5 accent-[#006A4E] cursor-pointer"
                 />
               </div>
             </div>
@@ -680,7 +680,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
               <button
                 type="button"
                 onClick={() => setIsSettingsModalOpen(false)}
-                className="px-4 py-2 bg-[#1DB954] text-white text-xs font-black rounded-xl cursor-pointer shadow-xs transition"
+                className="px-4 py-2 bg-[#006A4E] text-white text-xs font-black rounded-xl cursor-pointer shadow-xs transition"
               >
                 সংরক্ষণ করুন
               </button>
@@ -716,7 +716,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
               value={userNote}
               onChange={(e) => setUserNote(e.target.value)}
               placeholder="যেমন: Available for web development 💻"
-              className="w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1DB954]"
+              className="w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006A4E]"
             />
 
             <div className="flex justify-end gap-2">
@@ -730,7 +730,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
               <button
                 type="button"
                 onClick={() => setIsNoteModalOpen(false)}
-                className="px-4 py-1.5 bg-[#1DB954] text-white text-xs font-black rounded-lg cursor-pointer"
+                className="px-4 py-1.5 bg-[#006A4E] text-white text-xs font-black rounded-lg cursor-pointer"
               >
                 শেয়ার করুন
               </button>
@@ -750,7 +750,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
             className="bg-white dark:bg-[#1C2733] border border-slate-200 dark:border-slate-700 w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden max-h-[80vh] flex flex-col">
             <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
               <h3 className="font-black text-sm text-slate-900 dark:text-white flex items-center gap-2">
-                <Plus className="w-4 h-4 text-[#1DB954]" />
+                <Plus className="w-4 h-4 text-[#38BDF8]" />
                 <span>নতুন কথোপকথন শুরু করুন</span>
               </h3>
               <button
@@ -789,7 +789,7 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
                     <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">{u.name}</h4>
                     <p className="text-[10px] text-slate-400 truncate">{u.role}</p>
                   </div>
-                  <span className="text-[10px] px-2 py-0.5 bg-[#1DB954]/10 text-[#1DB954] font-black rounded-full border border-[#1DB954]/30">
+                  <span className="text-[10px] px-2 py-0.5 bg-[#006A4E]/10 text-[#38BDF8] font-black rounded-full border border-blue-600/50/30">
                     চ্যাট
                   </span>
                 </div>
@@ -872,12 +872,12 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
                 <img
                   src={activeCallState.callerAvatar}
                   alt={activeCallState.callerName}
-                  className="w-24 h-24 rounded-full object-cover mx-auto border-4 border-[#1DB954] shadow-xl animate-pulse"
+                  className="w-24 h-24 rounded-full object-cover mx-auto border-4 border-blue-600/50 shadow-xl animate-pulse"
                 />
-                <span className="w-4 h-4 bg-emerald-500 rounded-full border-2 border-slate-900 absolute bottom-1 right-1" />
+                <span className="w-4 h-4 bg-blue-500 rounded-full border-2 border-slate-900 absolute bottom-1 right-1" />
               </div>
               <h3 className="text-lg font-black text-white">{activeCallState.callerName}</h3>
-              <p className="text-xs text-emerald-400 font-bold">
+              <p className="text-xs text-sky-400 font-bold">
                 ভয়েস কল চলমান • {Math.floor(activeCallState.duration / 60)}:{(activeCallState.duration % 60).toString().padStart(2, '0')}
               </p>
             </div>
@@ -998,13 +998,13 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
           </button>
 
           {/* Seller Avatar */}
-          <div className="relative shrink-0 p-[1.5px] rounded-full bg-gradient-to-tr from-emerald-400 via-blue-500 to-cyan-400 shadow-xs">
+          <div className="relative shrink-0 p-[1.5px] rounded-full bg-gradient-to-tr from-sky-400 via-blue-500 to-cyan-400 shadow-xs">
             <img
               src={win.senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
               alt={win.senderName}
               className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border border-white dark:border-[#1C2733]"
             />
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-[#1C2733]" />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-blue-500 rounded-full border-2 border-white dark:border-[#1C2733]" />
           </div>
 
           {/* Seller Info */}
@@ -1013,8 +1013,8 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
               <span className="truncate">{win.senderName}</span>
               <CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
             </h3>
-            <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            <p className="text-[10px] font-bold text-[#006A4E] dark:text-sky-400 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shrink-0" />
               <span className="truncate">অনলাইনে আছেন</span>
             </p>
           </div>
@@ -1026,7 +1026,7 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
           <button
             type="button"
             onClick={() => setIsOfferModalOpen(true)}
-            className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-xs font-black hover:bg-emerald-500/20 transition cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-blue-500/10 text-[#006A4E] dark:text-sky-400 border border-blue-500/30 text-xs font-black hover:bg-blue-500/20 transition cursor-pointer"
             title="কাস্টম অফার পাঠান"
           >
             <Briefcase className="w-3.5 h-3.5" />
@@ -1038,7 +1038,7 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
             type="button"
             id="messenger-meet-trigger"
             onClick={onCreateMeet}
-            className="p-2 text-[#1DB954] hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-full transition cursor-pointer"
+            className="p-2 text-[#38BDF8] hover:bg-blue-50 dark:hover:bg-slate-950/40 rounded-full transition cursor-pointer"
             title="Google Meet ভিডিও কল"
           >
             <Video className="w-5 h-5" />
@@ -1049,7 +1049,7 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
             type="button"
             id="messenger-phone-trigger"
             onClick={onStartVoiceCall}
-            className="p-2 text-[#1DB954] hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-full transition cursor-pointer"
+            className="p-2 text-[#38BDF8] hover:bg-blue-50 dark:hover:bg-slate-950/40 rounded-full transition cursor-pointer"
             title="ভয়েস কল"
           >
             <Phone className="w-5 h-5" />
@@ -1096,42 +1096,42 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
               <div
                 className={`px-4 py-2.5 text-xs sm:text-sm leading-relaxed shadow-2xs ${
                   m.isSelf
-                    ? 'bg-[#1DB954] text-white font-bold rounded-2xl rounded-br-xs'
+                    ? 'bg-[#006A4E] text-white font-bold rounded-2xl rounded-br-xs'
                     : 'bg-white dark:bg-[#243447] text-slate-900 dark:text-slate-100 border border-slate-200/70 dark:border-slate-700/60 rounded-2xl rounded-bl-xs'
                 }`}
               >
                 {m.text.includes('💼') || m.text.includes('অফার') || m.text.includes('অর্ডার') ? (
-                  <div className="my-1 p-3.5 bg-gradient-to-br from-slate-900 via-slate-900 to-[#0B132B] text-white rounded-2xl border border-emerald-500/40 shadow-xl space-y-3 font-bengali">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                  <div className="my-1 p-3.5 bg-white text-slate-900 rounded-2xl border border-slate-200 shadow-md space-y-3 font-bengali">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                       <div className="flex items-center gap-2">
-                        <span className="p-1.5 rounded-xl bg-emerald-500/20 text-emerald-400">
+                        <span className="p-1.5 rounded-xl bg-emerald-100 text-[#006A4E]">
                           <Briefcase className="w-4 h-4" />
                         </span>
                         <div>
-                          <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 block">
+                          <span className="text-[10px] font-black uppercase tracking-wider text-[#006A4E] block">
                             ডাইরেক্ট প্রজেক্ট অর্ডার কার্ড
                           </span>
-                          <span className="text-xs font-bold text-slate-200">
+                          <span className="text-xs font-bold text-slate-800">
                             {win.senderName}-এর জন্য ব্যক্তিগত প্রস্তাব
                           </span>
                         </div>
                       </div>
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-black border border-emerald-500/30">
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-[#006A4E] text-[10px] font-black border border-emerald-200">
                         অপেক্ষমাণ (Pending)
                       </span>
                     </div>
 
-                    <div className="text-xs space-y-1 text-slate-200">
+                    <div className="text-xs space-y-1 text-slate-700">
                       <p className="whitespace-pre-wrap font-medium">{m.text}</p>
                     </div>
 
-                    <div className="pt-2 border-t border-slate-800 flex items-center gap-2">
+                    <div className="pt-2 border-t border-slate-100 flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => {
                           alert('অভিনন্দন! ডাইরেক্ট প্রজেক্ট অর্ডার কনফার্ম করা হয়েছে এবং এস্ক্রো গেটওয়েতে ফান্ড সিকিউরড করা হয়েছে।');
                         }}
-                        className="w-full py-2 px-3 bg-[#1DB954] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-md cursor-pointer transition active:scale-95"
+                        className="w-full py-2 px-3 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-xs cursor-pointer transition active:scale-95"
                       >
                         <ShoppingBag className="w-4 h-4" />
                         <span>অর্ডার একসেপ্ট ও সিকিউরড পেমেন্ট</span>
@@ -1146,9 +1146,9 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
                     href={m.meetLink}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-black hover:bg-slate-800 transition"
+                    className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#006A4E] text-white text-xs font-black hover:bg-[#047857] transition shadow-xs"
                   >
-                    <Video className="w-3.5 h-3.5 text-emerald-400" />
+                    <Video className="w-3.5 h-3.5 text-white" />
                     <span>Join Google Meet Call</span>
                   </a>
                 )}
@@ -1196,7 +1196,7 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
           <button
             type="button"
             onClick={() => setIsOfferModalOpen(true)}
-            className="p-1.5 sm:p-2 text-[#1DB954] hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-full transition cursor-pointer shrink-0 active:scale-95"
+            className="p-1.5 sm:p-2 text-[#38BDF8] hover:bg-blue-50 dark:hover:bg-slate-950/40 rounded-full transition cursor-pointer shrink-0 active:scale-95"
             title="নতুন ডাইরেক্ট প্রজেক্ট অর্ডার পাঠান"
           >
             <ShoppingBag className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
@@ -1206,7 +1206,7 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="p-1.5 sm:p-2 text-slate-400 hover:text-[#1DB954] dark:hover:text-[#1DB954] transition cursor-pointer shrink-0"
+            className="p-1.5 sm:p-2 text-slate-400 hover:text-sky-400 dark:hover:text-sky-400 transition cursor-pointer shrink-0"
             title="ফাইল বা ছবি সংযুক্ত করুন"
           >
             <Paperclip className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
@@ -1233,7 +1233,7 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
               }
             }}
             placeholder="মেসেজ লিখুন..."
-            className="min-w-0 flex-1 px-2.5 sm:px-4 py-1.5 sm:py-2.5 bg-slate-100 dark:bg-slate-800/80 rounded-full text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1DB954]"
+            className="min-w-0 flex-1 px-2.5 sm:px-4 py-1.5 sm:py-2.5 bg-slate-100 dark:bg-slate-800/80 rounded-full text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#006A4E]"
           />
 
           {/* Send Message Button - Always visible */}
@@ -1243,7 +1243,7 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
             disabled={!inputText.trim()}
             className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full cursor-pointer transition active:scale-95 shadow-xs shrink-0 flex items-center justify-center ${
               inputText.trim()
-                ? 'bg-[#1DB954] hover:bg-[#19a34a] text-white opacity-100'
+                ? 'bg-[#006A4E] hover:bg-[#19a34a] text-white opacity-100'
                 : 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed opacity-60'
             }`}
             title="পাঠান"
@@ -1264,7 +1264,7 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
             className="bg-white dark:bg-[#1C2733] border border-slate-200 dark:border-slate-700 w-full max-w-sm rounded-2xl shadow-2xl p-4 sm:p-5 space-y-4">
             <div className="flex items-center justify-between">
               <h4 className="font-black text-sm text-slate-900 dark:text-white flex items-center gap-2">
-                <Briefcase className="w-4 h-4 text-[#1DB954]" />
+                <Briefcase className="w-4 h-4 text-[#38BDF8]" />
                 <span>কাস্টম প্রজেক্ট অফার পাঠান</span>
               </h4>
               <button
@@ -1321,7 +1321,7 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
               <button
                 type="button"
                 onClick={handleSendCustomOffer}
-                className="px-4 py-2 bg-[#1DB954] text-white text-xs font-black rounded-xl cursor-pointer shadow-md hover:bg-[#19a34a] transition"
+                className="px-4 py-2 bg-[#006A4E] text-white text-xs font-black rounded-xl cursor-pointer shadow-md hover:bg-[#19a34a] transition"
               >
                 অফার সেন্ড করুন 🚀
               </button>

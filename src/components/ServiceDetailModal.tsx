@@ -30,7 +30,9 @@ import {
   MessageSquare,
   BadgeCheck,
   User,
-  HelpCircle
+  HelpCircle,
+  Coins,
+  MessageCircle
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { Service, MarketplaceOrder, MarketplaceGigPackage, MarketplaceGig } from '../types';
@@ -47,21 +49,103 @@ export interface ServiceDetailModalProps {
   onClose: () => void;
   setActiveTab?: (tab: string, category?: string) => void;
   openAuthModal?: () => void;
+  viewerMode?: 'buyer' | 'seller';
 }
+
+const formatSellerLevel = (level?: string): string => {
+  if (!level || level === 'টপ রেটেড' || level === 'টপরেটেড') return 'Top Rated';
+  return level;
+};
 
 export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
   service,
   onClose,
   setActiveTab,
-  openAuthModal
+  openAuthModal,
+  viewerMode
 }) => {
-  const { currentUser, siteSettings, addMarketplaceOrder, updateService, t, signup } = useData();
+  const { currentUser, siteSettings, addMarketplaceOrder, updateService, t, signup, openMessengerInbox, marketplaceOrders } = useData();
+
+  const isBuyerOffer = Boolean(
+    (service as any).isBuyerPost ||
+    (service as any).isPublicOffer ||
+    service.category === 'কাস্টম পাবলিক অফার' ||
+    (service as any).offerBadge === 'পাবলিক অফার' ||
+    (service as any).offerBadge === 'বায়ারের অফার' ||
+    (service as any).sellerLevel === 'ভেরিফায়েড বায়ার' ||
+    (service as any).sellerRole === 'buyer'
+  );
+
+  const buyerBudget = Number(
+    service.price && service.price > 0
+      ? service.price
+      : service.packages?.basic?.price || (service as any).amount || (service as any).budget || 15000
+  );
+
+  const buyerDeliveryDays = Number(
+    service.packages?.basic?.deliveryDays || (service as any).deadlineDays || 5
+  );
+
+  const isSellerViewing = isBuyerOffer || viewerMode === 'seller' || (currentUser && currentUser.role === 'seller' && service.sellerId !== currentUser.id && viewerMode !== 'buyer');
+  const [isOrderReceived, setIsOrderReceived] = useState(false);
+  const [orderReceivedSuccessMsg, setOrderReceivedSuccessMsg] = useState('');
+
+  // Check active/running or completed order for this service
+  const userExistingOrder = marketplaceOrders?.find((o) => {
+    if (o.gigId !== service.id && o.title !== service.title) return false;
+    if (o.status === "cancelled") return false;
+    if (!currentUser) return false;
+    return (
+      o.buyerId === currentUser.id ||
+      o.sellerId === currentUser.id ||
+      (currentUser.email && (o.buyerEmail === currentUser.email || o.sellerEmail === currentUser.email)) ||
+      (currentUser.name && (o.buyerName === currentUser.name || o.sellerName === currentUser.name)) ||
+      (currentUser.mobile && (o.buyerPhone === currentUser.mobile || o.sellerPhone === currentUser.mobile))
+    );
+  });
+
+  const handleReceiveOrderAsSeller = () => {
+    if (!currentUser) {
+      if (openAuthModal) openAuthModal();
+      return;
+    }
+
+    const pkgPrice = isBuyerOffer ? buyerBudget : (currentPackage.price ?? 2500);
+    const newOrder: MarketplaceOrder = {
+      id: `ord-rec-${Date.now()}`,
+      gigId: service.id,
+      type: 'custom_agency_order',
+      title: service.title,
+      category: service.category || 'Specialist Project',
+      buyerId: service.sellerId || 'buyer-1',
+      buyerName: service.sellerName || 'বায়ার / ক্লায়েন্ট',
+      buyerEmail: 'client@ptenit.com',
+      buyerPhone: '01812345678',
+      sellerId: currentUser.id,
+      sellerName: currentUser.name || 'সেলার',
+      sellerAvatar: currentUser.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+      packageType: isBuyerOffer ? 'Public Offer' : selectedTier.toUpperCase(),
+      amount: pkgPrice,
+      adminCommission: Math.round(pkgPrice * 0.1),
+      sellerPayout: Math.round(pkgPrice * 0.9),
+      paymentMethod: 'Escrow Secured',
+      transactionId: `REC-${Date.now().toString().slice(-8)}`,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+      deadlineDate: new Date(Date.now() + (isBuyerOffer ? buyerDeliveryDays : 5) * 86400000).toISOString().split('T')[0],
+      deliveryNote: isBuyerOffer ? 'সেলার কর্তৃক পাবলিক বায়ার অফার রিসিভ করা হয়েছে।' : 'সেলার কর্তৃক অর্ডার রিসিভ করা হয়েছে।'
+    };
+
+    addMarketplaceOrder(newOrder);
+    setIsOrderReceived(true);
+    setOrderReceivedSuccessMsg(`🎉 অর্ডারটি সফলভাবে রিসিভ করা হয়েছে! ৳${pkgPrice.toLocaleString('bn-BD')} আপনার পেন্ডিং অর্ডারে যুক্ত হয়েছে।`);
+  };
 
   // Active Tab: 'overview' | 'portfolio' | 'reviews' | 'seller' | 'faqs'
   const [activeTabState, setActiveTabState] = useState<'overview' | 'portfolio' | 'reviews' | 'seller' | 'faqs'>('overview');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
-  // Client Reviews List
+  // Client Reviews List (When client reviews seller gig)
   const reviewsList = [
     {
       name: 'তানভীর আহমেদ',
@@ -90,6 +174,38 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
       date: '৩ সপ্তাহ আগে',
       rating: 5,
       comment: 'উচ্চমানের সার্ভিস ও ইনস্ট্যান্ট রেসপন্স। ভবিষ্যতে যেকোনো প্রজেক্টে এই টিমকেই ফার্স্ট চয়েস রাখব।'
+    }
+  ];
+
+  // Seller Feedback on Buyer (When viewing buyer's public post)
+  const sellerFeedbackForBuyer = [
+    {
+      name: 'আব্দুর রহিম (ফুল-স্ট্যাক ইঞ্জিনিয়ার)',
+      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80',
+      date: '২ দিন আগে',
+      rating: 5,
+      comment: 'খুবই চমৎকার ও প্রফেশনাল বায়ার! কাজের রিকোয়ারমেন্ট প্রথম থেকেই স্পষ্ট ছিল এবং কাজ ডেলিভারি করার সাথে সাথেই এস্ক্রো পেমেন্ট রিলিজ করে দিয়েছেন।'
+    },
+    {
+      name: 'তানিয়া আক্তার (UI/UX ডিজাইনার)',
+      avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80',
+      date: '৫ দিন আগে',
+      rating: 5,
+      comment: 'গ্রেট ক্লায়েন্ট! সঠিক সময়ে ফিডব্যাক ও অ্যাসেট প্রোভাইড করেছেন। উনার সাথে কাজ করা খুবই আনন্দের।'
+    },
+    {
+      name: 'মাহমুদুল হাসান (ওয়েব ডেভেলপার)',
+      avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=150&q=80',
+      date: '১ সপ্তাহ আগে',
+      rating: 5,
+      comment: '১০০% ভেরিফাইড ও বিশ্বস্ত বায়ার। সময়মতো প্রজেক্ট রিভিউ ও চমৎকার যোগাযোগ বজায় রেখেছিলেন।'
+    },
+    {
+      name: 'রাকিবুল ইসলাম (সফটওয়্যার স্পেশালিস্ট)',
+      avatar: 'https://images.unsplash.com/photo-1628157582853-a796fa650a6a?auto=format&fit=crop&w=150&q=80',
+      date: '২ সপ্তাহ আগে',
+      rating: 5,
+      comment: 'পারফেক্ট কমিউনিকেশন এবং অত্যন্ত আন্তরিক ব্যবহার। এ ধরনের ক্লায়েন্টের সাথে বারবার কাজ করতে পেরে আনন্দিত।'
     }
   ];
 
@@ -127,6 +243,15 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
   const [copiedNumber, setCopiedNumber] = useState(false);
   const [copiedDemoLink, setCopiedDemoLink] = useState(false);
   const [copiedShareLink, setCopiedShareLink] = useState(false);
+
+  const isOrderRunning = !!(
+    (isOrderPlaced || isOrderReceived) ||
+    (userExistingOrder && ['pending', 'pending_approval', 'in_progress', 'in_review', 'revision_requested'].includes(userExistingOrder.status))
+  );
+
+  const isOrderCompleted = !!(
+    userExistingOrder && userExistingOrder.status === 'completed' && !isOrderPlaced && !isOrderReceived
+  );
 
   // Admin In-Modal Live Demo & Gallery Management State
   const [adminDemoUrl, setAdminDemoUrl] = useState(service.demoUrl || '');
@@ -360,6 +485,223 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
 
   // Gig-style Package Selector and Order Card (Matching GigDetailPage exactly!)
   const renderPackageAndOrder = (isMobileView: boolean) => {
+    // If seller is viewing or it's a buyer's public offer:
+    // Do NOT show 3-package tabs! A buyer's project has only 1 unified package with requirements, budget & deadline.
+    if (isSellerViewing || isBuyerOffer) {
+      return (
+        <div className={`space-y-3.5 font-bengali ${isMobileView ? 'max-w-[345px] sm:max-w-[380px] mx-auto px-0.5' : 'w-full'}`}>
+          {/* Centered Heading */}
+          <div className="text-center pb-0.5">
+            <span className="inline-flex items-center gap-1.5 text-sm sm:text-base font-bold text-slate-900 dark:text-white border-b-2 border-emerald-600 dark:border-emerald-500 pb-1 px-3">
+              <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <span>বায়ারের প্রজেক্ট স্পেসিফিকেশন ও বাজেট</span>
+            </span>
+          </div>
+
+          {/* Offer Card */}
+          <div className="relative mt-4 bg-white dark:bg-slate-900 px-3.5 sm:px-5 pt-5 pb-4 rounded-2xl border border-neutral-700/35 dark:border-slate-700 shadow-sm space-y-3.5">
+            {/* Top Center Badge */}
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+              <span className="text-xs font-bold text-white bg-emerald-600 px-4 py-1 rounded-full shadow-md inline-flex items-center justify-center text-center whitespace-nowrap">
+                ফিক্সড প্রজেক্ট বাজেট
+              </span>
+            </div>
+
+            {/* Offer Title */}
+            <div>
+              <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                {service.title || 'বায়ারের পাবলিক প্রজেক্ট অফার'}
+              </h4>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                ক্যাটাগরি: <span className="font-semibold text-emerald-600 dark:text-emerald-400">{service.category || 'কাস্টম প্রজেক্ট'}</span>
+              </p>
+            </div>
+
+            {/* Budget Box */}
+            <div className="flex items-center justify-between py-3 px-3.5 sm:px-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-dashed border-emerald-600 dark:border-emerald-500">
+              <div>
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                    প্রস্তাবিত বাজেট
+                  </span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border text-emerald-700 bg-emerald-100/60 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-700">
+                    ১০০% এস্ক্রো সুরক্ষিত
+                  </span>
+                </div>
+                <div className="text-2xl sm:text-3xl font-black text-emerald-700 dark:text-emerald-400 tracking-tight">
+                  ৳{buyerBudget.toLocaleString('bn-BD')}
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-xs text-slate-400 dark:text-slate-500 font-medium block">
+                  পেমেন্ট পদ্ধতি
+                </span>
+                <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                  PTENit Escrow
+                </span>
+              </div>
+            </div>
+
+            {/* Delivery Days & Requirements Meta */}
+            <div className="grid grid-cols-2 gap-2 py-2 border-y border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400">
+              <span className="flex items-center gap-1.5 font-medium">
+                <Clock className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>সময়সীমা: <strong className="text-slate-900 dark:text-white font-bold">{buyerDeliveryDays} দিন</strong></span>
+              </span>
+              <span className="flex items-center gap-1.5 font-medium">
+                <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>রিভিশন: <strong className="text-slate-900 dark:text-white font-bold">রিকোয়ারমেন্ট অনুযায়ী</strong></span>
+              </span>
+            </div>
+
+            {/* বায়ারের প্রজেক্ট সংক্ষিপ্ত ব্রিফ ও রিকোয়ারমেন্ট */}
+            <div className="bg-slate-50 dark:bg-slate-800/40 p-3 rounded-xl border border-slate-200/70 dark:border-slate-800 text-xs space-y-1.5">
+              <div className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>কাজের মূল রিকোয়ারমেন্ট সারসংক্ষেপ:</span>
+              </div>
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed font-normal text-[11px] sm:text-xs line-clamp-3">
+                {service.shortDescription || service.fullDescription || 'বায়ারের দেয়া নির্ধারিত রিকোয়ারমেন্ট ও ডিজাইন স্পেসিফিকেশন অনুযায়ী প্রজেক্টটি প্রস্তুত ও ডেলিভারি করতে হবে।'}
+              </p>
+            </div>
+
+            {/* Deliverables Checklist */}
+            <div className="space-y-1.5">
+              <span className="text-xs font-bold text-slate-900 dark:text-white block">
+                ডেলিভারেবলস ও শর্তসমূহ:
+              </span>
+              <ul className="text-xs text-slate-600 dark:text-slate-300 space-y-1.5">
+                <li className="flex items-start gap-2 font-normal">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <span>বায়ারের দেওয়া নির্ধারিত রিকোয়ারমেন্ট অনুযায়ী কাজ সম্পন্ন</span>
+                </li>
+                <li className="flex items-start gap-2 font-normal">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <span>ক্লিন সোর্স কোড ও ফাইনাল প্রজেক্ট ফাইল ডেলিভারি</span>
+                </li>
+                <li className="flex items-start gap-2 font-normal">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <span>১০০% সুরক্ষিত প্ল্যাটফর্ম এস্ক্রো পেমেন্ট প্রোটেকশন</span>
+                </li>
+                <li className="flex items-start gap-2 font-normal">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <span>কাজ ডেলিভারি ও ক্লায়েন্ট সন্তুষ্টি সাপেক্ষে পেমেন্ট রিলিজ</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* প্রয়োজনীয় স্কিলস / ট্যাগস */}
+            {service.category && (
+              <div className="pt-1 flex items-center gap-1.5 flex-wrap">
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">স্কিলস:</span>
+                <span className="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[10px] font-bold">
+                  {service.category}
+                </span>
+                <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[10px] font-bold">
+                  কাস্টম প্রজেক্ট
+                </span>
+                <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[10px] font-bold">
+                  এস্ক্রো সিকিউর্ড
+                </span>
+              </div>
+            )}
+
+            {/* Active Running Order Notice Pill */}
+            {isOrderRunning && (
+              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700 rounded-xl flex items-center justify-between text-xs font-bold text-emerald-800 dark:text-emerald-200">
+                <span className="flex items-center gap-1.5 truncate">
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+                  <span className="truncate">
+                    অর্ডার রানিং {userExistingOrder?.id ? `(#${userExistingOrder.id.slice(-6)})` : completedOrder?.id ? `(#${completedOrder.id.slice(-6)})` : ''}
+                  </span>
+                </span>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-md font-black uppercase">
+                    রানিং
+                  </span>
+                  {openMessengerInbox && (
+                    <button
+                      type="button"
+                      onClick={() => openMessengerInbox(service.sellerId, service.sellerName)}
+                      className="py-1 px-2.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-bold flex items-center gap-1 transition cursor-pointer shadow-2xs"
+                      title="রানিং অর্ডারে মেসেজ দিন"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5" />
+                      <span>মেসেজ</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Completed Order Notice Pill */}
+            {isOrderCompleted && (
+              <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl text-xs font-bold text-blue-900 dark:text-blue-200 space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-blue-600" />
+                    <span>প্রজেক্ট সম্পন্ন হয়েছে</span>
+                  </span>
+                  <span className="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-md font-black uppercase">
+                    কমপ্লিট
+                  </span>
+                </div>
+                <p className="text-[11px] font-normal text-slate-600 dark:text-slate-400">
+                  প্রজেক্টটি কম্পপ্লিট হওয়ায় মেসেজ অপশন বন্ধ রয়েছে।
+                </p>
+              </div>
+            )}
+
+            {/* Action Button */}
+            <div className="pt-0.5 space-y-2">
+              {orderReceivedSuccessMsg && (
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700 rounded-xl text-emerald-800 dark:text-emerald-200 text-xs font-bold flex items-center gap-2 animate-fadeIn">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>{orderReceivedSuccessMsg}</span>
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  if (currentUser?.id === service.sellerId) {
+                    alert('এটি আপনার নিজের পোস্টকৃত পাবলিক অফার। সেলাররা আপনার অফারে আবেদন বা রিসিভ করতে পারবে।');
+                    return;
+                  }
+                  handleReceiveOrderAsSeller();
+                }}
+                className="w-full py-3 px-4 rounded-xl text-white font-bold font-bengali text-sm sm:text-base shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 bg-[#006A4E] hover:bg-[#00523d] active:bg-[#003d2e] active:scale-98"
+              >
+                <Zap className="w-4 h-4 fill-white text-white" />
+                <span>
+                  {currentUser?.id === service.sellerId
+                    ? 'আপনার পাবলিক অফার'
+                    : isOrderReceived
+                    ? 'অর্ডার রিসিভড • কাজ শুরু করুন'
+                    : 'অর্ডার রিসিভ করুন'}
+                </span>
+                <span className="opacity-60">•</span>
+                <span className="font-extrabold text-amber-200">
+                  ৳{buyerBudget.toLocaleString('bn-BD')}
+                </span>
+              </button>
+            </div>
+
+            {/* Security Notice */}
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-xs font-medium text-slate-600 dark:text-slate-400 space-y-1.5">
+              <p className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-[#15803d] shrink-0" />
+                <span>১০০% নিরাপদ এস্ক্রো পেমেন্ট ও প্ল্যাটফর্ম প্রোটেকশন</span>
+              </p>
+              <p className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-[#15803d] shrink-0" />
+                <span>সরাসরি প্রজেক্ট কোলাবোরেশন ও সাপোর্ট</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className={`space-y-3.5 font-bengali ${isMobileView ? 'max-w-[345px] sm:max-w-[380px] mx-auto px-0.5' : 'w-full'}`}>
         {/* Centered Heading with subtle light underline */}
@@ -380,7 +722,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
             if (pKey === 'basic') {
               label = 'বেসিক';
               activeClass = 'bg-[#15803d] text-white shadow-xs scale-105 border border-[#15803d]';
-              inactiveClass = 'text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 border border-emerald-500/40';
+              inactiveClass = 'text-blue-700 dark:text-sky-400 hover:bg-blue-50 dark:hover:bg-slate-950/40 border border-blue-500/40';
             } else if (pKey === 'standard') {
               label = 'স্ট্যান্ডার্ড';
               activeClass = 'bg-red-600 text-white shadow-xs scale-105 border border-red-600';
@@ -450,7 +792,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                 <span
                   className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
                     selectedTier === 'basic'
-                      ? 'text-[#15803d] bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300/80 dark:border-emerald-700/60'
+                      ? 'text-[#15803d] bg-blue-50 dark:bg-blue-950/40 border-sky-300/80 dark:border-blue-700/60'
                       : selectedTier === 'standard'
                       ? 'text-red-600 bg-red-50 dark:bg-red-950/40 border-red-300/80 dark:border-red-700/60'
                       : 'text-purple-600 bg-purple-50 dark:bg-purple-950/40 border-purple-300/80 dark:border-purple-700/60'
@@ -503,39 +845,89 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
             ))}
           </ul>
 
-          {/* Active Order Notice Pill if applicable */}
-          {isOrderPlaced && (
-            <div className="p-3 bg-[#15803d]/10 border border-[#15803d]/30 rounded-xl flex items-center justify-between text-xs font-bold text-[#15803d]">
+          {/* Active Running Order Notice Pill - Only show when order is actively running! */}
+          {isOrderRunning && (
+            <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700 rounded-xl flex items-center justify-between text-xs font-bold text-emerald-800 dark:text-emerald-200">
               <span className="flex items-center gap-1.5 truncate">
-                <CheckCircle2 className="w-4 h-4 shrink-0 text-[#15803d]" />
-                <span className="truncate">অর্ডারকৃত সার্ভিস {completedOrder?.id ? `(আইডি: #${completedOrder.id})` : ''}</span>
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+                <span className="truncate">
+                  অর্ডার রানিং {userExistingOrder?.id ? `(#${userExistingOrder.id.slice(-6)})` : completedOrder?.id ? `(#${completedOrder.id.slice(-6)})` : ''}
+                </span>
               </span>
-              <span className="text-[10px] bg-[#15803d] text-white px-2 py-0.5 rounded-md font-black uppercase shrink-0">
-                একটিভ
-              </span>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-md font-black uppercase">
+                  রানিং
+                </span>
+                {openMessengerInbox && (
+                  <button
+                    type="button"
+                    onClick={() => openMessengerInbox(service.sellerId, service.sellerName)}
+                    className="py-1 px-2.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-bold flex items-center gap-1 transition cursor-pointer shadow-2xs"
+                    title="রানিং অর্ডারে মেসেজ দিন"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    <span>মেসেজ</span>
+                  </button>
+                )}
+              </div>
             </div>
           )}
 
-          {/* "অর্ডার করুন" বাটন (প্যাকেজ অনুযায়ী ফোকাসড কালার ও ৪-কোণা রাউন্ডেড স্টাইল) */}
-          <div className="pt-0.5">
+          {/* Completed Order Notice Pill - Messaging disabled, new order button works */}
+          {isOrderCompleted && (
+            <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl text-xs font-bold text-blue-900 dark:text-blue-200 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-blue-600" />
+                  <span>প্রজেক্ট সম্পন্ন হয়েছে</span>
+                </span>
+                <span className="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-md font-black uppercase">
+                  কমপ্লিট
+                </span>
+              </div>
+              <p className="text-[11px] font-normal text-slate-600 dark:text-slate-400">
+                প্রজেক্টটি কম্পপ্লিট হওয়ায় মেসেজ অপশন বন্ধ রয়েছে। নতুন কাজ করাতে নিচের বাটনে নতুন অর্ডার করুন।
+              </p>
+            </div>
+          )}
+
+          {/* অর্ডার বাটন (বায়ার হলে অর্ডার করুন, সেলার হলে অর্ডার রিসিভ করুন - নতুন অর্ডার বাটন সব সময় কাজ করবে) */}
+          <div className="pt-0.5 space-y-2">
+            {orderReceivedSuccessMsg && (
+              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700 rounded-xl text-emerald-800 dark:text-emerald-200 text-xs font-bold flex items-center gap-2 animate-fadeIn">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{orderReceivedSuccessMsg}</span>
+              </div>
+            )}
             <button
               type="button"
               onClick={() => {
-                setOrderModalOpen(true);
-                if (!isOrderPlaced) {
+                if (isSellerViewing) {
+                  handleReceiveOrderAsSeller();
+                } else {
+                  setOrderModalOpen(true);
                   setCheckoutStep(1);
+                  setOrderError(null);
                 }
-                setOrderError(null);
               }}
               className={`w-full py-3 px-4 rounded-lg text-white font-bold font-bengali text-sm sm:text-base shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98 ${
-                selectedTier === 'basic'
+                isSellerViewing
+                  ? 'bg-[#006A4E] hover:bg-[#00523d] active:bg-[#003d2e]'
+                  : selectedTier === 'basic'
                   ? 'bg-[#15803d] hover:bg-[#166534] active:bg-[#14532d]'
                   : selectedTier === 'standard'
                   ? 'bg-red-600 hover:bg-red-700 active:bg-red-800'
                   : 'bg-gradient-to-r from-purple-700 via-indigo-700 to-purple-800 hover:from-purple-800 hover:to-indigo-900'
               }`}
             >
-              <span>{isOrderPlaced ? 'অর্ডার সম্পন্ন • স্ট্যাটাস দেখুন' : 'অর্ডার করুন'}</span>
+              {isSellerViewing ? (
+                <>
+                  <Zap className="w-4 h-4 fill-white text-white" />
+                  <span>{isOrderReceived ? 'অর্ডার রিসিভড • কাজ শুরু করুন' : 'অর্ডার রিসিভ করুন'}</span>
+                </>
+              ) : (
+                <span>{isOrderCompleted ? 'নতুন অর্ডার করুন' : isOrderRunning ? 'আরেকটি নতুন অর্ডার করুন' : 'অর্ডার করুন'}</span>
+              )}
               <span className="opacity-60">•</span>
               <span className="font-extrabold text-amber-200">
                 ৳{(currentPackage.price ?? 2500).toLocaleString('bn-BD')}
@@ -636,7 +1028,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                           shareWhatsApp();
                           setIsShareMenuOpen(false);
                         }}
-                        className="flex items-center gap-2 p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold transition cursor-pointer"
+                        className="flex items-center gap-2 p-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-950/60 text-blue-700 dark:text-sky-300 text-xs font-bold transition cursor-pointer"
                       >
                         <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
                         <span className="truncate">হোয়াটসঅ্যাপ</span>
@@ -675,8 +1067,8 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                       >
                         {copiedLink ? (
                           <>
-                            <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                            <span className="text-emerald-600 dark:text-emerald-400 font-bold truncate">কপি হয়েছে!</span>
+                            <Check className="w-4 h-4 text-blue-500 shrink-0" />
+                            <span className="text-[#006A4E] dark:text-sky-400 font-bold truncate">কপি হয়েছে!</span>
                           </>
                         ) : (
                           <>
@@ -696,7 +1088,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                         }}
                         className="w-full py-1.5 px-2 mt-1 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium flex items-center justify-center gap-1.5 transition cursor-pointer"
                       >
-                        <Share2 className="w-3.5 h-3.5 text-[#1DB954]" />
+                        <Share2 className="w-3.5 h-3.5 text-[#38BDF8]" />
                         <span>অন্যান্য অ্যাপসে শেয়ার</span>
                       </button>
                     )}
@@ -757,19 +1149,38 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
               onClick={(e) => e.stopPropagation()}
               className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-2.5 sm:p-3 z-20 flex items-center flex-nowrap overflow-x-auto scrollbar-none gap-2 text-[11px] sm:text-xs text-white/90 whitespace-nowrap"
             >
-              <span className="inline-flex items-center gap-1 font-bold text-amber-400 shrink-0">
-                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                <span>{service.rating || 5}</span>
-                <span className="text-white/70 font-normal">({service.reviewsCount || 48})</span>
-              </span>
-              <span className="text-white/40 shrink-0">·</span>
-              <span className="font-medium text-white/95 shrink-0">
-                ১৫০+ প্রজেক্ট ডেলিভারি
-              </span>
-              <span className="text-white/40 shrink-0">·</span>
-              <span className="font-medium text-white/95 shrink-0">
-                {service.category}
-              </span>
+              {isSellerViewing ? (
+                <>
+                  <span className="inline-flex items-center gap-1 font-bold text-emerald-400 shrink-0">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>ভেরিফায়েড বায়ার</span>
+                  </span>
+                  <span className="text-white/40 shrink-0">·</span>
+                  <span className="font-medium text-white/95 shrink-0">
+                    {service.category || 'কাস্টম প্রজেক্ট'}
+                  </span>
+                  <span className="text-white/40 shrink-0">·</span>
+                  <span className="font-medium text-emerald-300 shrink-0">
+                    ১০০% এস্ক্রো সিকিউর্ড
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="inline-flex items-center gap-1 font-bold text-amber-400 shrink-0">
+                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                    <span>{service.rating || 5}</span>
+                    <span className="text-white/70 font-normal">({service.reviewsCount || 48})</span>
+                  </span>
+                  <span className="text-white/40 shrink-0">·</span>
+                  <span className="font-medium text-white/95 shrink-0">
+                    ১৫০+ প্রজেক্ট ডেলিভারি
+                  </span>
+                  <span className="text-white/40 shrink-0">·</span>
+                  <span className="font-medium text-white/95 shrink-0">
+                    {service.category}
+                  </span>
+                </>
+              )}
             </div>
           </div>
 
@@ -799,7 +1210,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                       }}
                       className={`relative w-16 h-11 sm:w-20 sm:h-13 rounded-lg overflow-hidden shrink-0 transition cursor-pointer border ${
                         activeMediaIndex === idx
-                          ? 'border-[#1DB954] ring-2 ring-[#1DB954]/40 scale-102 opacity-100'
+                          ? 'border-blue-600/50 ring-2 ring-[#006A4E]/40 scale-102 opacity-100'
                           : 'border-slate-200 dark:border-slate-700 opacity-75 hover:opacity-100'
                       }`}
                       title={`ডেমো ছবি ${idx + 1}`}
@@ -818,13 +1229,13 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
             {/* Left Main Content */}
             <div className="lg:col-span-8 space-y-6">
               
-              {/* Tabs Header - 5 Tabs: সার্ভিস বিবরণী, পোর্টফোলিও, রিভিউ (35), সেলার বায়ো, প্রশ্নোত্তর (FAQ) */}
+              {/* Tabs Header - 5 Tabs */}
               <div className="flex border-b border-slate-200 dark:border-slate-800 gap-4 sm:gap-6 text-xs sm:text-sm font-bold font-bengali overflow-x-auto scrollbar-none">
                 {[
-                  { id: 'overview', label: 'সার্ভিস বিবরণী' },
-                  { id: 'portfolio', label: 'পোর্টফোলিও' },
-                  { id: 'reviews', label: `রিভিউ (${service.reviewsCount || 35})` },
-                  { id: 'seller', label: 'সেলার বায়ো' },
+                  { id: 'overview', label: isSellerViewing ? 'কাজের বিবরণ' : 'সার্ভিস বিবরণী' },
+                  { id: 'portfolio', label: isSellerViewing ? 'রেফারেন্স স্ক্রিনশট' : 'পোর্টফোলিও' },
+                  { id: 'reviews', label: isSellerViewing ? 'রেটিং ও রিভিউ' : `রিভিউ (${service.reviewsCount || 35})` },
+                  { id: 'seller', label: isSellerViewing ? 'বায়ার পরিচিতি' : 'সেলার বায়ো' },
                   { id: 'faqs', label: 'প্রশ্নোত্তর (FAQ)' }
                 ].map(tab => (
                   <button
@@ -833,7 +1244,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                     onClick={() => setActiveTabState(tab.id as any)}
                     className={`pb-3 border-b-2 transition-colors cursor-pointer whitespace-nowrap ${
                       activeTabState === tab.id
-                        ? 'border-[#1DB954] text-[#1DB954]'
+                        ? 'border-blue-600/50 text-[#38BDF8]'
                         : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white'
                     }`}
                   >
@@ -842,30 +1253,37 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                 ))}
               </div>
 
-              {/* TAB 1: OVERVIEW (সার্ভিস বিবরণী) */}
+              {/* TAB 1: OVERVIEW (সার্ভিস বিবরণী / বায়ারের রিকোয়ারমেন্ট) */}
               {activeTabState === 'overview' && (
                 <div className="space-y-6 animate-fadeIn font-bengali">
                   
                   {/* Service Description */}
                   <div>
                     <h3 className="text-base sm:text-lg font-bold font-heading mb-2 text-slate-900 dark:text-white">
-                      সার্ভিস বিবরণী
+                      {isSellerViewing ? 'কাজের বিস্তারিত বিবরণ ও বায়ারের রিকোয়ারমেন্ট' : 'সার্ভিস বিবরণী'}
                     </h3>
                     <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line font-normal">
                       {service.fullDescription || service.shortDescription}
                     </p>
                   </div>
 
-                  {/* What You Will Get (এই সার্ভিসে আপনি যা যা পাবেন) */}
+                  {/* What You Will Get (এই সার্ভিসে আপনি যা যা পাবেন / বায়ারের কাজের পরিধি) */}
                   <div className="bg-slate-50 dark:bg-slate-800/60 p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 space-y-2.5">
                     <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#1DB954]" />
-                      <span>এই সার্ভিসে আপনি যা যা পাবেন:</span>
+                      <CheckCircle2 className="w-4 h-4 text-[#38BDF8]" />
+                      <span>{isSellerViewing ? 'বায়ারের কাজের পরিধি ও ডেলিভারেবলস:' : 'এই সার্ভিসে আপনি যা যা পাবেন:'}</span>
                     </h3>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-normal">
-                      {defaultFeatures.map((item, i) => (
+                      {(isSellerViewing ? [
+                        'বায়ারের নির্ধারিত রিকোয়ারমেন্ট অনুযায়ী কাজ সম্পন্ন',
+                        'ক্লিন সোর্স কোড ও ফাইনাল প্রজেক্ট ফাইল ডেলিভারি',
+                        'ক্লায়েন্ট সন্তুষ্টি ও অ্যাপ্রুভাল সাপেক্ষে পেমেন্ট রিলিজ',
+                        'রানিং অর্ডারে মেসেঞ্জারে সার্বক্ষণিক ফাইল শেয়ারিং ও যোগাযোগ',
+                        '১০০% প্ল্যাটফর্ম এস্ক্রো পেমেন্ট সুরক্ষা',
+                        'প্রয়োজনীয় ব্রাউজার বা মোবাইল ডিভাইসে পূর্ণাঙ্গ টেস্ট রিপোর্ট'
+                      ] : defaultFeatures).map((item, i) => (
                         <li key={i} className="flex items-start gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954] mt-1.5 shrink-0" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#006A4E] mt-1.5 shrink-0" />
                           <span>{item}</span>
                         </li>
                       ))}
@@ -875,27 +1293,38 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                   {/* Requirements & Work Process (প্রয়োজনীয় রিকোয়ারমেন্টস ও কাজের প্রক্রিয়া) */}
                   <div>
                     <h3 className="text-sm sm:text-base font-bold font-heading mb-2 text-slate-900 dark:text-white">
-                      প্রয়োজনীয় রিকোয়ারমেন্টস ও কাজের প্রক্রিয়া
+                      {isSellerViewing ? 'প্রজেক্ট এক্সিকিউশন ও কাজের নীতিমালা' : 'প্রয়োজনীয় রিকোয়ারমেন্টস ও কাজের প্রক্রিয়া'}
                     </h3>
                     <ul className="list-disc list-inside text-xs sm:text-sm text-slate-600 dark:text-slate-300 space-y-1 font-normal">
-                      <li>১০০% হ্যান্ড-কোডেড ও আধুনিক প্রযুক্তির রেসপন্সিভ আর্কিটেকচার</li>
-                      <li>ক্লিন ও অপ্টিমাইজড সোর্স ফাইল ডেলিভারি সহ লাইভ টেস্টেড প্রজেক্ট</li>
-                      <li>প্রয়োজনীয় ব্রাউজার বা মোবাইল ডিভাইসে পূর্ণাঙ্গ টেস্ট রিপোর্ট</li>
-                      <li>ডেলিভারি পরবর্তীতে ফ্রি রিভিশন ও ইনস্টলেশন সাপোর্ট</li>
+                      {isSellerViewing ? (
+                        <>
+                          <li>অর্ডার রিসিভ করার পর প্রজেক্টের কাজ সময়মতো সম্পন্ন করতে হবে।</li>
+                          <li>ক্লিন ও অপ্টিমাইজড সোর্স ফাইল সহ প্রজেক্ট হ্যান্ডওভার নিশ্চিত করতে হবে।</li>
+                          <li>অর্ডার রানিং থাকা অবস্থায় মেসেঞ্জারে ফাইল আদান-প্রদান ও চ্যাট সচল থাকবে।</li>
+                          <li>বায়ার কাজ গ্রহণ করার সাথে সাথে আপনার ওয়ালেটে পেমেন্ট যুক্ত হবে।</li>
+                        </>
+                      ) : (
+                        <>
+                          <li>১০০% হ্যান্ড-কোডেড ও আধুনিক প্রযুক্তির রেসপন্সিভ আর্কিটেকচার</li>
+                          <li>ক্লিন ও অপ্টিমাইজড সোর্স ফাইল ডেলিভারি সহ লাইভ টেস্টেড প্রজেক্ট</li>
+                          <li>প্রয়োজনীয় ব্রাউজার বা মোবাইল ডিভাইসে পূর্ণাঙ্গ টেস্ট রিপোর্ট</li>
+                          <li>ডেলিভারি পরবর্তীতে ফ্রি রিভিশন ও ইনস্টলেশন সাপোর্ট</li>
+                        </>
+                      )}
                     </ul>
                   </div>
 
                   {/* Verified Service Profile & Guarantee (ভেরিফাইড সার্ভিস প্রোফাইল) */}
                   <div className="p-2.5 sm:p-3 bg-slate-100 dark:bg-slate-800/80 rounded-xl flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-[#1DB954] text-white flex items-center justify-center font-bold text-sm shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-[#006A4E] text-white flex items-center justify-center font-bold text-sm shrink-0">
                       <ShieldCheck className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
                       <h4 className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm truncate">
-                        ভেরিফাইড সার্ভিস (PTENit Agency)
+                        {isSellerViewing ? 'ভেরিফায়েড বায়ার (১০০% এস্ক্রো সুরক্ষিত ক্লায়েন্ট)' : 'ভেরিফাইড সার্ভিস (PTENit Agency)'}
                       </h4>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                        ১০০% সিকিউর এস্ক্রো ও মানি ব্যাক গ্যারান্টি
+                        {isSellerViewing ? 'কাজের সন্তুষ্টি নিশ্চিত সাপেক্ষে এস্ক্রো থেকে নিরাপদ পেমেন্ট রিলিজ' : '১০০% সিকিউর এস্ক্রো ও মানি ব্যাক গ্যারান্টি'}
                       </p>
                     </div>
                   </div>
@@ -908,18 +1337,18 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                 </div>
               )}
 
-              {/* TAB 2: PORTFOLIO (পোর্টফোলিও) */}
+              {/* TAB 2: PORTFOLIO (পোর্টফোলিও / রেফারেন্স স্ক্রিনশট) */}
               {activeTabState === 'portfolio' && (
                 <div className="space-y-6 animate-fadeIn font-bengali">
                   
-                  {/* Live Demo Link Card: Only shown if admin provided demoUrl */}
+                  {/* Live Demo Link Card: Only shown if admin/buyer provided demoUrl */}
                   {service.demoUrl && service.demoUrl.trim() ? (
-                    <div className="p-3 sm:p-3.5 rounded-2xl bg-emerald-500/10 dark:bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-between gap-3">
+                    <div className="p-3 sm:p-3.5 rounded-2xl bg-blue-500/10 dark:bg-blue-500/10 border border-blue-500/25 flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#1DB954] animate-pulse shrink-0" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#006A4E] animate-pulse shrink-0" />
                         <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white flex items-center gap-1.5 truncate whitespace-nowrap">
-                          <Globe className="w-4 h-4 text-[#1DB954] shrink-0" />
-                          <span className="truncate">লাইভ ডেমো প্রিভিউ</span>
+                          <Globe className="w-4 h-4 text-[#38BDF8] shrink-0" />
+                          <span className="truncate">{isSellerViewing ? 'বায়ারের রেফারেন্স ওয়েবসাইট / ডেমো লিংক' : 'লাইভ ডেমো প্রিভিউ'}</span>
                         </h4>
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0">
@@ -927,10 +1356,10 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                           href={service.demoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs transition shadow-xs cursor-pointer active:scale-95 whitespace-nowrap"
+                          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs transition shadow-xs cursor-pointer active:scale-95 whitespace-nowrap"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
-                          <span>লাইভ দেখুন</span>
+                          <span>{isSellerViewing ? 'রেফারেন্স লিংক দেখুন' : 'লাইভ দেখুন'}</span>
                         </a>
                       </div>
                     </div>
@@ -941,11 +1370,11 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                     <div className="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 space-y-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-200">
-                          <Edit3 className="w-4 h-4 text-[#1DB954]" />
-                          <span>এডমিন কন্ট্রোল: লাইভ ডেমো লিংক ও গ্যালারি আপডেট</span>
+                          <Edit3 className="w-4 h-4 text-[#38BDF8]" />
+                          <span>{isSellerViewing ? 'এডমিন কন্ট্রোল: বায়ারের রেফারেন্স লিংক ও গ্যালারি মডারেশন' : 'এডমিন কন্ট্রোল: লাইভ ডেমো লিংক ও গ্যালারি আপডেট'}</span>
                         </div>
                         {saveDemoSuccess && (
-                          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 animate-fadeIn">
+                          <span className="text-xs font-bold text-[#006A4E] dark:text-sky-400 animate-fadeIn">
                             ✓ সফলভাবে সংরক্ষিত হয়েছে!
                           </span>
                         )}
@@ -954,7 +1383,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                       {/* Edit Demo URL Input */}
                       <div className="space-y-1.5">
                         <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">
-                          লাইভ ডেমো ওয়েবসাইট লিংক (URL)
+                          {isSellerViewing ? 'কাজের রেফারেন্স ওয়েবসাইট লিংক (URL)' : 'লাইভ ডেমো ওয়েবসাইট লিংক (URL)'}
                         </label>
                         <div className="flex gap-2">
                           <input
@@ -962,7 +1391,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                             placeholder="https://your-service-demo.com"
                             value={adminDemoUrl}
                             onChange={(e) => setAdminDemoUrl(e.target.value)}
-                            className="flex-1 px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs font-mono focus:outline-none focus:border-[#1DB954]"
+                            className="flex-1 px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs font-mono focus:outline-none focus:border-[#006A4E]"
                           />
                           <button
                             type="button"
@@ -971,7 +1400,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                               setSaveDemoSuccess(true);
                               setTimeout(() => setSaveDemoSuccess(false), 2500);
                             }}
-                            className="px-4 py-2 bg-[#1DB954] hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition cursor-pointer shrink-0"
+                            className="px-4 py-2 bg-[#006A4E] hover:bg-[#047857] text-white rounded-xl text-xs font-bold transition cursor-pointer shrink-0"
                           >
                             লিংক সেভ
                           </button>
@@ -981,7 +1410,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                       {/* Add New Screenshot to Gallery */}
                       <div className="space-y-1.5 pt-2 border-t border-slate-200 dark:border-slate-700">
                         <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">
-                          নতুন স্ক্রিনশট ছবির লিংক যোগ করুন
+                          {isSellerViewing ? 'নতুন রেফারেন্স স্ক্রিনশট ছবির লিংক যোগ করুন' : 'নতুন স্ক্রিনশট ছবির লিংক যোগ করুন'}
                         </label>
                         <div className="flex gap-2">
                           <input
@@ -989,7 +1418,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                             placeholder="https://example.com/screenshot.png"
                             value={newGalleryImgUrl}
                             onChange={(e) => setNewGalleryImgUrl(e.target.value)}
-                            className="flex-1 px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs font-mono focus:outline-none focus:border-[#1DB954]"
+                            className="flex-1 px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs font-mono focus:outline-none focus:border-[#006A4E]"
                           />
                           <button
                             type="button"
@@ -1014,7 +1443,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                       {serviceMediaList.length > 0 && (
                         <div className="pt-2 border-t border-slate-200 dark:border-slate-700 space-y-2">
                           <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 block">
-                            বিদ্যমান ছবি ব্যবস্থাপনা ({serviceMediaList.length}টি)
+                            {isSellerViewing ? `বিদ্যমান রেফারেন্স ছবি ব্যবস্থাপনা (${serviceMediaList.length}টি)` : `বিদ্যমান ছবি ব্যবস্থাপনা (${serviceMediaList.length}টি)`}
                           </span>
                           <div className="flex flex-wrap gap-2">
                             {serviceMediaList.map((url, i) => (
@@ -1045,10 +1474,10 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                     <div className="flex items-center justify-between gap-2">
                       <div className="min-w-0 flex-1">
                         <h3 className="text-sm sm:text-base font-bold font-heading text-slate-900 dark:text-white truncate whitespace-nowrap">
-                          ডেমো স্ক্রিনশট ও প্রিভিউ গ্যালারী
+                          {isSellerViewing ? 'কাজের রেফারেন্স ও নমুনা স্ক্রিনশট' : 'ডেমো স্ক্রিনশট ও প্রিভিউ গ্যালারী'}
                         </h3>
                         <p className="text-[11px] sm:text-xs text-slate-500 font-bengali truncate whitespace-nowrap">
-                          যেকোনো ছবিতে ক্লিক করে ফুলস্ক্রিনে বড় করে দেখুন
+                          {isSellerViewing ? 'বায়ারের প্রদত্ত কাজের নমুনা ও রেফারেন্স দেখতে ছবিতে ক্লিক করুন' : 'যেকোনো ছবিতে ক্লিক করে ফুলস্ক্রিনে বড় করে দেখুন'}
                         </p>
                       </div>
                       <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-lg shrink-0 whitespace-nowrap">
@@ -1087,22 +1516,22 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                   <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                     <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
                       <Star className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500 fill-current" />
-                      <span>ক্লায়েন্টদের রিভিউ ও রেটিং</span>
+                      <span>{isSellerViewing ? 'সেলার ও ফ্রিল্যান্সারদের দেওয়া মূল্যায়ন (বায়ার ফিডব্যাক)' : 'ক্লায়েন্টদের রিভিউ ও রেটিং'}</span>
                     </h3>
                     <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-amber-500 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-lg border border-amber-300/40">
                       <Star className="w-3.5 h-3.5 fill-current" />
-                      <span>{service.rating || 5.0} ({service.reviewsCount || 35}টি রিভিউ)</span>
+                      <span>{isSellerViewing ? '★ ৫.০ (বায়ার রেটিং)' : `${service.rating || 5.0} (${service.reviewsCount || 35}টি রিভিউ)`}</span>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    {reviewsList.map((rev, rIdx) => (
+                    {(isSellerViewing ? sellerFeedbackForBuyer : reviewsList).map((rev, rIdx) => (
                       <div key={rIdx} className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
                         <div className="flex items-center gap-3">
                           <img
                             src={rev.avatar}
                             alt={rev.name}
-                            className="w-10 h-10 rounded-full object-cover border border-emerald-500/40"
+                            className="w-10 h-10 rounded-full object-cover border border-blue-500/40"
                           />
                           <div className="min-w-0 flex-1">
                             <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">{rev.name}</h4>
@@ -1123,45 +1552,64 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                 </div>
               )}
 
-              {/* TAB 4: SELLER BIO (সেলার বায়ো) */}
+              {/* TAB 4: SELLER BIO / BUYER BIO */}
               {activeTabState === 'seller' && (
                 <div className="space-y-4 sm:space-y-5 animate-fadeIn font-bengali">
                   <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
-                    <User className="w-4 h-4 sm:w-5 sm:h-5 text-[#1DB954]" />
-                    <span>সেলার প্রোফাইল</span>
+                    <User className="w-4 h-4 sm:w-5 sm:h-5 text-[#38BDF8]" />
+                    <span>{isSellerViewing ? 'বায়ার প্রোফাইল' : 'সেলার প্রোফাইল'}</span>
                   </h3>
 
                   <div className="p-3.5 sm:p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3.5 sm:space-y-4">
                     <div className="flex items-start sm:items-center gap-3 sm:gap-4">
                       <img
                         src={(service as any).sellerAvatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
-                        alt={(service as any).sellerName || "PTENit Certified Team"}
+                        alt={isSellerViewing ? (service.sellerName || "বায়ার / ক্লায়েন্ট") : ((service as any).sellerName || "PTENit Certified Team")}
                         className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-emerald-500 shrink-0 mt-0.5 sm:mt-0"
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <h4 className="text-xs sm:text-base font-bold text-slate-900 dark:text-white truncate">
-                            {(service as any).sellerName || "PTENit Certified Team"}
+                            {isSellerViewing ? (service.sellerName || "বায়ার / ক্লায়েন্ট") : ((service as any).sellerName || "PTENit Certified Team")}
                           </h4>
-                          <BadgeCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
+                          <BadgeCheck className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500 fill-emerald-500 text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
                         </div>
                         <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex-wrap">
-                          <span className="text-amber-500 font-bold whitespace-nowrap">{(service as any).sellerLevel || "Top Rated Agency"}</span>
-                          <span className="text-slate-300 dark:text-slate-600 hidden sm:inline">·</span>
-                          <span className="text-[#15803d] dark:text-[#1DB954] font-semibold whitespace-nowrap">{(service as any).sellerTitle || "Full-Stack Engineers"}</span>
+                          {isSellerViewing ? (
+                            <>
+                              <span className="text-emerald-600 dark:text-emerald-400 font-bold whitespace-nowrap">ভেরিফায়েড বায়ার</span>
+                              <span className="text-slate-300 dark:text-slate-600 hidden sm:inline">·</span>
+                              <span className="text-slate-600 dark:text-slate-300 font-semibold whitespace-nowrap">মার্কেটপ্লেস ক্লায়েন্ট</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-amber-500 font-bold whitespace-nowrap">{formatSellerLevel((service as any).sellerLevel) || "Top Rated Agency"}</span>
+                              <span className="text-slate-300 dark:text-slate-600 hidden sm:inline">·</span>
+                              <span className="text-[#15803d] dark:text-sky-400 font-semibold whitespace-nowrap">{(service as any).sellerTitle || "Full-Stack Engineers"}</span>
+                            </>
+                          )}
                         </div>
-                        <p className="text-[11px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-bold mt-1">
-                          ★ {((service as any).sellerRating || service.rating || 5.0).toFixed(1)} রেটিং · {((service as any).salesCount ? `${(service as any).salesCount}+ সফল ডেলিভারি` : '১২০+ সফল প্রজেক্ট ডেলিভারি')}
+                        <p className="text-[11px] sm:text-xs text-[#006A4E] dark:text-emerald-400 font-bold mt-1">
+                          {isSellerViewing
+                            ? '★ ৫.০ বায়ার ফিডব্যাক · ১০০% এস্ক্রো পেমেন্ট ভেরিফাইড'
+                            : `★ ${((service as any).sellerRating || service.rating || 5.0).toFixed(1)} রেটিং · ${((service as any).salesCount ? `${(service as any).salesCount}+ সফল ডেলিভারি` : '১২০+ সফল প্রজেক্ট ডেলিভারি')}`
+                          }
                         </p>
                       </div>
                     </div>
 
                     <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
-                      আমরা PTENit এর ভেরিফাইড ইঞ্জিনিয়ার ও ক্রিয়েটিভ টিম। গত ৫ বছর যাবত দেশি ও আন্তর্জাতিক ক্লায়েন্টদের জন্য কাস্টম ওয়েব অ্যাপ, SaaS সফটওয়্যার এবং ই-কমার্স সল্যুশন ডেভেলপ করে আসছি। প্রতিটি প্রজেক্ট শতভাগ কোয়ালিটি ও সিকিউরিটি নিশ্চিত করে গ্রাহকের চাহিদা অনুযায়ী প্রস্তুত করা হয়।
+                      {isSellerViewing
+                        ? 'বায়ার এই প্রজেক্টের অফারটি পোস্ট করেছেন। প্ল্যাটফর্মের মাধ্যমে শতভাগ সুরক্ষিত লেনদেন ও এস্ক্রো সুরক্ষায় কাজ নিশ্চিত করা হয়। অর্ডার রানিং থাকা অবস্থায় সরাসরি মেসেজে যোগাযোগ করতে পারবেন।'
+                        : 'আমরা PTENit এর ভেরিফাইড ইঞ্জিনিয়ার ও ক্রিয়েটিভ টিম। গত ৫ বছর যাবত দেশি ও আন্তর্জাতিক ক্লায়েন্টদের জন্য কাস্টম ওয়েব অ্যাপ, SaaS সফটওয়্যার এবং ই-কমার্স সল্যুশন ডেভেলপ করে আসছি। প্রতিটি প্রজেক্ট শতভাগ কোয়ালিটি ও সিকিউরিটি নিশ্চিত করে গ্রাহকের চাহিদা অনুযায়ী প্রস্তুত করা হয়।'
+                      }
                     </p>
 
                     <div className="flex flex-wrap gap-1.5 pt-1">
-                      {['React.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Firebase', 'API Integration'].map((skill, sIdx) => (
+                      {(isSellerViewing 
+                        ? ['কাস্টম প্রজেক্ট', 'ভেরিফাইড পেমেন্ট', 'এস্ক্রো সিকিউর্ড', 'সরাসরি প্রজেক্ট']
+                        : ['React.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Firebase', 'API Integration']
+                      ).map((skill, sIdx) => (
                         <span
                           key={sIdx}
                           className="px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 whitespace-nowrap"
@@ -1171,16 +1619,37 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                       ))}
                     </div>
 
+                    {/* মেসেজ বাটন - কেবল অর্ডার রানিং থাকলে মেসেজ করা যাবে */}
+                    {isOrderRunning && openMessengerInbox && (
+                      <button
+                        type="button"
+                        onClick={() => openMessengerInbox(service.sellerId, service.sellerName)}
+                        className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer shadow-xs"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        <span>{isSellerViewing ? 'বায়ারকে মেসেজ দিন' : 'সেলারকে মেসেজ দিন'}</span>
+                      </button>
+                    )}
+
+                    {/* অর্ডার বাটন - সর্বদা কাজ করবে */}
                     <button
                       type="button"
                       onClick={() => {
-                        setOrderModalOpen(true);
-                        setCheckoutStep(1);
-                        setOrderError(null);
+                        if (isSellerViewing) {
+                          handleReceiveOrderAsSeller();
+                        } else {
+                          setOrderModalOpen(true);
+                          setCheckoutStep(1);
+                          setOrderError(null);
+                        }
                       }}
                       className="w-full py-2.5 sm:py-3 bg-[#15803d] hover:bg-[#166534] active:bg-[#14532d] text-white font-bold rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer shadow-xs"
                     >
-                      <span>অর্ডার করুন • ৳{(currentPackage.price ?? 5000).toLocaleString('bn-BD')}</span>
+                      {isSellerViewing ? (
+                        <span>{isOrderReceived ? 'অর্ডার রিসিভড' : 'অর্ডার রিসিভ করুন'} • ৳{(isBuyerOffer ? buyerBudget : (currentPackage.price ?? 5000)).toLocaleString('bn-BD')}</span>
+                      ) : (
+                        <span>{isOrderCompleted ? 'নতুন অর্ডার করুন' : isOrderRunning ? 'আরেকটি নতুন অর্ডার করুন' : 'অর্ডার করুন'} • ৳{(currentPackage.price ?? 5000).toLocaleString('bn-BD')}</span>
+                      )}
                     </button>
                   </div>
                 </div>
@@ -1190,12 +1659,29 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
               {activeTabState === 'faqs' && (
                 <div className="space-y-4 animate-fadeIn font-bengali">
                   <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
-                    <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#1DB954]" />
-                    <span>সাধারণ প্রশ্ন ও উত্তর (FAQs)</span>
+                    <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#38BDF8]" />
+                    <span>{isSellerViewing ? 'কাজের প্রয়োজনীয় প্রশ্নোত্তর (FAQs)' : 'সাধারণ প্রশ্ন ও উত্তর (FAQs)'}</span>
                   </h3>
 
                   <div className="space-y-2.5">
-                    {[
+                    {(isSellerViewing ? [
+                      {
+                        q: 'আমি কীভাবে বায়ারের এই প্রজেক্টের কাজ গ্রহণ ও শুরু করব?',
+                        a: '"অর্ডার রিসিভ করুন" বাটনে ক্লিক করার সাথে সাথে প্রজেক্টটি আপনার রানিং অর্ডার তালিকায় যুক্ত হবে এবং ডেলিভারির নির্ধারিত সময়সীমা গণনা শুরু হবে।'
+                      },
+                      {
+                        q: 'প্রজেক্টের পেমেন্ট কীভাবে সুরক্ষিত এবং কখন আমার একাউন্টে আসবে?',
+                        a: 'বায়ার এই কাজের সম্পূর্ণ বাজেট প্ল্যাটফর্মের ১০০% নিরাপদ এস্ক্রো অ্যাকাউন্টে অগ্রিম জমা রেখেছেন। কাজ সম্পন্ন করে ডেলিভারি দেওয়ার পর বায়ার রিভিউ করে অনুমোদন দিলেই সম্পূর্ণ অর্থ সরাসরি আপনার ব্যালেন্সে যোগ হবে।'
+                      },
+                      {
+                        q: 'বায়ারের সাথে কাজের বিষয়ে কীভাবে যোগাযোগ ও ফাইল শেয়ার করব?',
+                        a: 'অর্ডার রিসিভ করার পর ইনবক্স ও মেসেঞ্জার চ্যাট চালু হবে। সেখানে যেকোনো প্রশ্ন, আপডেট ও ফাইল রিয়েল-টাইমে আদান-প্রদান করতে পারবেন।'
+                      },
+                      {
+                        q: 'কাজ ডেলিভারির পর যদি বায়ার কোনো পরিমার্জন বা রিভিশন চান?',
+                        a: 'বায়ারের প্রয়োজনীয় ফিডব্যাক অনুযায়ী কোড বা প্রজেক্ট সংশোধন করে পুনরায় ডেলিভারি জমা দিতে পারবেন। শতভাগ সন্তোষজনক কাজ সম্পন্ন করাই এখানে নিশ্চিত করা হয়।'
+                      }
+                    ] : [
                       {
                         q: 'কাজ কতদিনের মধ্যে ডেলিভারি করা হবে?',
                         a: 'প্যাকেজ নির্বাচন অনুযায়ী ৩ থেকে ৭ কার্যদিবসের মধ্যে সম্পূর্ণ কাজ ডেলিভারি করা হবে। জরুরি প্রয়োজনে এক্সপ্রেস ডেলিভারির সুবিধা রয়েছে।'
@@ -1212,7 +1698,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                         q: 'ডেলিভারি পরবর্তীতে কি টেকনিক্যাল সাপোর্ট পাব?',
                         a: 'হ্যাঁ, প্রজেক্ট ডেলিভারির পর ৩০ দিন পর্যন্ত ফ্রি টেকনিক্যাল সাপোর্ট ও ইনস্টলেশন গাইডলাইন প্রদান করা হবে।'
                       }
-                    ].map((faq, fIdx) => (
+                    ]).map((faq, fIdx) => (
                       <div key={fIdx} className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden">
                         <button
                           type="button"
@@ -1220,7 +1706,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                           className="w-full p-3.5 sm:p-4 text-left font-bold text-xs sm:text-sm text-slate-900 dark:text-white flex items-center justify-between cursor-pointer"
                         >
                           <span>{faq.q}</span>
-                          <ChevronDown className={`w-4 h-4 text-[#1DB954] transition-transform duration-200 ${openFaqIndex === fIdx ? 'rotate-180' : ''}`} />
+                          <ChevronDown className={`w-4 h-4 text-[#38BDF8] transition-transform duration-200 ${openFaqIndex === fIdx ? 'rotate-180' : ''}`} />
                         </button>
                         {openFaqIndex === fIdx && (
                           <div className="px-4 pb-4 pt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300 border-t border-slate-200/60 dark:border-slate-800 leading-relaxed font-normal">
@@ -1265,14 +1751,14 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
               <>
                 {/* Modal Header */}
                 <div className="text-center space-y-1 pt-1">
-                  <span className="px-3 py-1 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-bold text-xs rounded-full inline-block">
+                  <span className="px-3 py-1 bg-blue-500/15 text-blue-700 dark:text-sky-400 font-bold text-xs rounded-full inline-block">
                     সার্ভিস বুকিং ও পেমেন্ট
                   </span>
                   <h3 className="text-lg sm:text-xl font-black font-heading text-slate-900 dark:text-white">
                     {checkoutStep === 1 ? 'ধাপ ১: আপনার যোগাযোগের তথ্য' : 'ধাপ ২: পেমেন্ট মেথড ও কনফার্মেশন'}
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-bengali truncate max-w-md mx-auto">
-                    {service.title} ({currentPackage.name}) — <span className="font-bold text-[#15803d] dark:text-[#1DB954]">
+                    {service.title} ({currentPackage.name}) — <span className="font-bold text-[#15803d] dark:text-sky-400">
                       ৳{currentPackage.price.toLocaleString('bn-BD')}
                     </span>
                   </p>
@@ -1340,7 +1826,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                           setCustomerName(e.target.value);
                           if (orderError) setOrderError(null);
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#1DB954]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
                       />
                     </div>
 
@@ -1357,7 +1843,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                           setCustomerPhone(e.target.value);
                           if (orderError) setOrderError(null);
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#1DB954]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
                       />
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-bengali">
                         ১১ ডিজিটের বাংলাদেশী মোবাইল নম্বর দিন।
@@ -1377,23 +1863,23 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                           setCustomerEmail(e.target.value);
                           if (orderError) setOrderError(null);
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#1DB954]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
                       />
                     </div>
 
                     {!currentUser && (
                       <div>
                         <label className="block text-xs font-bold mb-1 font-bengali text-slate-700 dark:text-slate-300">
-                          একাউন্ট পাসওয়ার্ড <span className="text-emerald-500 text-[11px] font-normal">(অর্ডার ট্র্যাকিং ও লগইনের জন্য)</span>
+                          একাউন্ট পাসওয়ার্ড <span className="text-blue-500 text-[11px] font-normal">(অর্ডার ট্র্যাকিং ও লগইনের জন্য)</span>
                         </label>
                         <input
                           type="password"
                           placeholder="কমপক্ষে ৬ অক্ষরের একটি পাসওয়ার্ড দিন (ঐচ্ছিক)"
                           value={customerPassword}
                           onChange={e => setCustomerPassword(e.target.value)}
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#1DB954]"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
                         />
-                        <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1 font-bengali flex items-center gap-1.5">
+                        <p className="text-[11px] text-[#006A4E] dark:text-sky-400 mt-1 font-bengali flex items-center gap-1.5">
                           <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
                           <span>সার্ভিস ক্রয়ের সাথে সাথে আপনার এই প্রোফাইলটি স্বয়ংক্রিয়ভাবে পিটেন + বায়ার আইডি হিসেবে সাইনআপ হয়ে যাবে।</span>
                         </p>
@@ -1409,7 +1895,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                         placeholder="আপনার কোনো স্পেশাল রিকোয়ারমেন্ট থাকলে সংক্ষেপে লিখুন..."
                         value={projectRequirements}
                         onChange={e => setProjectRequirements(e.target.value)}
-                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#1DB954]"
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
                       />
                     </div>
 
@@ -1438,7 +1924,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                             onClick={() => setPaymentMethod(method)}
                             className={`py-2 px-1 text-center rounded-xl text-xs font-bold border transition cursor-pointer ${
                               paymentMethod === method
-                                ? 'bg-emerald-500/15 border-[#15803d] text-[#15803d] dark:text-[#1DB954]'
+                                ? 'bg-blue-500/15 border-[#15803d] text-[#15803d] dark:text-sky-400'
                                 : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400'
                             }`}
                           >
@@ -1467,7 +1953,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                         }}
                         className="px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-xs font-bold flex items-center gap-1 hover:bg-slate-100 cursor-pointer"
                       >
-                        {copiedNumber ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                        {copiedNumber ? <Check className="w-3.5 h-3.5 text-blue-500" /> : <Copy className="w-3.5 h-3.5" />}
                         <span>{copiedNumber ? 'কপি হয়েছে' : 'কপি'}</span>
                       </button>
                     </div>
@@ -1490,7 +1976,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                           setTrxId(e.target.value);
                           if (orderError) setOrderError(null);
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-mono focus:outline-none focus:border-[#15803d] dark:focus:border-[#1DB954]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-mono focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
                       />
                     </div>
 
@@ -1516,7 +2002,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
             ) : (
               /* ORDER CONFIRMED SUCCESS VIEW */
               <div className="text-center space-y-4 py-3 font-bengali">
-                <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto ring-8 ring-emerald-500/10 animate-bounce">
+                <div className="w-16 h-16 rounded-full bg-blue-500/20 text-[#006A4E] dark:text-sky-400 flex items-center justify-center mx-auto ring-8 ring-[#006A4E]/10 animate-bounce">
                   <CheckCircle2 className="w-9 h-9" />
                 </div>
 
@@ -1527,7 +2013,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                   <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
                     আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে। আমাদের টিম খুব দ্রুত প্রজেক্টের কাজ শুরু করবে।
                   </p>
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold mt-1">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-700 dark:text-sky-300 text-xs font-bold mt-1">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     <span>পিটেন + বায়ার প্রোফাইল সক্রিয় হয়েছে ({customerName || 'নতুন বায়ার'})</span>
                   </div>
@@ -1550,7 +2036,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-500">পরিশোধিত মূল্য:</span>
-                      <span className="font-black text-[#15803d] dark:text-[#1DB954]">৳{completedOrder.amount.toLocaleString('bn-BD')}</span>
+                      <span className="font-black text-[#15803d] dark:text-sky-400">৳{completedOrder.amount.toLocaleString('bn-BD')}</span>
                     </div>
                   </div>
                 )}

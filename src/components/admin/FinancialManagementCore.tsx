@@ -709,8 +709,8 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
     <div className="space-y-4 font-bengali">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 border border-emerald-500 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 animate-bounce">
-          <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 border border-blue-500 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 animate-bounce">
+          <CheckCircle2 className="w-5 h-5 text-sky-400 shrink-0" />
           <span className="text-xs font-bold">{toastMessage}</span>
         </div>
       )}
@@ -720,13 +720,13 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-800 pb-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2.5 flex-wrap">
-              <div className="p-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-xl">
+              <div className="p-2 bg-blue-500/10 text-sky-400 border border-blue-500/20 rounded-xl">
                 <Wallet className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-lg sm:text-2xl font-black text-white flex items-center gap-2">
                   <span>ফাইন্যান্সিয়াল অ্যাকাউন্টিং ও অল-ইন-ওয়ান পেমেন্ট কোর</span>
-                  <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-black rounded-full uppercase">
+                  <span className="px-2 py-0.5 bg-blue-500/20 text-sky-400 border border-blue-500/30 text-[10px] font-black rounded-full uppercase">
                     Live Accounting
                   </span>
                 </h1>
@@ -741,7 +741,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
           <div className="flex items-center gap-2 flex-wrap shrink-0">
             <button
               onClick={() => setAddBillModalOpen(true)}
-              className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition cursor-pointer"
+              className="px-3.5 py-2 bg-[#047857] hover:bg-blue-500 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>+ নতুন বিল / ভাউচার তৈরি</span>
@@ -763,9 +763,9 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
           <div className="bg-slate-950/60 border border-slate-800/80 p-3.5 rounded-xl space-y-1">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-black text-slate-400">মোট প্ল্যাটফর্ম আদায়</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-emerald-400" />
+              <ArrowUpRight className="w-3.5 h-3.5 text-sky-400" />
             </div>
-            <p className="text-base sm:text-xl font-black text-emerald-400">
+            <p className="text-base sm:text-xl font-black text-sky-400">
               ৳{stats.totalInflow.toLocaleString('bn-BD')}
             </p>
             <p className="text-[9px] text-slate-500">কোর্স + গিগ + ডিজিটাল সেল</p>
@@ -839,7 +839,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
           onClick={() => setActiveCoreTab('all_transactions')}
           className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer whitespace-nowrap ${
             activeCoreTab === 'all_transactions'
-              ? 'bg-emerald-500 text-slate-950 font-black shadow-md'
+              ? 'bg-blue-500 text-slate-950 font-black shadow-md'
               : 'bg-slate-800/70 text-slate-300 hover:text-white hover:bg-slate-800'
           }`}
         >
@@ -851,7 +851,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
           onClick={() => setActiveCoreTab('invoices_bills')}
           className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer whitespace-nowrap relative ${
             activeCoreTab === 'invoices_bills'
-              ? 'bg-emerald-500 text-slate-950 font-black shadow-md'
+              ? 'bg-blue-500 text-slate-950 font-black shadow-md'
               : 'bg-slate-800/70 text-slate-300 hover:text-white hover:bg-slate-800'
           }`}
         >
@@ -868,7 +868,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
           onClick={() => setActiveCoreTab('payout_requests')}
           className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer whitespace-nowrap relative ${
             activeCoreTab === 'payout_requests'
-              ? 'bg-emerald-500 text-slate-950 font-black shadow-md'
+              ? 'bg-blue-500 text-slate-950 font-black shadow-md'
               : 'bg-slate-800/70 text-slate-300 hover:text-white hover:bg-slate-800'
           }`}
         >
@@ -885,7 +885,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
           onClick={() => setActiveCoreTab('mfs_accounts')}
           className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer whitespace-nowrap ${
             activeCoreTab === 'mfs_accounts'
-              ? 'bg-emerald-500 text-slate-950 font-black shadow-md'
+              ? 'bg-blue-500 text-slate-950 font-black shadow-md'
               : 'bg-slate-800/70 text-slate-300 hover:text-white hover:bg-slate-800'
           }`}
         >
@@ -905,7 +905,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               placeholder="TrxID, ইনভয়েস নম্বর, পেয়ার নাম বা মোবাইল নাম্বার দিয়ে খুঁজুন..."
-              className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition"
+              className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition"
             />
             {searchTerm && (
               <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white text-xs">
@@ -920,7 +920,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
             <select
               value={typeFilter}
               onChange={e => setTypeFilter(e.target.value as any)}
-              className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-blue-500 cursor-pointer"
             >
               <option value="all">সকল ধরন</option>
               <option value="course">🎓 কোর্স ফি</option>
@@ -934,7 +934,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
             <select
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value as any)}
-              className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-blue-500 cursor-pointer"
             >
               <option value="all">সকল স্ট্যাটাস</option>
               <option value="verified">✓ ভেরিফাইড / পরিশোধিত</option>
@@ -946,7 +946,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
             <select
               value={gatewayFilter}
               onChange={e => setGatewayFilter(e.target.value)}
-              className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-blue-500 cursor-pointer"
             >
               <option value="all">সকল পেমেন্ট চ্যানেল</option>
               <option value="bkash">বিকাশ (bKash)</option>
@@ -963,7 +963,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
         <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
           <div className="p-4 border-b border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Receipt className="w-4 h-4 text-emerald-400" />
+              <Receipt className="w-4 h-4 text-sky-400" />
               <h2 className="text-sm font-bold text-white">
                 সর্বমোট লেনদেন রেকর্ডস ({filteredTransactions.length})
               </h2>
@@ -998,7 +998,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                   filteredTransactions.map(item => (
                     <tr key={item.id} className="hover:bg-slate-800/30 transition">
                       <td className="p-3">
-                        <div className="font-mono text-emerald-400 font-bold text-[11px]">
+                        <div className="font-mono text-sky-400 font-bold text-[11px]">
                           {item.invoiceNo}
                         </div>
                         <span className="text-[10px] text-slate-500 font-mono">
@@ -1021,7 +1021,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                       </td>
 
                       <td className="p-3">
-                        <div className={`font-black text-sm ${item.flow === 'inflow' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                        <div className={`font-black text-sm ${item.flow === 'inflow' ? 'text-sky-400' : 'text-rose-400'}`}>
                           {item.flow === 'inflow' ? '+' : '-'}৳{item.amount.toLocaleString('bn-BD')}
                         </div>
                         {item.escrowHold && (
@@ -1047,7 +1047,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                       <td className="p-3">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 w-fit ${
                           item.status === 'verified'
-                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                            ? 'bg-blue-500/20 text-sky-400 border border-blue-500/30'
                             : item.status === 'in_progress'
                             ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30'
                             : item.status === 'pending'
@@ -1064,7 +1064,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => setSelectedVoucher(item)}
-                            className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 rounded-lg text-xs font-bold flex items-center gap-1 transition cursor-pointer"
+                            className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 rounded-lg text-xs font-bold flex items-center gap-1 transition cursor-pointer"
                           >
                             <Eye className="w-3 h-3" />
                             <span>বিল দেখুন</span>
@@ -1073,7 +1073,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                           {item.status === 'pending' && item.type === 'company_bill' && (
                             <button
                               onClick={() => handleVerifyBill(item.id)}
-                              className="p-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition cursor-pointer"
+                              className="p-1 bg-[#047857] hover:bg-blue-500 text-white rounded-lg transition cursor-pointer"
                               title="অনুমোদন করুন"
                             >
                               <Check className="w-3.5 h-3.5" />
@@ -1083,7 +1083,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                           {item.status === 'pending' && item.type === 'payout' && (
                             <button
                               onClick={() => handleOpenPayoutModal(item.rawItem || item, 'approve')}
-                              className="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition cursor-pointer"
+                              className="px-2 py-1 bg-[#047857] hover:bg-blue-500 text-white rounded-lg text-xs font-bold transition cursor-pointer"
                             >
                               অনুমোদন
                             </button>
@@ -1106,7 +1106,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
           <div className="bg-slate-900 border border-slate-800 p-4 sm:p-5 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-md">
             <div>
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                <div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/20 text-sky-400">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
@@ -1129,7 +1129,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
               {pendingBillsCount > 0 && (
                 <button
                   onClick={handleVerifyAllBillsAction}
-                  className="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-emerald-500 hover:from-amber-400 hover:to-emerald-400 text-slate-950 font-black text-xs rounded-xl flex items-center gap-1.5 shadow-md transition cursor-pointer active:scale-95"
+                  className="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-blue-500 hover:from-amber-400 hover:to-sky-400 text-slate-950 font-black text-xs rounded-xl flex items-center gap-1.5 shadow-md transition cursor-pointer active:scale-95"
                   title="এক ক্লিকে সব অপেক্ষমাণ বিল যাচাই ও অনুমোদন করুন"
                 >
                   <CheckCircle2 className="w-4 h-4 text-slate-950" />
@@ -1139,7 +1139,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
 
               <button
                 onClick={() => setAddBillModalOpen(true)}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow transition cursor-pointer shrink-0 active:scale-95"
+                className="px-4 py-2 bg-[#047857] hover:bg-blue-500 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow transition cursor-pointer shrink-0 active:scale-95"
               >
                 <Plus className="w-4 h-4" />
                 <span>+ নতুন বিল জমা দিন</span>
@@ -1157,7 +1157,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                   onClick={() => setBillScope('company_bills')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
                     billScope === 'company_bills'
-                      ? 'bg-emerald-500 text-slate-950 font-black shadow-xs'
+                      ? 'bg-blue-500 text-slate-950 font-black shadow-xs'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
@@ -1168,7 +1168,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                   onClick={() => setBillScope('all_invoices')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
                     billScope === 'all_invoices'
-                      ? 'bg-emerald-500 text-slate-950 font-black shadow-xs'
+                      ? 'bg-blue-500 text-slate-950 font-black shadow-xs'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
@@ -1184,7 +1184,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                   placeholder="বিল নং, TrxID বা নাম খুঁজুন..."
                   value={billSubSearch}
                   onChange={(e) => setBillSubSearch(e.target.value)}
-                  className="w-full pl-8.5 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500/50"
+                  className="w-full pl-8.5 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50"
                 />
               </div>
             </div>
@@ -1211,7 +1211,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                         ? st.key === 'pending'
                           ? 'bg-amber-500 text-slate-950 font-black'
                           : st.key === 'verified'
-                          ? 'bg-emerald-500 text-slate-950 font-black'
+                          ? 'bg-blue-500 text-slate-950 font-black'
                           : 'bg-slate-700 text-white font-black'
                         : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
@@ -1258,12 +1258,12 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                   >
                     <div className="space-y-2.5">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="font-mono text-xs font-black text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/20">
+                        <span className="font-mono text-xs font-black text-sky-400 bg-blue-500/10 px-2.5 py-0.5 rounded-md border border-blue-500/20">
                           {b.invoiceNo || b.id}
                         </span>
                         <span className={`px-2.5 py-0.5 text-[10px] font-black rounded-full flex items-center gap-1 ${
                           isVerified
-                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                            ? 'bg-blue-500/20 text-sky-400 border border-blue-500/30'
                             : isPending
                             ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40 animate-pulse'
                             : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
@@ -1284,14 +1284,14 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
 
                       <div className="p-2.5 bg-slate-950 rounded-xl flex items-center justify-between text-xs border border-slate-800/80">
                         <span className="text-slate-400 text-[11px] font-medium">বিলের পরিমাণ:</span>
-                        <span className="font-black text-sm text-emerald-400">৳{b.amount.toLocaleString('bn-BD')}</span>
+                        <span className="font-black text-sm text-sky-400">৳{b.amount.toLocaleString('bn-BD')}</span>
                       </div>
 
                       <div className="text-[11px] text-slate-400 flex items-center justify-between font-mono bg-slate-950/40 px-2 py-1 rounded-lg">
                         <span className="flex items-center gap-1">
                           <span className="font-bold text-slate-300">{b.gateway}</span>
                           <span>•</span>
-                          <span className="text-emerald-400 font-semibold">{b.transactionId}</span>
+                          <span className="text-sky-400 font-semibold">{b.transactionId}</span>
                         </span>
                         <span className="text-[10px] text-slate-500">{b.date.slice(0, 10)}</span>
                       </div>
@@ -1304,7 +1304,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                           <button
                             type="button"
                             onClick={() => handleVerifyBill(b.id)}
-                            className="w-full py-1.5 px-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black rounded-xl flex items-center justify-center gap-1 transition cursor-pointer shadow-xs active:scale-95"
+                            className="w-full py-1.5 px-2 bg-[#047857] hover:bg-blue-500 text-white text-xs font-black rounded-xl flex items-center justify-center gap-1 transition cursor-pointer shadow-xs active:scale-95"
                           >
                             <CheckCircle2 className="w-3.5 h-3.5" />
                             <span>অনুমোদন করুন</span>
@@ -1324,7 +1324,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                         <button
                           type="button"
                           onClick={() => setSelectedVoucher(b)}
-                          className="flex-1 py-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                          className="flex-1 py-1.5 bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
                         >
                           <Eye className="w-3.5 h-3.5" />
                           <span>বিল দেখুন ও প্রিন্ট</span>
@@ -1394,7 +1394,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                   ) : (
                     payoutRequestsList.map(p => (
                       <tr key={p.id} className="hover:bg-slate-800/30 transition">
-                        <td className="p-3 font-mono text-emerald-400 font-bold">
+                        <td className="p-3 font-mono text-sky-400 font-bold">
                           {p.invoiceNo}
                         </td>
 
@@ -1421,7 +1421,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                         <td className="p-3">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                             p.status === 'verified'
-                              ? 'bg-emerald-500/20 text-emerald-400'
+                              ? 'bg-blue-500/20 text-sky-400'
                               : p.status === 'pending'
                               ? 'bg-amber-500/20 text-amber-400 animate-pulse'
                               : 'bg-rose-500/20 text-rose-400'
@@ -1447,7 +1447,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                               <>
                                 <button
                                   onClick={() => handleOpenPayoutModal(p.rawItem || p, 'approve')}
-                                  className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition cursor-pointer shadow"
+                                  className="px-2.5 py-1 bg-[#047857] hover:bg-blue-500 text-white rounded-lg text-xs font-bold transition cursor-pointer shadow"
                                 >
                                   অনুমোদন করুন
                                 </button>
@@ -1491,7 +1491,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
               <div className="p-3 bg-slate-950 rounded-xl space-y-1">
                 <div className="flex justify-between text-xs">
                   <span className="text-slate-400">মোট আদায়:</span>
-                  <span className="font-bold text-emerald-400">৳{stats.gateways.bkash.in.toLocaleString('bn-BD')}</span>
+                  <span className="font-bold text-sky-400">৳{stats.gateways.bkash.in.toLocaleString('bn-BD')}</span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-slate-400">উত্তোলন/খরচ:</span>
@@ -1520,7 +1520,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
               <div className="p-3 bg-slate-950 rounded-xl space-y-1">
                 <div className="flex justify-between text-xs">
                   <span className="text-slate-400">মোট আদায়:</span>
-                  <span className="font-bold text-emerald-400">৳{stats.gateways.nagad.in.toLocaleString('bn-BD')}</span>
+                  <span className="font-bold text-sky-400">৳{stats.gateways.nagad.in.toLocaleString('bn-BD')}</span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-slate-400">উত্তোলন/খরচ:</span>
@@ -1549,7 +1549,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
               <div className="p-3 bg-slate-950 rounded-xl space-y-1">
                 <div className="flex justify-between text-xs">
                   <span className="text-slate-400">মোট আদায়:</span>
-                  <span className="font-bold text-emerald-400">৳{stats.gateways.rocket.in.toLocaleString('bn-BD')}</span>
+                  <span className="font-bold text-sky-400">৳{stats.gateways.rocket.in.toLocaleString('bn-BD')}</span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-slate-400">উত্তোলন/খরচ:</span>
@@ -1566,7 +1566,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
             <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-3 shadow">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 font-black flex items-center justify-center text-xs">
+                  <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-sky-400 font-black flex items-center justify-center text-xs">
                     BK
                   </div>
                   <div>
@@ -1578,7 +1578,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
               <div className="p-3 bg-slate-950 rounded-xl space-y-1">
                 <div className="flex justify-between text-xs">
                   <span className="text-slate-400">মোট আদায়:</span>
-                  <span className="font-bold text-emerald-400">৳{stats.gateways.bank.in.toLocaleString('bn-BD')}</span>
+                  <span className="font-bold text-sky-400">৳{stats.gateways.bank.in.toLocaleString('bn-BD')}</span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-slate-400">উত্তোলন/খরচ:</span>
@@ -1601,7 +1601,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
             {/* Modal Header */}
             <div className="p-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Receipt className="w-5 h-5 text-emerald-400" />
+                <Receipt className="w-5 h-5 text-sky-400" />
                 <div>
                   <h3 className="text-sm font-black text-white">অফিসিয়াল ইনভয়েস ও বিলিং ভাউচার</h3>
                   <p className="text-[10px] text-slate-400 font-mono">ইনভয়েস নং: {selectedVoucher.invoiceNo}</p>
@@ -1627,7 +1627,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                 <div className="text-right">
                   <span className={`inline-block px-3 py-1 rounded-full text-xs font-black uppercase border ${
                     selectedVoucher.status === 'verified'
-                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
+                      ? 'bg-blue-500/20 text-sky-400 border-blue-500/40'
                       : selectedVoucher.status === 'pending'
                       ? 'bg-amber-500/20 text-amber-400 border-amber-500/40'
                       : 'bg-rose-500/20 text-rose-400 border-rose-500/40'
@@ -1648,7 +1648,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                 </div>
                 <div>
                   <p className="text-[10px] text-slate-500 font-bold uppercase">পেমেন্ট গেটওয়ে বিবরণ:</p>
-                  <p className="text-sm font-bold text-emerald-400 mt-0.5">{selectedVoucher.gateway}</p>
+                  <p className="text-sm font-bold text-sky-400 mt-0.5">{selectedVoucher.gateway}</p>
                   <p className="text-slate-400 text-[11px] font-mono">TrxID: {selectedVoucher.transactionId}</p>
                   <p className="text-slate-500 text-[10px]">লেনদেন ধরন: {selectedVoucher.typeName}</p>
                 </div>
@@ -1677,7 +1677,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                   <tfoot className="bg-slate-950/80 border-t border-slate-800">
                     <tr>
                       <td colSpan={2} className="p-3 text-right font-bold text-slate-400">সর্বমোট প্রদেয় / পরিশোধিত:</td>
-                      <td className="p-3 text-right font-black text-base text-emerald-400">
+                      <td className="p-3 text-right font-black text-base text-sky-400">
                         ৳{selectedVoucher.amount.toLocaleString('bn-BD')}
                       </td>
                     </tr>
@@ -1705,7 +1705,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
               <div className="flex items-center gap-2">
                 <button
                   onClick={handlePrintVoucher}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow transition cursor-pointer"
+                  className="px-4 py-2 bg-[#047857] hover:bg-blue-500 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow transition cursor-pointer"
                 >
                   <Printer className="w-4 h-4" />
                   <span>প্রিন্ট ভাউচার / PDF</span>
@@ -1737,7 +1737,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
           <div className="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
             <div className="p-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Plus className="w-5 h-5 text-emerald-400" />
+                <Plus className="w-5 h-5 text-sky-400" />
                 <h3 className="text-sm font-black text-white">নতুন প্রাতিষ্ঠানিক বিল বা খরচ ভাউচার</h3>
               </div>
               <button onClick={() => setAddBillModalOpen(false)} className="text-slate-400 hover:text-white cursor-pointer">
@@ -1754,7 +1754,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                   value={newBillForm.title}
                   onChange={e => setNewBillForm({ ...newBillForm, title: e.target.value })}
                   placeholder="যেমন: মাসিক ক্লাউড সার্ভার ও হোস্টিং রিনিউয়াল"
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
 
@@ -1764,7 +1764,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                   <select
                     value={newBillForm.category}
                     onChange={e => setNewBillForm({ ...newBillForm, category: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500 cursor-pointer"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500 cursor-pointer"
                   >
                     <option value="অফিস ভাড়া ও ইউটিলিটি">অফিস ভাড়া ও ইউটিলিটি</option>
                     <option value="ক্লাউড ও ডেডিকেটেড সার্ভার">ক্লাউড ও ডেডিকেটেড সার্ভার</option>
@@ -1784,7 +1784,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                     min={1}
                     value={newBillForm.amount}
                     onChange={e => setNewBillForm({ ...newBillForm, amount: Number(e.target.value) })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500 font-bold"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500 font-bold"
                   />
                 </div>
               </div>
@@ -1798,7 +1798,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                     value={newBillForm.payerName}
                     onChange={e => setNewBillForm({ ...newBillForm, payerName: e.target.value })}
                     placeholder="যেমন: DigitalOcean / বাড়িওয়ালা মোঃ করিম"
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
@@ -1809,7 +1809,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                     value={newBillForm.payerPhone}
                     onChange={e => setNewBillForm({ ...newBillForm, payerPhone: e.target.value })}
                     placeholder="017XXXXXXXX"
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
@@ -1820,7 +1820,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                   <select
                     value={newBillForm.gateway}
                     onChange={e => setNewBillForm({ ...newBillForm, gateway: e.target.value as any })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500 cursor-pointer"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500 cursor-pointer"
                   >
                     <option value="bKash">বিকাশ (bKash)</option>
                     <option value="Nagad">নগদ (Nagad)</option>
@@ -1839,7 +1839,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                       value={newBillForm.transactionId}
                       onChange={e => setNewBillForm({ ...newBillForm, transactionId: e.target.value })}
                       placeholder="যেমন: 8N7X9K2P"
-                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500 font-mono"
+                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500 font-mono"
                     />
                     <button
                       type="button"
@@ -1859,7 +1859,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                   value={newBillForm.note}
                   onChange={e => setNewBillForm({ ...newBillForm, note: e.target.value })}
                   placeholder="বিলের মেমো বা চেক নম্বর সম্পর্কিত তথ্য..."
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
 
@@ -1873,7 +1873,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-black shadow transition cursor-pointer"
+                  className="px-5 py-2 bg-[#047857] hover:bg-blue-500 text-white rounded-xl font-black shadow transition cursor-pointer"
                 >
                   বিল যুক্ত করুন
                 </button>
@@ -1890,7 +1890,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
             <h3 className="text-base font-black text-white flex items-center gap-2">
               {payoutActionModal.actionType === 'approve' ? (
                 <>
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                  <CheckCircle2 className="w-5 h-5 text-sky-400" />
                   <span>পেআউট অনুমোদন ও তহবিল ছাড়করণ</span>
                 </>
               ) : (
@@ -1908,7 +1908,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-400">উত্তোলনের পরিমাণ:</span>
-                <span className="font-black text-sm text-emerald-400">৳{payoutActionModal.payout.amount}</span>
+                <span className="font-black text-sm text-sky-400">৳{payoutActionModal.payout.amount}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-400">প্রাপকের একাউন্ট:</span>
@@ -1970,7 +1970,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                 onClick={handleConfirmPayoutAction}
                 className={`px-5 py-2 rounded-xl text-xs font-black text-white shadow cursor-pointer transition ${
                   payoutActionModal.actionType === 'approve'
-                    ? 'bg-emerald-600 hover:bg-emerald-500'
+                    ? 'bg-[#047857] hover:bg-blue-500'
                     : 'bg-rose-600 hover:bg-rose-500'
                 }`}
               >

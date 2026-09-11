@@ -46,7 +46,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onBack }) => {
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition cursor-pointer border-0 shadow-xs"
                 title={t('পূর্ববর্তী স্থানে ফিরে যান', 'Go back to previous page')}
               >
-                <ArrowLeft className="w-4 h-4 text-[#1DB954]" />
+                <ArrowLeft className="w-4 h-4 text-[#38BDF8]" />
                 <span>{t('ফিরে যান', 'Back')}</span>
               </button>
             </div>
@@ -67,7 +67,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onBack }) => {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all cursor-pointer border-0 ${
                 selectedCategory === cat
-                  ? 'bg-[#1DB954] text-white shadow-lg shadow-[#1DB954]/20'
+                  ? 'bg-[#006A4E] text-white shadow-lg shadow-blue-500/20'
                   : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
               }`}
             >
@@ -94,7 +94,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onBack }) => {
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
 
               <div className="absolute bottom-4 left-4 right-4 text-white space-y-1">
-                <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#1DB954] text-white uppercase">
+                <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#006A4E] text-white uppercase">
                   {item.category}
                 </span>
                 <h3 className="font-bold text-base font-bengali line-clamp-1">{item.title}</h3>

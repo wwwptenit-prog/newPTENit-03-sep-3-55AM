@@ -172,7 +172,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
           <div className="lg:hidden bg-slate-900 border border-slate-800 p-2.5 px-3 rounded-2xl shadow-lg mb-4 flex items-center justify-between gap-2 text-white font-bengali sticky top-2 z-30">
             {/* Left: Dashboard Icon + Text */}
             <div className="flex items-center gap-2 min-w-0">
-              <div className="p-2 bg-gradient-to-tr from-[#1DB954] to-emerald-400 text-white rounded-xl shadow shrink-0">
+              <div className="p-2 bg-gradient-to-tr from-[#006A4E] to-sky-400 text-white rounded-xl shadow shrink-0">
                 <LayoutDashboard className="w-5 h-5 font-bold" />
               </div>
               <span className="font-extrabold text-sm tracking-tight text-white truncate">
@@ -192,7 +192,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
                 }`}
                 title="প্রোফাইল"
               >
-                <User className="w-4 h-4 text-emerald-400 shrink-0" />
+                <User className="w-4 h-4 text-sky-400 shrink-0" />
                 <span className="hidden xs:inline">প্রোফাইল</span>
               </button>
 
@@ -301,7 +301,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
                         setMobileMenuOpen(false);
                         setActiveTab?.('marketplace');
                       }}
-                      className="w-full py-2 px-2.5 font-bold text-xs flex items-center gap-2 text-emerald-400 hover:bg-slate-800 rounded-lg transition min-h-[40px]"
+                      className="w-full py-2 px-2.5 font-bold text-xs flex items-center gap-2 text-sky-400 hover:bg-slate-800 rounded-lg transition min-h-[40px]"
                     >
                       <Briefcase className="w-3.5 h-3.5 shrink-0" />
                       <span className="truncate">মার্কেটপ্লেস</span>
@@ -324,7 +324,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
                       onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')}
                       className="w-full py-2 px-2.5 font-bold text-xs flex items-center gap-2 text-slate-300 hover:bg-slate-800 rounded-lg transition min-h-[40px]"
                     >
-                      <Globe className="w-3.5 h-3.5 text-[#1DB954] shrink-0" />
+                      <Globe className="w-3.5 h-3.5 text-[#38BDF8] shrink-0" />
                       <span className="truncate">ভাষা: {lang === 'bn' ? 'ENG' : 'বাংলা'}</span>
                     </button>
                   </div>
@@ -352,14 +352,14 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
         {!hideHeaderBanner && (
           <div className="hidden lg:flex bg-slate-900 border border-slate-800 p-3 sm:p-4 rounded-2xl sm:rounded-3xl shadow-lg mb-4 sm:mb-6 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-white font-bengali">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#1DB954] to-emerald-400 flex items-center justify-center font-black text-white text-base shadow shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#006A4E] to-sky-400 flex items-center justify-center font-black text-white text-base shadow shrink-0">
                 P
               </div>
               <div className="min-w-0 flex-1">
                 <span className="font-extrabold text-xs sm:text-base tracking-wide text-white block leading-tight truncate">
                   PTENit IT Training Academy
                 </span>
-                <span className="text-[11px] text-emerald-400 font-semibold block truncate">
+                <span className="text-[11px] text-sky-400 font-semibold block truncate">
                   কাস্টমার & পার্টনার পোর্টাল
                 </span>
               </div>
@@ -372,7 +372,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
                 className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl border border-slate-700 flex items-center gap-1.5 transition cursor-pointer shadow-sm active:scale-95 min-h-[38px]"
                 title="ভাষা পরিবর্তন / Switch Language"
               >
-                <Globe className="w-3.5 h-3.5 text-[#1DB954] shrink-0" />
+                <Globe className="w-3.5 h-3.5 text-[#38BDF8] shrink-0" />
                 <span>{lang === 'bn' ? 'ENG' : 'বাংলা'}</span>
               </button>
 
@@ -388,7 +388,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
               <button
                 type="button"
                 onClick={() => setActiveTab?.('marketplace')}
-                className="px-3.5 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white text-xs font-black rounded-xl flex items-center gap-1.5 transition cursor-pointer shadow-md active:scale-95 min-h-[38px]"
+                className="px-3.5 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white text-xs font-black rounded-xl flex items-center gap-1.5 transition cursor-pointer shadow-md active:scale-95 min-h-[38px]"
               >
                 <Briefcase className="w-3.5 h-3.5 shrink-0" />
                 <span className="truncate">মার্কেটপ্লেস</span>
@@ -399,7 +399,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
                 onClick={() => setActiveTab?.('home')}
                 className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl border border-slate-700 flex items-center gap-1.5 transition cursor-pointer shadow-sm active:scale-95 min-h-[38px]"
               >
-                <Globe className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <Globe className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                 <span>ওয়েবসাইট</span>
               </button>
 
@@ -477,13 +477,13 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
                 </div>
                 <div className="bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-700/60">
                   <span className="text-slate-500 dark:text-slate-400 text-[10px] font-semibold block truncate">সম্পন্ন কাজ</span>
-                  <span className="text-lg font-black text-[#1DB954] mt-0.5 block">
+                  <span className="text-lg font-black text-[#38BDF8] mt-0.5 block">
                     {myProjects.filter(p => p.status === 'completed').length} টি
                   </span>
                 </div>
                 <div className="bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-700/60">
                   <span className="text-slate-500 dark:text-slate-400 text-[10px] font-semibold block truncate">সাপোর্ট মেসেজ</span>
-                  <span className="text-lg font-black text-emerald-500 mt-0.5 block">{myMessages.length} টি</span>
+                  <span className="text-lg font-black text-blue-500 mt-0.5 block">{myMessages.length} টি</span>
                 </div>
               </div>
             </div>
@@ -560,7 +560,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-6">
                 {myProjects.map(prj => {
                   const getStatusBadge = (st: string) => {
-                    if (st === 'completed') return <span className="px-2.5 py-1 bg-emerald-500/10 text-[#1DB954] text-[11px] sm:text-xs font-bold rounded-full border border-emerald-500/20 shrink-0">সম্পন্ন হয়েছে</span>;
+                    if (st === 'completed') return <span className="px-2.5 py-1 bg-blue-500/10 text-[#38BDF8] text-[11px] sm:text-xs font-bold rounded-full border border-blue-500/20 shrink-0">সম্পন্ন হয়েছে</span>;
                     if (st === 'in_progress') return <span className="px-2.5 py-1 bg-amber-500/10 text-amber-500 text-[11px] sm:text-xs font-bold rounded-full border border-amber-500/20 shrink-0">কাজ চলছে</span>;
                     return <span className="px-2.5 py-1 bg-blue-500/10 text-blue-500 text-[11px] sm:text-xs font-bold rounded-full border border-blue-500/20 shrink-0">পর্যালোচনায় রয়েছে</span>;
                   };
@@ -616,7 +616,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
             </div>
 
             {requestSubmitted && (
-              <div className="p-3.5 bg-emerald-500/20 border border-emerald-500/40 text-[#1DB954] text-xs font-bold rounded-xl flex items-center gap-2">
+              <div className="p-3.5 bg-blue-500/20 border border-blue-500/40 text-[#38BDF8] text-xs font-bold rounded-xl flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 shrink-0" />
                 <span>আপনার সার্ভিসের রিকুয়েস্ট সফলভাবে PTENit টিমকে পাঠানো হয়েছে!</span>
               </div>
@@ -711,7 +711,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
               </p>
 
               {msgSentSuccess && (
-                <div className="p-3 bg-emerald-500/20 border border-emerald-500/40 text-[#1DB954] text-xs font-bold rounded-xl flex items-center gap-2">
+                <div className="p-3 bg-blue-500/20 border border-blue-500/40 text-[#38BDF8] text-xs font-bold rounded-xl flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 shrink-0" />
                   <span>মেসেজটি সফলভাবে পাঠানো হয়েছে! দ্রুত রিপ্লাই দেওয়া হবে।</span>
                 </div>
@@ -787,7 +787,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
             </div>
 
             {profileSaved && (
-              <div className="p-3 bg-emerald-500/20 border border-emerald-500/40 text-[#1DB954] text-xs font-bold rounded-xl flex items-center gap-2">
+              <div className="p-3 bg-blue-500/20 border border-blue-500/40 text-[#38BDF8] text-xs font-bold rounded-xl flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 shrink-0" />
                 <span>প্রোফাইল সফলভাবে আপডেট করা হয়েছে!</span>
               </div>
@@ -900,14 +900,14 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
             type="button"
             onClick={() => setActiveTabState('projects')}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] min-h-[48px] px-1 py-1 transition cursor-pointer active:scale-95 relative ${
-              activeTab === 'projects' ? 'text-[#1DB954] font-black' : 'text-slate-400 hover:text-white font-medium'
+              activeTab === 'projects' ? 'text-[#38BDF8] font-black' : 'text-slate-400 hover:text-white font-medium'
             }`}
             title="অর্ডার"
           >
             <Briefcase className="w-5 h-5 shrink-0" />
             <span className="text-[10px]">অর্ডার</span>
             {myProjects.length > 0 && (
-              <span className="absolute top-1 right-1.5 w-2 h-2 rounded-full bg-[#1DB954]" />
+              <span className="absolute top-1 right-1.5 w-2 h-2 rounded-full bg-[#006A4E]" />
             )}
           </button>
 
@@ -918,7 +918,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
             className="flex flex-col items-center justify-center gap-0.5 min-w-[48px] min-h-[48px] px-1 py-1 text-slate-400 hover:text-white transition cursor-pointer active:scale-95"
             title="কোর্স"
           >
-            <BookOpen className="w-5 h-5 shrink-0 text-emerald-400" />
+            <BookOpen className="w-5 h-5 shrink-0 text-sky-400" />
             <span className="text-[10px] font-bold">কোর্স</span>
           </button>
 
@@ -927,7 +927,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
             type="button"
             onClick={() => setActiveTabState('inquiries')}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] min-h-[48px] px-1 py-1 transition cursor-pointer active:scale-95 relative ${
-              activeTab === 'inquiries' ? 'text-[#1DB954] font-black' : 'text-slate-400 hover:text-white font-medium'
+              activeTab === 'inquiries' ? 'text-[#38BDF8] font-black' : 'text-slate-400 hover:text-white font-medium'
             }`}
             title="মেসেঞ্জার"
           >

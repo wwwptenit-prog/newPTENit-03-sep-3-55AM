@@ -91,7 +91,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
     Nagad: { label: 'Nagad Personal', number: siteSettings?.nagadNumber || '01700000000', color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800' },
     Rocket: { label: 'Rocket Personal', number: siteSettings?.rocketNumber || '01900000000', color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-950/40 border-purple-300 dark:border-purple-800' },
     Upay: { label: 'Upay Personal', number: siteSettings?.upayNumber || '01800000000', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800' },
-    Card: { label: siteSettings?.bankName || 'Bank / Card PLC', number: siteSettings?.bankAccountNumber || '2181100098765', color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800' }
+    Card: { label: siteSettings?.bankName || 'Bank / Card PLC', number: siteSettings?.bankAccountNumber || '2181100098765', color: 'text-[#006A4E] dark:text-sky-400', bg: 'bg-blue-50 dark:bg-blue-950/40 border-sky-300 dark:border-blue-900' }
   };
 
   const handleNextToPayment = () => {
@@ -185,12 +185,12 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
         {/* Header Section */}
         <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white p-3.5 sm:p-4 flex items-center justify-between border-b border-slate-800/80 relative shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#1DB954]/15 border border-[#1DB954]/30 flex items-center justify-center text-[#1DB954] shrink-0 shadow-xs">
-              <Sparkles className="w-4 h-4 text-[#1DB954]" />
+            <div className="w-8 h-8 rounded-xl bg-[#006A4E]/15 border border-blue-600/50/30 flex items-center justify-center text-[#38BDF8] shrink-0 shadow-xs">
+              <Sparkles className="w-4 h-4 text-[#38BDF8]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black uppercase tracking-wide px-2 py-0.5 rounded-full bg-[#1DB954] text-white shadow-xs">
+                <span className="text-[10px] font-black uppercase tracking-wide px-2 py-0.5 rounded-full bg-[#006A4E] text-white shadow-xs">
                   PTENit Checkout
                 </span>
                 <span className="text-[11px] font-bold text-slate-400">
@@ -199,7 +199,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
               </div>
               <h2 className="text-xs sm:text-sm font-extrabold text-white flex items-center gap-2 mt-0.5">
                 <span>অর্ডার কনফার্মেশন</span>
-                <span className="text-[11px] font-black text-[#1DB954] bg-[#1DB954]/10 border border-[#1DB954]/30 px-2 py-0.5 rounded-md">
+                <span className="text-[11px] font-black text-[#38BDF8] bg-[#006A4E]/10 border border-blue-600/50/30 px-2 py-0.5 rounded-md">
                   {selectedPkgType === 'basic' ? 'বেসিক' : selectedPkgType === 'standard' ? 'স্ট্যান্ডার্ড' : 'প্রিমিয়াম'} (৳{finalPrice.toLocaleString('bn-BD')})
                 </span>
               </h2>
@@ -234,14 +234,14 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
               onClick={() => setCurrentStep(2)}
               className={`flex-1 py-1.5 px-3 rounded-xl flex items-center justify-center gap-2 transition cursor-pointer border ${
                 currentStep === 2
-                  ? 'bg-white dark:bg-slate-900 text-[#1DB954] border-[#1DB954]/40 shadow-xs font-black'
+                  ? 'bg-white dark:bg-slate-900 text-[#38BDF8] border-blue-600/50/40 shadow-xs font-black'
                   : currentStep > 2
                   ? 'bg-slate-100 dark:bg-slate-900/50 text-slate-700 dark:text-slate-300 border-transparent'
                   : 'text-slate-400 border-transparent'
               }`}
             >
               <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black ${
-                currentStep === 2 ? 'bg-[#1DB954] text-white' : 'bg-slate-300 dark:bg-slate-800 text-slate-600'
+                currentStep === 2 ? 'bg-[#006A4E] text-white' : 'bg-slate-300 dark:bg-slate-800 text-slate-600'
               }`}>
                 {currentStep > 2 ? '✓' : '১'}
               </span>
@@ -258,12 +258,12 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
               }}
               className={`flex-1 py-1.5 px-3 rounded-xl flex items-center justify-center gap-2 transition cursor-pointer border ${
                 currentStep === 3
-                  ? 'bg-white dark:bg-slate-900 text-[#1DB954] border-[#1DB954]/40 shadow-xs font-black'
+                  ? 'bg-white dark:bg-slate-900 text-[#38BDF8] border-blue-600/50/40 shadow-xs font-black'
                   : 'text-slate-400 border-transparent'
               }`}
             >
               <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black ${
-                currentStep === 3 ? 'bg-[#1DB954] text-white' : 'bg-slate-300 dark:bg-slate-800 text-slate-600'
+                currentStep === 3 ? 'bg-[#006A4E] text-white' : 'bg-slate-300 dark:bg-slate-800 text-slate-600'
               }`}>
                 ২
               </span>
@@ -280,7 +280,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-[#1DB954]" />
+                  <Zap className="w-4 h-4 text-[#38BDF8]" />
                   <span>উপযুক্ত প্যাকেজ সিলেক্ট করুন:</span>
                 </h3>
                 <span className="text-xs text-slate-500 font-medium">
@@ -301,14 +301,14 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                       onClick={() => setSelectedPkgType(pKey)}
                       className={`p-3.5 pt-5 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between relative ${
                         isSelected
-                          ? 'border-[#1DB954] bg-[#1DB954]/10 dark:bg-[#1DB954]/15 shadow-md ring-1 ring-[#1DB954]'
+                          ? 'border-blue-600/50 bg-[#006A4E]/10 dark:bg-[#006A4E]/15 shadow-md ring-1 ring-[#006A4E]'
                           : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 hover:border-slate-300 dark:hover:border-slate-700'
                       }`}
                     >
                       {/* Floating Package Badge on Top Border */}
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap">
                         {pKey === 'basic' && (
-                          <span className="text-[11px] font-black text-white bg-[#1DB954] border border-emerald-600 px-2.5 py-0.5 rounded-full shadow-xs">
+                          <span className="text-[11px] font-black text-white bg-[#006A4E] border border-blue-600 px-2.5 py-0.5 rounded-full shadow-xs">
                             বেসিক প্যাকেজ
                           </span>
                         )}
@@ -330,12 +330,12 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                             <span className="font-extrabold text-slate-500">
                               অফার:
                             </span>
-                            <span className="text-emerald-600 dark:text-[#1DB954] bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-black">
+                            <span className="text-[#006A4E] dark:text-sky-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20 font-black">
                               {(gig.offerBadge === 'work_first' || gig.offerBadge === 'আগে কাজ শুরু') ? 'আগে কাজ শুরু' : ((gig.offerBadge === '৩০% ক্যাশব্যাক') ? '৩০% ছাড়' : (gig.offerBadge || '৩০% ছাড়'))}
                             </span>
                           </span>
                           <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-[#1DB954]" />
+                            <Clock className="w-3 h-3 text-[#38BDF8]" />
                             {pData.deliveryDays} দিন
                           </span>
                         </div>
@@ -344,14 +344,14 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                           {pData.name}
                         </div>
 
-                        <div className="text-base font-black text-[#1DB954]">
+                        <div className="text-base font-black text-[#38BDF8]">
                           ৳{pData.price.toLocaleString('bn-BD')}
                         </div>
 
                         <ul className="text-[11px] text-slate-600 dark:text-slate-300 space-y-1 border-t border-slate-200 dark:border-slate-800/80 pt-2">
                           {(pData.features || []).slice(0, 3).map((f, i) => (
                             <li key={i} className="flex items-center gap-1.5 truncate">
-                              <Check className="w-3 h-3 text-[#1DB954] shrink-0" />
+                              <Check className="w-3 h-3 text-[#38BDF8] shrink-0" />
                               <span className="truncate">{f}</span>
                             </li>
                           ))}
@@ -362,7 +362,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                         type="button"
                         className={`mt-3 w-full py-1.5 rounded-xl font-bold text-xs transition cursor-pointer text-center ${
                           isSelected
-                            ? 'bg-[#1DB954] text-white shadow'
+                            ? 'bg-[#006A4E] text-white shadow'
                             : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                         }`}
                       >
@@ -383,7 +383,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                   value={projectNote}
                   onChange={(e) => setProjectNote(e.target.value)}
                   placeholder="আপনার প্রজেক্ট সম্পর্কিত যেকোনো বিশেষ চাওয়া বা ওয়েবসাইট লিঙ্ক থাকলে লিখুন..."
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                 />
               </div>
 
@@ -392,7 +392,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setCurrentStep(2)}
-                  className="px-6 py-2.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold font-bengali text-xs sm:text-sm rounded-xl shadow-md transition flex items-center justify-center cursor-pointer"
+                  className="px-6 py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold font-bengali text-xs sm:text-sm rounded-xl shadow-md transition flex items-center justify-center cursor-pointer"
                 >
                   <span>পরবর্তী ধাপে যান (যোগাযোগের তথ্য)</span>
                 </button>
@@ -403,9 +403,9 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
           {/* STEP 2: CONTACT INFORMATION */}
           {currentStep === 2 && (
             <div className="space-y-3.5">
-              <div className="p-3 bg-emerald-500/10 dark:bg-emerald-950/30 rounded-2xl border border-[#1DB954]/30 space-y-0.5">
-                <h3 className="text-xs sm:text-sm font-black text-[#1DB954] flex items-center gap-2">
-                  <User className="w-4 h-4 text-[#1DB954]" />
+              <div className="p-3 bg-blue-500/10 dark:bg-slate-950/30 rounded-2xl border border-blue-600/50/30 space-y-0.5">
+                <h3 className="text-xs sm:text-sm font-black text-[#38BDF8] flex items-center gap-2">
+                  <User className="w-4 h-4 text-[#38BDF8]" />
                   <span>আপনার যোগাযোগের তথ্য প্রদান করুন:</span>
                 </h3>
                 <p className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
@@ -425,7 +425,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                     আপনার পূর্ণ নাম <span className="text-rose-500">*</span>
                   </label>
                   <div className="relative">
-                    <User className="w-4 h-4 text-[#1DB954] absolute left-3 top-3" />
+                    <User className="w-4 h-4 text-[#38BDF8] absolute left-3 top-3" />
                     <input
                       type="text"
                       placeholder="উদাহরণ: আরিফ হোসেন"
@@ -434,7 +434,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                         setClientName(e.target.value);
                         if (formError) setFormError('');
                       }}
-                      className="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954] focus:ring-1 focus:ring-[#1DB954]"
+                      className="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]"
                     />
                   </div>
                 </div>
@@ -445,7 +445,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                       হোয়াটসঅ্যাপ নম্বর <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
-                      <Phone className="w-4 h-4 text-[#1DB954] absolute left-3 top-3" />
+                      <Phone className="w-4 h-4 text-[#38BDF8] absolute left-3 top-3" />
                       <input
                         type="text"
                         placeholder="01712345678"
@@ -454,7 +454,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                           setClientPhone(e.target.value);
                           if (formError) setFormError('');
                         }}
-                        className="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:border-[#1DB954] focus:ring-1 focus:ring-[#1DB954]"
+                        className="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]"
                       />
                     </div>
                   </div>
@@ -473,7 +473,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                           setClientEmail(e.target.value);
                           if (formError) setFormError('');
                         }}
-                        className="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954] focus:ring-1 focus:ring-[#1DB954]"
+                        className="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]"
                       />
                     </div>
                   </div>
@@ -489,7 +489,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                     value={projectNote}
                     onChange={(e) => setProjectNote(e.target.value)}
                     placeholder="আপনার প্রজেক্ট সম্পর্কিত যেকোনো বিশেষ চাওয়া বা ওয়েবসাইট লিঙ্ক থাকলে লিখুন..."
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954] focus:ring-1 focus:ring-[#1DB954]"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]"
                   />
                 </div>
               </div>
@@ -499,7 +499,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                 <button
                   type="button"
                   onClick={handleNextToPayment}
-                  className="w-full sm:w-auto px-7 py-3 bg-[#1DB954] hover:bg-emerald-600 text-white font-black font-bengali text-xs sm:text-sm rounded-xl shadow-md transition flex items-center justify-center cursor-pointer"
+                  className="w-full sm:w-auto px-7 py-3 bg-[#006A4E] hover:bg-[#047857] text-white font-black font-bengali text-xs sm:text-sm rounded-xl shadow-md transition flex items-center justify-center cursor-pointer"
                 >
                   <span>পেমেন্ট ও কনফার্মেশনে যান (ধাপ ২)</span>
                 </button>
@@ -512,13 +512,13 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
             <div className="space-y-3.5">
               {/* If Work First Gig */}
               {orderMode === 'pay_after_work' ? (
-                <div className="p-4 bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/30 rounded-2xl space-y-2.5">
+                <div className="p-4 bg-blue-500/10 dark:bg-blue-500/15 border border-blue-500/30 rounded-2xl space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-[#1DB954] font-black text-sm">
-                      <CheckCircle2 className="w-5 h-5 shrink-0 text-[#1DB954]" />
+                    <div className="flex items-center gap-2 text-[#38BDF8] font-black text-sm">
+                      <CheckCircle2 className="w-5 h-5 shrink-0 text-[#38BDF8]" />
                       <span>আগে কাজ, পরে বিল (Zero Risk Guarantee)</span>
                     </div>
-                    <span className="text-[10px] font-black text-white bg-[#1DB954] px-2.5 py-0.5 rounded-full shadow-xs shrink-0">
+                    <span className="text-[10px] font-black text-white bg-[#006A4E] px-2.5 py-0.5 rounded-full shadow-xs shrink-0">
                       ১০০% সেফ
                     </span>
                   </div>
@@ -527,12 +527,12 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                   </p>
 
                   <div className="grid grid-cols-2 gap-2 pt-1">
-                    <div className="flex items-center gap-2 text-[11px] font-bold text-slate-700 dark:text-slate-300 bg-white/60 dark:bg-slate-900/60 p-2 rounded-xl border border-emerald-500/20">
-                      <ShieldCheck className="w-4 h-4 text-[#1DB954] shrink-0" />
+                    <div className="flex items-center gap-2 text-[11px] font-bold text-slate-700 dark:text-slate-300 bg-white/60 dark:bg-slate-900/60 p-2 rounded-xl border border-blue-500/20">
+                      <ShieldCheck className="w-4 h-4 text-[#38BDF8] shrink-0" />
                       <span>কোনো অগ্রিম চার্জ নেই</span>
                     </div>
-                    <div className="flex items-center gap-2 text-[11px] font-bold text-slate-700 dark:text-slate-300 bg-white/60 dark:bg-slate-900/60 p-2 rounded-xl border border-emerald-500/20">
-                      <Clock className="w-4 h-4 text-[#1DB954] shrink-0" />
+                    <div className="flex items-center gap-2 text-[11px] font-bold text-slate-700 dark:text-slate-300 bg-white/60 dark:bg-slate-900/60 p-2 rounded-xl border border-blue-500/20">
+                      <Clock className="w-4 h-4 text-[#38BDF8] shrink-0" />
                       <span>সময়মতো প্রজেক্ট ডেলিভারি</span>
                     </div>
                   </div>
@@ -541,8 +541,8 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                 /* Standard Order: Payment Method Selector */
                 <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3.5">
                   <div className="flex justify-between items-center text-xs font-black text-slate-800 dark:text-slate-200">
-                    <span className="text-xs font-extrabold text-[#1DB954]">পেমেন্ট মেথড নির্বাচন করুন:</span>
-                    <span className="text-[#1DB954] font-black bg-[#1DB954]/10 px-2.5 py-1 rounded-lg border border-[#1DB954]/20">
+                    <span className="text-xs font-extrabold text-[#38BDF8]">পেমেন্ট মেথড নির্বাচন করুন:</span>
+                    <span className="text-[#38BDF8] font-black bg-[#006A4E]/10 px-2.5 py-1 rounded-lg border border-blue-600/50/20">
                       মোট বিল: ৳{finalPrice.toLocaleString('bn-BD')}
                     </span>
                   </div>
@@ -559,7 +559,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                           onClick={() => setPaymentMethod(mKey)}
                           className={`py-3 px-2 rounded-2xl font-black text-xs sm:text-sm border transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 shadow-2xs ${
                             isSel
-                              ? 'bg-white dark:bg-slate-900 border-[#1DB954] text-[#1DB954] ring-2 ring-[#1DB954]/40 shadow-md scale-102'
+                              ? 'bg-white dark:bg-slate-900 border-blue-600/50 text-[#38BDF8] ring-2 ring-[#006A4E]/40 shadow-md scale-102'
                               : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300'
                           }`}
                         >
@@ -588,7 +588,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                     <button
                       type="button"
                       onClick={() => handleCopyAccount(officialAccounts[paymentMethod].number)}
-                      className="px-4 py-2 bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shrink-0 shadow-xs active:scale-95"
+                      className="px-4 py-2 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shrink-0 shadow-xs active:scale-95"
                     >
                       <Copy className="w-3.5 h-3.5 text-white" />
                       <span>{isCopied ? 'কপি হয়েছে!' : 'নম্বর কপি করুন'}</span>
@@ -608,7 +608,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                         setTrxId(e.target.value);
                         if (formError) setFormError('');
                       }}
-                      className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm font-mono text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954] focus:ring-1 focus:ring-[#1DB954]"
+                      className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm font-mono text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]"
                     />
                   </div>
                 </div>
@@ -621,14 +621,14 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                   <span>৳{basePrice.toLocaleString('bn-BD')}</span>
                 </div>
                 {isDiscounted && (
-                  <div className="flex justify-between text-[#1DB954]">
+                  <div className="flex justify-between text-[#38BDF8]">
                     <span>ইনস্ট্যান্ট ক্যাশব্যাক (৫% ছাড়):</span>
                     <span>-৳{Math.round(basePrice * 0.05).toLocaleString('bn-BD')}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-slate-900 dark:text-white text-sm font-black pt-1 border-t border-slate-200 dark:border-slate-800">
                   <span>সর্বমোট প্রদেয় বিল:</span>
-                  <span className="text-[#1DB954]">৳{finalPrice.toLocaleString('bn-BD')}</span>
+                  <span className="text-[#38BDF8]">৳{finalPrice.toLocaleString('bn-BD')}</span>
                 </div>
               </div>
 
@@ -652,7 +652,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                 <button
                   type="button"
                   onClick={handleConfirmOrderSubmit}
-                  className="flex-1 py-3 px-6 bg-[#1DB954] hover:bg-emerald-600 text-white font-black font-bengali text-sm rounded-xl shadow-lg hover:shadow-[#1DB954]/20 transition transform active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex-1 py-3 px-6 bg-[#006A4E] hover:bg-[#047857] text-white font-black font-bengali text-sm rounded-xl shadow-lg hover:shadow-blue-500/20 transition transform active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <CheckCircle2 className="w-4 h-4" />
                   <span>অর্ডার নিশ্চিত করুন</span>
@@ -665,7 +665,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
           {currentStep === 4 && completedOrder && (
             <div className="space-y-4 text-center py-2 animate-in zoom-in-95 duration-300">
               
-              <div className="w-14 h-14 bg-[#1DB954]/20 text-[#1DB954] rounded-full flex items-center justify-center mx-auto ring-8 ring-[#1DB954]/10">
+              <div className="w-14 h-14 bg-[#006A4E]/20 text-[#38BDF8] rounded-full flex items-center justify-center mx-auto ring-8 ring-[#006A4E]/10">
                 <Check className="w-7 h-7 stroke-[3]" />
               </div>
 
@@ -704,7 +704,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                   </div>
                   <div className="flex justify-between text-slate-700 dark:text-slate-300">
                     <span>প্যাকেজ নাম:</span>
-                    <span className="text-[#1DB954]">{completedOrder.packageName}</span>
+                    <span className="text-[#38BDF8]">{completedOrder.packageName}</span>
                   </div>
                   <div className="flex justify-between text-slate-700 dark:text-slate-300">
                     <span>মোট বাজেট:</span>
@@ -718,7 +718,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                   </div>
                   <div className="flex justify-between text-slate-700 dark:text-slate-300">
                     <span>বিলিং মোড:</span>
-                    <span className="text-emerald-600 dark:text-emerald-400">
+                    <span className="text-[#006A4E] dark:text-sky-400">
                       {completedOrder.orderMode === 'instant_escrow' ? 'ইনস্ট্যান্ট এস্ক্রো' : 'আগে কাজ, পরে বিল'}
                     </span>
                   </div>
@@ -737,7 +737,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                       setActiveTab('marketplace');
                     }
                   }}
-                  className="py-3 px-2 bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-md truncate"
+                  className="py-3 px-2 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-md truncate"
                 >
                   <ArrowRight className="w-4 h-4 shrink-0 text-slate-950" />
                   <span className="truncate">বায়ারের ড্যাশবোর্ডে যান</span>
@@ -748,7 +748,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                   onClick={handleOpenMarketplaceChat}
                   className="py-3 px-2 bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer truncate border border-slate-700"
                 >
-                  <MessageSquare className="w-4 h-4 text-[#1DB954] shrink-0" />
+                  <MessageSquare className="w-4 h-4 text-[#38BDF8] shrink-0" />
                   <span className="truncate">মেসেজ করুন</span>
                 </button>
               </div>

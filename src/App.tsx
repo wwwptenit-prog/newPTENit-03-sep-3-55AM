@@ -31,7 +31,7 @@ const NotificationCenterModal = React.lazy(() => import('./components/Notificati
 
 const LazyFallback: React.FC = () => (
   <div className="min-h-[50vh] flex flex-col items-center justify-center p-8">
-    <div className="w-9 h-9 border-3 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+    <div className="w-9 h-9 border-3 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
     <span className="mt-3 text-xs text-slate-400 font-medium tracking-wide">লোড হচ্ছে...</span>
   </div>
 );
@@ -362,7 +362,7 @@ const MainAppContent: React.FC = () => {
   return (
     <div
       style={siteSettings?.customScalePercent && siteSettings.customScalePercent !== 100 ? { zoom: `${siteSettings.customScalePercent}%` } : undefined}
-      className="min-h-screen bg-slate-50 dark:bg-slate-900 text-white dark:text-slate-100 flex flex-col font-sans selection:bg-[#1DB954] selection:text-white max-w-full overflow-x-hidden"
+      className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-[#16A34A] selection:text-white max-w-full overflow-x-hidden"
     >
       
       {/* Top Main Navbar (Only shown on public website pages, not in dashboards or marketplace) */}
@@ -391,7 +391,7 @@ const MainAppContent: React.FC = () => {
                 {/* 1. Hero Section (signature deep navy background) */}
                 <Hero setActiveTab={handleSetActiveTab} mouseCoords={heroZoneMouseCoords} />
 
-                {/* 2. Eid Mega Offer Banner (emerald-to-teal gradient background) */}
+                {/* 2. Eid Mega Offer Banner (blue-to-teal gradient background) */}
                 <PromotionalOfferBanner setActiveTab={handleSetActiveTab} />
 
                 {/* 3. Continuous Glittering Starfield spanning seamlessly across Hero down through Eid Mega Offer Banner */}

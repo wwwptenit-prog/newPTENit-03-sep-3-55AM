@@ -225,7 +225,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold text-xs transition cursor-pointer shadow-xs"
                   title={t('পূর্ববর্তী স্থানে ফিরে যান', 'Go back to previous page')}
                 >
-                  <ArrowLeft className="w-4 h-4 text-[#1DB954]" />
+                  <ArrowLeft className="w-4 h-4 text-[#38BDF8]" />
                   <span>{t('ফিরে যান', 'Back')}</span>
                 </button>
               )}
@@ -281,7 +281,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                     setActiveTab('services');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="inline-flex items-center gap-1 text-[#1DB954] hover:text-emerald-600 font-bold text-xs sm:text-sm hover:underline transition-all cursor-pointer font-bengali shrink-0 group"
+                  className="inline-flex items-center gap-1 text-[#38BDF8] hover:text-[#006A4E] font-bold text-xs sm:text-sm hover:underline transition-all cursor-pointer font-bengali shrink-0 group"
                 >
                   <span>{t('সবগুলো দেখুন →', 'See All →')}</span>
                 </button>
@@ -332,7 +332,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                     setActiveTab('marketplace', 'All');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="inline-flex items-center gap-1 text-[#1DB954] hover:text-emerald-600 font-bold text-xs sm:text-sm hover:underline transition-all cursor-pointer font-bengali shrink-0 group"
+                  className="inline-flex items-center gap-1 text-[#38BDF8] hover:text-[#006A4E] font-bold text-xs sm:text-sm hover:underline transition-all cursor-pointer font-bengali shrink-0 group"
                 >
                   <span>{t('সবগুলো দেখুন →', 'See All →')}</span>
                 </button>

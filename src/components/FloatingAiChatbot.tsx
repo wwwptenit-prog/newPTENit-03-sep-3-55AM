@@ -110,7 +110,7 @@ const TypewriterText: React.FC<{
     <span>
       {displayedText}
       {currentIndex < text.length && (
-        <span className="inline-block w-1.5 h-3.5 bg-[#1DB954] ml-0.5 animate-pulse rounded-full align-middle" />
+        <span className="inline-block w-1.5 h-3.5 bg-[#006A4E] ml-0.5 animate-pulse rounded-full align-middle" />
       )}
     </span>
   );
@@ -446,10 +446,10 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
       {!isOpen && (
         <div className="relative group">
           {/* Vibrant Animated Multi-Color AI Glowing Halo */}
-          <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#1DB954] via-fuchsia-500 via-sky-400 to-amber-300 opacity-85 blur-[3px] group-hover:opacity-100 group-hover:blur-sm transition duration-300 animate-pulse"></div>
+          <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#006A4E] via-fuchsia-500 via-sky-400 to-amber-300 opacity-85 blur-[3px] group-hover:opacity-100 group-hover:blur-sm transition duration-300 animate-pulse"></div>
 
           {/* Gradient Border Frame around Sleek Black Core */}
-          <div className="relative p-[2px] rounded-full bg-gradient-to-tr from-[#1DB954] via-violet-500 via-pink-500 to-cyan-400 shadow-xl shadow-emerald-500/25">
+          <div className="relative p-[2px] rounded-full bg-gradient-to-tr from-[#006A4E] via-violet-500 via-pink-500 to-cyan-400 shadow-xl shadow-blue-500/25">
             <button
               onClick={() => {
                 setIsOpen(true);
@@ -462,21 +462,21 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
               {/* Bot Icon with AI Colorful Sparkles */}
               <div className="relative flex items-center justify-center">
                 {/* Bot Icon on Dark Circle - White Color & Prominent Size */}
-                <div className="w-8 h-8 rounded-full bg-black sm:bg-gradient-to-tr sm:from-[#1DB954] sm:to-emerald-400 flex items-center justify-center text-white sm:text-white shadow-inner">
-                  <Bot className="w-5.5 h-5.5 sm:w-4 sm:h-4 text-white sm:text-slate-950 stroke-[2.2]" />
+                <div className="w-8 h-8 rounded-full bg-black sm:bg-gradient-to-tr sm:from-[#006A4E] sm:to-[#047857] flex items-center justify-center text-white sm:text-white shadow-inner">
+                  <Bot className="w-5.5 h-5.5 sm:w-4 sm:h-4 text-white sm:text-white stroke-[2.2]" />
                 </div>
                 
-                {/* Pulsing Colorful AI Active Beacon - Placed on the side at 50% */}
+                {/* Pulsing Red & Green Active Beacon */}
                 <span className="absolute top-1/2 -translate-y-1/2 -right-1 sm:-top-0.5 sm:translate-y-0 sm:-right-0.5 flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#1DB954] opacity-85"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-gradient-to-r from-[#1DB954] to-cyan-400 border border-black"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E11D48] opacity-85"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#E11D48] border border-black shadow-[0_0_8px_#E11D48]"></span>
                 </span>
               </div>
 
               {/* Minimal Title & Sparkles (Hidden on mobile, visible on desktop) */}
               <span className="hidden sm:inline-flex font-extrabold text-xs tracking-wide font-heading text-white items-center gap-1.5 pl-2 pr-1">
                 AI Assistant
-                <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+                <Sparkles className="w-3.5 h-3.5 text-[#10B981] animate-pulse" />
               </span>
             </button>
           </div>
@@ -486,27 +486,27 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
       {/* CHAT WINDOW */}
       {isOpen && (
         <div
-          className={`bg-[#0b132b] border-2 border-[#1DB954]/90 rounded-3xl shadow-2xl w-[94vw] sm:w-[420px] flex flex-col transition-all duration-300 overflow-hidden ${
+          className={`bg-[#0b132b] border-2 border-emerald-500/40 rounded-3xl shadow-2xl w-[94vw] sm:w-[420px] flex flex-col transition-all duration-300 overflow-hidden ${
             isMinimized ? 'h-16' : 'h-[600px]'
           }`}
         >
           {/* HEADER */}
-          <div className="bg-gradient-to-r from-[#091124] via-[#0f1d3a] to-[#091124] p-3.5 border-b border-slate-800 flex items-center justify-between text-white shrink-0 shadow-md">
+          <div className="bg-gradient-to-r from-[#03130e] via-[#08231c] to-[#03130e] p-3.5 border-b border-emerald-900/50 flex items-center justify-between text-white shrink-0 shadow-md">
             <div className="flex items-center gap-2.5">
               <div className="relative">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-[#1DB954] via-emerald-400 to-[#38bdf8] flex items-center justify-center border-2 border-[#34d399] shadow-md text-white">
-                  <Bot className="w-5 h-5 text-slate-950" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-[#006A4E] to-[#047857] flex items-center justify-center border-2 border-emerald-400 shadow-md text-white">
+                  <Bot className="w-5 h-5 text-white" />
                 </div>
-                <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#1DB954] border-2 border-slate-950 rounded-full animate-pulse"></span>
+                <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#E11D48] border-2 border-slate-950 rounded-full animate-pulse"></span>
               </div>
               <div>
                 <h3 className="text-xs sm:text-sm font-bold text-white font-heading tracking-wide flex items-center gap-1.5">
                   AI Assistant
-                  <span className="text-[9px] bg-[#1DB954] text-white px-1.5 py-0.2 rounded-full font-extrabold">
+                  <span className="text-[9px] bg-[#006A4E] text-white px-1.5 py-0.2 rounded-full font-extrabold">
                     ONLINE
                   </span>
                 </h3>
-                <p className="text-[10px] text-emerald-400 font-medium">
+                <p className="text-[10px] text-emerald-300 font-medium">
                   PTENit & Marketplace Helper
                 </p>
               </div>
@@ -542,18 +542,18 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                     }`}
                   >
                     {m.sender === 'user' ? (
-                      <div className="w-7 h-7 rounded-full bg-[#1DB954] text-white flex items-center justify-center shrink-0 border border-[#34d399] font-bold shadow">
+                      <div className="w-7 h-7 rounded-full bg-[#006A4E] text-white flex items-center justify-center shrink-0 border border-[#34d399] font-bold shadow">
                         <User className="w-3.5 h-3.5" />
                       </div>
                     ) : m.sender === 'agent' ? (
                       <img
                         src={m.agentAvatar}
                         alt={m.agentName}
-                        className="w-8 h-8 rounded-full object-cover shrink-0 border-2 border-[#1DB954] shadow"
+                        className="w-8 h-8 rounded-full object-cover shrink-0 border-2 border-blue-600/50 shadow"
                       />
                     ) : (
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#1DB954] via-emerald-500 to-[#38bdf8] text-white flex items-center justify-center shrink-0 border border-[#34d399] font-extrabold shadow text-sm">
-                        <Bot className="w-4 h-4 text-slate-950" />
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#006A4E] to-[#0284c7] text-white flex items-center justify-center shrink-0 border border-[#006A4E] font-extrabold shadow text-sm">
+                        <Bot className="w-4 h-4 text-white" />
                       </div>
                     )}
 
@@ -561,18 +561,18 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                       <div
                         className={`p-3 rounded-2xl shadow text-xs leading-relaxed space-y-1.5 ${
                           m.sender === 'user'
-                            ? 'bg-[#1DB954] text-white font-semibold rounded-tr-none'
+                            ? 'bg-[#006A4E] text-white font-semibold rounded-tr-none'
                             : 'bg-[#131f37] text-slate-100 border border-slate-700/80 rounded-tl-none font-sans'
                         }`}
                       >
                         {m.sender === 'agent' && (
                           <div className="flex items-center gap-1.5 border-b border-slate-700/80 pb-1 mb-1">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-[#1DB954]" />
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#38BDF8]" />
                             <div>
                               <span className="font-extrabold text-white text-[11px] block leading-none">
                                 {m.agentName}
                               </span>
-                              <span className="text-[9px] text-[#1DB954] font-semibold">
+                              <span className="text-[9px] text-[#38BDF8] font-semibold">
                                 {m.agentRole}
                               </span>
                             </div>
@@ -602,9 +602,9 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                           <Clock className="w-2.5 h-2.5 opacity-70" />
                           <span>{m.timestamp}</span>
                           {m.sender !== 'user' && !m.isStreaming && (
-                            <span className="flex items-center gap-0.5 text-[#1DB954] font-bold ml-1">
+                            <span className="flex items-center gap-0.5 text-[#38BDF8] font-bold ml-1">
                               <span>Seen</span>
-                              <CheckCheck className="w-3 h-3 text-[#1DB954]" />
+                              <CheckCheck className="w-3 h-3 text-[#38BDF8]" />
                             </span>
                           )}
                         </div>
@@ -621,7 +621,7 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                             {m.cards.map((card) => (
                               <div
                                 key={card.id}
-                                className="w-48 shrink-0 bg-[#091124] border border-slate-700 hover:border-[#1DB954] rounded-2xl p-2.5 shadow-lg flex flex-col justify-between transition-all duration-200 group"
+                                className="w-48 shrink-0 bg-[#091124] border border-slate-700 hover:border-blue-600/50 rounded-2xl p-2.5 shadow-lg flex flex-col justify-between transition-all duration-200 group"
                               >
                                 <div className="space-y-2">
                                   <div className="relative h-24 rounded-xl overflow-hidden bg-slate-800">
@@ -631,7 +631,7 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                     />
                                     {card.badge && (
-                                      <span className="absolute top-1.5 right-1.5 bg-[#1DB954] text-white font-black text-[9px] px-1.5 py-0.5 rounded-md shadow">
+                                      <span className="absolute top-1.5 right-1.5 bg-[#006A4E] text-white font-black text-[9px] px-1.5 py-0.5 rounded-md shadow">
                                         {card.badge}
                                       </span>
                                     )}
@@ -661,7 +661,7 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                                       </span>
                                     </div>
                                     <div className="text-right">
-                                      <span className="text-xs font-black text-[#1DB954]">
+                                      <span className="text-xs font-black text-[#38BDF8]">
                                         {card.priceText}
                                       </span>
                                       {card.originalPriceText && (
@@ -674,7 +674,7 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
 
                                   <button
                                     onClick={() => handleCardClick(card)}
-                                    className="w-full py-1.5 bg-[#1DB954] hover:bg-[#18a249] active:scale-95 text-white font-extrabold text-[10px] rounded-xl flex items-center justify-center gap-1 transition shadow cursor-pointer"
+                                    className="w-full py-1.5 bg-[#006A4E] hover:bg-[#18a249] active:scale-95 text-white font-extrabold text-[10px] rounded-xl flex items-center justify-center gap-1 transition shadow cursor-pointer"
                                   >
                                     <span>{card.actionText}</span>
                                     <ExternalLink className="w-3 h-3" />
@@ -691,17 +691,17 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
 
                 {/* SLEEK PROFESSIONAL TYPING INDICATOR */}
                 {isLoading && (
-                  <div className="flex items-center gap-3 text-[#1DB954] text-xs p-3 bg-[#091124] rounded-2xl border border-slate-700/80 shadow-md animate-fadeIn">
-                    <div className="w-7 h-7 rounded-full bg-[#1DB954]/20 border border-[#1DB954] flex items-center justify-center shrink-0">
-                      <Bot className="w-4 h-4 text-[#1DB954] animate-pulse" />
+                  <div className="flex items-center gap-3 text-[#38BDF8] text-xs p-3 bg-[#091124] rounded-2xl border border-slate-700/80 shadow-md animate-fadeIn">
+                    <div className="w-7 h-7 rounded-full bg-[#006A4E]/20 border border-blue-600/50 flex items-center justify-center shrink-0">
+                      <Bot className="w-4 h-4 text-[#38BDF8] animate-pulse" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-1.5 font-bold text-slate-200">
                         <span>AI Assistant উত্তর প্রস্তুত করছে</span>
                         <div className="flex gap-1 items-center ml-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954] animate-bounce [animation-delay:-0.3s]"></span>
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954] animate-bounce [animation-delay:-0.15s]"></span>
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954] animate-bounce"></span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#006A4E] animate-bounce [animation-delay:-0.3s]"></span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#006A4E] animate-bounce [animation-delay:-0.15s]"></span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#006A4E] animate-bounce"></span>
                         </div>
                       </div>
                       <p className="text-[10px] text-slate-400 font-normal">উত্তর সম্পূর্ণ না হওয়া পর্যন্ত অনুগ্রহ করে অপেক্ষা করুন...</p>
@@ -719,7 +719,7 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                       key={idx}
                       disabled={isBusy}
                       onClick={() => handleSend(sug)}
-                      className="px-2.5 py-1.5 bg-slate-900 hover:bg-[#1DB954] hover:text-white disabled:opacity-50 disabled:hover:bg-slate-900 disabled:hover:text-slate-200 text-slate-200 border border-slate-700/80 rounded-xl text-[11px] font-semibold whitespace-nowrap cursor-pointer disabled:cursor-not-allowed transition shadow-sm"
+                      className="px-2.5 py-1.5 bg-slate-900 hover:bg-[#006A4E] hover:text-white disabled:opacity-50 disabled:hover:bg-slate-900 disabled:hover:text-slate-200 text-slate-200 border border-slate-700/80 rounded-xl text-[11px] font-semibold whitespace-nowrap cursor-pointer disabled:cursor-not-allowed transition shadow-sm"
                     >
                       {sug}
                     </button>
@@ -745,12 +745,12 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                   }
                   value={inputMsg}
                   onChange={(e) => setInputMsg(e.target.value)}
-                  className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-[#1DB954] disabled:opacity-60 disabled:cursor-not-allowed font-sans"
+                  className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-[#006A4E] disabled:opacity-60 disabled:cursor-not-allowed font-sans"
                 />
                 <button
                   type="submit"
                   disabled={isBusy || !inputMsg.trim()}
-                  className="p-2.5 bg-[#1DB954] hover:bg-[#19a34a] disabled:opacity-50 text-white font-bold rounded-xl shadow cursor-pointer disabled:cursor-not-allowed transition shrink-0"
+                  className="p-2.5 bg-[#006A4E] hover:bg-[#19a34a] disabled:opacity-50 text-white font-bold rounded-xl shadow cursor-pointer disabled:cursor-not-allowed transition shrink-0"
                 >
                   <Send className="w-4 h-4" />
                 </button>
@@ -763,7 +763,7 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
       {/* QUICK SERVICE / GIG CHECKOUT MODAL OVERLAY */}
       {selectedModalCard && (
         <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#0b132b] border-2 border-[#1DB954] rounded-3xl w-full max-w-md p-5 shadow-2xl text-white space-y-4 animate-scaleUp relative">
+          <div className="bg-[#0b132b] border-2 border-blue-600/50 rounded-3xl w-full max-w-md p-5 shadow-2xl text-white space-y-4 animate-scaleUp relative">
             <button
               onClick={() => setSelectedModalCard(null)}
               className="absolute top-4 right-4 p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-full transition cursor-pointer"
@@ -775,22 +775,22 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
               <img
                 src={selectedModalCard.thumbnail}
                 alt={selectedModalCard.title}
-                className="w-16 h-16 rounded-xl object-cover border border-[#1DB954]"
+                className="w-16 h-16 rounded-xl object-cover border border-blue-600/50"
               />
               <div>
-                <span className="text-[10px] font-bold bg-[#1DB954] text-white px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-bold bg-[#006A4E] text-white px-2 py-0.5 rounded-full">
                   {selectedModalCard.badge || 'PTENit Service'}
                 </span>
                 <h3 className="text-sm font-extrabold text-white mt-1 leading-snug">
                   {selectedModalCard.title}
                 </h3>
-                <p className="text-xs font-black text-[#1DB954]">{selectedModalCard.priceText}</p>
+                <p className="text-xs font-black text-[#38BDF8]">{selectedModalCard.priceText}</p>
               </div>
             </div>
 
             {orderSuccess ? (
               <div className="py-8 text-center space-y-3">
-                <div className="w-16 h-16 bg-[#1DB954] text-white rounded-full flex items-center justify-center mx-auto animate-bounce">
+                <div className="w-16 h-16 bg-[#006A4E] text-white rounded-full flex items-center justify-center mx-auto animate-bounce">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
                 <h4 className="text-lg font-black text-white">অর্ডার সফলভাবে কনফার্ম হয়েছে! 🎈</h4>
@@ -810,7 +810,7 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                         onClick={() => setSelectedPkg(pkg)}
                         className={`py-1.5 rounded-xl font-bold capitalize border text-[11px] transition cursor-pointer ${
                           selectedPkg === pkg
-                            ? 'bg-[#1DB954] text-white border-[#1DB954]'
+                            ? 'bg-[#006A4E] text-white border-blue-600/50'
                             : 'bg-slate-900 text-slate-300 border-slate-700'
                         }`}
                       >
@@ -851,7 +851,7 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                     placeholder="01700000000"
                     value={orderPhone}
                     onChange={(e) => setOrderPhone(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -862,7 +862,7 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                     placeholder="e.g. 9H8X2A11"
                     value={orderTxId}
                     onChange={(e) => setOrderTxId(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -873,13 +873,13 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                     placeholder="কাজের সংক্ষেপ বা রিকোয়ারমেন্ট লিখুন..."
                     value={orderNote}
                     onChange={(e) => setOrderNote(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 bg-[#1DB954] hover:bg-[#18a249] text-white font-black rounded-xl text-xs transition cursor-pointer shadow-lg mt-2"
+                  className="w-full py-2.5 bg-[#006A4E] hover:bg-[#18a249] text-white font-black rounded-xl text-xs transition cursor-pointer shadow-lg mt-2"
                 >
                   অর্ডার কনফার্ম করুন 🚀
                 </button>

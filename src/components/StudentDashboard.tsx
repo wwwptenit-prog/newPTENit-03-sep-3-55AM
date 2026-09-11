@@ -165,14 +165,14 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   if (!currentUser) {
     return (
       <div className="py-20 text-center max-w-md mx-auto space-y-4 font-bengali">
-        <UserIcon className="w-16 h-16 text-[#1DB954] mx-auto" />
+        <UserIcon className="w-16 h-16 text-[#38BDF8] mx-auto" />
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white">লগইন প্রয়োজন</h2>
         <p className="text-sm text-slate-500">
           স্টুডেন্ট ড্যাশবোর্ড দেখার জন্য অনুগ্রহ করে আপনার একাউন্টে লগইন করুন।
         </p>
         <button
           onClick={() => setActiveTab('courses')}
-          className="px-6 py-2.5 bg-[#1DB954] text-white font-bold text-sm rounded-xl cursor-pointer"
+          className="px-6 py-2.5 bg-[#006A4E] text-white font-bold text-sm rounded-xl cursor-pointer"
         >
           কোর্সসমূহ দেখুন
         </button>
@@ -242,92 +242,90 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
         
         {/* Teacher-Style Rich Student Profile Header Banner */}
         {!hideHeaderBanner && (
-          <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-[#142B4D] rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl border border-emerald-500/30 mb-6 sm:mb-8 relative overflow-hidden">
-            <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 relative z-10 text-center sm:text-left">
-            <div className="relative group shrink-0">
-              <img
-                src={currentUser.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80'}
-                alt={currentUser.name}
-                className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl sm:rounded-3xl object-cover border-2 sm:border-4 border-[#1DB954]/50 shadow-xl"
-              />
-              <span className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#1DB954] border-2 border-slate-900 flex items-center justify-center text-xs text-white shadow-md" title="সক্রিয় স্টুডেন্ট">
-                ✓
-              </span>
-            </div>
-
-            <div className="space-y-1.5 flex-1 w-full">
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                <h1 className="text-xl sm:text-3xl font-black text-white">{currentUser.name}</h1>
-                <span className="bg-emerald-500/20 text-[#1DB954] border border-emerald-500/40 text-[11px] sm:text-xs px-2.5 py-0.5 sm:py-1 rounded-full font-bold flex items-center gap-1">
-                  <GraduationCap className="w-3.5 h-3.5" /> স্টুডেন্ট প্রোফাইল
+          <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-slate-900 shadow-sm border border-slate-200 mb-6 sm:mb-8 relative overflow-hidden">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 relative z-10 text-center sm:text-left">
+              <div className="relative group shrink-0">
+                <img
+                  src={currentUser.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80'}
+                  alt={currentUser.name}
+                  className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl sm:rounded-3xl object-cover border-2 sm:border-4 border-slate-100 shadow-md"
+                />
+                <span className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#006A4E] border-2 border-white flex items-center justify-center text-xs text-white shadow-xs" title="সক্রিয় স্টুডেন্ট">
+                  ✓
                 </span>
               </div>
-              <p className="text-slate-300 text-xs sm:text-sm font-medium">
-                {currentUser.institution || 'PTENit IT Training Academy'}
-              </p>
-              <p className="text-slate-400 text-[11px] sm:text-xs">
-                {currentUser.email} • {currentUser.mobile}
-              </p>
-            </div>
 
-            {/* Header Action Suite */}
-            <div className="flex flex-wrap sm:flex-nowrap items-center justify-center sm:justify-end gap-2 sm:gap-2.5 w-full sm:w-auto shrink-0 font-bengali">
-              
-              {/* Language Switcher */}
-              <button
-                onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')}
-                className="bg-slate-800/80 px-3 py-2.5 rounded-2xl border border-slate-700 hover:border-[#1DB954] text-xs font-bold text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
-                title="ভাষা পরিবর্তন / Switch Language"
-              >
-                <Globe className="w-4 h-4 text-[#1DB954]" />
-                <span>{lang === 'bn' ? 'ENG' : 'বাংলা'}</span>
-              </button>
+              <div className="space-y-1.5 flex-1 w-full">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                  <h1 className="text-xl sm:text-3xl font-black text-slate-900">{currentUser.name}</h1>
+                  <span className="bg-emerald-50 text-[#006A4E] border border-emerald-200 text-[11px] sm:text-xs px-2.5 py-0.5 sm:py-1 rounded-full font-bold flex items-center gap-1">
+                    <GraduationCap className="w-3.5 h-3.5" /> স্টুডেন্ট প্রোফাইল
+                  </span>
+                </div>
+                <p className="text-slate-600 text-xs sm:text-sm font-medium">
+                  {currentUser.institution || 'PTENit IT Training Academy'}
+                </p>
+                <p className="text-slate-500 text-[11px] sm:text-xs">
+                  {currentUser.email} • {currentUser.mobile}
+                </p>
+              </div>
 
-              {/* Night Mode Toggle */}
-              <button
-                onClick={toggleDarkMode}
-                className="bg-slate-800/80 p-2.5 rounded-2xl border border-slate-700 hover:border-[#1DB954] text-xs font-bold transition-colors flex items-center justify-center cursor-pointer"
-                title={darkMode ? 'লাইট মোড অন করুন' : 'নাইট মোড অন করুন'}
-              >
-                {darkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-indigo-400" />}
-              </button>
-
-              {/* Back Button */}
-              {onBack && (
+              {/* Header Action Suite */}
+              <div className="flex flex-wrap sm:flex-nowrap items-center justify-center sm:justify-end gap-2 sm:gap-2.5 w-full sm:w-auto shrink-0 font-bengali">
+                
+                {/* Language Switcher */}
                 <button
-                  type="button"
-                  onClick={onBack}
-                  className="bg-slate-800/80 px-3 py-2.5 rounded-2xl border border-slate-700 hover:border-[#1DB954] text-xs font-bold text-slate-200 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer"
-                  title="পূর্ববর্তী পেজে ফিরে যান"
+                  onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')}
+                  className="bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200 hover:border-slate-300 text-xs font-bold text-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  title="ভাষা পরিবর্তন / Switch Language"
                 >
-                  <ArrowLeft className="w-4 h-4 text-[#1DB954]" />
-                  <span>{t('ফিরে যান', 'Back')}</span>
+                  <Globe className="w-4 h-4 text-[#006A4E]" />
+                  <span>{lang === 'bn' ? 'ENG' : 'বাংলা'}</span>
                 </button>
-              )}
 
-              {/* Main Site Link */}
-              <button
-                onClick={() => setActiveTab ? setActiveTab('home') : onBack ? onBack() : undefined}
-                className="bg-slate-800/80 px-3 py-2.5 rounded-2xl border border-slate-700 hover:border-[#1DB954] text-xs font-bold text-emerald-400 transition-colors flex items-center gap-1.5 cursor-pointer"
-                title="মূল ওয়েবসাইটে যান"
-              >
-                <Globe className="w-4 h-4 text-emerald-400" />
-                <span className="hidden sm:inline">{t('হোম পেইজ', 'Home Page')}</span>
-              </button>
+                {/* Night Mode Toggle */}
+                <button
+                  onClick={toggleDarkMode}
+                  className="bg-slate-50 p-2.5 rounded-2xl border border-slate-200 hover:border-slate-300 text-xs font-bold transition-colors flex items-center justify-center cursor-pointer text-slate-700"
+                  title={darkMode ? 'লাইট মোড অন করুন' : 'নাইট মোড অন করুন'}
+                >
+                  {darkMode ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5 text-slate-700" />}
+                </button>
 
-              {/* Notification Badge inside Dashboard */}
-              <div className="relative">
-              <button
-                onClick={() => {
-                  setNotifOpen(!notifOpen);
-                  if (msgOpen) setMsgOpen(false);
-                }}
-                className="bg-slate-800/80 p-3 rounded-2xl border border-slate-700 hover:border-[#1DB954] transition-colors cursor-pointer relative"
-                title="নোটিফিকেশনসমূহ"
-              >
-                <Bell className="w-5 h-5 text-emerald-400" />
+                {/* Back Button */}
+                {onBack && (
+                  <button
+                    type="button"
+                    onClick={onBack}
+                    className="bg-slate-50 px-3 py-2.5 rounded-2xl border border-slate-200 hover:border-slate-300 text-xs font-bold text-slate-700 hover:text-slate-900 transition-colors flex items-center gap-1.5 cursor-pointer"
+                    title="পূর্ববর্তী পেজে ফিরে যান"
+                  >
+                    <ArrowLeft className="w-4 h-4 text-slate-700" />
+                    <span>{t('ফিরে যান', 'Back')}</span>
+                  </button>
+                )}
+
+                {/* Main Site Link */}
+                <button
+                  onClick={() => setActiveTab ? setActiveTab('home') : onBack ? onBack() : undefined}
+                  className="bg-emerald-50 px-3 py-2.5 rounded-2xl border border-emerald-200 text-xs font-bold text-[#006A4E] hover:bg-emerald-100 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  title="মূল ওয়েবসাইটে যান"
+                >
+                  <Globe className="w-4 h-4 text-[#006A4E]" />
+                  <span className="hidden sm:inline">{t('হোম পেইজ', 'Home Page')}</span>
+                </button>
+
+                {/* Notification Badge inside Dashboard */}
+                <div className="relative">
+                <button
+                  onClick={() => {
+                    setNotifOpen(!notifOpen);
+                    if (msgOpen) setMsgOpen(false);
+                  }}
+                  className="bg-slate-50 p-3 rounded-2xl border border-slate-200 hover:border-slate-300 transition-colors cursor-pointer relative"
+                  title="নোটিফিকেশনসমূহ"
+                >
+                  <Bell className="w-5 h-5 text-slate-700" />
                 {unreadNotifCount > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 bg-rose-600 text-white font-black text-[10px] rounded-full flex items-center justify-center animate-pulse shadow-lg border-2 border-slate-900">
                     {unreadNotifCount}
@@ -336,13 +334,13 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               </button>
 
               {notifOpen && (
-                <div className="fixed bottom-0 right-2 sm:right-6 sm:bottom-4 w-full sm:w-[460px] max-w-[calc(100vw-1rem)] z-50 bg-slate-900 border-t-2 sm:border-2 border-emerald-500/60 rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col font-bengali animate-fadeIn overflow-hidden">
+                <div className="fixed bottom-0 right-2 sm:right-6 sm:bottom-4 w-full sm:w-[460px] max-w-[calc(100vw-1rem)] z-50 bg-slate-900 border-t-2 sm:border-2 border-blue-500/60 rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col font-bengali animate-fadeIn overflow-hidden">
                   {/* Header Bar */}
-                  <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 px-3.5 py-2.5 border-b border-slate-800 flex items-center justify-between">
+                  <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 px-3.5 py-2.5 border-b border-slate-800 flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                       <div className="relative">
-                        <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-black text-xs flex items-center justify-center border border-emerald-500/40">
-                          <Bell className="w-4 h-4 text-emerald-400" />
+                        <div className="w-8 h-8 rounded-full bg-blue-500/20 text-sky-400 font-black text-xs flex items-center justify-center border border-blue-500/40">
+                          <Bell className="w-4 h-4 text-sky-400" />
                         </div>
                       </div>
                       <div>
@@ -353,12 +351,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                               {unreadNotifCount} অপঠিত
                             </span>
                           ) : (
-                            <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.2 rounded font-bold">
+                            <span className="text-[9px] bg-blue-500/20 text-sky-400 px-1.5 py-0.2 rounded font-bold">
                               সব পড়া হয়েছে ✓
                             </span>
                           )}
                         </h4>
-                        <p className="text-[10px] text-emerald-400">কোর্স, অ্যাসাইনমেন্ট ও এডমিন নোটিশ</p>
+                        <p className="text-[10px] text-sky-400">কোর্স, অ্যাসাইনমেন্ট ও এডমিন নোটিশ</p>
                       </div>
                     </div>
 
@@ -366,7 +364,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                       {unreadNotifCount > 0 && (
                         <button
                           onClick={markAllNotificationsRead}
-                          className="text-[10px] bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold px-2 py-1 rounded-lg border border-slate-700 cursor-pointer transition-all"
+                          className="text-[10px] bg-slate-800 hover:bg-slate-700 text-sky-400 font-bold px-2 py-1 rounded-lg border border-slate-700 cursor-pointer transition-all"
                         >
                           সব পঠিত ✓
                         </button>
@@ -399,7 +397,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                       onClick={() => setStudentNotifToggles(prev => ({ ...prev, teacher: !prev.teacher }))}
                       className={`px-2.5 py-1 rounded-xl transition-all cursor-pointer border flex items-center gap-1 shrink-0 ${
                         studentNotifToggles.teacher
-                          ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300'
+                          ? 'bg-blue-500/20 border-blue-500/50 text-sky-300'
                           : 'bg-slate-900 border-slate-800 text-slate-500'
                       }`}
                       title="টিচার/কোর্স আপডেট চালু/বন্ধ করুন"
@@ -461,12 +459,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                             className={`p-3 rounded-2xl text-xs cursor-pointer transition-all ${
                               n.read
                                 ? 'bg-slate-800/40 border border-slate-800 text-slate-400'
-                                : 'bg-slate-800 border border-emerald-500/30 text-white shadow-md'
+                                : 'bg-slate-800 border border-blue-500/30 text-white shadow-md'
                             }`}
                           >
                             <div className="flex justify-between items-start gap-1 mb-1">
                               <p className="font-bold text-white text-[12px] flex items-center gap-1.5 truncate">
-                                {!n.read && <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />}
+                                {!n.read && <span className="w-2 h-2 rounded-full bg-sky-400 shrink-0" />}
                                 {n.title}
                               </p>
                             </div>
@@ -532,12 +530,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                         <div className="w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 font-black text-xs flex items-center justify-center border border-sky-500/40">
                           {activeSupportSender === 'PTENit সাপোর্ট' ? 'S' : 'T'}
                         </div>
-                        <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full absolute bottom-0 right-0 border-2 border-slate-900 animate-pulse" />
+                        <span className="w-2.5 h-2.5 bg-blue-500 rounded-full absolute bottom-0 right-0 border-2 border-slate-900 animate-pulse" />
                       </div>
                       <div>
                         <h4 className="text-xs font-black text-white flex items-center gap-1.5">
                           <span>{activeSupportSender}</span>
-                          <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.2 rounded font-semibold">অনলাইন</span>
+                          <span className="text-[9px] bg-blue-500/20 text-sky-400 px-1.5 py-0.2 rounded font-semibold">অনলাইন</span>
                         </h4>
                         <p className="text-[10px] text-sky-400">লাইভ স্টুডেন্ট মেসেঞ্জার & ইনবক্স</p>
                       </div>
@@ -599,7 +597,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     <button
                       onClick={() => setStudentMsgToggles(prev => ({ ...prev, instructor: !prev.instructor }))}
                       className={`px-2 py-0.5 rounded-lg text-[10px] font-bold border shrink-0 cursor-pointer transition-all ${
-                        studentMsgToggles.instructor ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-slate-900 text-slate-500 border-slate-800'
+                        studentMsgToggles.instructor ? 'bg-blue-500/20 text-sky-300 border-blue-500/40' : 'bg-slate-900 text-slate-500 border-slate-800'
                       }`}
                       title="ইনস্ট্রাক্টর বার্তা ফিল্টার অন/অফ"
                     >
@@ -728,7 +726,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 className="px-3 py-2 sm:px-3.5 sm:py-2.5 bg-slate-800/90 hover:bg-slate-700/90 text-slate-200 border border-slate-700/90 rounded-xl sm:rounded-2xl shadow-lg flex items-center gap-1.5 cursor-pointer transition-all font-bold text-xs"
                 title="মূল ওয়েবসাইটে ফিরে যান"
               >
-                <Globe className="w-4 h-4 text-[#1DB954]" />
+                <Globe className="w-4 h-4 text-[#38BDF8]" />
                 <span className="hidden sm:inline">মূল ওয়েবসাইট</span>
               </button>
 
@@ -750,7 +748,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
           {/* Integrated Metrics Row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 mt-6 pt-6 border-t border-slate-800/80">
             <div className="bg-slate-900/80 p-3 sm:p-4 rounded-2xl border border-slate-800 text-center">
-              <span className="text-xl sm:text-2xl font-black text-[#1DB954] block">{myEnrollments.length}</span>
+              <span className="text-xl sm:text-2xl font-black text-[#38BDF8] block">{myEnrollments.length}</span>
               <span className="text-[11px] text-slate-300 font-bold">এনরোলকৃত কোর্স</span>
             </div>
             <div className="bg-slate-900/80 p-3 sm:p-4 rounded-2xl border border-slate-800 text-center">
@@ -762,7 +760,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               <span className="text-[11px] text-slate-300 font-bold">অর্জিত সনদপত্র</span>
             </div>
             <div className="bg-slate-900/80 p-3 sm:p-4 rounded-2xl border border-slate-800 text-center">
-              <span className="text-xl sm:text-2xl font-black text-emerald-300 block">100%</span>
+              <span className="text-xl sm:text-2xl font-black text-sky-300 block">100%</span>
               <span className="text-[11px] text-slate-300 font-bold">লার্নিং স্কোর</span>
             </div>
           </div>
@@ -804,7 +802,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     onClick={() => setActiveSubTab(tab.id as any)}
                     className={`py-2.5 px-4 font-bold text-xs sm:text-sm flex items-center gap-2 rounded-xl transition-all shrink-0 cursor-pointer ${
                       isActive
-                        ? 'bg-[#1DB954] text-white shadow-md shadow-[#1DB954]/20 font-black'
+                        ? 'bg-[#006A4E] text-white shadow-md shadow-blue-500/20 font-black'
                         : tab.isLive
                         ? 'text-rose-600 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30'
                         : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -815,10 +813,10 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     {tab.badge !== undefined && (
                       <span className={`px-2 py-0.5 text-[10px] font-black rounded-full ${
                         isActive 
-                          ? 'bg-white text-emerald-800' 
+                          ? 'bg-white text-blue-900' 
                           : tab.isLive 
                           ? 'bg-rose-600 text-white animate-pulse' 
-                          : 'bg-emerald-600 text-white'
+                          : 'bg-[#047857] text-white'
                       }`}>
                         {tab.badge}
                       </span>
@@ -838,7 +836,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-[#1DB954]" />
+                    <BookOpen className="w-5 h-5 text-[#38BDF8]" />
                     <span>আমার এনরোলকৃত কোর্সসমূহ ({myEnrollments.length})</span>
                   </h2>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -854,7 +852,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     placeholder="কোর্স বা ইনস্ট্রাক্টর খুঁজুন..."
                     value={courseSearchQuery}
                     onChange={e => setCourseSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium focus:outline-none focus:border-[#1DB954] text-slate-900 dark:text-white"
+                    className="w-full pl-9 pr-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium focus:outline-none focus:border-[#006A4E] text-slate-900 dark:text-white"
                   />
                   {courseSearchQuery && (
                     <button
@@ -881,8 +879,8 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     onClick={() => setCourseStatusFilter(f.id as any)}
                     className={`px-3 py-1 rounded-xl transition cursor-pointer shrink-0 text-xs font-bold border ${
                       courseStatusFilter === f.id
-                        ? 'bg-[#1DB954] text-white border-[#1DB954] shadow-sm font-black'
-                        : 'bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#1DB954]'
+                        ? 'bg-[#006A4E] text-white border-blue-600/50 shadow-sm font-black'
+                        : 'bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-blue-600/50'
                     }`}
                   >
                     {f.label}
@@ -941,7 +939,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     return (
                       <div
                         key={enr.id}
-                        className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all flex flex-col justify-between space-y-4 font-bengali"
+                        className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-500/40 transition-all flex flex-col justify-between space-y-4 font-bengali"
                       >
                         {/* Course Main Top Card */}
                         <div className="space-y-3">
@@ -952,18 +950,18 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                                 alt={course.title}
                                 className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-md border border-slate-100 dark:border-slate-800"
                               />
-                              <span className="absolute -top-1.5 -left-1.5 bg-emerald-600 text-white font-black text-[9px] px-1.5 py-0.5 rounded-full shadow border border-slate-900">
+                              <span className="absolute -top-1.5 -left-1.5 bg-[#047857] text-white font-black text-[9px] px-1.5 py-0.5 rounded-full shadow border border-slate-900">
                                 🔴 ব্যাচ-০৪
                               </span>
                             </div>
 
                             <div className="space-y-1 flex-1 min-w-0">
                               <div className="flex flex-wrap items-center gap-1.5">
-                                <span className="px-2 py-0.5 bg-[#1DB954]/15 text-[#1DB954] text-[10px] font-bold rounded-lg border border-[#1DB954]/30">
+                                <span className="px-2 py-0.5 bg-[#006A4E]/15 text-[#38BDF8] text-[10px] font-bold rounded-lg border border-blue-600/50/30">
                                   {course.category}
                                 </span>
                                 {enr.status === 'completed' ? (
-                                  <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 text-[10px] font-bold rounded-lg border border-emerald-500/30 flex items-center gap-1">
+                                  <span className="px-2 py-0.5 bg-blue-500/20 text-sky-400 text-[10px] font-bold rounded-lg border border-blue-500/30 flex items-center gap-1">
                                     <CheckCircle className="w-3 h-3" /> কোর্স সম্পন্ন
                                   </span>
                                 ) : (
@@ -982,7 +980,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                                   👨‍🏫 {course.instructor}
                                 </span>
                                 <span>•</span>
-                                <span className="text-emerald-500 font-bold">আজীবন এক্সেস</span>
+                                <span className="text-blue-500 font-bold">আজীবন এক্সেস</span>
                               </div>
                             </div>
                           </div>
@@ -991,16 +989,16 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                           <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 space-y-2">
                             <div className="flex justify-between items-center text-xs font-bold">
                               <span className="text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                                <BookOpen className="w-3.5 h-3.5 text-[#1DB954]" />
+                                <BookOpen className="w-3.5 h-3.5 text-[#38BDF8]" />
                                 <span>অগ্রগতি</span>
                               </span>
-                              <span className="text-[#1DB954] font-black text-xs">
+                              <span className="text-[#38BDF8] font-black text-xs">
                                 {enr.progress}% সম্পন্ন
                               </span>
                             </div>
                             <div className="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
                               <div
-                                className="bg-gradient-to-r from-[#1DB954] via-emerald-400 to-sky-400 h-full rounded-full transition-all duration-500"
+                                className="bg-gradient-to-r from-[#006A4E] via-sky-400 to-sky-400 h-full rounded-full transition-all duration-500"
                                 style={{ width: `${enr.progress}%` }}
                               />
                             </div>
@@ -1014,7 +1012,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                             <button
                               type="button"
                               onClick={() => onStartLearning(course.id)}
-                              className="flex-1 py-2.5 px-3 bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                              className="flex-1 py-2.5 px-3 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
                             >
                               <PlayCircle className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
                               <span>ক্লাসে যান</span>
@@ -1050,10 +1048,10 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
                             <button
                               onClick={() => setActiveCurriculumModal(course)}
-                              className="py-2 px-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-emerald-500/20 hover:text-emerald-400 hover:border-emerald-500/50 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl transition cursor-pointer flex items-center justify-center gap-1 text-center"
+                              className="py-2 px-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-blue-500/20 hover:text-sky-400 hover:border-blue-500/50 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl transition cursor-pointer flex items-center justify-center gap-1 text-center"
                               title="কোর্সের সিলেবাস ও লেসন তালিকা দেখুন"
                             >
-                              <BookOpen className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                              <BookOpen className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                               <span className="truncate">সিলেবাস</span>
                             </button>
 
@@ -1083,7 +1081,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 </p>
                 <button
                   onClick={() => { setCourseSearchQuery(''); setActiveTab?.('courses'); }}
-                  className="px-5 py-2.5 bg-[#1DB954] text-white font-bold text-xs rounded-xl shadow cursor-pointer"
+                  className="px-5 py-2.5 bg-[#006A4E] text-white font-bold text-xs rounded-xl shadow cursor-pointer"
                 >
                   কোর্স ক্যাটালগ দেখুন
                 </button>
@@ -1127,7 +1125,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     placeholder="টপিক, কোর্স, মডিউল বা ইনস্ট্রাক্টর..."
                     value={courseSearchQuery}
                     onChange={e => setCourseSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-8 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium focus:outline-none focus:border-[#1DB954] text-slate-900 dark:text-white"
+                    className="w-full pl-9 pr-8 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium focus:outline-none focus:border-[#006A4E] text-slate-900 dark:text-white"
                   />
                   {courseSearchQuery && (
                     <button
@@ -1158,20 +1156,20 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                       </span>
                     </div>
 
-                    <div className="bg-emerald-500/10 p-3.5 rounded-2xl border border-emerald-500/30 text-center">
-                      <span className="text-lg sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 block font-mono">
+                    <div className="bg-blue-500/10 p-3.5 rounded-2xl border border-blue-500/30 text-center">
+                      <span className="text-lg sm:text-2xl font-black text-[#006A4E] dark:text-sky-400 block font-mono">
                         {scheduledCount}
                       </span>
-                      <span className="text-[11px] text-emerald-700 dark:text-emerald-300 font-bold">
+                      <span className="text-[11px] text-blue-700 dark:text-sky-300 font-bold">
                         🗓️ নির্ধারিত শিডিউল
                       </span>
                     </div>
 
-                    <div className="col-span-2 sm:col-span-1 bg-teal-500/10 p-3.5 rounded-2xl border border-teal-500/30 text-center">
-                      <span className="text-lg sm:text-2xl font-black text-teal-600 dark:text-teal-400 block font-mono">
+                    <div className="col-span-2 sm:col-span-1 bg-indigo-500/10 p-3.5 rounded-2xl border border-indigo-500/30 text-center">
+                      <span className="text-lg sm:text-2xl font-black text-indigo-600 dark:text-sky-400 block font-mono">
                         {myEnrollments.length}
                       </span>
-                      <span className="text-[11px] text-teal-700 dark:text-teal-300 font-bold">
+                      <span className="text-[11px] text-teal-700 dark:text-sky-300 font-bold">
                         আমার এনরোলকৃত কোর্স
                       </span>
                     </div>
@@ -1207,7 +1205,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     {courseSearchQuery && (
                       <button
                         onClick={() => setCourseSearchQuery('')}
-                        className="px-5 py-2.5 bg-[#1DB954] text-white font-bold text-xs rounded-xl shadow cursor-pointer"
+                        className="px-5 py-2.5 bg-[#006A4E] text-white font-bold text-xs rounded-xl shadow cursor-pointer"
                       >
                         সকল ক্লাস দেখুন
                       </button>
@@ -1232,7 +1230,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                         className={`bg-white dark:bg-slate-900 rounded-3xl border p-5 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between space-y-4 relative overflow-hidden ${
                           isLiveNow
                             ? 'border-rose-500/50 dark:border-rose-500/60 ring-2 ring-rose-500/20'
-                            : 'border-slate-200/90 dark:border-slate-800 hover:border-emerald-500/40'
+                            : 'border-slate-200/90 dark:border-slate-800 hover:border-blue-500/40'
                         }`}
                       >
                         {/* Top Gradient Highlight */}
@@ -1240,7 +1238,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                           className={`h-1.5 w-full absolute top-0 left-0 ${
                             isLiveNow
                               ? 'bg-gradient-to-r from-rose-500 via-red-500 to-amber-500 animate-pulse'
-                              : 'bg-gradient-to-r from-[#1DB954] via-emerald-400 to-teal-500'
+                              : 'bg-gradient-to-r from-[#006A4E] via-sky-400 to-indigo-500'
                           }`}
                         />
 
@@ -1253,14 +1251,14 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                                 {t('🔴 সরাসরি লাইভ চলছে', '🔴 LIVE NOW')}
                               </span>
                             ) : (
-                              <span className="px-3 py-1 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 text-xs font-extrabold rounded-full flex items-center gap-1.5">
+                              <span className="px-3 py-1 bg-blue-500/10 text-blue-700 dark:text-sky-300 border border-blue-500/20 text-xs font-extrabold rounded-full flex items-center gap-1.5">
                                 <Calendar className="w-3.5 h-3.5" />
                                 {t('🗓️ নির্ধারিত শিডিউল', '🗓️ SCHEDULED')}
                               </span>
                             )}
 
                             {isEnrolled && (
-                              <span className="px-2.5 py-0.5 bg-[#1DB954]/15 text-[#1DB954] text-[11px] font-bold rounded-full border border-[#1DB954]/30 flex items-center gap-1">
+                              <span className="px-2.5 py-0.5 bg-[#006A4E]/15 text-[#38BDF8] text-[11px] font-bold rounded-full border border-blue-600/50/30 flex items-center gap-1">
                                 <CheckCircle2 className="w-3 h-3" /> এনরোলকৃত
                               </span>
                             )}
@@ -1269,7 +1267,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                           {/* Module, Lesson & Serial Number Header Badge */}
                           <div className="p-2.5 bg-slate-100/90 dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2 text-xs">
                             <div className="flex items-center gap-3 font-bold text-slate-800 dark:text-slate-200">
-                              <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-mono">
+                              <span className="flex items-center gap-1 text-[#006A4E] dark:text-sky-400 font-mono">
                                 <Layers className="w-3.5 h-3.5" />
                                 <span>মডিউল: {session.moduleNo || '০১'}</span>
                               </span>
@@ -1314,7 +1312,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                           {/* Date & Time Schedule Box */}
                           <div className="grid grid-cols-2 gap-2 text-xs">
                             <div className="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-2">
-                              <Calendar className="w-4 h-4 text-emerald-500 shrink-0" />
+                              <Calendar className="w-4 h-4 text-blue-500 shrink-0" />
                               <div className="min-w-0">
                                 <span className="text-[10px] text-slate-400 block">তারিখ:</span>
                                 <span className="font-bold text-slate-800 dark:text-slate-200 truncate block">
@@ -1336,7 +1334,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
                           {/* Bangla Formatted Schedule */}
                           <p className="text-xs text-slate-600 dark:text-slate-400 font-medium flex items-center gap-1.5 px-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#006A4E]" />
                             <span>শিডিউল: <strong>{formatBanglaLiveSchedule(session.date, session.time)}</strong></span>
                           </p>
                         </div>
@@ -1351,7 +1349,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                             className={`w-full py-3 px-4 font-black text-xs sm:text-sm rounded-2xl flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer transform active:scale-[0.99] ${
                               isLiveNow
                                 ? 'bg-gradient-to-r from-rose-600 to-red-600 hover:from-red-600 hover:to-rose-700 text-white shadow-rose-500/20 animate-pulse'
-                                : 'bg-gradient-to-r from-[#1DB954] to-emerald-600 hover:from-emerald-600 hover:to-teal-600 text-white shadow-emerald-500/20'
+                                : 'bg-gradient-to-r from-[#006A4E] to-blue-600 hover:from-blue-600 hover:to-indigo-600 text-white shadow-blue-500/20'
                             }`}
                           >
                             <Video className="w-4 h-4" />
@@ -1375,8 +1373,8 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                             >
                               {copiedStudentLiveLink === session.id ? (
                                 <>
-                                  <CheckCircle2 className="w-3.5 h-3.5 text-[#1DB954]" />
-                                  <span className="text-[#1DB954]">লিংক কপি হয়েছে!</span>
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-[#38BDF8]" />
+                                  <span className="text-[#38BDF8]">লিংক কপি হয়েছে!</span>
                                 </>
                               ) : (
                                 <>
@@ -1394,7 +1392,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                                   setActiveTab?.('courses');
                                 }
                               }}
-                              className="py-2 px-3.5 bg-slate-100 dark:bg-slate-800 hover:bg-emerald-500 hover:text-white text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer border border-slate-200 dark:border-slate-700"
+                              className="py-2 px-3.5 bg-slate-100 dark:bg-slate-800 hover:bg-blue-500 hover:text-white text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer border border-slate-200 dark:border-slate-700"
                             >
                               <BookOpen className="w-3.5 h-3.5" />
                               <span>{isEnrolled ? 'ক্লাসরুম' : 'কোর্স কারিকুলাম'}</span>
@@ -1429,7 +1427,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                         <Award className="w-8 h-8" />
                       </div>
                       <div>
-                        <span className="text-[10px] font-mono font-bold text-[#1DB954]">
+                        <span className="text-[10px] font-mono font-bold text-[#38BDF8]">
                           ID: {cert.certificateCode}
                         </span>
                         <h3 className="font-bold text-slate-900 dark:text-white text-base">
@@ -1447,7 +1445,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                       </span>
                       <button
                         onClick={() => onViewCertificate(cert.certificateCode)}
-                        className="px-4 py-2 bg-slate-900 dark:bg-slate-800 hover:bg-[#1DB954] text-white font-bold text-xs rounded-xl transition-all cursor-pointer flex items-center gap-1.5"
+                        className="px-4 py-2 bg-slate-900 dark:bg-slate-800 hover:bg-[#006A4E] text-white font-bold text-xs rounded-xl transition-all cursor-pointer flex items-center gap-1.5"
                       >
                         <Download className="w-4 h-4" />
                         ডাউনলোড
@@ -1493,9 +1491,9 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                           <td className="p-3.5 sm:p-4 font-mono font-bold text-slate-900 dark:text-white">{ord.id}</td>
                           <td className="p-3.5 sm:p-4 font-semibold">{ord.courseTitle}</td>
                           <td className="p-3.5 sm:p-4 font-medium">{ord.paymentMethod} ({ord.transactionId})</td>
-                          <td className="p-3.5 sm:p-4 font-bold text-[#1DB954]">৳{ord.amount}</td>
+                          <td className="p-3.5 sm:p-4 font-bold text-[#38BDF8]">৳{ord.amount}</td>
                           <td className="p-3.5 sm:p-4">
-                            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-[#1DB954]">
+                            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-500/20 text-[#38BDF8]">
                               {ord.status}
                             </span>
                           </td>
@@ -1517,7 +1515,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
               <div>
                 <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2.5">
-                  <div className="p-2 bg-[#1DB954]/10 text-[#1DB954] rounded-xl border border-[#1DB954]/20">
+                  <div className="p-2 bg-[#006A4E]/10 text-[#38BDF8] rounded-xl border border-blue-600/50/20">
                     <FileText className="w-6 h-6" />
                   </div>
                   <span>আমার কোর্সের অ্যাসাইনমেন্টসমূহ</span>
@@ -1527,7 +1525,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 </p>
               </div>
 
-              <span className="px-3 py-1 bg-emerald-500/10 text-[#1DB954] border border-emerald-500/20 font-extrabold text-xs rounded-full">
+              <span className="px-3 py-1 bg-blue-500/10 text-[#38BDF8] border border-blue-500/20 font-extrabold text-xs rounded-full">
                 মোট অ্যাসাইনমেন্ট: {assignments.length} টি
               </span>
             </div>
@@ -1541,15 +1539,15 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 return (
                   <div
                     key={asgn.id}
-                    className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800/90 shadow-md hover:shadow-2xl transition-all duration-300 relative overflow-hidden flex flex-col justify-between space-y-5 group hover:border-[#1DB954]/40"
+                    className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800/90 shadow-md hover:shadow-2xl transition-all duration-300 relative overflow-hidden flex flex-col justify-between space-y-5 group hover:border-blue-600/50/40"
                   >
                     {/* Top Gradient Highlight Bar */}
-                    <div className="h-1.5 w-full bg-gradient-to-r from-[#1DB954] via-emerald-400 to-teal-500 absolute top-0 left-0" />
+                    <div className="h-1.5 w-full bg-gradient-to-r from-[#006A4E] via-sky-400 to-indigo-500 absolute top-0 left-0" />
 
                     <div className="space-y-4 pt-1">
                       {/* Top Header Row with Badges */}
                       <div className="flex flex-wrap justify-between items-center gap-2">
-                        <span className="px-3 py-1 bg-teal-500/10 text-teal-700 dark:text-teal-300 border border-teal-500/20 font-extrabold text-xs rounded-full flex items-center gap-1.5">
+                        <span className="px-3 py-1 bg-indigo-500/10 text-teal-700 dark:text-sky-300 border border-indigo-500/20 font-extrabold text-xs rounded-full flex items-center gap-1.5">
                           <BookOpen className="w-3.5 h-3.5" />
                           <span>{asgn.courseTitle}</span>
                         </span>
@@ -1558,11 +1556,11 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-black flex items-center gap-1.5 shadow-sm ${
                               mySubmission.status === 'graded'
-                                ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-[#1DB954] border border-emerald-500/40'
+                                ? 'bg-gradient-to-r from-blue-500/20 to-indigo-500/20 text-[#38BDF8] border border-blue-500/40'
                                 : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 animate-pulse'
                             }`}
                           >
-                            <span className={`w-2 h-2 rounded-full ${mySubmission.status === 'graded' ? 'bg-[#1DB954]' : 'bg-amber-400'}`} />
+                            <span className={`w-2 h-2 rounded-full ${mySubmission.status === 'graded' ? 'bg-[#006A4E]' : 'bg-amber-400'}`} />
                             {mySubmission.status === 'graded'
                               ? `প্রাপ্ত মার্কস: ${mySubmission.points}/${asgn.totalPoints}`
                               : 'জমা দেওয়া হয়েছে (চেকিং চলছে)'}
@@ -1577,7 +1575,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
                       {/* Title & Description */}
                       <div className="space-y-2">
-                        <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white leading-snug group-hover:text-[#1DB954] transition-colors">
+                        <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white leading-snug group-hover:text-sky-400 transition-colors">
                           {asgn.title}
                         </h3>
                         <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
@@ -1587,15 +1585,15 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
                       {/* Instructor Attachment File Box */}
                       {asgn.attachmentName && (
-                        <div className="p-3 bg-emerald-500/5 dark:bg-slate-800/80 rounded-2xl flex items-center justify-between text-xs border border-emerald-500/20 dark:border-slate-700">
+                        <div className="p-3 bg-blue-500/5 dark:bg-slate-800/80 rounded-2xl flex items-center justify-between text-xs border border-blue-500/20 dark:border-slate-700">
                           <span className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-bold truncate">
-                            <Paperclip className="w-4 h-4 text-[#1DB954] shrink-0" />
+                            <Paperclip className="w-4 h-4 text-[#38BDF8] shrink-0" />
                             <span className="truncate">{asgn.attachmentName}</span>
                           </span>
                           <a
                             href={asgn.attachmentUrl}
                             download={asgn.attachmentName}
-                            className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl transition-all shrink-0 shadow-sm flex items-center gap-1"
+                            className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl transition-all shrink-0 shadow-sm flex items-center gap-1"
                           >
                             <Download className="w-3.5 h-3.5" />
                             <span>ডাউনলোড</span>
@@ -1622,7 +1620,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                           <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-2 text-xs">
                             <div className="flex justify-between items-center text-slate-500 dark:text-slate-400 font-bold">
                               <span className="flex items-center gap-1.5">
-                                <CheckCircle className="w-4 h-4 text-[#1DB954]" /> আপনার জমাকৃত উত্তর/নোট:
+                                <CheckCircle className="w-4 h-4 text-[#38BDF8]" /> আপনার জমাকৃত উত্তর/নোট:
                               </span>
                               <span className="text-[10px] text-slate-400 font-normal">{mySubmission.submittedAt}</span>
                             </div>
@@ -1630,7 +1628,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                               {mySubmission.submissionText}
                             </div>
                             {mySubmission.fileName && (
-                              <div className="text-[11px] text-[#1DB954] font-bold flex items-center gap-1 pt-1">
+                              <div className="text-[11px] text-[#38BDF8] font-bold flex items-center gap-1 pt-1">
                                 <Paperclip className="w-3.5 h-3.5" /> ফাইল: {mySubmission.fileName}
                               </div>
                             )}
@@ -1638,13 +1636,13 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
                           {/* Teacher Feedback Card */}
                           {mySubmission.feedback && (
-                            <div className="bg-gradient-to-br from-emerald-500/10 via-teal-500/10 to-slate-900/5 dark:from-emerald-950/40 dark:to-teal-950/30 border-2 border-emerald-500/40 p-4 sm:p-5 rounded-2xl shadow-inner space-y-2.5 relative overflow-hidden">
-                              <div className="flex justify-between items-center border-b border-emerald-500/20 pb-2">
-                                <div className="flex items-center gap-2 text-[#1DB954] font-black text-xs sm:text-sm">
+                            <div className="bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-slate-900/5 dark:from-slate-950/40 dark:to-teal-950/30 border-2 border-blue-500/40 p-4 sm:p-5 rounded-2xl shadow-inner space-y-2.5 relative overflow-hidden">
+                              <div className="flex justify-between items-center border-b border-blue-500/20 pb-2">
+                                <div className="flex items-center gap-2 text-[#38BDF8] font-black text-xs sm:text-sm">
                                   <Sparkles className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '4s' }} />
                                   <span>টিচার ফিডব্যাক ও মূল্যায়িত মন্তব্য</span>
                                 </div>
-                                <span className="px-2.5 py-0.5 bg-[#1DB954] text-white font-mono font-black text-xs rounded-lg shadow-sm">
+                                <span className="px-2.5 py-0.5 bg-[#006A4E] text-white font-mono font-black text-xs rounded-lg shadow-sm">
                                   {mySubmission.points} / {asgn.totalPoints}
                                 </span>
                               </div>
@@ -1657,7 +1655,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                       ) : (
                         <button
                           onClick={() => setSelectedAsgn(asgn)}
-                          className="w-full py-3.5 bg-gradient-to-r from-[#1DB954] to-emerald-600 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-xs sm:text-sm rounded-2xl transition-all shadow-md hover:shadow-xl cursor-pointer flex items-center justify-center gap-2 transform active:scale-[0.99]"
+                          className="w-full py-3.5 bg-gradient-to-r from-[#006A4E] to-blue-600 hover:from-blue-600 hover:to-indigo-600 text-white font-bold text-xs sm:text-sm rounded-2xl transition-all shadow-md hover:shadow-xl cursor-pointer flex items-center justify-center gap-2 transform active:scale-[0.99]"
                         >
                           <Send className="w-4 h-4" />
                           <span>অ্যাসাইনমেন্ট উত্তর ও ফাইল জমা দিন</span>
@@ -1678,19 +1676,19 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             <div className="border-b border-slate-100 dark:border-slate-800 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
                 <h2 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                  <UserIcon className="w-6 h-6 text-[#1DB954]" /> স্টুডেন্ট মাই প্রোফাইল & অ্যাকাউন্ট সেটিংস
+                  <UserIcon className="w-6 h-6 text-[#38BDF8]" /> স্টুডেন্ট মাই প্রোফাইল & অ্যাকাউন্ট সেটিংস
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   প্রোফাইল ছবি, ব্যক্তিগত তথ্য, শিক্ষা প্রতিষ্ঠান ও বায়ো আপডেট করুন।
                 </p>
               </div>
-              <span className="px-3 py-1 bg-emerald-500/10 text-[#1DB954] border border-emerald-500/30 font-bold text-xs rounded-full flex items-center gap-1.5 shrink-0">
-                <Shield className="w-3.5 h-3.5 text-[#1DB954]" /> ভেরিফাইড স্টুডেন্ট একাউন্ট
+              <span className="px-3 py-1 bg-blue-500/10 text-[#38BDF8] border border-blue-500/30 font-bold text-xs rounded-full flex items-center gap-1.5 shrink-0">
+                <Shield className="w-3.5 h-3.5 text-[#38BDF8]" /> ভেরিফাইড স্টুডেন্ট একাউন্ট
               </span>
             </div>
 
             {profSaved && (
-              <div className="p-4 bg-emerald-500/20 border border-emerald-500/40 text-[#1DB954] text-xs font-bold rounded-2xl flex items-center gap-2 shadow-sm animate-fadeIn">
+              <div className="p-4 bg-blue-500/20 border border-blue-500/40 text-[#38BDF8] text-xs font-bold rounded-2xl flex items-center gap-2 shadow-sm animate-fadeIn">
                 <Check className="w-5 h-5" /> প্রোফাইল তথ্য সফলভাবে আপডেট ও সংরক্ষণ করা হয়েছে!
               </div>
             )}
@@ -1701,9 +1699,9 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 <img
                   src={profAvatar || currentUser.avatar || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"}
                   alt="Avatar Preview"
-                  className="w-24 h-24 rounded-2xl sm:rounded-3xl object-cover border-4 border-[#1DB954]/50 shadow-lg"
+                  className="w-24 h-24 rounded-2xl sm:rounded-3xl object-cover border-4 border-blue-600/50/50 shadow-lg"
                 />
-                <span className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#1DB954] text-white flex items-center justify-center font-bold text-xs border-2 border-slate-900 shadow">
+                <span className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#006A4E] text-white flex items-center justify-center font-bold text-xs border-2 border-slate-900 shadow">
                   ✓
                 </span>
               </div>
@@ -1713,7 +1711,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                   প্রোফাইল ছবি নির্বাচন (ডিভাইস থেকে ফাইল আপলোড বা লিংক)
                 </label>
                 <div className="flex flex-col sm:flex-row items-center gap-2">
-                  <label className="px-4 py-2.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl cursor-pointer flex items-center justify-center gap-2 shrink-0 shadow transition-all w-full sm:w-auto">
+                  <label className="px-4 py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-xl cursor-pointer flex items-center justify-center gap-2 shrink-0 shadow transition-all w-full sm:w-auto">
                     <Upload className="w-4 h-4" />
                     <span>ছবি আপলোড করুন</span>
                     <input
@@ -1728,7 +1726,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     placeholder="অথবা ছবি URL পেস্ট করুন..."
                     value={profAvatar}
                     onChange={e => setProfAvatar(e.target.value)}
-                    className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -1748,7 +1746,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     type="text"
                     value={profName}
                     onChange={e => setProfName(e.target.value)}
-                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:border-[#006A4E]"
                     required
                   />
                 </div>
@@ -1762,7 +1760,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     value={profInstitution}
                     onChange={e => setProfInstitution(e.target.value)}
                     placeholder="যেমন: ঢাকা বিশ্ববিদ্যালয় / আইডিয়াল কলেজ"
-                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
               </div>
@@ -1776,7 +1774,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     type="text"
                     value={profMobile}
                     onChange={e => setProfMobile(e.target.value)}
-                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -1788,7 +1786,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     type="email"
                     value={profEmail}
                     onChange={e => setProfEmail(e.target.value)}
-                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
               </div>
@@ -1802,13 +1800,13 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                   value={profBio}
                   onChange={e => setProfBio(e.target.value)}
                   placeholder="আপনার আইটি ক্যারিয়ারের লক্ষ্য, আগ্রহ বা দক্ষতা সংক্ষেপে লিখুন..."
-                  className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:border-[#1DB954]"
+                  className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:border-[#006A4E]"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-sm rounded-2xl transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-sm rounded-2xl transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2"
               >
                 <Save className="w-4 h-4" />
                 <span>প্রোফাইল পরিবর্তন তথ্য সংরক্ষণ করুন</span>
@@ -1819,49 +1817,49 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
         {/* ASSIGNMENT SUBMISSION MODAL */}
         {selectedAsgn && (
-          <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-            <div className="bg-[#142B4D] text-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl max-w-lg w-full border border-slate-700 shadow-2xl space-y-4 my-auto">
-              <div className="flex justify-between items-center border-b border-slate-700 pb-3">
-                <h3 className="text-base sm:text-lg font-bold flex items-center gap-2">
-                  <Upload className="w-5 h-5 text-[#1DB954]" /> উত্তর ও ফাইল জমা দিন
+          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+            <div className="bg-white text-slate-900 p-5 sm:p-8 rounded-2xl sm:rounded-3xl max-w-lg w-full border border-slate-200 shadow-2xl space-y-4 my-auto">
+              <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 className="text-base sm:text-lg font-bold flex items-center gap-2 text-slate-900">
+                  <Upload className="w-5 h-5 text-[#006A4E]" /> উত্তর ও ফাইল জমা দিন
                 </h3>
-                <button onClick={() => setSelectedAsgn(null)} className="text-slate-400 hover:text-white p-1">✕</button>
+                <button onClick={() => setSelectedAsgn(null)} className="text-slate-400 hover:text-slate-700 p-1">✕</button>
               </div>
 
-              <div className="bg-slate-800 p-3.5 rounded-2xl border border-slate-700 text-xs space-y-1">
-                <p className="font-bold text-white">{selectedAsgn.title}</p>
-                <p className="text-slate-300">{selectedAsgn.description}</p>
+              <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-xs space-y-1">
+                <p className="font-bold text-slate-900">{selectedAsgn.title}</p>
+                <p className="text-slate-600">{selectedAsgn.description}</p>
               </div>
 
               {subSuccess && (
-                <div className="p-3 bg-emerald-500/20 text-[#1DB954] text-xs font-bold rounded-xl flex items-center gap-2">
+                <div className="p-3 bg-emerald-50 text-[#006A4E] text-xs font-bold rounded-xl flex items-center gap-2 border border-emerald-200">
                   <Check className="w-4 h-4" /> আপনার কাজ সফলভাবে জমা দেওয়া হয়েছে!
                 </div>
               )}
 
               <form onSubmit={handleAssignmentSubmit} className="space-y-4 text-xs">
                 <div>
-                  <label className="block font-bold text-slate-300 mb-1">উত্তর বিবরণ / নোট লিখুন</label>
+                  <label className="block font-bold text-slate-700 mb-1">উত্তর বিবরণ / নোট লিখুন</label>
                   <textarea
                     rows={4}
                     value={subText}
                     onChange={e => setSubText(e.target.value)}
                     placeholder="আপনার কাজের বিবরণ বা লিংক এখানে লিখুন..."
-                    className="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full p-3 bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#006A4E]"
                     required
                   />
                 </div>
 
                 {/* Direct Attachment Upload */}
                 <div>
-                  <label className="block font-bold text-slate-300 mb-1">অ্যাসাইনমেন্ট ফাইল / ডকুমেন্ট পিক করুন</label>
+                  <label className="block font-bold text-slate-700 mb-1">অ্যাসাইনমেন্ট ফাইল / ডকুমেন্ট পিক করুন</label>
                   <input
                     type="file"
                     onChange={e => handleFileUpload(e, setSubFileUrl, setSubFileName)}
-                    className="block w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#1DB954] file:text-white cursor-pointer"
+                    className="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#006A4E] file:text-white cursor-pointer"
                   />
                   {subFileName && (
-                    <span className="text-[11px] text-[#1DB954] mt-1 block">✓ সংযুক্ত ফাইল: {subFileName}</span>
+                    <span className="text-[11px] text-[#006A4E] mt-1 block font-medium">✓ সংযুক্ত ফাইল: {subFileName}</span>
                   )}
                 </div>
 
@@ -1869,13 +1867,13 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                   <button
                     type="button"
                     onClick={() => setSelectedAsgn(null)}
-                    className="w-1/2 py-3 bg-slate-700 text-white font-bold rounded-xl"
+                    className="w-1/2 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition cursor-pointer"
                   >
                     বাতিল
                   </button>
                   <button
                     type="submit"
-                    className="w-1/2 py-3 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold rounded-xl shadow-md"
+                    className="w-1/2 py-3 bg-[#006A4E] hover:bg-[#047857] text-white font-bold rounded-xl shadow-xs transition cursor-pointer"
                   >
                     সাবমিট করুন
                   </button>
@@ -1910,7 +1908,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               <div className="space-y-3 text-xs">
                 <div className="p-3.5 bg-slate-800/80 rounded-2xl border border-slate-700 flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5">
-                    <FileText className="w-5 h-5 text-emerald-400 shrink-0" />
+                    <FileText className="w-5 h-5 text-sky-400 shrink-0" />
                     <div>
                       <p className="font-bold text-white text-xs">১. লেকচার নোটস ও ক্লাস গাইডলাইন PDF</p>
                       <p className="text-[11px] text-slate-400">সাইজ: ৪.২ MB • ফরম্যাট: PDF Document</p>
@@ -1919,7 +1917,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                   <a
                     href="#download"
                     onClick={(e) => { e.preventDefault(); alert('লেকচার নোটস PDF ডাউনলোড শুরু হয়েছে!'); }}
-                    className="px-3 py-1.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold rounded-xl flex items-center gap-1 shrink-0"
+                    className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold rounded-xl flex items-center gap-1 shrink-0"
                   >
                     <Download className="w-3.5 h-3.5" /> ডাউনলোড
                   </a>
@@ -2003,7 +2001,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               <div className="space-y-3 text-xs">
                 <div className="p-4 bg-slate-800 rounded-2xl border border-slate-700 space-y-3">
                   <p className="font-bold text-slate-300">গুগল মিট জয়েন লিংক:</p>
-                  <div className="flex items-center gap-2 bg-slate-900 p-2.5 rounded-xl border border-slate-700 font-mono text-emerald-400 text-xs overflow-x-auto">
+                  <div className="flex items-center gap-2 bg-slate-900 p-2.5 rounded-xl border border-slate-700 font-mono text-sky-400 text-xs overflow-x-auto">
                     <span>https://meet.google.com/ptenit-live-class</span>
                   </div>
                   <div className="flex gap-2">
@@ -2020,7 +2018,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                       href="https://meet.google.com"
                       target="_blank"
                       rel="noreferrer"
-                      className="w-1/2 py-2.5 bg-[#1DB954] hover:bg-emerald-600 text-white font-black rounded-xl transition text-center text-xs flex items-center justify-center gap-1 shadow-md"
+                      className="w-1/2 py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white font-black rounded-xl transition text-center text-xs flex items-center justify-center gap-1 shadow-md"
                     >
                       <Video className="w-4 h-4" /> ক্লাসে প্রবেশ করুন
                     </a>
@@ -2044,12 +2042,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 sm:p-8 max-w-xl w-full text-white space-y-6 shadow-2xl relative">
               <div className="flex justify-between items-start gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="p-3 bg-emerald-500/20 text-[#1DB954] rounded-2xl">
+                  <div className="p-3 bg-blue-500/20 text-[#38BDF8] rounded-2xl">
                     <BookOpen className="w-6 h-6" />
                   </div>
                   <div>
                     <h3 className="text-lg sm:text-xl font-bold">{activeCurriculumModal.title}</h3>
-                    <p className="text-xs text-emerald-400 font-medium">কোর্স সিলেবাস ও মডিউল অগ্রগতি breakdown</p>
+                    <p className="text-xs text-sky-400 font-medium">কোর্স সিলেবাস ও মডিউল অগ্রগতি breakdown</p>
                   </div>
                 </div>
                 <button
@@ -2077,7 +2075,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                       <p className="text-[11px] text-slate-400">সময়সীমা: {mod.duration}</p>
                     </div>
                     {mod.status === 'completed' && (
-                      <span className="px-2.5 py-1 bg-emerald-500/20 text-[#1DB954] border border-emerald-500/30 font-bold text-[10px] rounded-lg shrink-0 flex items-center gap-1">
+                      <span className="px-2.5 py-1 bg-blue-500/20 text-[#38BDF8] border border-blue-500/30 font-bold text-[10px] rounded-lg shrink-0 flex items-center gap-1">
                         <CheckCircle className="w-3.5 h-3.5" /> সম্পন্ন
                       </span>
                     )}
@@ -2101,7 +2099,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     setActiveCurriculumModal(null);
                     onStartLearning(activeCurriculumModal.id);
                   }}
-                  className="w-full py-3 bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs rounded-2xl transition cursor-pointer flex items-center justify-center gap-1.5"
+                  className="w-full py-3 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs rounded-2xl transition cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   <PlayCircle className="w-4 h-4" /> লার্নিং প্লেয়ার খুলুন
                 </button>

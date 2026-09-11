@@ -398,7 +398,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                           shareWhatsApp();
                           setIsShareMenuOpen(false);
                         }}
-                        className="flex items-center gap-2 p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold transition cursor-pointer"
+                        className="flex items-center gap-2 p-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-950/60 text-blue-700 dark:text-sky-300 text-xs font-bold transition cursor-pointer"
                       >
                         <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
                         <span className="truncate">হোয়াটসঅ্যাপ</span>
@@ -437,8 +437,8 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                       >
                         {copiedLink ? (
                           <>
-                            <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                            <span className="text-emerald-600 dark:text-emerald-400 font-bold truncate">কপি হয়েছে!</span>
+                            <Check className="w-4 h-4 text-blue-500 shrink-0" />
+                            <span className="text-[#006A4E] dark:text-sky-400 font-bold truncate">কপি হয়েছে!</span>
                           </>
                         ) : (
                           <>
@@ -458,7 +458,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                         }}
                         className="w-full py-1.5 px-2 mt-1 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium flex items-center justify-center gap-1.5 transition cursor-pointer"
                       >
-                        <Share2 className="w-3.5 h-3.5 text-[#1DB954]" />
+                        <Share2 className="w-3.5 h-3.5 text-[#38BDF8]" />
                         <span>অন্যান্য অ্যাপসে শেয়ার</span>
                       </button>
                     )}
@@ -537,7 +537,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                 </>
               )}
               <span className="text-white/40 shrink-0">·</span>
-              <span className="font-semibold text-emerald-400 shrink-0">
+              <span className="font-semibold text-sky-400 shrink-0">
                 লাইফটাইম এক্সেস
               </span>
             </div>
@@ -569,7 +569,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                       }}
                       className={`relative w-16 h-11 sm:w-20 sm:h-13 rounded-lg overflow-hidden shrink-0 transition cursor-pointer border ${
                         activeMediaIndex === idx
-                          ? 'border-[#1DB954] ring-2 ring-[#1DB954]/40 scale-102 opacity-100'
+                          ? 'border-blue-600/50 ring-2 ring-[#006A4E]/40 scale-102 opacity-100'
                           : 'border-slate-200 dark:border-slate-700 opacity-75 hover:opacity-100'
                       }`}
                       title={`ডেমো ছবি ${idx + 1}`}
@@ -595,7 +595,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                   onClick={() => setActiveTab('overview')}
                   className={`pb-3 border-b-2 transition-colors cursor-pointer whitespace-nowrap ${
                     activeTab === 'overview'
-                      ? 'border-[#1DB954] text-[#1DB954]'
+                      ? 'border-blue-600/50 text-[#38BDF8]'
                       : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white'
                   }`}
                 >
@@ -606,7 +606,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                   onClick={() => setActiveTab('demo')}
                   className={`pb-3 border-b-2 transition-colors cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
                     activeTab === 'demo'
-                      ? 'border-[#1DB954] text-[#1DB954]'
+                      ? 'border-blue-600/50 text-[#38BDF8]'
                       : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white'
                   }`}
                 >
@@ -635,7 +635,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                   {/* What You Will Get */}
                   <div className="bg-slate-50 dark:bg-slate-800/60 p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 space-y-2.5">
                     <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white font-bengali flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#1DB954]" />
+                      <CheckCircle2 className="w-4 h-4 text-[#38BDF8]" />
                       এই প্রোডাক্টে আপনি যা যা পাবেন:
                     </h3>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-bengali">
@@ -650,7 +650,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                           ]
                       ).map((item, i) => (
                         <li key={i} className="flex items-start gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954] mt-1.5 shrink-0" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#006A4E] mt-1.5 shrink-0" />
                           <span>{item}</span>
                         </li>
                       ))}
@@ -681,7 +681,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
 
                   {/* Verified Resource Profile */}
                   <div className="p-3 sm:p-3.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-[#1DB954] text-white flex items-center justify-center font-bold text-sm shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-[#006A4E] text-white flex items-center justify-center font-bold text-sm shrink-0">
                       <ShieldCheck className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
@@ -701,11 +701,11 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                 <div className="space-y-6">
                   {/* Live Demo Link Card: Only shown if admin provided demoUrl */}
                   {product.demoUrl && product.demoUrl.trim() ? (
-                    <div className="p-3 sm:p-3.5 rounded-2xl bg-emerald-500/10 dark:bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-between gap-3">
+                    <div className="p-3 sm:p-3.5 rounded-2xl bg-blue-500/10 dark:bg-blue-500/10 border border-blue-500/25 flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#1DB954] animate-pulse shrink-0" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#006A4E] animate-pulse shrink-0" />
                         <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white flex items-center gap-1.5 truncate whitespace-nowrap">
-                          <Globe className="w-4 h-4 text-[#1DB954] shrink-0" />
+                          <Globe className="w-4 h-4 text-[#38BDF8] shrink-0" />
                           <span className="truncate">লাইভ ডেমো প্রিভিউ</span>
                         </h4>
                       </div>
@@ -714,7 +714,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                           href={product.demoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs transition shadow-xs cursor-pointer active:scale-95 whitespace-nowrap"
+                          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs transition shadow-xs cursor-pointer active:scale-95 whitespace-nowrap"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                           <span>লাইভ দেখুন</span>
@@ -743,7 +743,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                         <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
                           <span>লাইভ ডেমো ওয়েবসাইট লিংক (URL)</span>
                           {saveDemoSuccess && (
-                            <span className="text-emerald-500 text-xs flex items-center gap-1 animate-fadeIn font-bold">
+                            <span className="text-blue-500 text-xs flex items-center gap-1 animate-fadeIn font-bold">
                               <CheckCircle2 className="w-3.5 h-3.5" /> সংরক্ষিত হয়েছে!
                             </span>
                           )}
@@ -754,7 +754,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                             value={adminDemoUrl}
                             onChange={(e) => setAdminDemoUrl(e.target.value)}
                             placeholder="https://example.com/demo"
-                            className="flex-1 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                            className="flex-1 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                           />
                           <button
                             type="button"
@@ -766,7 +766,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                               setSaveDemoSuccess(true);
                               setTimeout(() => setSaveDemoSuccess(false), 2500);
                             }}
-                            className="px-4 py-2 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs transition cursor-pointer whitespace-nowrap active:scale-95"
+                            className="px-4 py-2 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs transition cursor-pointer whitespace-nowrap active:scale-95"
                           >
                             লিংক সেভ করুন
                           </button>
@@ -784,7 +784,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                             value={newGalleryImgUrl}
                             onChange={(e) => setNewGalleryImgUrl(e.target.value)}
                             placeholder="https://images.unsplash.com/... বা ছবির লিঙ্ক"
-                            className="flex-1 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                            className="flex-1 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                           />
                           <button
                             type="button"
@@ -829,7 +829,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                         <div
                           key={idx}
                           onClick={() => setLightboxIndex(idx)}
-                          className="group relative aspect-video rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-800 cursor-zoom-in shadow-xs transition hover:border-[#1DB954]"
+                          className="group relative aspect-video rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-800 cursor-zoom-in shadow-xs transition hover:border-blue-600/50"
                         >
                           <img
                             src={imgUrl}
@@ -885,7 +885,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                     প্রোডাক্ট মূল্য
                   </span>
                   {isFree ? (
-                    <div className="text-3xl font-black text-emerald-500 mt-1">
+                    <div className="text-3xl font-black text-blue-500 mt-1">
                       সম্পূর্ণ ফ্রি!
                     </div>
                   ) : (
@@ -900,19 +900,19 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                 {/* Product Package Perks (Matching Course Package Perks!) */}
                 <div className="space-y-3 text-xs font-semibold text-slate-700 dark:text-slate-300 font-bengali">
                   <div className="flex items-center gap-2.5">
-                    <Zap className="w-4 h-4 text-[#1DB954]" />
+                    <Zap className="w-4 h-4 text-[#38BDF8]" />
                     <span>ইনস্ট্যান্ট অটো ডেলিভারি ও এক্সেস</span>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <FileText className="w-4 h-4 text-[#1DB954]" />
+                    <FileText className="w-4 h-4 text-[#38BDF8]" />
                     <span>সম্পূর্ণ ফাইল ও রিসোর্স কোড</span>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <Clock className="w-4 h-4 text-[#1DB954]" />
+                    <Clock className="w-4 h-4 text-[#38BDF8]" />
                     <span>লাইফটাইম এক্সেস ও ফ্রি আপডেট</span>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <Award className="w-4 h-4 text-[#1DB954]" />
+                    <Award className="w-4 h-4 text-[#38BDF8]" />
                     <span>১০০% সিকিউর ও ভেরিফাইড ডিজিটাল ফাইল</span>
                   </div>
                 </div>
@@ -964,15 +964,15 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
 
                 {/* Quick Order Success Link if placed */}
                 {isOrderPlaced && completedOrder && (
-                  <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 rounded-2xl border border-emerald-500/30 text-xs space-y-2">
-                    <span className="text-emerald-700 dark:text-emerald-300 font-bold block">
+                  <div className="p-3 bg-blue-50 dark:bg-blue-950/40 rounded-2xl border border-blue-500/30 text-xs space-y-2">
+                    <span className="text-blue-700 dark:text-sky-300 font-bold block">
                       ✅ অর্ডার #{completedOrder.id} নিশ্চিত হয়েছে
                     </span>
                     {completedOrder.deliveryType === 'canva_auto' ? (
                       <button
                         type="button"
                         onClick={handleCanvaAccessNow}
-                        className="w-full py-2 px-3 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="w-full py-2 px-3 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <Crown className="w-3.5 h-3.5 text-amber-300" />
                         <span>Canva Access খুলুন</span>
@@ -982,7 +982,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                         href={completedOrder.customFileUrl || product.downloadUrl || 'https://drive.google.com'}
                         target="_blank"
                         rel="noreferrer"
-                        className="w-full py-2 px-3 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 text-center"
+                        className="w-full py-2 px-3 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs flex items-center justify-center gap-1.5 text-center"
                       >
                         <Download className="w-3.5 h-3.5" />
                         <span>ফাইল ডাউনলোড করুন</span>
@@ -1017,14 +1017,14 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
               <>
                 {/* Modal Header */}
                 <div className="text-center space-y-1 pt-1">
-                  <span className="px-3 py-1 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-bold text-xs rounded-full inline-block">
+                  <span className="px-3 py-1 bg-blue-500/15 text-blue-700 dark:text-sky-400 font-bold text-xs rounded-full inline-block">
                     ডিজিটাল প্রোডাক্ট এক্সেস ও পেমেন্ট
                   </span>
                   <h3 className="text-lg sm:text-xl font-black font-heading text-slate-900 dark:text-white">
                     {checkoutStep === 1 ? 'ধাপ ১: আপনার যোগাযোগের তথ্য' : 'ধাপ ২: পেমেন্ট মেথড ও কনফার্মেশন'}
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-bengali truncate max-w-md mx-auto">
-                    {product.title} — <span className="font-bold text-[#15803d] dark:text-[#1DB954]">
+                    {product.title} — <span className="font-bold text-[#15803d] dark:text-sky-400">
                       {isFree ? 'সম্পূর্ণ ফ্রি' : `৳${product.price.toLocaleString('bn-BD')}`}
                     </span>
                   </p>
@@ -1092,7 +1092,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                           setCustomerName(e.target.value);
                           if (purchaseError) setPurchaseError(null);
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#1DB954]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
                       />
                     </div>
 
@@ -1109,7 +1109,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                           setCustomerPhone(e.target.value);
                           if (purchaseError) setPurchaseError(null);
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#1DB954]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
                       />
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-bengali">
                         ১১ ডিজিটের বাংলাদেশী মোবাইল নম্বর দিন।
@@ -1129,7 +1129,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                           setCustomerEmail(e.target.value);
                           if (purchaseError) setPurchaseError(null);
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#1DB954]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
                       />
                     </div>
 
@@ -1158,7 +1158,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                             onClick={() => setPaymentMethod(method)}
                             className={`py-2 px-1 text-center rounded-xl text-xs font-bold border transition cursor-pointer ${
                               paymentMethod === method
-                                ? 'bg-emerald-500/15 border-[#15803d] text-[#15803d] dark:text-[#1DB954]'
+                                ? 'bg-blue-500/15 border-[#15803d] text-[#15803d] dark:text-sky-400'
                                 : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400'
                             }`}
                           >
@@ -1187,7 +1187,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                         }}
                         className="px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-xs font-bold flex items-center gap-1 hover:bg-slate-100 cursor-pointer"
                       >
-                        {copiedNumber ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                        {copiedNumber ? <Check className="w-3.5 h-3.5 text-blue-500" /> : <Copy className="w-3.5 h-3.5" />}
                         <span>{copiedNumber ? 'কপি হয়েছে' : 'কপি'}</span>
                       </button>
                     </div>
@@ -1239,17 +1239,17 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                 {/* 1. AUTO CANVA ACCESS FLOW */}
                 {((completedOrder?.deliveryType === 'canva_auto') || (product.deliveryType === 'canva_auto')) && (
                   <div className="space-y-4">
-                    <div className="p-4 bg-emerald-500/10 border border-[#1DB954]/30 rounded-2xl text-center space-y-1.5">
-                      <div className="w-11 h-11 rounded-full bg-[#1DB954] text-white flex items-center justify-center mx-auto shadow-md">
+                    <div className="p-4 bg-blue-500/10 border border-blue-600/50/30 rounded-2xl text-center space-y-1.5">
+                      <div className="w-11 h-11 rounded-full bg-[#006A4E] text-white flex items-center justify-center mx-auto shadow-md">
                         <Crown className="w-6 h-6 text-amber-300" />
                       </div>
                       <h4 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
                         🎉 পেমেন্ট সফল হয়েছে! ধন্যবাদ আপনার ক্রয়ের জন্য
                       </h4>
                       <p className="text-xs text-slate-600 dark:text-slate-300">
-                        ইনভয়েস নং: <span className="font-mono font-bold text-[#1DB954]">#{completedOrder?.id}</span> • ক্রেতা: <strong className="text-slate-900 dark:text-white">{completedOrder?.buyerName}</strong>
+                        ইনভয়েস নং: <span className="font-mono font-bold text-[#38BDF8]">#{completedOrder?.id}</span> • ক্রেতা: <strong className="text-slate-900 dark:text-white">{completedOrder?.buyerName}</strong>
                       </p>
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-[#1DB954] text-[11px] font-bold mt-1">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-[#38BDF8] text-[11px] font-bold mt-1">
                         <Sparkles className="w-3.5 h-3.5" />
                         <span>⚡ অটো ক্যানভা এক্সেস সিস্টেম (Auto Canva VIP Access)</span>
                       </div>
@@ -1283,7 +1283,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                           <button
                             type="button"
                             onClick={handleCanvaAccessNow}
-                            className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#1DB954] via-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-xl transition-all cursor-pointer active:scale-95"
+                            className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#006A4E] via-blue-500 to-indigo-600 hover:from-blue-600 hover:to-teal-700 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-xl transition-all cursor-pointer active:scale-95"
                           >
                             <Crown className="w-5 h-5 text-amber-300" />
                             <span>Access Now (ক্যানভা এক্সেস নিন)</span>
@@ -1310,22 +1310,22 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                 {/* 2. FILE DOWNLOAD FLOW */}
                 {((completedOrder?.deliveryType === 'file_download' || completedOrder?.deliveryType === 'auto') && (completedOrder?.deliveryType !== 'canva_auto') && (product.deliveryType !== 'canva_auto')) && (
                   <div className="space-y-4">
-                    <div className="p-4 bg-emerald-500/10 border border-[#1DB954]/30 rounded-2xl text-center space-y-1.5">
-                      <div className="w-10 h-10 rounded-full bg-[#1DB954] text-white flex items-center justify-center mx-auto shadow-md">
+                    <div className="p-4 bg-blue-500/10 border border-blue-600/50/30 rounded-2xl text-center space-y-1.5">
+                      <div className="w-10 h-10 rounded-full bg-[#006A4E] text-white flex items-center justify-center mx-auto shadow-md">
                         <CheckCircle2 className="w-6 h-6" />
                       </div>
                       <h4 className="text-base font-black text-slate-900 dark:text-white">
                         {isFree ? '🎉 ফ্রি ফাইল ডাউনলোড প্রস্তুত!' : '🎉 অর্ডার গ্রহণ করা হয়েছে!'}
                       </h4>
                       <p className="text-xs text-slate-600 dark:text-slate-300">
-                        ইনভয়েস নং: <span className="font-mono font-bold text-[#1DB954]">#{completedOrder?.id}</span>
+                        ইনভয়েস নং: <span className="font-mono font-bold text-[#38BDF8]">#{completedOrder?.id}</span>
                       </p>
                     </div>
 
                     <div className="p-4 bg-slate-950 text-white rounded-2xl border border-slate-800 space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-[#1DB954] flex items-center gap-1">
-                          <Zap className="w-4 h-4 fill-[#1DB954]" />
+                        <span className="text-xs font-bold text-[#38BDF8] flex items-center gap-1">
+                          <Zap className="w-4 h-4 fill-sky-400" />
                           ডাউনলোড ফাইল প্রস্তুত
                         </span>
                         <span className="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-300">
@@ -1337,7 +1337,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                         href={completedOrder?.customFileUrl || product.downloadUrl || 'https://drive.google.com'}
                         target="_blank"
                         rel="noreferrer"
-                        className="w-full py-3 px-4 rounded-xl bg-[#1DB954] hover:bg-emerald-600 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition active:scale-95 text-center"
+                        className="w-full py-3 px-4 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition active:scale-95 text-center"
                       >
                         <Download className="w-4 h-4" />
                         <span>📥 সুরক্ষিত ফাইল ডাউনলোড করুন (Download File)</span>
@@ -1357,7 +1357,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                               className="text-slate-400 hover:text-white p-1 cursor-pointer"
                               title="কি কপি করুন"
                             >
-                              {copiedKey ? <Check className="w-3.5 h-3.5 text-[#1DB954]" /> : <Copy className="w-3.5 h-3.5 text-slate-400" />}
+                              {copiedKey ? <Check className="w-3.5 h-3.5 text-[#38BDF8]" /> : <Copy className="w-3.5 h-3.5 text-slate-400" />}
                             </button>
                           </div>
                         </div>
@@ -1391,7 +1391,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                           href={getOrderWhatsAppLink(completedOrder)}
                           target="_blank"
                           rel="noreferrer"
-                          className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-2 transition text-center"
+                          className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#047857] text-white font-bold text-xs flex items-center justify-center gap-2 transition text-center"
                         >
                           <WhatsAppIcon className="w-4 h-4" />
                           <span>এডমিনের সাথে হোয়াটসঅ্যাপে চ্যাট করুন</span>

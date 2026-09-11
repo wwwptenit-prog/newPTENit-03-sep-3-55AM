@@ -52,7 +52,7 @@ export const OfficeLocation: React.FC = () => {
           <div className="lg:col-span-6 bg-white dark:bg-slate-800/95 p-6 sm:p-8 rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-xl space-y-5">
             <div className="border-b border-slate-100 dark:border-slate-700/70 pb-2.5">
               <h3 className="text-base sm:text-xl font-black font-bengali text-slate-900 dark:text-white flex items-center gap-2">
-                <Send className="w-4 h-4 sm:w-5 sm:h-5 text-[#1DB954]" />
+                <Send className="w-4 h-4 sm:w-5 sm:h-5 text-[#38BDF8]" />
                 {t('ইনকোয়ারি পাঠান', 'Send Inquiry')}
               </h3>
               <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -61,15 +61,15 @@ export const OfficeLocation: React.FC = () => {
             </div>
 
             {submitted ? (
-              <div className="p-6 bg-emerald-500/10 border border-emerald-500/40 rounded-2xl text-emerald-600 dark:text-emerald-400 space-y-3 font-bengali text-center">
-                <CheckCircle2 className="w-10 h-10 mx-auto text-[#1DB954]" />
+              <div className="p-6 bg-blue-500/10 border border-blue-500/40 rounded-2xl text-[#006A4E] dark:text-sky-400 space-y-3 font-bengali text-center">
+                <CheckCircle2 className="w-10 h-10 mx-auto text-[#38BDF8]" />
                 <h4 className="font-bold text-lg">{t('ধন্যবাদ! আপনার ইনকোয়ারি গ্রহণ করা হয়েছে।', 'Thank you! Your inquiry has been received.')}</h4>
                 <p className="text-xs text-slate-600 dark:text-slate-300">
                   {t('আমাদের প্রতিনিধি অতি শীঘ্রই আপনার প্রদানকৃত মোবাইল নম্বরে যোগাযোগ করবেন।', 'Our representative will call your phone number shortly.')}
                 </p>
                 <button
                   onClick={() => setSubmitted(false)}
-                  className="mt-2 px-5 py-2.5 bg-[#1DB954] hover:bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-md cursor-pointer"
+                  className="mt-2 px-5 py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white text-xs font-bold rounded-xl shadow-md cursor-pointer"
                 >
                   {t('অন্য মেসেজ পাঠান', 'Send Another Message')}
                 </button>
@@ -86,7 +86,7 @@ export const OfficeLocation: React.FC = () => {
                     placeholder={t("উদা: সাব্বির হোসেন", "e.g. Sabbir Hossain")}
                     value={name}
                     onChange={e => setName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -101,7 +101,7 @@ export const OfficeLocation: React.FC = () => {
                       placeholder="01712345678"
                       value={phone}
                       onChange={e => setPhone(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
 
@@ -114,7 +114,7 @@ export const OfficeLocation: React.FC = () => {
                       placeholder="info@gmail.com"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                     />
                   </div>
                 </div>
@@ -126,7 +126,7 @@ export const OfficeLocation: React.FC = () => {
                   <select
                     value={serviceOrCourse}
                     onChange={e => setServiceOrCourse(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
                   >
                     <option value="Web Design & Development">Web Design & Development</option>
                     <option value="Digital Marketing">Digital Marketing</option>
@@ -148,13 +148,13 @@ export const OfficeLocation: React.FC = () => {
                     placeholder={t("আপনার কি ধরণের সার্ভিস বা ট্রেনিং প্রয়োজন লিখুন...", "Write your inquiry details...")}
                     value={message}
                     onChange={e => setMessage(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#1DB954] resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E] resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3 bg-gradient-to-r from-[#1DB954] to-emerald-600 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-sm rounded-xl shadow-lg hover:shadow-emerald-500/20 transition-all cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-gradient-to-r from-[#006A4E] to-blue-600 hover:from-blue-600 hover:to-indigo-600 text-white font-bold text-sm rounded-xl shadow-lg hover:shadow-blue-500/20 transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" />
                   <span>{t('মেসেজ পাঠান', 'Send Inquiry')}</span>
@@ -166,18 +166,18 @@ export const OfficeLocation: React.FC = () => {
           {/* Right Column: Office Address & Google Map (Visible on PC / lg screens) */}
           <div className="hidden lg:flex lg:col-span-6 flex-col space-y-5 bg-white dark:bg-slate-800/95 p-6 sm:p-8 rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-xl">
             <div className="border-b border-slate-100 dark:border-slate-700/70 pb-3">
-              <span className="text-[10px] font-bold text-[#1DB954] uppercase tracking-wider block">
+              <span className="text-[10px] font-bold text-[#38BDF8] uppercase tracking-wider block">
                 {t('অফিস ঠিকানা', 'Office Address')}
               </span>
               <h3 className="text-xl font-black font-bengali text-slate-900 dark:text-white flex items-center gap-2 mt-0.5">
-                <Building className="w-5 h-5 text-[#1DB954]" />
+                <Building className="w-5 h-5 text-[#38BDF8]" />
                 {t('আমাদের প্রধান কার্যালয়', 'Visit Our Main Office')}
               </h3>
             </div>
 
             <div className="space-y-3 text-xs sm:text-sm font-bengali text-slate-700 dark:text-slate-300">
               <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-[#1DB954] shrink-0 mt-0.5" />
+                <MapPin className="w-5 h-5 text-[#38BDF8] shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-slate-900 dark:text-white block font-bold">{t('ঠিকানা:', 'Address:')}</strong>
                   <span>{siteSettings.officeAddress || (lang === 'en' ? 'House #12, Road #05, Block-C, Banani, Dhaka-1213, Bangladesh' : 'হাউজ #১২, রোড #০৫, ব্লক-সি, বনানী, ঢাকা-১২১৩, বাংলাদেশ')}</span>
@@ -185,7 +185,7 @@ export const OfficeLocation: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-[#1DB954] shrink-0" />
+                <Phone className="w-5 h-5 text-[#38BDF8] shrink-0" />
                 <div>
                   <strong className="text-slate-900 dark:text-white inline-block font-bold mr-1">{t('ফোন:', 'Phone:')}</strong>
                   <span>{siteSettings.phone || '+880 1700-000000'}</span>
@@ -193,7 +193,7 @@ export const OfficeLocation: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-[#1DB954] shrink-0" />
+                <Mail className="w-5 h-5 text-[#38BDF8] shrink-0" />
                 <div>
                   <strong className="text-slate-900 dark:text-white inline-block font-bold mr-1">{t('ইমেইল:', 'Email:')}</strong>
                   <span>{siteSettings.email || 'support@ptenit.com'}</span>
@@ -201,7 +201,7 @@ export const OfficeLocation: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-3">
-                <Clock className="w-5 h-5 text-[#1DB954] shrink-0" />
+                <Clock className="w-5 h-5 text-[#38BDF8] shrink-0" />
                 <div>
                   <strong className="text-slate-900 dark:text-white inline-block font-bold mr-1">{t('অফিস সময়:', 'Office Hours:')}</strong>
                   <span>{siteSettings.officeHours || (lang === 'en' ? '10:00 AM - 08:00 PM (Sat - Thu)' : 'সকাল ১০:০০ - রাত ০৮:০০ (শনিবার - বৃহস্পতিবার)')}</span>

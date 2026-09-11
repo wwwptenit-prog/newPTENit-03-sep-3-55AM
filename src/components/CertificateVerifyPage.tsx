@@ -57,12 +57,12 @@ export const CertificateVerifyPage: React.FC<CertificateVerifyPageProps> = ({ on
                 value={code}
                 onChange={e => setCode(e.target.value)}
                 required
-                className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl text-sm font-mono focus:outline-none focus:border-[#1DB954] uppercase"
+                className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl text-sm font-mono focus:outline-none focus:border-[#006A4E] uppercase"
               />
             </div>
             <button
               type="submit"
-              className="px-8 py-3 bg-[#1DB954] hover:bg-emerald-500 text-white font-bold text-sm rounded-2xl shadow-lg transition-all cursor-pointer font-bengali"
+              className="px-8 py-3 bg-[#006A4E] hover:bg-blue-500 text-white font-bold text-sm rounded-2xl shadow-lg transition-all cursor-pointer font-bengali"
             >
               {t('ভেরিফাই করুন', 'Verify Certificate')}
             </button>
@@ -71,8 +71,8 @@ export const CertificateVerifyPage: React.FC<CertificateVerifyPageProps> = ({ on
           {searched && (
             <div className="pt-6 border-t border-slate-200 dark:border-slate-700">
               {result ? (
-                <div className="bg-emerald-500/10 border border-emerald-500/40 p-6 rounded-2xl space-y-3 text-slate-900 dark:text-white font-bengali">
-                  <div className="flex items-center gap-2 text-emerald-500 font-bold text-base">
+                <div className="bg-blue-500/10 border border-blue-500/40 p-6 rounded-2xl space-y-3 text-slate-900 dark:text-white font-bengali">
+                  <div className="flex items-center gap-2 text-blue-500 font-bold text-base">
                     <ShieldCheck className="w-6 h-6" />
                     {t('বৈধ ও সত্যায়িত সার্টিফিকেট', 'Valid & Verified Certificate')}
                   </div>

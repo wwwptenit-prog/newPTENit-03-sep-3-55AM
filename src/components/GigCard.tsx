@@ -44,6 +44,7 @@ interface GigCardProps {
   className?: string;
   layoutMode?: 'feed' | 'grid' | 'auto';
   openAuthModal?: () => void;
+  isBuyerPost?: boolean;
 }
 
 export const GigCard: React.FC<GigCardProps> = ({
@@ -57,6 +58,7 @@ export const GigCard: React.FC<GigCardProps> = ({
   className = "",
   layoutMode = 'auto',
   openAuthModal,
+  isBuyerPost = false,
 }) => {
   const { marketplaceOrders, currentUser: contextUser, openMessengerInbox } = useData();
   const effectiveUser = currentUser || contextUser;
@@ -347,7 +349,7 @@ export const GigCard: React.FC<GigCardProps> = ({
             e.stopPropagation();
             setIsBlocked(false);
           }}
-          className="text-xs font-bold text-[#1877F2] hover:underline cursor-pointer"
+          className="text-xs font-bold text-[#16A34A] hover:underline cursor-pointer"
         >
           আনব্লক করুন
         </button>
@@ -364,10 +366,10 @@ export const GigCard: React.FC<GigCardProps> = ({
         onClick={onClick}
         className={`${
           isFeedMode ? "flex" : "hidden"
-        } flex-col bg-white dark:bg-slate-900 border ${
+        } flex-col bg-white border ${
           userOrder
-            ? "border-blue-500/80 ring-1 ring-blue-500/20 shadow-md"
-            : "border-slate-200/90 dark:border-slate-800"
+            ? "border-[#16A34A] ring-1 ring-[#16A34A]/20 shadow-md"
+            : "border-slate-200"
         } rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-200 cursor-pointer font-bengali ${className}`}
       >
         {/* --- Facebook Post Header --- */}
@@ -381,39 +383,39 @@ export const GigCard: React.FC<GigCardProps> = ({
                   "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
                 }
                 alt={gig.sellerName}
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover ring-2 ring-[#1877F2]/20 border border-slate-200 dark:border-slate-700"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover ring-2 ring-[#16A34A]/20 border border-slate-200"
               />
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full ring-2 ring-white dark:ring-slate-900 animate-pulse" />
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#16A34A] rounded-full ring-2 ring-white animate-pulse" />
             </div>
 
             <div className="min-w-0 flex-1">
-              {/* Line 1: Name (Facebook font size 15px/16px font-bold) + Verified Blue Tick */}
+              {/* Line 1: Name + Verified Green Tick */}
               <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-[15px] sm:text-base font-bold text-slate-900 dark:text-slate-100 truncate">
+                <span className="text-[15px] sm:text-base font-bold text-slate-900 truncate">
                   {gig.sellerName}
                 </span>
                 <CheckCircle2
-                  className="w-4 h-4 text-[#1877F2] fill-[#1877F2] text-white shrink-0"
+                  className="w-4 h-4 text-[#16A34A] fill-[#16A34A] text-white shrink-0"
                   title="Verified Profile"
                 />
               </div>
 
-              {/* Line 2: Single-line display: 240d • Top Rated • Agency • Public Icon (Facebook 13px) */}
-              <div className="flex items-center gap-1.5 text-[12.5px] sm:text-[13px] text-slate-500 dark:text-slate-400 font-medium mt-0.5 whitespace-nowrap flex-nowrap overflow-hidden">
+              {/* Line 2: Meta Info */}
+              <div className="flex items-center gap-1.5 text-[12.5px] sm:text-[13px] text-slate-500 font-medium mt-0.5 whitespace-nowrap flex-nowrap overflow-hidden">
                 <span className="shrink-0">{postTime}</span>
-                <span className="text-slate-400 dark:text-slate-500 text-[10px] shrink-0">•</span>
-                <span className="font-semibold text-amber-600 dark:text-amber-400 shrink-0">
-                  Top Rated
+                <span className="text-slate-400 text-[10px] shrink-0">•</span>
+                <span className={`font-semibold shrink-0 ${isBuyerPost ? 'text-blue-600' : 'text-[#16A34A]'}`}>
+                  {isBuyerPost ? "ভেরিফায়েড বায়ার" : (gig.sellerLevel || "টপ রেটেড")}
                 </span>
-                {isAgency && (
+                {!isBuyerPost && isAgency && (
                   <>
-                    <span className="text-slate-400 dark:text-slate-500 text-[10px] shrink-0">•</span>
-                    <span className="font-medium text-slate-600 dark:text-slate-300 shrink-0">Agency</span>
+                    <span className="text-slate-400 text-[10px] shrink-0">•</span>
+                    <span className="font-medium text-slate-700 shrink-0">Agency</span>
                   </>
                 )}
-                <span className="text-slate-400 dark:text-slate-500 text-[10px] shrink-0">•</span>
+                <span className="text-slate-400 text-[10px] shrink-0">•</span>
                 <Globe
-                  className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0"
+                  className="w-3.5 h-3.5 text-slate-400 shrink-0"
                   aria-label="Public"
                 />
               </div>
@@ -431,7 +433,7 @@ export const GigCard: React.FC<GigCardProps> = ({
                     deleteGig(gig.id);
                   }
                 }}
-                className="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-full transition"
+                className="p-1.5 text-red-600 hover:bg-red-50 rounded-full transition"
                 title="Delete Gig"
               >
                 <Trash2 className="w-4 h-4" />
@@ -447,14 +449,14 @@ export const GigCard: React.FC<GigCardProps> = ({
               }}
               className={`px-3 py-1.5 rounded-full text-xs sm:text-[13px] font-semibold transition flex items-center gap-1 cursor-pointer active:scale-95 shrink-0 ${
                 isFollowing
-                  ? "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200"
-                  : "bg-blue-50 dark:bg-blue-950/60 text-[#1877F2] dark:text-blue-400 hover:bg-[#1877F2] hover:text-white"
+                  ? "bg-slate-100 text-slate-700"
+                  : "bg-green-50 text-[#16A34A] hover:bg-[#16A34A] hover:text-white"
               }`}
               title={isFollowing ? "Unfollow" : "Follow"}
             >
               {isFollowing ? (
                 <>
-                  <UserCheck className="w-3.5 h-3.5 text-[#1877F2]" />
+                  <UserCheck className="w-3.5 h-3.5 text-[#16A34A]" />
                   <span>Following</span>
                 </>
               ) : (
@@ -472,7 +474,7 @@ export const GigCard: React.FC<GigCardProps> = ({
                 e.stopPropagation();
                 setIsMenuOpen((prev) => !prev);
               }}
-              className="p-1.5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition cursor-pointer"
+              className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition cursor-pointer"
               title="Menu"
             >
               <MoreHorizontal className="w-5 h-5" />
@@ -482,7 +484,7 @@ export const GigCard: React.FC<GigCardProps> = ({
             {isMenuOpen && (
               <div
                 onClick={(e) => e.stopPropagation()}
-                className="absolute right-0 top-9 z-30 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl p-1 text-xs space-y-0.5 animate-fadeIn"
+                className="absolute right-0 top-9 z-30 w-48 bg-white border border-slate-200 rounded-xl shadow-xl p-1 text-xs space-y-0.5 animate-fadeIn"
               >
                 <button
                   type="button"
@@ -490,9 +492,9 @@ export const GigCard: React.FC<GigCardProps> = ({
                     handleShareLink(e);
                     setIsMenuOpen(false);
                   }}
-                  className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 text-slate-700 dark:text-slate-200 font-medium cursor-pointer"
+                  className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-slate-100 flex items-center gap-2 text-slate-700 font-medium cursor-pointer"
                 >
-                  <Copy className="w-3.5 h-3.5 text-[#1877F2]" />
+                  <Copy className="w-3.5 h-3.5 text-[#16A34A]" />
                   <span>{copiedLink ? "Copied!" : "Copy Link"}</span>
                 </button>
                 <button
@@ -501,13 +503,13 @@ export const GigCard: React.FC<GigCardProps> = ({
                     setIsMenuOpen(false);
                     onClick();
                   }}
-                  className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 text-slate-700 dark:text-slate-200 font-medium cursor-pointer"
+                  className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-slate-100 flex items-center gap-2 text-slate-700 font-medium cursor-pointer"
                 >
-                  <ShoppingBag className="w-3.5 h-3.5 text-[#1DB954]" />
+                  <ShoppingBag className="w-3.5 h-3.5 text-[#16A34A]" />
                   <span>View Full Gig</span>
                 </button>
 
-                <div className="border-t border-slate-100 dark:border-slate-700/80 my-1" />
+                <div className="border-t border-slate-100 my-1" />
 
                 {/* Report Option */}
                 <button
@@ -518,9 +520,9 @@ export const GigCard: React.FC<GigCardProps> = ({
                     setIsReported(true);
                     alert(`Report submitted for "${gig.title}". Our team will review this.`);
                   }}
-                  className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-amber-50 dark:hover:bg-amber-950/30 flex items-center gap-2 text-amber-600 dark:text-amber-400 font-medium cursor-pointer"
+                  className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-red-50 flex items-center gap-2 text-red-600 font-medium cursor-pointer"
                 >
-                  <Flag className="w-3.5 h-3.5 text-amber-500" />
+                  <Flag className="w-3.5 h-3.5 text-red-500" />
                   <span>{isReported ? "Reported" : "Report"}</span>
                 </button>
 
@@ -534,9 +536,9 @@ export const GigCard: React.FC<GigCardProps> = ({
                       setIsBlocked(true);
                     }
                   }}
-                  className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center gap-2 text-rose-600 dark:text-rose-400 font-medium cursor-pointer"
+                  className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-red-50 flex items-center gap-2 text-red-600 font-medium cursor-pointer"
                 >
-                  <Ban className="w-3.5 h-3.5 text-rose-500" />
+                  <Ban className="w-3.5 h-3.5 text-red-500" />
                   <span>Block Seller</span>
                 </button>
               </div>
@@ -544,9 +546,9 @@ export const GigCard: React.FC<GigCardProps> = ({
           </div>
         </div>
 
-        {/* --- Facebook Post Caption / Title (Facebook font scale 15px/16px font-normal) --- */}
+        {/* --- Facebook Post Caption / Title --- */}
         <div className="px-3.5 pt-1 pb-2.5">
-          <p className="text-[15px] sm:text-base font-normal text-slate-800 dark:text-slate-100 leading-relaxed">
+          <p className="text-[15px] sm:text-base font-normal text-slate-800 leading-relaxed">
             {gig.title}
           </p>
         </div>
@@ -563,13 +565,13 @@ export const GigCard: React.FC<GigCardProps> = ({
               />
             </div>
             {/* Card Bottom: Start Work First + Starts at ৳2,000 */}
-            <div className="px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
-              <span className="text-sm font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-                Start Work First
+            <div className="px-3.5 py-2 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-2">
+              <span className="text-sm font-semibold text-[#DC2626] flex items-center gap-1.5">
+                {isBuyerPost ? "পাবলিক অফার" : "Start Work First"}
               </span>
               <div className="flex items-center gap-1 text-sm">
-                <span className="text-slate-500 dark:text-slate-400 font-normal">Starts at</span>
-                <span className="font-bold text-base text-[#1877F2] dark:text-blue-400">
+                <span className="text-slate-500 font-normal">{isBuyerPost ? "বাজেট" : "Starts at"}</span>
+                <span className="font-bold text-base text-[#16A34A]">
                   ৳{price.toLocaleString("en-US")}
                 </span>
               </div>
@@ -600,7 +602,7 @@ export const GigCard: React.FC<GigCardProps> = ({
                     e.stopPropagation();
                     onClick();
                   }}
-                  className="w-[72%] sm:w-[250px] shrink-0 snap-start rounded-lg border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-2xs cursor-pointer group/card flex flex-col"
+                  className="w-[72%] sm:w-[250px] shrink-0 snap-start rounded-lg border border-slate-200 bg-white overflow-hidden shadow-2xs cursor-pointer group/card flex flex-col"
                 >
                   {/* Carousel Card Image */}
                   <div className="relative w-full aspect-[4/3] bg-slate-950 overflow-hidden">
@@ -612,13 +614,13 @@ export const GigCard: React.FC<GigCardProps> = ({
                   </div>
 
                   {/* Carousel Card Bottom: Start Work First + Starts at ৳2,000 */}
-                  <div className="px-3 py-2 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-1.5">
-                    <span className="text-sm font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1 truncate">
-                      Start Work First
+                  <div className="px-3 py-2 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-1.5">
+                    <span className="text-sm font-semibold text-[#DC2626] flex items-center gap-1 truncate">
+                      {isBuyerPost ? "পাবলিক অফার" : "Start Work First"}
                     </span>
                     <div className="flex items-center gap-1 text-sm shrink-0">
-                      <span className="text-slate-500 dark:text-slate-400 font-normal">Starts at</span>
-                      <span className="font-bold text-base text-[#1877F2] dark:text-blue-400">
+                      <span className="text-slate-500 font-normal">{isBuyerPost ? "বাজেট" : "Starts at"}</span>
+                      <span className="font-bold text-base text-[#16A34A]">
                         ৳{price.toLocaleString("en-US")}
                       </span>
                     </div>
@@ -629,48 +631,48 @@ export const GigCard: React.FC<GigCardProps> = ({
           </div>
         )}
 
-        {/* --- Facebook Reactions & Engagement Counter Bar (Facebook font scale 13.5px) --- */}
-        <div className="px-3.5 py-2 flex items-center justify-between gap-1 text-[13.5px] text-slate-600 dark:text-slate-300">
-          {/* 1. Left: Facebook Likes */}
+        {/* --- Reactions & Engagement Counter Bar --- */}
+        <div className="px-3.5 py-2 flex items-center justify-between gap-1 text-[13.5px] text-slate-600">
+          {/* 1. Left: Likes */}
           <div className="flex items-center gap-2 shrink-0">
             <div className="flex -space-x-1 items-center">
-              <span className="w-4.5 h-4.5 rounded-full bg-[#1877F2] text-white flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white dark:ring-slate-900">
+              <span className="w-4.5 h-4.5 rounded-full bg-[#16A34A] text-white flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white">
                 <ThumbsUp className="w-2.5 h-2.5 fill-white text-white" />
               </span>
-              <span className="w-4.5 h-4.5 rounded-full bg-rose-500 text-white flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white dark:ring-slate-900">
+              <span className="w-4.5 h-4.5 rounded-full bg-[#DC2626] text-white flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white">
                 <Heart className="w-2.5 h-2.5 fill-white text-white" />
               </span>
             </div>
-            <span className="font-medium text-slate-600 dark:text-slate-400 text-[13.5px]">
+            <span className="font-medium text-slate-600 text-[13.5px]">
               {likeCount} {likeCount === 1 ? "like" : "likes"}
             </span>
           </div>
 
-          {/* 2. Right: Views Counter (1.8K views) */}
-          <div className="flex items-center gap-1.5 text-[13.5px] text-slate-500 dark:text-slate-400 shrink-0">
-            <Eye className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-            <span className="font-medium text-slate-500 dark:text-slate-400 text-[13.5px]">
+          {/* 2. Right: Views Counter */}
+          <div className="flex items-center gap-1.5 text-[13.5px] text-slate-500 shrink-0">
+            <Eye className="w-4 h-4 text-slate-400" />
+            <span className="font-medium text-slate-500 text-[13.5px]">
               {viewCountInK}
             </span>
           </div>
         </div>
 
-        {/* --- Action Bar: Facebook 4-Action Buttons (Like, Message, Share, Order) --- */}
-        <div className="px-2.5 sm:px-3.5 py-2 grid grid-cols-4 gap-2 items-center border-t border-slate-100 dark:border-slate-800/80 bg-white dark:bg-slate-900">
+        {/* --- Action Bar: 4-Action Buttons (Like, Message, Share, Order) --- */}
+        <div className="px-2.5 sm:px-3.5 py-2 grid grid-cols-4 gap-2 items-center border-t border-slate-100 bg-white">
           {/* 1. Like / Upvote */}
           <button
             type="button"
             onClick={handleUpvoteToggle}
             className={`py-2 px-2 rounded-full text-xs sm:text-[14px] font-semibold flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs ${
               isUpvoted
-                ? "text-[#1877F2] bg-blue-50 dark:bg-blue-950/60 font-bold"
-                : "text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700"
+                ? "text-[#16A34A] bg-green-50 font-bold"
+                : "text-slate-700 bg-slate-100 hover:bg-slate-200"
             }`}
             title="লাইক / Upvote"
           >
             <ThumbsUp
               className={`w-4 h-4 ${
-                isUpvoted ? "fill-[#1877F2] text-[#1877F2]" : "text-slate-600 dark:text-slate-300"
+                isUpvoted ? "fill-[#16A34A] text-[#16A34A]" : "text-slate-600"
               }`}
             />
             <span className="hidden xs:inline">{isUpvoted ? "লাইকড" : "লাইক"}</span>
@@ -688,10 +690,10 @@ export const GigCard: React.FC<GigCardProps> = ({
                 onClick();
               }
             }}
-            className="py-2 px-2 rounded-full text-xs sm:text-[14px] font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs"
-            title="সেলারকে ইনবক্স করুন"
+            className="py-2 px-2 rounded-full text-xs sm:text-[14px] font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs"
+            title={isBuyerPost ? "বায়ারকে ইনবক্স করুন" : "সেলারকে ইনবক্স করুন"}
           >
-            <MessageCircle className="w-4 h-4 text-blue-500 dark:text-blue-400" />
+            <MessageCircle className="w-4 h-4 text-[#16A34A]" />
             <span>মেসেজ</span>
           </button>
 
@@ -699,33 +701,33 @@ export const GigCard: React.FC<GigCardProps> = ({
           <button
             type="button"
             onClick={handleShareLink}
-            className="py-2 px-2 rounded-full text-xs sm:text-[14px] font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs"
+            className="py-2 px-2 rounded-full text-xs sm:text-[14px] font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs"
             title="গিগ লিঙ্ক কপি করুন"
           >
             {copiedLink ? (
               <>
-                <Check className="w-4 h-4 text-emerald-500" />
-                <span className="text-emerald-600 font-bold">কপি</span>
+                <Check className="w-4 h-4 text-[#16A34A]" />
+                <span className="text-[#16A34A] font-bold">কপি</span>
               </>
             ) : (
               <>
-                <Share2 className="w-4 h-4 text-slate-600 dark:text-slate-300" />
+                <Share2 className="w-4 h-4 text-slate-600" />
                 <span>শেয়ার</span>
               </>
             )}
           </button>
 
-          {/* 4. Order / Details */}
+          {/* 4. Details Button */}
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               onClick();
             }}
-            className="py-2 px-2.5 rounded-full text-xs sm:text-[14px] font-bold text-white bg-[#1DB954] hover:bg-emerald-600 flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-xs group/btn"
-            title="বিস্তারিত দেখুন ও অর্ডার করুন"
+            className="py-2 px-2.5 rounded-full text-xs sm:text-[14px] font-bold text-white bg-[#16A34A] hover:bg-[#15803D] flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer shadow-xs group/btn"
+            title="বিস্তারিত দেখুন"
           >
-            <span>অর্ডার</span>
+            <span>বিস্তারিত</span>
             <ArrowRight className="w-4 h-4 text-white group-hover/btn:translate-x-0.5 transition-transform" />
           </button>
         </div>
@@ -738,11 +740,11 @@ export const GigCard: React.FC<GigCardProps> = ({
         onClick={onClick}
         className={`${
           isFeedMode ? "hidden" : "flex"
-        } group relative bg-white dark:bg-slate-900 border ${
+        } group relative bg-white border ${
           userOrder
-            ? "border-blue-500/70 ring-1 ring-blue-500/20 shadow-md"
-            : "border-slate-200/90 dark:border-slate-800"
-        } rounded-2xl sm:rounded-3xl overflow-hidden shadow-none sm:shadow-sm hover:shadow-2xl hover:shadow-[#1DB954]/10 hover:border-[#1DB954] transition-all duration-300 cursor-pointer flex flex-col justify-between font-bengali ${className}`}
+            ? "border-[#16A34A] ring-1 ring-[#16A34A]/20 shadow-md"
+            : "border-slate-200"
+        } rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs hover:shadow-lg hover:border-[#16A34A] transition-all duration-300 cursor-pointer flex flex-col justify-between font-bengali ${className}`}
       >
         <div>
           {/* Thumbnail Header with Left/Right Image Navigation */}
@@ -759,24 +761,24 @@ export const GigCard: React.FC<GigCardProps> = ({
             {/* Top Floating Badges Section */}
             <div className="absolute top-2 left-2 sm:top-2.5 sm:left-2.5 z-10 flex items-center gap-1 sm:gap-1.5 flex-wrap max-w-[70%] pointer-events-none">
               {gig.offerBadge === "work_first" || gig.offerBadge === "আগে কাজ শুরু" ? (
-                <span className="bg-amber-500 text-slate-950 text-[9px] sm:text-[11px] font-medium px-1.5 py-0.5 sm:px-2 rounded shadow-xs">
+                <span className="bg-[#DC2626] text-white text-[9px] sm:text-[11px] font-medium px-1.5 py-0.5 sm:px-2 rounded shadow-xs">
                   Start Work First
                 </span>
               ) : (
-                <span className="bg-[#1DB954] text-white text-[9px] sm:text-[11px] font-medium px-1.5 py-0.5 sm:px-2 rounded shadow-xs">
+                <span className="bg-[#16A34A] text-white text-[9px] sm:text-[11px] font-medium px-1.5 py-0.5 sm:px-2 rounded shadow-xs">
                   {gig.offerBadge === "৩০% ক্যাশব্যাক" ? "30% Off" : gig.offerBadge || "30% Off"}
                 </span>
               )}
 
               {userOrder && (
-                <span className="bg-blue-600 text-white text-[8px] sm:text-[9px] font-semibold px-1.5 py-0.5 rounded flex items-center gap-0.5 shadow-xs">
+                <span className="bg-[#16A34A] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 py-0.5 rounded flex items-center gap-0.5 shadow-xs">
                   <CheckCircle2 className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-white shrink-0" />
                   <span>Ordered</span>
                 </span>
               )}
 
               {badgeTag && (
-                <span className="bg-amber-400 text-slate-950 text-[8px] sm:text-[10px] font-medium px-1.5 py-0.5 rounded shadow-xs">
+                <span className="bg-[#DC2626] text-white text-[8px] sm:text-[10px] font-medium px-1.5 py-0.5 rounded shadow-xs">
                   {badgeTag}
                 </span>
               )}
@@ -795,7 +797,7 @@ export const GigCard: React.FC<GigCardProps> = ({
                       deleteGig(gig.id);
                     }
                   }}
-                  className="p-1 sm:p-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white shadow-md transition cursor-pointer"
+                  className="p-1 sm:p-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-md transition cursor-pointer"
                   title="Delete Gig"
                 >
                   <Trash2 className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
@@ -808,8 +810,8 @@ export const GigCard: React.FC<GigCardProps> = ({
                   onClick={(e) => toggleFavorite(gig.id, e)}
                   className={`p-1 sm:p-1.5 rounded-full backdrop-blur-md transition cursor-pointer ${
                     isFavorite
-                      ? "bg-rose-500 text-white shadow-lg scale-105"
-                      : "bg-slate-950/70 text-white hover:text-rose-400 hover:bg-slate-950 shadow-md"
+                      ? "bg-red-600 text-white shadow-lg scale-105"
+                      : "bg-slate-950/70 text-white hover:text-red-400 hover:bg-slate-950 shadow-md"
                   }`}
                   title={isFavorite ? "Remove from Favorites" : "Add to Favorites"}
                 >
@@ -851,7 +853,7 @@ export const GigCard: React.FC<GigCardProps> = ({
           {/* Content Body */}
           <div className="p-2.5 sm:p-4 space-y-1.5 sm:space-y-3">
             {/* Seller Identity Bar */}
-            <div className="flex items-center justify-between gap-1.5 border-b border-slate-100 dark:border-slate-800/80 pb-1.5 sm:pb-2.5">
+            <div className="flex items-center justify-between gap-1.5 border-b border-slate-100 pb-1.5 sm:pb-2.5">
               <div className="flex items-center gap-1.5 min-w-0">
                 <div className="relative shrink-0">
                   <img
@@ -860,39 +862,43 @@ export const GigCard: React.FC<GigCardProps> = ({
                       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
                     }
                     alt={gig.sellerName}
-                    className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover border border-[#1DB954]"
+                    className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover border border-slate-200"
                   />
-                  <span className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-500 rounded-full ring-1 ring-white dark:ring-slate-900 animate-pulse" />
+                  <span className="absolute bottom-0 right-0 w-2 h-2 bg-[#16A34A] rounded-full ring-1 ring-white animate-pulse" />
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-1">
-                    <span className="text-xs sm:text-[15px] font-bold text-slate-900 dark:text-slate-100 truncate group-hover:text-[#1DB954] transition-colors">
+                    <span className="text-xs sm:text-[15px] font-bold text-slate-900 truncate hover:text-[#16A34A] transition-colors">
                       {gig.sellerName}
                     </span>
                     <CheckCircle2
-                      className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#0084FF] fill-[#0084FF] text-white shrink-0"
+                      className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#16A34A] fill-[#16A34A] text-white shrink-0"
                       title="Verified Profile"
                     />
                   </div>
-                  <span className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 block truncate font-medium">
-                    {gig.sellerLevel || "Top Rated"}
+                  <span className="text-[11px] sm:text-xs text-slate-500 block truncate font-medium">
+                    {isBuyerPost ? "ভেরিফায়েড বায়ার" : (gig.sellerLevel || "টপ রেটেড")}
                   </span>
                 </div>
               </div>
 
-              {isAgency ? (
-                <span className="px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md sm:rounded-full bg-[#1DB954]/15 text-[#1DB954] text-[10px] sm:text-xs font-bold border border-[#1DB954]/30 shrink-0">
+              {isBuyerPost ? (
+                <span className="px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md sm:rounded-full bg-blue-50 text-blue-700 text-[10px] sm:text-xs font-bold border border-blue-200 shrink-0">
+                  বায়ার
+                </span>
+              ) : isAgency ? (
+                <span className="px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md sm:rounded-full bg-green-50 text-[#16A34A] text-[10px] sm:text-xs font-bold border border-green-200 shrink-0">
                   Agency
                 </span>
               ) : (
-                <span className="px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md sm:rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] sm:text-xs font-semibold border border-slate-200 dark:border-slate-700 shrink-0">
+                <span className="px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md sm:rounded-full bg-slate-100 text-slate-700 text-[10px] sm:text-xs font-semibold border border-slate-200 shrink-0">
                   Pro
                 </span>
               )}
             </div>
 
             {/* Gig Title */}
-            <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#1DB954] transition-colors min-h-[2.5rem] sm:min-h-[2.75rem]">
+            <h3 className="text-sm sm:text-base font-bold text-slate-900 line-clamp-2 leading-snug hover:text-[#16A34A] transition-colors min-h-[2.5rem] sm:min-h-[2.75rem]">
               {gig.title}
             </h3>
 
@@ -902,7 +908,7 @@ export const GigCard: React.FC<GigCardProps> = ({
                 {gig.tags.slice(0, 2).map((tag, idx) => (
                   <span
                     key={idx}
-                    className="text-[10px] sm:text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-md truncate max-w-[110px]"
+                    className="text-[10px] sm:text-xs font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md truncate max-w-[110px]"
                   >
                     #{tag}
                   </span>
@@ -913,13 +919,13 @@ export const GigCard: React.FC<GigCardProps> = ({
         </div>
 
         {/* Footer Price & Action Ribbon */}
-        <div className="p-2.5 sm:p-3.5 md:p-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1 bg-slate-50/70 dark:bg-slate-950/40 rounded-b-2xl sm:rounded-b-3xl">
+        <div className="p-2.5 sm:p-3.5 md:p-4 border-t border-slate-100 flex items-center justify-between gap-1 bg-slate-50 rounded-b-2xl sm:rounded-b-3xl">
           <div className="min-w-0">
-            <span className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium block leading-tight">
+            <span className="text-[10px] sm:text-xs text-slate-500 font-medium block leading-tight">
               Starts at
             </span>
             <div className="flex items-baseline gap-0.5 sm:gap-1">
-              <span className="text-sm sm:text-base md:text-lg font-black text-[#1DB954] block leading-tight">
+              <span className="text-sm sm:text-base md:text-lg font-black text-[#16A34A] block leading-tight">
                 ৳{price.toLocaleString("en-US")}
               </span>
             </div>
@@ -930,9 +936,9 @@ export const GigCard: React.FC<GigCardProps> = ({
               e.stopPropagation();
               onClick();
             }}
-            className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold text-white bg-[#1DB954] hover:bg-emerald-600 shadow-xs sm:shadow-md sm:shadow-[#1DB954]/20 transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
+            className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold text-white bg-[#16A34A] hover:bg-[#15803D] shadow-xs transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
           >
-            <span>Details</span>
+            <span>বিস্তারিত</span>
             <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
           </button>
         </div>

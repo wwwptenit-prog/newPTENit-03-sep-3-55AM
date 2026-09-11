@@ -39,11 +39,11 @@ export const GlitterParticles: React.FC<GlitterParticlesProps> = ({ mouseCoords 
     let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
     let height = (canvas.height = canvas.parentElement?.clientHeight || 800);
 
-    // Rich colorful shimmering palette with gold, emerald, sky blue & diamond white
+    // Rich colorful shimmering palette with gold, blue, sky blue & diamond white
     const palette = [
       '#FCD34D', // Gold
       '#FBBF24', // Amber Gold
-      '#1DB954', // Emerald Green
+      '#006A4E', // Emerald Green
       '#34D399', // Mint Shimmer
       '#38BDF8', // Sky Blue Sparkle
       '#FFFFFF', // Diamond White Sparkle

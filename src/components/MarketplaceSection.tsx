@@ -100,9 +100,10 @@ import {
 } from 'lucide-react';
 import { useData, checkAndAutoCancelOverdueOrders } from '../context/DataContext';
 import { getLiveSessionDynamicStatus, formatBanglaLiveSchedule } from '../services/liveClassService';
-import { MarketplaceGig, MarketplaceJob, MarketplaceOrder, Service } from '../types';
+import { MarketplaceGig, MarketplaceJob, MarketplaceOrder, Service, DigitalProduct, Course } from '../types';
 import { GigDetailPage } from './GigDetailPage';
 import { ServiceDetailModal } from './ServiceDetailModal';
+import { DigitalProductDetailModal } from './DigitalProductDetailModal';
 import { GigCard } from './GigCard';
 import { StudentDashboard } from './StudentDashboard';
 import { CustomerDashboard } from './CustomerDashboard';
@@ -272,6 +273,338 @@ const AnimatedOverviewCounter: React.FC<{ value: string }> = ({ value }) => {
   return <span>{displayStr}</span>;
 };
 
+// পিটেন আইটির প্রডাক্ট ও কোর্স (২টি করে পৃথক সেকশনে ফুল টাইটেল সহ ও সবগুলো দেখুন বাটন - ফুল রেসপন্সিভ ডিজাইন)
+interface PtenFeaturedShowcaseProps {
+  digitalProducts?: any[];
+  courses?: any[];
+  setActiveTab?: (tab: string, category?: string, pushHistory?: boolean) => void;
+  setActiveSubTab?: (subTab: any) => void;
+}
+
+const PtenFeaturedShowcase: React.FC<PtenFeaturedShowcaseProps> = ({
+  digitalProducts = [],
+  courses = [],
+  setActiveTab,
+  setActiveSubTab
+}) => {
+  // ২টি ডিজিটাল প্রডাক্ট (ফোন ভিউ কার্ড ডিজাইন)
+  const productItems = useMemo(() => {
+    const dp1 = digitalProducts[0] || {
+      id: 'dp-1',
+      title: 'ফুল স্ট্যাক ই-কমার্স রেডি ওয়েবসাইট ও সোর্স কোড',
+      price: 1500,
+      thumbnail: 'https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=400&q=80',
+      rating: 4.9,
+      reviewsCount: 45,
+      salesCount: 140
+    };
+
+    const dp2 = digitalProducts[1] || {
+      id: 'dp-2',
+      title: 'সোশ্যাল মিডিয়া গ্রাফিক্স ও ক্যানভা প্রো মেগা টেমপ্লেট প্যাক',
+      price: 850,
+      thumbnail: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80',
+      rating: 5.0,
+      reviewsCount: 68,
+      salesCount: 230
+    };
+
+    return [
+      {
+        id: 'feat-dp-1',
+        title: dp1.title || 'ফুল স্ট্যাক ই-কমার্স রেডি ওয়েবসাইট ও সোর্স কোড',
+        price: dp1.price || 1500,
+        thumbnail: dp1.thumbnail || 'https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=400&q=80',
+        rating: dp1.rating || 4.9,
+        reviewsCount: dp1.reviewsCount || 45,
+        salesCount: dp1.salesCount || 140,
+        btnText: 'কিনুন',
+        onNavigate: () => {
+          if (setActiveTab) setActiveTab('digital-products');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      },
+      {
+        id: 'feat-dp-2',
+        title: dp2.title || 'সোশ্যাল মিডিয়া গ্রাফিক্স ও ক্যানভা প্রো মেগা টেমপ্লেট প্যাক',
+        price: dp2.price || 850,
+        thumbnail: dp2.thumbnail || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80',
+        rating: dp2.rating || 5.0,
+        reviewsCount: dp2.reviewsCount || 68,
+        salesCount: dp2.salesCount || 230,
+        btnText: 'কিনুন',
+        onNavigate: () => {
+          if (setActiveTab) setActiveTab('digital-products');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    ];
+  }, [digitalProducts, setActiveTab]);
+
+  // ২টি একাডেমি কোর্স (ফোন ভিউ কার্ড ডিজাইন)
+  const courseItems = useMemo(() => {
+    const c1 = courses[0] || {
+      id: 'course-mern-pro',
+      title: 'কমপ্লিট ফুল স্ট্যাক ওয়েব ডেভেলপমেন্ট (MERN Pro)',
+      price: 3500,
+      thumbnail: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=400&q=80',
+      duration: '১২ সপ্তাহ',
+      lessonsCount: 48,
+      enrolledCount: 320
+    };
+
+    const c2 = courses[1] || {
+      id: 'course-yt-seo',
+      title: 'ইউটিউব এসইও ও ভিডিও মার্কেটিং মাস্টারক্লাস',
+      price: 2000,
+      thumbnail: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=400&q=80',
+      duration: '৪ সপ্তাহ',
+      lessonsCount: 20,
+      enrolledCount: 185
+    };
+
+    return [
+      {
+        id: 'feat-c-1',
+        title: c1.title || 'কমপ্লিট ফুল স্ট্যাক ওয়েব ডেভেলপমেন্ট (MERN Pro)',
+        price: c1.price || 3500,
+        thumbnail: c1.thumbnail || 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=400&q=80',
+        duration: c1.duration || '১২ সপ্তাহ',
+        lessonsCount: c1.lessonsCount || 48,
+        enrolledCount: c1.enrolledCount || 320,
+        btnText: 'বিস্তারিত',
+        onNavigate: () => {
+          if (setActiveSubTab) {
+            setActiveSubTab('courses');
+          } else if (setActiveTab) {
+            setActiveTab('courses');
+          }
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      },
+      {
+        id: 'feat-c-2',
+        title: c2.title || 'ইউটিউব এসইও ও ভিডিও মার্কেটিং মাস্টারক্লাস',
+        price: c2.price || 2000,
+        thumbnail: c2.thumbnail || 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=400&q=80',
+        duration: c2.duration || '৪ সপ্তাহ',
+        lessonsCount: c2.lessonsCount || 20,
+        enrolledCount: c2.enrolledCount || 185,
+        btnText: 'বিস্তারিত',
+        onNavigate: () => {
+          if (setActiveSubTab) {
+            setActiveSubTab('courses');
+          } else if (setActiveTab) {
+            setActiveTab('courses');
+          }
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    ];
+  }, [courses, setActiveTab, setActiveSubTab]);
+
+  const formatPrice = (p: number | string) => {
+    if (typeof p === 'number') return `৳${p.toLocaleString('bn-BD')}`;
+    return p;
+  };
+
+  return (
+    <div className="space-y-4 w-full">
+      {/* গ্রুপ ১: পিটেন আইটির প্রডাক্ট */}
+      <div>
+        <div className="flex items-center justify-between mb-2 sm:mb-2.5">
+          <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+            পিটেন আইটির প্রডাক্ট
+          </h4>
+          <button
+            type="button"
+            onClick={() => {
+              if (setActiveTab) setActiveTab('digital-products');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className="text-[11px] sm:text-xs font-bold text-[#006A4E] dark:text-emerald-400 hover:underline flex items-center gap-0.5 cursor-pointer"
+          >
+            <span>সবগুলো দেখুন</span>
+            <span>→</span>
+          </button>
+        </div>
+
+        {/* সম্পূর্ণ রেসপন্সিভ ২-কলাম কার্ড গ্রিড */}
+        <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
+          {productItems.map((product) => (
+            <div
+              key={product.id}
+              onClick={product.onNavigate}
+              className="group relative bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-md hover:border-blue-500/50 transition-all duration-300 flex flex-col justify-between cursor-pointer min-w-0"
+            >
+              <div>
+                {/* Clean Cover Thumbnail */}
+                <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-slate-950">
+                  <img
+                    src={product.thumbnail}
+                    alt={product.title}
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
+                  />
+                </div>
+
+                {/* Card Body */}
+                <div className="p-1.5 sm:p-2.5 space-y-1 sm:space-y-1.5 flex-1 flex flex-col justify-between min-w-0">
+                  <div>
+                    <h5
+                      className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors min-h-[1.9rem] sm:min-h-[2.1rem]"
+                      title={product.title}
+                    >
+                      {product.title}
+                    </h5>
+                  </div>
+
+                  {/* Rating & Sales Micro Info */}
+                  <div className="flex items-center justify-between text-[8.5px] sm:text-[10px] text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-800/60 min-w-0">
+                    <div className="flex items-center gap-0.5 text-amber-500 font-bold shrink-0">
+                      <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400 shrink-0" />
+                      <span>{product.rating}</span>
+                      <span className="text-slate-400 font-normal">({product.reviewsCount})</span>
+                    </div>
+                    <span className="text-slate-400 dark:text-slate-500 flex items-center gap-0.5 shrink-0">
+                      <Download className="w-2.5 h-2.5 text-slate-400 shrink-0" />
+                      <span>{product.salesCount}+</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card Footer */}
+              <div className="p-1.5 sm:p-2.5 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1 rounded-b-xl sm:rounded-b-2xl">
+                <div className="min-w-0">
+                  <span className="text-[7.5px] sm:text-[9px] text-slate-500 dark:text-slate-400 font-bold block leading-none mb-0.5 uppercase tracking-wider">
+                    মূল্য
+                  </span>
+                  <span className="text-[11px] sm:text-xs md:text-sm font-black text-[#006A4E] dark:text-emerald-400 tracking-tight leading-none block truncate">
+                    {formatPrice(product.price)}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    product.onNavigate();
+                  }}
+                  className="py-1 px-1.5 sm:py-1.5 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-bold shadow-xs flex items-center justify-center gap-0.5 sm:gap-1 transition-all active:scale-95 cursor-pointer shrink-0 bg-[#006A4E] hover:bg-[#047857] text-white whitespace-nowrap"
+                >
+                  <span>{product.btnText}</span>
+                  <ArrowRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 shrink-0" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* গ্রুপ ২: পিটেন আইটির কোর্স */}
+      <div className="pt-3 sm:pt-3.5 border-t border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-between mb-2 sm:mb-2.5">
+          <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+            পিটেন আইটির কোর্স
+          </h4>
+          <button
+            type="button"
+            onClick={() => {
+              if (setActiveSubTab) {
+                setActiveSubTab('courses');
+              } else if (setActiveTab) {
+                setActiveTab('courses');
+              }
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className="text-[11px] sm:text-xs font-bold text-[#006A4E] dark:text-emerald-400 hover:underline flex items-center gap-0.5 cursor-pointer"
+          >
+            <span>সবগুলো দেখুন</span>
+            <span>→</span>
+          </button>
+        </div>
+
+        {/* সম্পূর্ণ রেসপন্সিভ ২-কলাম কোর্স কার্ড গ্রিড */}
+        <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
+          {courseItems.map((course) => (
+            <div
+              key={course.id}
+              onClick={course.onNavigate}
+              className="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-md hover:border-[#006A4E]/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group cursor-pointer min-w-0"
+            >
+              {/* Thumbnail */}
+              <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-950">
+                <img
+                  src={course.thumbnail}
+                  alt={course.title}
+                  loading="lazy"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+
+              {/* Card Content */}
+              <div className="p-1.5 sm:p-2.5 flex-1 flex flex-col justify-between space-y-1 sm:space-y-1.5 min-w-0">
+                <div>
+                  <h5
+                    className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug min-h-[1.9rem] sm:min-h-[2.1rem]"
+                    title={course.title}
+                  >
+                    {course.title}
+                  </h5>
+                </div>
+
+                {/* Course Info Micro Metrics */}
+                <div className="grid grid-cols-3 gap-0.5 py-1 border-t border-slate-100 dark:border-slate-800/60 text-center">
+                  <div className="flex flex-col items-center justify-center min-w-0">
+                    <Clock className="w-2.5 h-2.5 text-[#38BDF8] mb-0.5 shrink-0" />
+                    <span className="text-[7.5px] sm:text-[8.5px] text-slate-500 dark:text-slate-400 font-medium truncate w-full leading-tight">
+                      {course.duration}
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center min-w-0">
+                    <BookOpen className="w-2.5 h-2.5 text-[#38BDF8] mb-0.5 shrink-0" />
+                    <span className="text-[7.5px] sm:text-[8.5px] text-slate-500 dark:text-slate-400 font-medium truncate w-full leading-tight">
+                      {course.lessonsCount} ক্লাস
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center min-w-0">
+                    <Users className="w-2.5 h-2.5 text-[#38BDF8] mb-0.5 shrink-0" />
+                    <span className="text-[7.5px] sm:text-[8.5px] text-slate-500 dark:text-slate-400 font-medium truncate w-full leading-tight">
+                      {course.enrolledCount}+
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Price & Actions Ribbon */}
+              <div className="p-1.5 sm:p-2.5 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1 rounded-b-xl sm:rounded-b-2xl">
+                <div className="min-w-0 flex flex-col justify-center">
+                  <span className="text-[11px] sm:text-xs md:text-sm font-black text-[#006A4E] dark:text-emerald-400 block truncate leading-tight tracking-tight">
+                    {formatPrice(course.price)}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    course.onNavigate();
+                  }}
+                  className="py-1 px-1.5 sm:py-1.5 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center gap-0.5 sm:gap-1 active:scale-95 shrink-0 group/btn whitespace-nowrap"
+                >
+                  <span>{course.btnText}</span>
+                  <ArrowRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white group-hover/btn:translate-x-0.5 transition-transform shrink-0" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 interface MarketplaceSectionProps {
   setActiveTab?: (tab: string, category?: string, pushHistory?: boolean) => void;
   activeTab?: string;
@@ -294,6 +627,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     marketplaceOrders,
     users,
     courses,
+    digitalProducts = [],
     enrollments,
     certificates,
     services,
@@ -939,6 +1273,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
   });
   const [copiedLicenseKeyId, setCopiedLicenseKeyId] = useState<string | null>(null);
   const [overviewInnerTab, setOverviewInnerTab] = useState<'all' | 'courses' | 'orders' | 'products'>('all');
+  const [agencyOverviewTab, setAgencyOverviewTab] = useState<'all' | 'products' | 'courses' | 'packages'>('all');
+  const [agencyPackagePage, setAgencyPackagePage] = useState(1);
+  const [agencyProductPage, setAgencyProductPage] = useState(1);
+  const [agencyCoursePage, setAgencyCoursePage] = useState(1);
+  const [selectedDigitalProduct, setSelectedDigitalProduct] = useState<DigitalProduct | null>(null);
+  const [isPaymentHistorySeeAllActive, setIsPaymentHistorySeeAllActive] = useState(false);
   const [buyerOrderStatusFilter, setBuyerOrderStatusFilter] = useState<'all' | 'in_progress' | 'in_review' | 'completed' | 'cancelled' | 'public_projects'>('public_projects');
   const [messengerSubTabFilter, setMessengerSubTabFilter] = useState<'all' | 'sellers' | 'online' | 'orders'>('all');
   const [isMessengerSearchActive, setIsMessengerSearchActive] = useState(false);
@@ -3183,7 +3523,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       
       {/* PTENit MODERN MARKETPLACE HEADER */}
       {!selectedGig && !(viewMode === 'selling' && sellerSubTab === 'create_gig') && (
-        <div className="sticky top-0 z-40 bg-white text-slate-900 px-2 sm:px-4 lg:px-6 mb-0 sm:mb-3 shadow-xs border-b border-slate-200">
+        <div className="sticky top-0 z-40 bg-[#006A4E] text-white px-2 sm:px-4 lg:px-6 mb-0 sm:mb-3 shadow-md border-b border-[#00543D]">
           <div className="w-full px-2 sm:px-4 lg:px-6 py-1 sm:py-2 flex flex-col justify-between gap-2">
           
           {/* MOBILE PHONE HEADER (Facebook Lite Style Header & Merged Icon Navigation on Phone & Small Devices) */}
@@ -3220,12 +3560,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       />
                     ) : (
                       <>
-                        <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-[#006A4E] flex items-center justify-center font-bold text-xs sm:text-base text-white shadow-xs shrink-0 relative">
+                        <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-[#00543D] border border-emerald-400/40 flex items-center justify-center font-bold text-xs sm:text-base text-white shadow-xs shrink-0 relative">
                           P
                           <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#E11D48] border border-white" />
                         </div>
-                        <span className="font-heading text-sm sm:text-base font-black tracking-wider text-slate-900 flex items-center gap-0.5">
-                          PTEN<span className="text-[#006A4E]">it</span>
+                        <span className="font-heading text-sm sm:text-base font-black tracking-wider text-white flex items-center gap-0.5">
+                          PTEN<span className="text-emerald-200">it</span>
                           <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] ml-0.5 inline-block" />
                         </span>
                       </>
@@ -3241,7 +3581,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder={viewMode === 'selling' ? "সার্ভিস বা অর্ডার..." : "সার্চ করুন..."}
-                      className="w-full text-center pl-7 pr-7 py-1 bg-slate-100 border border-slate-300 text-slate-900 rounded-lg text-xs placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-[#006A4E] font-bengali placeholder:text-center focus:placeholder:text-left focus:text-left"
+                      className="w-full text-center pl-7 pr-7 py-1 bg-white border border-emerald-400/40 text-slate-900 rounded-lg text-xs placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-300 font-bengali placeholder:text-center focus:placeholder:text-left focus:text-left shadow-xs"
                     />
                     <Search className="w-3.5 h-3.5 text-[#006A4E] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                     {searchQuery && (
@@ -3327,7 +3667,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 <div className="flex items-center justify-end gap-1 shrink-0">
                   {currentUser ? (
                     <div
-                      className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center cursor-default select-none shrink-0 overflow-hidden border border-slate-300"
+                      className="w-7 h-7 rounded-full bg-[#00543D] flex items-center justify-center cursor-default select-none shrink-0 overflow-hidden border border-emerald-400"
                       title={`প্রোফাইল: ${currentUser.name}`}
                     >
                       <img
@@ -3340,11 +3680,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <button
                       type="button"
                       onClick={openAuthModal}
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-slate-700 hover:text-[#006A4E] hover:bg-slate-100 active:scale-90 transition cursor-pointer"
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-white hover:bg-[#00543D] active:scale-90 transition cursor-pointer"
                       title="লগইন করুন"
                       aria-label="লগইন"
                     >
-                      <User className="w-5 h-5 text-[#006A4E]" />
+                      <User className="w-5 h-5 text-white" />
                     </button>
                   )}
 
@@ -3353,17 +3693,17 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     onClick={() => {
                       setIsMobileMarketplaceMenuOpen(!isMobileMarketplaceMenuOpen);
                     }}
-                    className="p-1.5 text-slate-700 hover:text-slate-900 cursor-pointer shrink-0 active:scale-95 touch-manipulation"
+                    className="p-1.5 text-white hover:bg-[#00543D] rounded-lg cursor-pointer shrink-0 active:scale-95 touch-manipulation"
                     title="মেনুবার"
                   >
-                    {isMobileMarketplaceMenuOpen ? <X className="w-5 h-5 text-[#E11D48]" /> : <Menu className="w-5 h-5" />}
+                    {isMobileMarketplaceMenuOpen ? <X className="w-5 h-5 text-rose-300" /> : <Menu className="w-5 h-5 text-white" />}
                   </button>
                 </div>
               </div>
             )}
 
             {/* FACEBOOK LITE STYLE UNIFIED ICON NAVIGATION BAR */}
-            <div className="flex items-center justify-between px-2 pt-1.5 pb-0.5 text-slate-600 w-full overflow-hidden border-t border-slate-100">
+            <div className="flex items-center justify-between px-2 pt-1.5 pb-0.5 text-emerald-100 w-full overflow-hidden border-t border-[#00543D]">
               {/* 1. 🏠 Marketplace / Specialist Home */}
               <button
                 type="button"
@@ -3387,22 +3727,16 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   setIsNotificationsOpen(false);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`flex-1 flex justify-center items-center py-1.5 transition active:scale-95 cursor-pointer ${
+                className={`flex-1 flex justify-center items-center py-1.5 transition active:scale-95 cursor-pointer rounded-lg ${
                   ((viewMode === 'buying' && activeSubTab === 'gigs' && (activeTab === 'marketplace' || !activeTab)) ||
                    (viewMode === 'selling' && specialistMainTab === 'marketplace' && (sellerSubTab === 'overview' || sellerSubTab === 'gigs'))) &&
                   !selectedGig && !isInboxModalOpen && !isNotificationsOpen
-                    ? 'text-[#006A4E]'
-                    : 'text-slate-600 hover:text-[#006A4E]'
+                    ? 'text-white bg-[#00543D]'
+                    : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/50'
                 }`}
                 title={viewMode === 'selling' ? 'সেলার ওভারভিউ / ড্যাশবোর্ড' : 'মার্কেটপ্লেস হোম'}
               >
-                <Home className={`w-5 h-5 ${
-                  ((viewMode === 'buying' && activeSubTab === 'gigs' && (activeTab === 'marketplace' || !activeTab)) ||
-                   (viewMode === 'selling' && specialistMainTab === 'marketplace' && (sellerSubTab === 'overview' || sellerSubTab === 'gigs'))) &&
-                  !selectedGig && !isInboxModalOpen && !isNotificationsOpen
-                    ? 'text-[#006A4E] stroke-[2.5]'
-                    : 'text-slate-600'
-                }`} />
+                <Home className="w-5 h-5 text-white stroke-[2.2]" />
               </button>
 
               {/* 2. 🛍️ Order & Courses / Specialist Client Orders */}
@@ -3429,31 +3763,25 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   setIsNotificationsOpen(false);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer ${
+                className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer rounded-lg ${
                   ((viewMode === 'buying' && (activeSubTab === 'my-orders' || activeSubTab === 'my-courses' || activeSubTab === 'overview')) ||
                    (viewMode === 'selling' && specialistMainTab === 'marketplace' && sellerSubTab === 'orders')) &&
                   !selectedGig && !isInboxModalOpen && !isNotificationsOpen
-                    ? 'text-[#006A4E]'
-                    : 'text-slate-600 hover:text-[#006A4E]'
+                    ? 'text-white bg-[#00543D]'
+                    : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/50'
                 }`}
                 title={viewMode === 'selling' ? 'ক্লায়েন্ট অর্ডারসমূহ' : 'আমার ক্রয়কৃত প্রজেক্ট ও কোর্সসমূহ'}
               >
-                <ShoppingBag className={`w-5 h-5 ${
-                  ((viewMode === 'buying' && (activeSubTab === 'my-orders' || activeSubTab === 'my-courses' || activeSubTab === 'overview')) ||
-                   (viewMode === 'selling' && specialistMainTab === 'marketplace' && sellerSubTab === 'orders')) &&
-                  !selectedGig && !isInboxModalOpen && !isNotificationsOpen
-                    ? 'stroke-[2.5] text-[#006A4E]'
-                    : 'text-slate-600'
-                }`} />
+                <ShoppingBag className="w-5 h-5 text-white stroke-[2.2]" />
                 {viewMode === 'selling' ? (
                   marketplaceOrders && marketplaceOrders.length > 0 && (
-                    <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-[#006A4E] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                    <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                       {marketplaceOrders.length}
                     </span>
                   )
                 ) : (
                   allBuyerOrders && allBuyerOrders.length > 0 && (
-                    <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-[#006A4E] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                    <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                       {allBuyerOrders.length}
                     </span>
                   )
@@ -3470,14 +3798,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   }
                   openMessengerInbox();
                 }}
-                className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer ${
-                  isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-[#006A4E]' : 'text-slate-600 hover:text-[#006A4E]'
+                className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer rounded-lg ${
+                  isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-white bg-[#00543D]' : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/50'
                 }`}
                 title={viewMode === 'selling' ? 'মেসেঞ্জার (সেলার ইনবক্স)' : 'মেসেঞ্জার'}
               >
-                <Mail className={`w-5 h-5 ${isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-[#006A4E] stroke-[2.5]' : 'text-slate-600'}`} />
+                <Mail className="w-5 h-5 text-white stroke-[2.2]" />
                 {unreadMarketplaceMsgCount > 0 && (
-                  <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                  <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                     {unreadMarketplaceMsgCount}
                   </span>
                 )}
@@ -3493,14 +3821,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   }
                   openNotificationCenter();
                 }}
-                className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer ${
-                  isNotificationCenterOpen ? 'text-[#006A4E]' : 'text-slate-600 hover:text-[#006A4E]'
+                className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer rounded-lg ${
+                  isNotificationCenterOpen ? 'text-white bg-[#00543D]' : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/50'
                 }`}
                 title="নোটিফিকেশন"
               >
-                <Bell className={`w-5 h-5 ${isNotificationCenterOpen ? 'text-[#006A4E] stroke-[2.5]' : 'text-slate-600'}`} />
+                <Bell className="w-5 h-5 text-white stroke-[2.2]" />
                 {roleScopedNotifications.filter(n => !n.read).length > 0 && (
-                  <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                  <span className="absolute -top-1 right-2 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
                     {roleScopedNotifications.filter(n => !n.read).length}
                   </span>
                 )}
@@ -3510,18 +3838,16 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               <button
                 type="button"
                 onClick={toggleOfferSound}
-                className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer ${
-                  isOfferSoundEnabled ? 'text-[#006A4E]' : 'text-slate-400 hover:text-slate-600'
-                }`}
+                className="flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer rounded-lg text-emerald-100 hover:text-white hover:bg-[#00543D]/50"
                 title={isOfferSoundEnabled ? "সাউন্ড চালু (মিউট করতে ক্লিক করুন)" : "সাউন্ড বন্ধ (চালু করতে ক্লিক করুন)"}
               >
                 {isOfferSoundEnabled ? (
-                  <Volume2 className="w-5 h-5 text-[#006A4E] stroke-[2.5]" />
+                  <Volume2 className="w-5 h-5 text-white stroke-[2.2]" />
                 ) : (
-                  <VolumeX className="w-5 h-5 text-slate-400 hover:text-slate-600" />
+                  <VolumeX className="w-5 h-5 text-emerald-300/70" />
                 )}
                 <span className={`absolute -top-1 right-1 min-w-[20px] h-[15px] px-1 rounded-full text-white text-[8px] font-black flex items-center justify-center shadow-xs leading-none ${
-                  isOfferSoundEnabled ? 'bg-[#006A4E]' : 'bg-slate-400 text-slate-100'
+                  isOfferSoundEnabled ? 'bg-[#00543D] border border-emerald-400/40' : 'bg-slate-700 text-slate-200'
                 }`}>
                   {isOfferSoundEnabled ? 'ON' : 'OFF'}
                 </span>
@@ -3559,12 +3885,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         setIsMobileFilterSheetOpen(prev => !prev);
                       }
                     }}
-                    className={`flex-1 flex justify-center items-center py-1.5 transition-all duration-200 relative active:scale-95 cursor-pointer group ${
+                    className={`flex-1 flex justify-center items-center py-1.5 transition-all duration-200 relative active:scale-95 cursor-pointer rounded-lg group ${
                       isAnyFilterActive
-                        ? 'text-[#E11D48] hover:text-[#BE123C]'
+                        ? 'text-rose-300 hover:text-rose-200 bg-[#00543D]'
                         : isMobileFilterSheetOpen
-                        ? 'text-[#006A4E]'
-                        : 'text-slate-600 hover:text-[#006A4E]'
+                        ? 'text-white bg-[#00543D]'
+                        : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/50'
                     }`}
                     title={
                       isAnyFilterActive
@@ -3573,21 +3899,19 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }
                   >
                     {isAnyFilterActive ? (
-                      <RotateCcw className="w-5 h-5 text-[#E11D48] stroke-[2.4] transition-transform duration-300 group-hover:-rotate-90 group-active:scale-90" />
+                      <RotateCcw className="w-5 h-5 text-rose-300 stroke-[2.4] transition-transform duration-300 group-hover:-rotate-90 group-active:scale-90" />
                     ) : (
-                      <Filter className={`w-5 h-5 transition-transform duration-200 ${
-                        isMobileFilterSheetOpen ? 'text-[#006A4E] stroke-[2.5] scale-105' : 'text-slate-600 group-hover:text-[#006A4E]'
-                      }`} />
+                      <Filter className="w-5 h-5 text-white transition-transform duration-200" />
                     )}
 
                     {/* Dynamic Status Badge */}
                     {isAnyFilterActive ? (
-                      <span className="absolute -top-1.5 right-0 min-w-[28px] h-[15px] px-1 rounded-full bg-[#E11D48] text-white text-[8px] font-black flex items-center justify-center shadow-xs leading-none ring-1 ring-white animate-pulse">
+                      <span className="absolute -top-1.5 right-0 min-w-[28px] h-[15px] px-1 rounded-full bg-rose-500 text-white text-[8px] font-black flex items-center justify-center shadow-xs leading-none ring-1 ring-white animate-pulse">
                         রিসেট
                       </span>
                     ) : (
                       <span className={`absolute -top-1.5 right-0 min-w-[26px] h-[15px] px-1 rounded-full text-white text-[8px] font-black flex items-center justify-center shadow-xs leading-none transition-colors ${
-                        isMobileFilterSheetOpen ? 'bg-[#006A4E]' : 'bg-slate-400 text-slate-100 group-hover:bg-[#006A4E]'
+                        isMobileFilterSheetOpen ? 'bg-white text-[#006A4E]' : 'bg-[#00543D] border border-emerald-400/40 text-emerald-100'
                       }`}>
                         ফিল্টার
                       </span>
@@ -3596,6 +3920,46 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 );
               })()}
             </div>
+
+            {/* MOBILE QUICK CATEGORY PILL STRIP (সকল সার্ভিস / ALL, গ্রাফিক্স, টেক...) */}
+            {activeSubTab === 'gigs' && viewMode === 'buying' && !selectedGig && !isInboxModalOpen && !isNotificationsOpen && (
+              <div className="flex items-center gap-1.5 pt-1.5 pb-1 overflow-x-auto scrollbar-none whitespace-nowrap border-t border-[#00543D]/80">
+                {[
+                  { key: 'All', label: 'সকল (All)' },
+                  { key: 'Graphics & Design', label: 'গ্রাফিক্স' },
+                  { key: 'Programming & Tech', label: 'ওয়েব ও টেক' },
+                  { key: 'Digital Marketing', label: 'মার্কেটিং' },
+                  { key: 'Video & Animation', label: 'ভিডিও' },
+                  { key: 'SEO & Growth', label: 'এসইও' },
+                  { key: 'AI Services', label: 'এআই' },
+                  { key: 'Education & Training', label: 'ট্রেনিং' }
+                ].map((cat) => {
+                  const isActive = selectedCategory === cat.key;
+                  return (
+                    <button
+                      key={cat.key}
+                      type="button"
+                      onClick={() => {
+                        setSelectedCategory(cat.key);
+                        setActiveSubTab('gigs');
+                        setSelectedGig(null);
+                        setSearchQuery('');
+                        if (cat.key === 'All' && setActiveTab) {
+                          setActiveTab('marketplace', 'All', true);
+                        }
+                      }}
+                      className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer shrink-0 active:scale-95 ${
+                        isActive
+                          ? 'bg-white text-[#006A4E] shadow-sm font-black'
+                          : 'bg-[#00543D] text-emerald-100 hover:text-white hover:bg-[#00412F] border border-emerald-500/30'
+                      }`}
+                    >
+                      {cat.label}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
             {/* MOBILE FILTER POPUP (ফিল্টার বাটনে ক্লিক করলে ঠিক সেখানে পপ এর ভিতর ফিল্টার) */}
             {isMobileFilterSheetOpen && (
@@ -3652,7 +4016,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               : 'text-slate-800 border-slate-200'
                           }`}
                         >
-                          <option value="All">সব ক্যাটাগরি</option>
+                          <option value="All">সব ক্যাটাগরি (All)</option>
                           <option value="AI Services">এআই ও সফটওয়্যার</option>
                           <option value="Programming & Tech">প্রোগ্রামিং ও টেকনোলজি</option>
                           <option value="Graphics & Design">গ্রাফিক্স ও ডিজাইন</option>
@@ -3787,6 +4151,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     onClick={() => {
                       setOrderHubTab('overview');
                       setActiveSubTab('my-orders');
+                      setIsPaymentHistorySeeAllActive(false);
                     }}
                     className={`py-1.5 px-0.5 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-center ${
                       orderHubTab === 'overview'
@@ -4143,10 +4508,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             {/* --------------------------------------------------------------------- */}
             {viewMode === 'buying' ? (
               <div className="flex flex-col w-full">
-                {/* Top Row: Brand + Search Bar + Right-side Links & Controls */}
-                <div className="flex items-center justify-between w-full h-14 gap-2 lg:gap-4 py-1">
+                {/* Top Row: Brand + Nav Tabs + Search Bar + Right-side Links & Controls (Slim Facebook-style Header) */}
+                <div className="flex items-center justify-between w-full h-12 gap-2 lg:gap-3 py-0">
                   {/* Left: Brand Logo + Quick Home Link */}
-                  <div className="flex items-center gap-2 lg:gap-3 shrink-0">
+                  <div className="flex items-center gap-2 lg:gap-3 shrink-0 h-full">
                     <button
                       type="button"
                       onClick={() => {
@@ -4166,17 +4531,17 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         <img
                           src={marketplaceLogo}
                           alt="PTENit Marketplace"
-                          className="h-8 lg:h-9 w-auto object-contain rounded-md"
+                          className="h-7 lg:h-8 w-auto object-contain rounded-md"
                         />
                       ) : (
                         <div className="flex items-center gap-1.5">
-                          <div className="w-8 h-8 rounded-xl bg-[#006A4E] flex items-center justify-center font-bold text-lg text-white shadow-xs shrink-0 relative">
+                          <div className="w-7 h-7 rounded-lg bg-white text-[#006A4E] flex items-center justify-center font-bold text-base shadow-xs shrink-0 relative">
                             P
-                            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#E11D48] border-2 border-white" />
+                            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#E11D48] border-2 border-white" />
                           </div>
-                          <span className="font-heading text-xl lg:text-2xl font-black tracking-tight text-slate-900 flex items-center gap-0.5">
-                            PTEN<span className="text-[#006A4E]">it</span>
-                            <span className="w-2 h-2 rounded-full bg-[#E11D48] ml-1 inline-block" title="লাল-সবুজের অহংকার" />
+                          <span className="font-heading text-lg lg:text-xl font-black tracking-tight text-white flex items-center gap-0.5">
+                            PTEN<span className="text-emerald-200">it</span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] ml-1 inline-block" title="লাল-সবুজের অহংকার" />
                           </span>
                         </div>
                       )}
@@ -4188,346 +4553,288 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       onClick={() => {
                         if (setActiveTab) setActiveTab('home');
                       }}
-                      className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-200 transition cursor-pointer active:scale-95 shadow-xs shrink-0"
+                      className="hidden 2xl:flex items-center gap-1 px-2 py-1 text-xs font-bold text-white bg-[#00543D] hover:bg-[#00412F] rounded-lg border border-emerald-400/30 transition cursor-pointer active:scale-95 shadow-xs shrink-0"
                       title="পিটেনআইটি মূল ওয়েবসাইটে ফিরে যান (হোম, কোর্স ও সার্ভিস)"
                     >
-                      <Home className="w-3.5 h-3.5 text-[#006A4E]" />
-                      <span className="hidden xl:inline">মূল ওয়েবসাইট</span>
-                      <span className="xl:hidden">হোম</span>
+                      <Home className="w-3.5 h-3.5 text-white" />
+                      <span>মূল সাইট</span>
                     </button>
                   </div>
 
-                  {/* Center: Search Bar with Green Action Button & Live Dropdown */}
-                  <div className="flex-1 min-w-[170px] max-w-md lg:max-w-lg xl:max-w-xl mx-2 lg:mx-3 relative">
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        if (searchQuery.trim()) {
-                          setSelectedGig(null);
-                          setActiveSubTab('gigs');
-                        }
-                      }}
-                      className="flex items-center w-full bg-slate-50 border border-slate-300 hover:border-slate-400 focus-within:border-[#006A4E] focus-within:ring-1 focus-within:ring-[#006A4E] rounded-lg overflow-hidden transition shadow-xs"
-                    >
-                      <div className="pl-3 pr-1.5 text-slate-400 shrink-0">
-                        <Search className="w-4 h-4" />
-                      </div>
-                      <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="কোন সার্ভিসটি খুঁজছেন? (যেমন: লোগো ডিজাইন, ওয়েবসাইট...)"
-                        className="w-full bg-transparent py-1.5 lg:py-2 text-xs lg:text-sm text-slate-900 placeholder-slate-400 focus:outline-none font-bengali truncate"
-                      />
-                      {searchQuery && (
-                        <button
-                          type="button"
-                          onClick={() => setSearchQuery('')}
-                          className="text-slate-400 hover:text-slate-700 p-1 mr-1 cursor-pointer shrink-0"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                      <button
-                        type="submit"
-                        className="bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs lg:text-sm px-4 lg:px-5 py-1.5 lg:py-2 flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-xs active:scale-95 whitespace-nowrap"
-                      >
-                        <Search className="w-3.5 h-3.5 text-white" />
-                        <span>খুঁজুন</span>
-                      </button>
-                    </form>
-
-                    {/* Live Search Dropdown */}
-                    {searchQuery.trim() && (
-                      <div className="absolute left-0 top-full mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-2xl p-3 z-50 text-slate-800 max-h-96 overflow-y-auto font-bengali">
-                        <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1.5 flex items-center justify-between">
-                          <span>সার্চ ফলাফল ({filteredGigs.length})</span>
-                          <span className="text-[11px] text-[#006A4E] font-bold">লাইভ ফলাফল</span>
-                        </div>
-                        {filteredGigs.length > 0 ? (
-                          <div className="space-y-1.5">
-                            {filteredGigs.slice(0, 5).map(gig => {
-                              const gigPrice = gig.packages?.basic?.price ?? (gig as any).price ?? 2500;
-                              const gigThumb = gig.images?.[0] || gig.sellerAvatar || 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=300&q=80';
-                              return (
-                                <div
-                                  key={gig.id}
-                                  onClick={() => {
-                                    setSelectedGig(gig);
-                                    setViewMode('buying');
-                                    setActiveSubTab('gigs');
-                                    setSearchQuery('');
-                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                  }}
-                                  className="flex items-center gap-2.5 p-2 hover:bg-slate-50 rounded-xl cursor-pointer transition bg-white border border-slate-200"
-                                >
-                                  <img
-                                    src={gigThumb}
-                                    alt={gig.title}
-                                    className="w-10 h-10 rounded-lg object-cover shrink-0 border border-slate-200"
-                                  />
-                                  <div className="flex-1 min-w-0">
-                                    <p className="font-semibold text-xs text-slate-900 truncate">{gig.title}</p>
-                                    <div className="flex items-center justify-between mt-1">
-                                      <span className="text-[10px] text-slate-500 truncate max-w-[120px]">{gig.sellerName}</span>
-                                      <span className="text-xs text-[#006A4E] font-bold">
-                                        ৳{gigPrice.toLocaleString('en-US')}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        ) : (
-                          <p className="text-center text-slate-500 py-3 text-xs">
-                            কোনো গিগ বা সার্ভিস পাওয়া যায়নি।
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Right: Buyer Links & Controls */}
-                  <div className="flex items-center gap-1.5 lg:gap-2.5 shrink-0">
-                    {/* Switch to Selling */}
+                  {/* 1. Primary Navigation Icon Buttons (Facebook Desktop Style with Underline & White Icons) */}
+                  <div className="flex items-center h-full gap-0.5 sm:gap-1 shrink-0">
+                    {/* মার্কেটপ্লেস ফিড */}
                     <button
                       type="button"
                       onClick={() => {
-                        setViewMode('selling');
-                        setSpecialistMainTab('marketplace');
-                        setSellerSubTab('gigs');
                         setSelectedGig(null);
+                        setViewMode('buying');
+                        setActiveSubTab('gigs');
+                        setSelectedCategory('All');
+                        setSearchQuery('');
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
-                      className="text-xs lg:text-sm font-bold text-[#006A4E] hover:text-white hover:bg-[#006A4E] border border-[#006A4E]/40 px-2.5 lg:px-3 py-1.5 rounded-lg transition duration-150 cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap active:scale-95"
-                      title="সেলার মোডে সুইচ করুন (গিগ ও অর্ডার পরিচালনা)"
+                      className={`h-full flex items-center justify-center relative px-2.5 lg:px-3.5 transition cursor-pointer group active:scale-95 ${
+                        activeSubTab === 'gigs' && !selectedGig
+                          ? 'text-white'
+                          : 'text-white/80 hover:text-white hover:bg-white/10'
+                      }`}
+                      title="মার্কেটপ্লেস ফিড"
+                      aria-label="মার্কেটপ্লেস ফিড"
                     >
-                      <Zap className="w-3.5 h-3.5" />
-                      <span>Switch to Selling</span>
+                      <Store className="w-5 h-5 text-white transition group-hover:scale-105" />
+                      {/* Facebook-style Bottom Underline Indicator */}
+                      {activeSubTab === 'gigs' && !selectedGig && (
+                        <span className="absolute bottom-0 left-1.5 right-1.5 h-[3px] bg-white rounded-t-full shadow-sm" />
+                      )}
                     </button>
 
-                    {/* Secondary Navigation Links */}
+                    {/* আমার অর্ডারসমূহ (Badge: 18) */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!currentUser && openAuthModal) {
+                          openAuthModal();
+                          return;
+                        }
+                        setSelectedGig(null);
+                        setActiveSubTab('my-orders');
+                        setOrderHubTab('orders');
+                      }}
+                      className={`h-full flex items-center justify-center relative px-2.5 lg:px-3.5 transition cursor-pointer group active:scale-95 ${
+                        activeSubTab === 'my-orders'
+                          ? 'text-white'
+                          : 'text-white/80 hover:text-white hover:bg-white/10'
+                      }`}
+                      title="আমার অর্ডারসমূহ"
+                      aria-label="আমার অর্ডারসমূহ"
+                    >
+                      <div className="relative flex items-center justify-center">
+                        <ShoppingBag className="w-5 h-5 text-white transition group-hover:scale-105" />
+                        <span className="absolute -top-1.5 -right-2.5 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-600 text-white text-[9px] font-black flex items-center justify-center shadow-xs border border-[#006A4E]">
+                          {allBuyerOrders.length > 0 ? allBuyerOrders.length : 18}
+                        </span>
+                      </div>
+                      {/* Facebook-style Bottom Underline Indicator */}
+                      {activeSubTab === 'my-orders' && (
+                        <span className="absolute bottom-0 left-1.5 right-1.5 h-[3px] bg-white rounded-t-full shadow-sm" />
+                      )}
+                    </button>
+
+                    {/* PTENit এজেন্সি সার্ভিস */}
                     <button
                       type="button"
                       onClick={() => {
                         setSelectedGig(null);
                         setActiveSubTab('ptenit-services');
                       }}
-                      className={`hidden 2xl:block text-xs lg:text-sm font-semibold transition px-2.5 py-1.5 rounded-lg cursor-pointer whitespace-nowrap ${
+                      className={`h-full flex items-center justify-center relative px-2.5 lg:px-3.5 transition cursor-pointer group active:scale-95 ${
                         activeSubTab === 'ptenit-services'
-                          ? 'text-[#006A4E] font-bold bg-emerald-50'
-                          : 'text-slate-600 hover:text-slate-900'
+                          ? 'text-white'
+                          : 'text-white/80 hover:text-white hover:bg-white/10'
                       }`}
-                      title="PTENit অফিশিয়াল এজেন্সি সার্ভিসেস"
+                      title="PTENit এজেন্সি সার্ভিস"
+                      aria-label="PTENit এজেন্সি সার্ভিস"
                     >
-                      এজেন্সি সার্ভিস
+                      <Briefcase className="w-5 h-5 text-white transition group-hover:scale-105" />
+                      {/* Facebook-style Bottom Underline Indicator */}
+                      {activeSubTab === 'ptenit-services' && (
+                        <span className="absolute bottom-0 left-1.5 right-1.5 h-[3px] bg-white rounded-t-full shadow-sm" />
+                      )}
                     </button>
+                  </div>
 
+                  {/* 2. সার্চবার (Perfect Center Alignment, Single Clean Left Search Icon, No Double Icon, Slim Capsule) */}
+                  <div className="flex-1 flex justify-center items-center px-2 sm:px-3 lg:px-4 min-w-0">
+                    <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg relative">
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          if (searchQuery.trim()) {
+                            setSelectedGig(null);
+                            setActiveSubTab('gigs');
+                          }
+                        }}
+                        className="flex items-center w-full h-8 lg:h-8.5 bg-white rounded-full shadow-xs hover:shadow-sm border border-emerald-200/80 focus-within:border-white focus-within:ring-2 focus-within:ring-white/70 transition-all duration-200 pl-3 pr-1"
+                      >
+                        {/* একক সার্চ আইকন (শুধু বামে) */}
+                        <Search className="w-3.5 h-3.5 text-slate-400 shrink-0 mr-1.5" />
+
+                        {/* সার্চ ইনপুট */}
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          placeholder="মার্কেটপ্লেসে খুঁজুন... (লোগো, ওয়েবসাইট, এসইও)"
+                          className="w-full bg-transparent text-xs text-slate-800 placeholder-slate-400 focus:outline-none font-bengali truncate"
+                        />
+
+                        {/* ক্লিয়ার বাটন */}
+                        {searchQuery && (
+                          <button
+                            type="button"
+                            onClick={() => setSearchQuery('')}
+                            className="text-slate-400 hover:text-slate-700 p-0.5 mr-1 transition cursor-pointer shrink-0"
+                            title="মুছে ফেলুন"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+
+                        {/* খুঁজুন বাটন */}
+                        <button
+                          type="submit"
+                          className="h-6.5 px-3 rounded-full bg-[#00543D] hover:bg-[#00412F] text-white font-bold text-[11px] transition-all duration-150 shrink-0 cursor-pointer shadow-xs active:scale-95 flex items-center justify-center whitespace-nowrap"
+                        >
+                          খুঁজুন
+                        </button>
+                      </form>
+
+                      {/* Live Search Dropdown */}
+                      {searchQuery.trim() && (
+                        <div className="absolute left-0 top-full mt-2 w-full bg-white border border-slate-200 rounded-2xl shadow-2xl p-3 z-50 text-slate-800 max-h-96 overflow-y-auto font-bengali">
+                          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1.5 flex items-center justify-between">
+                            <span>সার্চ ফলাফল ({filteredGigs.length})</span>
+                            <span className="text-[11px] text-[#006A4E] font-bold">লাইভ ফলাফল</span>
+                          </div>
+                          {filteredGigs.length > 0 ? (
+                            <div className="space-y-1.5">
+                              {filteredGigs.slice(0, 5).map(gig => {
+                                const gigPrice = gig.packages?.basic?.price ?? (gig as any).price ?? 2500;
+                                const gigThumb = gig.images?.[0] || gig.sellerAvatar || 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=300&q=80';
+                                return (
+                                  <div
+                                    key={gig.id}
+                                    onClick={() => {
+                                      setSelectedGig(gig);
+                                      setViewMode('buying');
+                                      setActiveSubTab('gigs');
+                                      setSearchQuery('');
+                                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                                    }}
+                                    className="flex items-center gap-2.5 p-2 hover:bg-slate-50 rounded-xl cursor-pointer transition bg-white border border-slate-200"
+                                  >
+                                    <img
+                                      src={gigThumb}
+                                      alt={gig.title}
+                                      className="w-10 h-10 rounded-lg object-cover shrink-0 border border-slate-200"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                      <p className="font-semibold text-xs text-slate-900 truncate">{gig.title}</p>
+                                      <div className="flex items-center justify-between mt-1">
+                                        <span className="text-[10px] text-slate-500 truncate max-w-[120px]">{gig.sellerName}</span>
+                                        <span className="text-xs text-[#006A4E] font-bold">
+                                          ৳{gigPrice.toLocaleString('en-US')}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ) : (
+                            <p className="text-center text-slate-500 py-3 text-xs">
+                              কোনো গিগ বা সার্ভিস পাওয়া যায়নি।
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 3. ডানপাশের কন্ট্রোলস: মেসেঞ্জার ও চ্যাট , নোটিফিকেশন , সাউন্ড , প্রোফাইল */}
+                  <div className="flex items-center gap-1 lg:gap-1.5 shrink-0">
+                    {/* মেসেঞ্জার ও চ্যাট */}
                     <button
                       type="button"
                       onClick={() => {
-                        setSelectedGig(null);
-                        setActiveSubTab('courses');
+                        if (!currentUser && openAuthModal) {
+                          openAuthModal();
+                          return;
+                        }
+                        openMessengerInbox();
                       }}
-                      className={`hidden 2xl:block text-xs lg:text-sm font-semibold transition px-2.5 py-1.5 rounded-lg cursor-pointer whitespace-nowrap ${
-                        activeSubTab === 'courses'
-                          ? 'text-[#006A4E] font-bold bg-emerald-50'
-                          : 'text-slate-600 hover:text-slate-900'
+                      className={`p-1.5 lg:p-2 rounded-lg relative text-emerald-100 hover:text-white hover:bg-[#00543D] transition cursor-pointer active:scale-95 ${
+                        isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-white bg-[#00543D]' : ''
                       }`}
-                      title="আইটি ট্রেনিং ও কোর্সসমূহ"
+                      title="মেসেঞ্জার ও চ্যাট"
                     >
-                      কোর্সসমূহ
+                      <Mail className="w-4 lg:w-5 h-4 lg:h-5" />
+                      {unreadMarketplaceMsgCount > 0 && (
+                        <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                          {unreadMarketplaceMsgCount}
+                        </span>
+                      )}
                     </button>
 
-                    {/* Compact Icon Bar (Orders, Inbox, Saved, Notifications, Sound) */}
-                    <div className="flex items-center gap-0.5 sm:gap-1">
-                      {/* Orders Icon */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (!currentUser && openAuthModal) {
-                            openAuthModal();
-                            return;
-                          }
-                          setSelectedGig(null);
-                          setActiveSubTab('my-orders');
-                          setOrderHubTab('orders');
-                        }}
-                        className={`p-1.5 lg:p-2 rounded-lg relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer ${
-                          activeSubTab === 'my-orders' ? 'text-[#006A4E] bg-emerald-50' : ''
-                        }`}
-                        title="আমার অর্ডারসমূহ"
-                      >
-                        <ShoppingBag className="w-4 lg:w-5 h-4 lg:h-5" />
-                        {allBuyerOrders.length > 0 && (
-                          <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#006A4E] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
-                            {allBuyerOrders.length}
-                          </span>
-                        )}
-                      </button>
-
-                      {/* Messages Inbox Icon */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (!currentUser && openAuthModal) {
-                            openAuthModal();
-                            return;
-                          }
-                          openMessengerInbox();
-                        }}
-                        className={`p-1.5 lg:p-2 rounded-lg relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer ${
-                          isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-[#006A4E] bg-emerald-50' : ''
-                        }`}
-                        title="ইনবক্স / মেসেজ"
-                      >
-                        <Mail className="w-4 lg:w-5 h-4 lg:h-5" />
-                        {unreadMarketplaceMsgCount > 0 && (
-                          <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
-                            {unreadMarketplaceMsgCount}
-                          </span>
-                        )}
-                      </button>
-
-                      {/* Saved / Lists Icon */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedGig(null);
-                          setActiveSubTab('saved_gigs');
-                        }}
-                        className={`p-1.5 lg:p-2 rounded-lg relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer ${
-                          activeSubTab === 'saved_gigs' ? 'text-[#006A4E] bg-emerald-50' : ''
-                        }`}
-                        title="সংরক্ষিত গিগ তালিকা (Favorites)"
-                      >
-                        <Heart className={`w-4 lg:w-5 h-4 lg:h-5 ${savedGigIds.length > 0 ? 'text-[#E11D48] fill-[#E11D48]/20' : ''}`} />
-                        {savedGigIds.length > 0 && (
-                          <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
-                            {savedGigIds.length}
-                          </span>
-                        )}
-                      </button>
-
-                      {/* Notifications Icon */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (!currentUser && openAuthModal) {
-                            openAuthModal();
-                            return;
-                          }
-                          openNotificationCenter();
-                        }}
-                        className={`p-1.5 lg:p-2 rounded-lg relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer ${
-                          isNotificationCenterOpen ? 'text-[#006A4E] bg-emerald-50' : ''
-                        }`}
-                        title="নোটিফিকেশন সেন্টার"
-                      >
-                        <Bell className="w-4 lg:w-5 h-4 lg:h-5" />
-                        {roleScopedNotifications.filter(n => !n.read).length > 0 && (
-                          <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
-                            {roleScopedNotifications.filter(n => !n.read).length}
-                          </span>
-                        )}
-                      </button>
-
-                      {/* Sound Toggle */}
-                      <button
-                        type="button"
-                        onClick={toggleOfferSound}
-                        className="w-7 lg:w-8 h-7 lg:h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition active:scale-95 cursor-pointer relative"
-                        title={isOfferSoundEnabled ? "অর্ডার নোটিফিকেশন সাউন্ড চালু" : "অর্ডার নোটিফিকেশন সাউন্ড বন্ধ"}
-                      >
-                        {isOfferSoundEnabled ? (
-                          <Volume2 className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-[#006A4E]" />
-                        ) : (
-                          <VolumeX className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-slate-400" />
-                        )}
-                      </button>
-                    </div>
-
-                    {/* Post Project Quick Action Button */}
+                    {/* নোটিফিকেশন */}
                     <button
                       type="button"
-                      onClick={() => setIsPostProjectModalOpen(true)}
-                      className="hidden lg:flex px-2.5 lg:px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 text-xs font-bold transition items-center gap-1.5 border border-slate-200 cursor-pointer shrink-0 whitespace-nowrap active:scale-95"
-                      title="কাস্টম প্রজেক্ট রিকোয়েস্ট পোস্ট করুন"
+                      onClick={() => {
+                        if (!currentUser && openAuthModal) {
+                          openAuthModal();
+                          return;
+                        }
+                        openNotificationCenter();
+                      }}
+                      className={`p-1.5 lg:p-2 rounded-lg relative text-emerald-100 hover:text-white hover:bg-[#00543D] transition cursor-pointer active:scale-95 ${
+                        isNotificationCenterOpen ? 'text-white bg-[#00543D]' : ''
+                      }`}
+                      title="নোটিফিকেশন"
                     >
-                      <Plus className="w-3.5 h-3.5 text-[#006A4E]" />
-                      <span>পোস্ট প্রজেক্ট</span>
+                      <Bell className="w-4 lg:w-5 h-4 lg:h-5" />
+                      {roleScopedNotifications.filter(n => !n.read).length > 0 && (
+                        <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                          {roleScopedNotifications.filter(n => !n.read).length}
+                        </span>
+                      )}
                     </button>
 
-                    {/* User Avatar / Login */}
+                    {/* সাউন্ড */}
+                    <button
+                      type="button"
+                      onClick={toggleOfferSound}
+                      className="w-7 lg:w-8 h-7 lg:h-8 rounded-lg bg-[#00543D] hover:bg-[#00412F] text-white border border-emerald-400/30 flex items-center justify-center transition active:scale-95 cursor-pointer relative"
+                      title={isOfferSoundEnabled ? "সাউন্ড চালু" : "সাউন্ড বন্ধ"}
+                    >
+                      {isOfferSoundEnabled ? (
+                        <Volume2 className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-emerald-200" />
+                      ) : (
+                        <VolumeX className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-emerald-300/60" />
+                      )}
+                    </button>
+
+                    {/* প্রোফাইল / লগইন */}
                     {currentUser ? (
                       <div
                         onClick={() => setIsMobileMarketplaceMenuOpen(true)}
-                        className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition cursor-pointer border border-slate-200 shrink-0 select-none"
-                        title={`প্রোফাইল মেনু: ${currentUser.name}`}
+                        className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-[#00543D] hover:bg-[#00412F] transition cursor-pointer border border-emerald-400/40 shrink-0 select-none text-white shadow-xs"
+                        title={`প্রোফাইল: ${currentUser.name}`}
                       >
                         <div className="relative">
                           <img
                             src={currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
                             alt={currentUser.name}
-                            className="w-6 h-6 lg:w-7 lg:h-7 rounded-full object-cover border border-emerald-600"
+                            className="w-6 h-6 lg:w-7 lg:h-7 rounded-full object-cover border border-emerald-300"
                           />
-                          <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-[#006A4E] border border-white" />
+                          <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-white" />
                         </div>
-                        <span className="hidden xl:inline text-xs font-bold text-slate-700 max-w-[65px] truncate">
+                        <span className="hidden xl:inline text-xs font-bold text-white max-w-[65px] truncate">
                           {currentUser.name.split(' ')[0]}
                         </span>
-                        <ChevronDown className="w-3 h-3 text-slate-500" />
+                        <ChevronDown className="w-3 h-3 text-emerald-200" />
                       </div>
                     ) : (
                       <button
                         type="button"
                         onClick={openAuthModal}
-                        className="px-3 lg:px-3.5 py-1.5 rounded-lg bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs transition cursor-pointer flex items-center gap-1.5 shadow-xs shrink-0 whitespace-nowrap active:scale-95"
+                        className="px-3 lg:px-3.5 py-1.5 rounded-lg bg-white hover:bg-emerald-50 text-[#006A4E] font-bold text-xs transition cursor-pointer flex items-center gap-1.5 shadow-xs shrink-0 whitespace-nowrap active:scale-95"
                       >
-                        <User className="w-3.5 h-3.5" />
+                        <User className="w-3.5 h-3.5 text-[#006A4E]" />
                         <span>লগইন</span>
                       </button>
                     )}
                   </div>
-                </div>
-
-                {/* Horizontal Category Strip */}
-                <div className="border-t border-slate-200 pt-2 pb-1.5 flex items-center justify-between text-xs lg:text-[13px] text-slate-600 overflow-x-auto scrollbar-none whitespace-nowrap gap-4 lg:gap-6">
-                  {[
-                    { key: 'All', label: 'সকল সার্ভিস' },
-                    { key: 'Graphics & Design', label: 'গ্রাফিক্স ও ডিজাইন' },
-                    { key: 'Programming & Tech', label: 'প্রোগ্রামিং ও টেক' },
-                    { key: 'Digital Marketing', label: 'ডিজিটাল মার্কেটিং' },
-                    { key: 'Video & Animation', label: 'ভিডিও ও অ্যানিমেশন' },
-                    { key: 'SEO & Growth', label: 'এসইও ও গ্রোথ' },
-                    { key: 'AI Services', label: 'এআই ও অটোমেশন' },
-                    { key: 'Education & Training', label: 'এডুকেশন ও ট্রেনিং' }
-                  ].map((cat) => {
-                    const isActive = selectedCategory === cat.key;
-                    return (
-                      <button
-                        key={cat.key}
-                        type="button"
-                        onClick={() => {
-                          setSelectedCategory(cat.key);
-                          setActiveSubTab('gigs');
-                          setSelectedGig(null);
-                          window.scrollTo({ top: 350, behavior: 'smooth' });
-                        }}
-                        className={`relative pb-1 font-medium transition cursor-pointer shrink-0 ${
-                          isActive
-                            ? 'text-[#006A4E] font-bold'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }`}
-                      >
-                        <span>{cat.label}</span>
-                        {isActive && (
-                          <span className="absolute bottom-0 inset-x-0 h-0.5 bg-[#006A4E] rounded-full" />
-                        )}
-                      </button>
-                    );
-                  })}
                 </div>
               </div>
             ) : (
@@ -4556,15 +4863,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       />
                     ) : (
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-xl bg-[#006A4E] flex items-center justify-center font-bold text-lg text-white shadow-xs shrink-0 relative">
+                        <div className="w-8 h-8 rounded-xl bg-white text-[#006A4E] flex items-center justify-center font-bold text-lg shadow-xs shrink-0 relative">
                           P
                           <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#E11D48] border-2 border-white" />
                         </div>
-                        <span className="font-heading text-xl lg:text-2xl font-black tracking-tight text-slate-900 flex items-center gap-0.5">
-                          PTEN<span className="text-[#006A4E]">it</span>
+                        <span className="font-heading text-xl lg:text-2xl font-black tracking-tight text-white flex items-center gap-0.5">
+                          PTEN<span className="text-emerald-200">it</span>
                           <span className="w-2 h-2 rounded-full bg-[#E11D48] ml-1 inline-block" title="লাল-সবুজের অহংকার" />
                         </span>
-                        <span className="px-2 py-0.5 bg-emerald-50 text-[#006A4E] border border-emerald-200 rounded-md text-[10px] lg:text-[11px] font-black uppercase tracking-wider flex items-center gap-1 shadow-xs">
+                        <span className="px-2 py-0.5 bg-[#00543D] text-white border border-emerald-400/40 rounded-md text-[10px] lg:text-[11px] font-black uppercase tracking-wider flex items-center gap-1 shadow-xs">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48]" />
                           Seller Hub
                         </span>
@@ -4578,10 +4885,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     onClick={() => {
                       if (setActiveTab) setActiveTab('home');
                     }}
-                    className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-200 transition cursor-pointer active:scale-95 shadow-xs shrink-0"
+                    className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold text-white bg-[#00543D] hover:bg-[#00412F] rounded-lg border border-emerald-400/30 transition cursor-pointer active:scale-95 shadow-xs shrink-0"
                     title="পিটেনআইটি মূল ওয়েবসাইটে ফিরে যান (হোম, কোর্স ও সার্ভিস)"
                   >
-                    <Home className="w-3.5 h-3.5 text-[#006A4E]" />
+                    <Home className="w-3.5 h-3.5 text-emerald-200" />
                     <span className="hidden xl:inline">মূল ওয়েবসাইট</span>
                     <span className="xl:hidden">হোম</span>
                   </button>
@@ -4599,8 +4906,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap ${
                       sellerSubTab === 'overview'
-                        ? 'text-[#006A4E] font-bold bg-emerald-50 border-b-2 border-[#006A4E]'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                        ? 'text-white font-bold bg-[#00543D] border-b-2 border-white'
+                        : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/60'
                     }`}
                   >
                     <LayoutDashboard className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
@@ -4617,14 +4924,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 rounded-lg relative whitespace-nowrap ${
                       sellerSubTab === 'orders'
-                        ? 'text-[#006A4E] font-bold bg-emerald-50 border-b-2 border-[#006A4E]'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                        ? 'text-white font-bold bg-[#00543D] border-b-2 border-white'
+                        : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/60'
                     }`}
                   >
                     <ShoppingBag className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
                     <span>অর্ডারসমূহ</span>
                     {marketplaceOrders.length > 0 && (
-                      <span className="ml-0.5 px-1.5 py-0.2 bg-[#006A4E] text-white text-[9px] font-black rounded-full shadow-xs">
+                      <span className="ml-0.5 px-1.5 py-0.2 bg-rose-500 text-white text-[9px] font-black rounded-full shadow-xs">
                         {marketplaceOrders.length}
                       </span>
                     )}
@@ -4640,8 +4947,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap ${
                       sellerSubTab === 'gigs' && specialistMainTab === 'marketplace'
-                        ? 'text-[#006A4E] font-bold bg-emerald-50 border-b-2 border-[#006A4E]'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                        ? 'text-white font-bold bg-[#00543D] border-b-2 border-white'
+                        : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/60'
                     }`}
                   >
                     <Folder className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
@@ -4658,8 +4965,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap ${
                       specialistMainTab === 'payments'
-                        ? 'text-[#006A4E] font-bold bg-emerald-50 border-b-2 border-[#006A4E]'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                        ? 'text-white font-bold bg-[#00543D] border-b-2 border-white'
+                        : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/60'
                     }`}
                   >
                     <Wallet className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
@@ -4670,10 +4977,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   <button
                     type="button"
                     onClick={() => setIsPostProjectModalOpen(true)}
-                    className="px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap"
+                    className="px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold text-emerald-100 hover:text-white hover:bg-[#00543D]/60 transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap"
                     title="লাইভ বায়ার রিকোয়েস্ট ও কাস্টম প্রজেক্ট"
                   >
-                    <FileText className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-[#006A4E]" />
+                    <FileText className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-emerald-200" />
                     <span>বায়ার রিকোয়েস্ট</span>
                   </button>
 
@@ -4687,8 +4994,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     }}
                     className={`hidden 2xl:flex px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer items-center gap-1.5 rounded-lg whitespace-nowrap ${
                       specialistMainTab === 'mentor'
-                        ? 'text-[#006A4E] font-bold bg-emerald-50 border-b-2 border-[#006A4E]'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                        ? 'text-white font-bold bg-[#00543D] border-b-2 border-white'
+                        : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/60'
                     }`}
                   >
                     <GraduationCap className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
@@ -4708,10 +5015,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       setSelectedGig(null);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="text-xs lg:text-sm font-bold text-slate-700 hover:text-slate-900 hover:bg-slate-100 px-2.5 lg:px-3 py-1.5 rounded-lg border border-slate-200 transition cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap active:scale-95"
+                    className="text-xs lg:text-sm font-bold text-white bg-[#00543D] hover:bg-[#00412F] px-2.5 lg:px-3 py-1.5 rounded-lg border border-emerald-400/40 transition cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap active:scale-95 shadow-xs"
                     title="বায়ার ব্রাউজিং মোডে ফিরে যান"
                   >
-                    <ShoppingBag className="w-3.5 h-3.5 text-[#006A4E]" />
+                    <ShoppingBag className="w-3.5 h-3.5 text-emerald-200" />
                     <span>Switch to Buying</span>
                   </button>
 
@@ -4722,10 +5029,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       setSelectedGig(null);
                       setSellerSubTab('create_gig');
                     }}
-                    className="px-3 lg:px-3.5 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs lg:text-sm rounded-lg transition shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 shrink-0 whitespace-nowrap relative group"
+                    className="px-3 lg:px-3.5 py-1.5 bg-white hover:bg-emerald-50 text-[#006A4E] font-bold text-xs lg:text-sm rounded-lg transition shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 shrink-0 whitespace-nowrap relative group"
                     title="নতুন প্রফেশনাল গিগ তৈরি করুন"
                   >
-                    <Plus className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-white" />
+                    <Plus className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-[#006A4E]" />
                     <span>নতুন গিগ তৈরি</span>
                     <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48]" />
                   </button>
@@ -4742,8 +5049,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         }
                         openMessengerInbox();
                       }}
-                      className={`p-1.5 lg:p-2 rounded-lg relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer ${
-                        isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-[#006A4E] bg-emerald-50' : ''
+                      className={`p-1.5 lg:p-2 rounded-lg relative text-emerald-100 hover:text-white hover:bg-[#00543D] transition cursor-pointer ${
+                        isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-white bg-[#00543D]' : ''
                       }`}
                       title="ইনবক্স / ক্লায়েন্ট মেসেজ"
                     >
@@ -4765,8 +5072,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         }
                         openNotificationCenter();
                       }}
-                      className={`p-1.5 lg:p-2 rounded-lg relative text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer ${
-                        isNotificationCenterOpen ? 'text-[#006A4E] bg-emerald-50' : ''
+                      className={`p-1.5 lg:p-2 rounded-lg relative text-emerald-100 hover:text-white hover:bg-[#00543D] transition cursor-pointer ${
+                        isNotificationCenterOpen ? 'text-white bg-[#00543D]' : ''
                       }`}
                       title="অর্ডার ও সেলার নোটিফিকেশন"
                     >
@@ -4782,13 +5089,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <button
                       type="button"
                       onClick={toggleOfferSound}
-                      className="w-7 lg:w-8 h-7 lg:h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition active:scale-95 cursor-pointer relative"
+                      className="w-7 lg:w-8 h-7 lg:h-8 rounded-lg bg-[#00543D] hover:bg-[#00412F] text-white border border-emerald-400/30 flex items-center justify-center transition active:scale-95 cursor-pointer relative"
                       title={isOfferSoundEnabled ? "অর্ডার নোটিফিকেশন সাউন্ড চালু" : "অর্ডার নোটিফিকেশন সাউন্ড বন্ধ"}
                     >
                       {isOfferSoundEnabled ? (
-                        <Volume2 className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-[#006A4E]" />
+                        <Volume2 className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-emerald-200" />
                       ) : (
-                        <VolumeX className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-slate-400" />
+                        <VolumeX className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-emerald-300/60" />
                       )}
                     </button>
                   </div>
@@ -4797,21 +5104,21 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   {currentUser ? (
                     <div
                       onClick={() => setIsMobileMarketplaceMenuOpen(true)}
-                      className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition cursor-pointer border border-slate-200 shrink-0 select-none"
+                      className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-[#00543D] hover:bg-[#00412F] transition cursor-pointer border border-emerald-400/40 shrink-0 select-none text-white shadow-xs"
                       title={`সেলার প্রোফাইল: ${currentUser.name}`}
                     >
                       <div className="relative">
                         <img
                           src={currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
                           alt={currentUser.name}
-                          className="w-6 h-6 lg:w-7 lg:h-7 rounded-full object-cover border border-emerald-600"
+                          className="w-6 h-6 lg:w-7 lg:h-7 rounded-full object-cover border border-emerald-300"
                         />
-                        <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-[#006A4E] border border-white" />
+                        <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-white" />
                       </div>
-                      <span className="hidden xl:inline text-xs font-bold text-slate-700 max-w-[65px] truncate">
+                      <span className="hidden xl:inline text-xs font-bold text-white max-w-[65px] truncate">
                         {currentUser.name.split(' ')[0]}
                       </span>
-                      <ChevronDown className="w-3 h-3 text-slate-500" />
+                      <ChevronDown className="w-3 h-3 text-emerald-200" />
                     </div>
                   ) : null}
                 </div>
@@ -5087,15 +5394,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             setShowSavedOnly(false);
                             setIsMobileMarketplaceMenuOpen(false);
                           }}
-                          className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                          className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
                             activeSubTab === 'gigs' && !showSavedOnly
                               ? 'bg-[#006A4E] text-white font-black'
                               : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <Sparkles className="w-3.5 h-3.5 text-[#006A4E]" />
-                            <span>সকল সার্ভিস ও গিগস</span>
+                            <Store className="w-4 h-4 text-[#006A4E]" />
+                            <span>মার্কেটপ্লেস ফিড</span>
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                         </button>
@@ -5105,59 +5412,69 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           onClick={() => {
                             setViewMode('buying');
                             setActiveSubTab('my-orders');
+                            setOrderHubTab('orders');
                             setSelectedGig(null);
                             setIsMobileMarketplaceMenuOpen(false);
                           }}
-                          className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                          className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
                             activeSubTab === 'my-orders'
                               ? 'bg-[#006A4E] text-white font-black'
                               : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <ShoppingBag className="w-3.5 h-3.5 text-[#006A4E]" />
+                            <ShoppingBag className="w-4 h-4 text-[#006A4E]" />
                             <span>আমার অর্ডারসমূহ</span>
                           </span>
-                          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                          {allBuyerOrders.length > 0 && (
+                            <span className="px-1.5 py-0.5 rounded-full bg-rose-500 text-white text-[10px] font-bold">
+                              {allBuyerOrders.length}
+                            </span>
+                          )}
                         </button>
 
                         <button
                           type="button"
                           onClick={() => {
                             setViewMode('buying');
-                            setActiveSubTab('gigs');
-                            setShowSavedOnly(true);
+                            setActiveSubTab('saved_gigs');
                             setSelectedGig(null);
                             setIsMobileMarketplaceMenuOpen(false);
                           }}
-                          className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
-                            activeSubTab === 'gigs' && showSavedOnly
+                          className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                            activeSubTab === 'saved_gigs'
                               ? 'bg-[#006A4E] text-white font-black'
                               : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <Heart className="w-3.5 h-3.5 text-[#E11D48]" />
+                            <Heart className="w-4 h-4 text-[#E11D48]" />
                             <span>পছন্দের গিগসমূহ</span>
                           </span>
-                          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                          {savedGigIds.length > 0 && (
+                            <span className="px-1.5 py-0.5 rounded-full bg-[#E11D48] text-white text-[10px] font-bold">
+                              {savedGigIds.length}
+                            </span>
+                          )}
                         </button>
 
                         <button
                           type="button"
                           onClick={() => {
+                            setViewMode('buying');
+                            setActiveSubTab('ptenit-services');
+                            setSelectedGig(null);
                             setIsMobileMarketplaceMenuOpen(false);
-                            setActiveSubTab('messenger');
                           }}
-                          className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
-                            activeSubTab === 'messenger'
+                          className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                            activeSubTab === 'ptenit-services'
                               ? 'bg-[#006A4E] text-white font-black'
                               : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <MessageSquare className="w-3.5 h-3.5 text-[#006A4E]" />
-                            <span>মেসেঞ্জার ইনবক্স</span>
+                            <Briefcase className="w-4 h-4 text-[#006A4E]" />
+                            <span>PTENit এজেন্সি সার্ভিস</span>
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                         </button>
@@ -5166,17 +5483,44 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           type="button"
                           onClick={() => {
                             setViewMode('buying');
-                            setIsPostProjectModalOpen(true);
+                            setActiveSubTab('courses');
                             setSelectedGig(null);
                             setIsMobileMarketplaceMenuOpen(false);
                           }}
-                          className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100 transition-all flex items-center justify-between cursor-pointer"
+                          className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                            activeSubTab === 'courses'
+                              ? 'bg-[#006A4E] text-white font-black'
+                              : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
+                          }`}
                         >
                           <span className="flex items-center gap-2">
-                            <PlusCircle className="w-3.5 h-3.5 text-[#006A4E]" />
-                            <span>কাস্টম প্রজেক্ট পোস্ট</span>
+                            <GraduationCap className="w-4 h-4 text-[#006A4E]" />
+                            <span>একাডেমি কোর্সসমূহ</span>
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsMobileMarketplaceMenuOpen(false);
+                            openMessengerInbox();
+                          }}
+                          className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                            isMessengerInboxOpen || activeSubTab === 'messenger'
+                              ? 'bg-[#006A4E] text-white font-black'
+                              : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <Mail className="w-4 h-4 text-[#006A4E]" />
+                            <span>মেসেঞ্জার ও চ্যাট</span>
+                          </span>
+                          {unreadMarketplaceMsgCount > 0 && (
+                            <span className="px-1.5 py-0.5 rounded-full bg-[#E11D48] text-white text-[10px] font-bold">
+                              {unreadMarketplaceMsgCount}
+                            </span>
+                          )}
                         </button>
                       </>
                     )}
@@ -5219,6 +5563,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             setActiveTab={setActiveTab}
             openAuthModal={openAuthModal}
             viewerMode={viewMode === 'selling' ? 'seller' : 'buyer'}
+          />
+        )}
+
+        {/* DIGITAL PRODUCT DETAIL MODAL */}
+        {selectedDigitalProduct && (
+          <DigitalProductDetailModal
+            product={selectedDigitalProduct}
+            onClose={() => setSelectedDigitalProduct(null)}
           />
         )}
 
@@ -7657,12 +8009,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                       <button
                                         type="button"
                                         onClick={() => setViewingOrderDetails(ord)}
-                                        className="py-1.5 sm:py-2 px-2.5 bg-slate-700 hover:bg-slate-800 active:scale-95 text-white font-black text-[10px] sm:text-xs rounded-xl transition cursor-pointer flex items-center justify-center gap-1 shadow-xs whitespace-nowrap"
+                                        className="py-1.5 px-2.5 sm:py-2 sm:px-4 bg-[#006A4E] hover:bg-[#047857] active:scale-95 text-white font-bold text-xs sm:text-sm rounded-lg sm:rounded-xl transition cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 shadow-xs whitespace-nowrap"
                                         title="কাজের সম্পূর্ণ তথ্য ও ব্রিফ দেখুন"
                                       >
-                                        <Info className="w-3.5 h-3.5 text-white" />
+                                        <Info className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                                         <span>বিস্তারিত</span>
-                                        <ExternalLink className="w-2.5 h-2.5 text-white/80" />
+                                        <ExternalLink className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white/80" />
                                       </button>
                                     </div>
 
@@ -9028,10 +9380,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               {/* ========================================================================= */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start font-bengali">
                 
-                {/* 1. LEFT SIDEBAR (DESKTOP FACEBOOK SHORTCUTS & PROFILE) */}
-                <div className="hidden lg:block lg:col-span-3 sticky top-20 space-y-4">
-                  {/* Profile Card */}
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs">
+                {/* 1. LEFT SIDEBAR (UNIFIED SINGLE COLUMN - NO MULTIPLE BOXES, SIMPLE DIVIDER LINE) */}
+                <div className="hidden lg:block lg:col-span-3 sticky top-20">
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs font-bengali">
+                    {/* Profile Header */}
                     <div className="flex items-center gap-3">
                       <img
                         src={currentUser?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
@@ -9049,6 +9401,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       </div>
                     </div>
 
+                    {/* Stats Grid: Orders & Saved Gigs */}
                     <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-center">
                       <div 
                         onClick={() => {
@@ -9072,225 +9425,285 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         <span className="text-xs sm:text-[13px] text-slate-500 dark:text-slate-400 font-medium">সংরক্ষিত গিগ</span>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Facebook Shortcut Links */}
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-2.5 shadow-xs space-y-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setActiveSubTab('gigs');
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className={`w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[15px] font-semibold transition text-left cursor-pointer ${
-                        activeSubTab === 'gigs'
-                          ? 'bg-[#1877F2]/10 text-[#1877F2]'
-                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/70'
-                      }`}
-                    >
-                      <Home className="w-5 h-5 text-[#1877F2] shrink-0" />
-                      <span>মার্কেটপ্লেস ফিড</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setActiveSubTab('my-orders');
-                        setOrderHubTab('orders');
-                      }}
-                      className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[15px] font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/70 transition text-left cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3.5">
-                        <ShoppingBag className="w-5 h-5 text-blue-500 shrink-0" />
-                        <span>আমার অর্ডারসমূহ</span>
-                      </div>
-                      {allBuyerOrders.length > 0 && (
-                        <span className="px-2 py-0.5 rounded-full bg-blue-500 text-white text-xs font-bold">
-                          {allBuyerOrders.length}
+                    {/* জনপ্রিয় ক্যাটাগরি (উপরে রেখা / ডিভাইডার) */}
+                    <div className="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800">
+                      <div className="flex items-center justify-between mb-2.5">
+                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                          জনপ্রিয় ক্যাটাগরি
+                        </h4>
+                        <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                          {gigs.length} টি সার্ভিস
                         </span>
-                      )}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => openMessengerInbox()}
-                      className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[15px] font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/70 transition text-left cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3.5">
-                        <Mail className="w-5 h-5 text-blue-500 shrink-0" />
-                        <span>মেসেঞ্জার ও চ্যাট</span>
                       </div>
-                      {unreadMarketplaceMsgCount > 0 && (
-                        <span className="px-2 py-0.5 rounded-full bg-rose-500 text-white text-xs font-bold">
-                          {unreadMarketplaceMsgCount}
-                        </span>
-                      )}
-                    </button>
+                      
+                      <div className="space-y-0.5">
+                        {[
+                          { id: 'All', label: 'সব ক্যাটাগরি (All)' },
+                          { id: 'Web & App Development', label: 'Web & App Development' },
+                          { id: 'Graphics & Design', label: 'Graphics & Design' },
+                          { id: 'Digital Marketing', label: 'Digital Marketing' },
+                          { id: 'Video & Animation', label: 'Video & Animation' },
+                          { id: 'AI & Automation', label: 'AI & Automation' }
+                        ].map(cat => {
+                          const count = cat.id === 'All' 
+                            ? gigs.length 
+                            : gigs.filter(g => {
+                                const allowed = categoryAliases[cat.id] || [cat.id];
+                                return allowed.some(c => 
+                                  g.category.toLowerCase().includes(c.toLowerCase()) || 
+                                  c.toLowerCase().includes(g.category.toLowerCase())
+                                );
+                              }).length;
 
-                    <button
-                      type="button"
-                      onClick={() => setActiveSubTab('saved_gigs')}
-                      className="w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[15px] font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/70 transition text-left cursor-pointer"
-                    >
-                      <Heart className="w-5 h-5 text-rose-500 shrink-0" />
-                      <span>পছন্দের গিগসমূহ</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setActiveSubTab('ptenit-services')}
-                      className="w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[15px] font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/70 transition text-left cursor-pointer"
-                    >
-                      <Building2 className="w-5 h-5 text-purple-500 shrink-0" />
-                      <span>PTENit এজেন্সি সার্ভিস</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setActiveSubTab('courses')}
-                      className="w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[15px] font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/70 transition text-left cursor-pointer"
-                    >
-                      <GraduationCap className="w-5 h-5 text-indigo-500 shrink-0" />
-                      <span>একাডেমি কোর্সসমূহ</span>
-                    </button>
-
-                    <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800">
-                      <button
-                        type="button"
-                        onClick={() => setIsPostProjectModalOpen(true)}
-                        className="w-full flex items-center justify-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-[#1877F2] hover:bg-blue-600 text-white text-[14px] font-bold transition shadow-xs cursor-pointer"
-                      >
-                        <Plus className="w-4.5 h-4.5" />
-                        <span>কাস্টম প্রজেক্ট পোস্ট করুন</span>
-                      </button>
+                          return (
+                            <button
+                              key={cat.id}
+                              type="button"
+                              onClick={() => setSelectedCategory(cat.id)}
+                              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-[13.5px] font-medium transition cursor-pointer text-left ${
+                                selectedCategory === cat.id
+                                  ? 'bg-[#006A4E]/10 text-[#006A4E] dark:text-emerald-400 font-bold'
+                                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                              }`}
+                            >
+                              <span className="truncate">{cat.label}</span>
+                              <div className="flex items-center gap-1.5 shrink-0 ml-1">
+                                <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold ${
+                                  selectedCategory === cat.id
+                                    ? 'bg-[#006A4E] text-white dark:bg-emerald-500'
+                                    : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                                }`}>
+                                  {count}
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Popular Categories Filter */}
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs">
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">
-                      জনপ্রিয় ক্যাটাগরি
-                    </h4>
-                    <div className="space-y-1">
-                      {['All', 'Web & App Development', 'Graphics & Design', 'Digital Marketing', 'Video & Animation', 'AI & Automation'].map(cat => (
-                        <button
-                          key={cat}
-                          type="button"
-                          onClick={() => setSelectedCategory(cat)}
-                          className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-[14px] sm:text-[15px] font-medium transition cursor-pointer text-left ${
-                            selectedCategory === cat
-                              ? 'bg-[#1877F2]/10 text-[#1877F2] font-bold'
-                              : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-                          }`}
+                    {/* নিখুঁত ফিল্টার ব্যবস্থা (রেখা / ডিভাইডার সহ) */}
+                    <div className="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3.5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <Filter className="w-3.5 h-3.5 text-[#006A4E] dark:text-emerald-400" />
+                          <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                            নিখুঁত ফিল্টার
+                          </h4>
+                        </div>
+                        {(selectedCategory !== 'All' || priceRangeFilter !== 'all' || deliveryFilter !== 'any' || ratingFilter > 0 || sortBy !== 'popular') && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedCategory('All');
+                              setPriceRangeFilter('all');
+                              setDeliveryFilter('any');
+                              setRatingFilter(0);
+                              setSortBy('popular');
+                            }}
+                            className="text-[11px] font-bold text-rose-500 hover:text-rose-600 dark:text-rose-400 hover:underline cursor-pointer"
+                          >
+                            রিসেট করুন
+                          </button>
+                        )}
+                      </div>
+
+                      {/* বাজেট ফিল্টার */}
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
+                          বাজেট রেঞ্জ (মূল্য)
+                        </label>
+                        <select
+                          value={priceRangeFilter}
+                          onChange={(e) => setPriceRangeFilter(e.target.value as any)}
+                          className="w-full text-xs font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-[#006A4E] cursor-pointer"
                         >
-                          <span className="truncate">{cat === 'All' ? 'সব ক্যাটাগরি' : cat}</span>
-                          {selectedCategory === cat && (
-                            <span className="w-2 h-2 rounded-full bg-[#1877F2]" />
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                          <option value="all">যেকোনো বাজেট (সকল)</option>
+                          <option value="under3k">৳৩,০০০ এর নিচে</option>
+                          <option value="3k-10k">৳৩,০০০ - ৳১০,০০০</option>
+                          <option value="10k-30k">৳১০,০০০ - ৳৩০,০০০</option>
+                          <option value="over30k">৳৩০,০০০ এর বেশি</option>
+                        </select>
+                      </div>
 
-                  {/* Trust Badge */}
-                  <div className="p-4 bg-gradient-to-br from-blue-500/10 to-blue-500/10 border border-blue-500/20 rounded-2xl">
-                    <div className="flex items-center gap-2 text-[#006A4E] dark:text-sky-400 font-bold text-sm">
-                      <ShieldCheck className="w-5 h-5 shrink-0" />
-                      <span>১০০% নিরাপদ এসক্রো গ্যারান্টি</span>
+                      {/* ডেলিভারি সময় ফিল্টার */}
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
+                          ডেলিভারি সময়
+                        </label>
+                        <div className="grid grid-cols-2 gap-1.5">
+                          {[
+                            { id: 'any', label: 'যেকোনো সময়' },
+                            { id: '1day', label: '⚡ ২৪ ঘন্টা' },
+                            { id: '3days', label: '৩ দিন পর্যন্ত' },
+                            { id: '7days', label: '৭ দিন পর্যন্ত' }
+                          ].map(item => (
+                            <button
+                              key={item.id}
+                              type="button"
+                              onClick={() => setDeliveryFilter(item.id as any)}
+                              className={`py-1.5 px-2 rounded-lg text-[11px] font-bold transition text-center cursor-pointer border ${
+                                deliveryFilter === item.id
+                                  ? 'bg-[#006A4E] text-white border-[#006A4E]'
+                                  : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                              }`}
+                            >
+                              {item.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* রেটিং ফিল্টার */}
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
+                          ন্যূনতম রেটিং
+                        </label>
+                        <div className="flex items-center gap-1.5">
+                          {[
+                            { val: 0, label: 'সব' },
+                            { val: 4.0, label: '৪.০+ ⭐' },
+                            { val: 4.5, label: '৪.৫+ ⭐' },
+                            { val: 4.8, label: '৪.৮+ ⭐' }
+                          ].map(rate => (
+                            <button
+                              key={rate.val}
+                              type="button"
+                              onClick={() => setRatingFilter(rate.val)}
+                              className={`flex-1 py-1 px-1.5 rounded-lg text-[11px] font-bold transition text-center cursor-pointer border ${
+                                ratingFilter === rate.val
+                                  ? 'bg-[#006A4E] text-white border-[#006A4E]'
+                                  : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                              }`}
+                            >
+                              {rate.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* সর্টিং / সাজানো */}
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
+                          সার্ভিস সাজান (Sort By)
+                        </label>
+                        <select
+                          value={sortBy}
+                          onChange={(e) => setSortBy(e.target.value as any)}
+                          className="w-full text-xs font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-[#006A4E] cursor-pointer"
+                        >
+                          <option value="popular">সবচেয়ে জনপ্রিয় (Trending)</option>
+                          <option value="price-asc">দাম: কম থেকে বেশি ৳</option>
+                          <option value="price-desc">দাম: বেশি থেকে কম ৳</option>
+                          <option value="rating">সেরা রেটিং (Top Rated ⭐)</option>
+                        </select>
+                      </div>
+
+                      {/* ফিল্টার ফলাফল কাউন্টার */}
+                      <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-center">
+                        <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                          পাওয়া গেছে: <strong className="text-[#006A4E] dark:text-emerald-400 font-extrabold">{filteredGigs.length}</strong> টি গিগ
+                        </span>
+                      </div>
                     </div>
-                    <p className="text-[13px] text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">
-                      কাজ পছন্দ না হওয়া পর্যন্ত পেমেন্ট সম্পূর্ণরূপে সুরক্ষিত।
-                    </p>
+
+                    {/* এসক্রো ট্রাস্ট গ্যারান্টি (রেখা / ডিভাইডার সহ) */}
+                    <div className="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800">
+                      <div className="flex items-center gap-2 text-[#006A4E] dark:text-emerald-400 font-bold text-xs sm:text-sm">
+                        <ShieldCheck className="w-4.5 h-4.5 shrink-0" />
+                        <span>১০০% নিরাপদ এসক্রো গ্যারান্টি</span>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                        কাজ পছন্দ না হওয়া পর্যন্ত আপনার পেমেন্ট সম্পূর্ণরূপে সুরক্ষিত।
+                      </p>
+                    </div>
                   </div>
                 </div>
 
                 {/* 2. CENTER FEED (FACEBOOK POST STREAM ON BOTH PC & PHONE) */}
                 <div className="w-full lg:col-span-6 space-y-4 sm:space-y-5 min-w-0">
-                  {/* FACEBOOK "WHAT'S ON YOUR MIND" POST CREATION CARD - HIDDEN ON PHONE VIEW */}
-                  <div className="hidden md:block bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={currentUser?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
-                        alt={currentUser?.name || 'User'}
-                        className="w-11 h-11 rounded-full object-cover border border-slate-300 dark:border-slate-700 shrink-0"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setIsPostProjectModalOpen(true)}
-                        className="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700/80 rounded-full px-4 py-2.5 text-left text-sm sm:text-[15px] text-slate-500 dark:text-slate-400 transition cursor-pointer truncate font-bengali"
-                      >
-                        কোন কাজটি করাতে চান? এখানে আপনার প্রজেক্টের রিকোয়ারমেন্ট লিখুন...
-                      </button>
+                  {/* WELCOME BACK HERO + ACTION CARDS (EXACTLY LIKE PHONE VIEW - REPLACING OLD PROMPT) */}
+                  <div className="hidden md:block bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs space-y-3 font-bengali">
+                    <div className="flex items-center justify-between gap-2 w-full py-0.5 flex-nowrap">
+                      <h1 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 min-w-0 truncate whitespace-nowrap">
+                        <span className="shrink-0 text-slate-700 dark:text-slate-300">Welcome back,</span>
+                        <span className="text-[#006A4E] dark:text-emerald-400 font-extrabold truncate">
+                          {(currentUser?.name || activeAccount.name || 'Mds Kazi Sohag')
+                            .replace(/\s*\((?:ফ্রিলা্যান্সার\s*)?সেলার\)/gi, '')
+                            .replace(/\s*\((?:গ্রাহক\s*)?বায়ার\)/gi, '')
+                            .replace(/\s*\(Student\s*\/\s*Buyer\)/gi, '')
+                            .trim()}
+                        </span>
+                        <span className="text-blue-700 dark:text-sky-400 font-bold text-xs sm:text-sm shrink-0">
+                          (বায়ার)
+                        </span>
+                      </h1>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                      <button
-                        type="button"
+                    {/* TWO RECOMMENDED ACTION CARDS (POST PROJECT BRIEF + SELLER MODE) */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {/* CARD 1: POST A PROJECT BRIEF */}
+                      <div 
                         onClick={() => setIsPostProjectModalOpen(true)}
-                        className="flex items-center justify-center gap-2 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-700 dark:text-slate-300 text-xs sm:text-[14px] font-semibold cursor-pointer"
+                        className="p-3.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-between gap-2.5 shadow-2xs hover:border-[#006A4E]/50 dark:hover:border-emerald-500/50 transition cursor-pointer group"
                       >
-                        <FileText className="w-4.5 h-4.5 text-blue-500" />
-                        <span className="truncate">কাস্টম প্রজেক্ট</span>
-                      </button>
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="w-9 h-9 rounded-lg bg-[#006A4E]/15 dark:bg-[#006A4E]/25 text-[#006A4E] dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                            <FileText className="w-5 h-5" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="text-sm font-bold text-slate-900 dark:text-white leading-tight truncate">পোস্ট প্রজেক্ট</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate mt-0.5">কাস্টম অফার পান</p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsPostProjectModalOpen(true);
+                          }}
+                          className="px-3.5 py-1.5 bg-[#006A4E] hover:bg-[#00523d] active:bg-[#004432] text-white text-xs font-bold rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-xs active:scale-95 border border-[#006A4E]"
+                        >
+                          Get started
+                        </button>
+                      </div>
 
-                      <button
-                        type="button"
-                        onClick={() => setIsPostProjectModalOpen(true)}
-                        className="flex items-center justify-center gap-2 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-700 dark:text-slate-300 text-xs sm:text-[14px] font-semibold cursor-pointer"
-                      >
-                        <Zap className="w-4.5 h-4.5 text-amber-500" />
-                        <span className="truncate">লাইভ অফার</span>
-                      </button>
-
-                      <button
-                        type="button"
+                      {/* CARD 2: SELLER MODE (SWITCH TO SELLER) */}
+                      <div 
                         onClick={() => {
                           setViewMode('selling');
                           setSpecialistMainTab('marketplace');
                           setSellerSubTab('gigs');
+                          setSelectedGig(null);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        className="flex items-center justify-center gap-2 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-700 dark:text-slate-300 text-xs sm:text-[14px] font-semibold cursor-pointer"
+                        className="p-3.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-between gap-2.5 shadow-2xs hover:border-amber-400 dark:hover:border-amber-400 transition cursor-pointer group"
                       >
-                        <Sparkles className="w-4.5 h-4.5 text-purple-500" />
-                        <span className="truncate">সেলার হাব</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* FEED CONTROL BAR: TOGGLE BETWEEN FEED AND GRID - HIDDEN ON PHONE VIEW */}
-                  <div className="hidden md:flex items-center justify-between px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-7 h-7 rounded-full bg-[#1877F2]/15 text-[#1877F2] flex items-center justify-center">
-                        <Globe className="w-4 h-4" />
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="w-9 h-9 rounded-lg bg-amber-500/15 dark:bg-amber-500/25 text-amber-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                            <Zap className="w-5 h-5 text-amber-500 fill-amber-500" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 leading-tight truncate">সেলার মোড</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate mt-0.5">সার্ভিস সেল ও আয় করুন</p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setViewMode('selling');
+                            setSpecialistMainTab('marketplace');
+                            setSellerSubTab('gigs');
+                            setSelectedGig(null);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                          className="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 active:from-amber-700 active:to-amber-800 text-white text-xs font-bold rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-xs active:scale-95"
+                        >
+                          সুইচ করুন
+                        </button>
                       </div>
-                      <span className="text-sm sm:text-base font-bold text-slate-900 dark:text-white truncate">
-                        মার্কেটপ্লেস পোস্ট ফিড ({filteredGigs.length})
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-200/80 dark:border-slate-700">
-                      <button
-                        type="button"
-                        onClick={() => setMobileGigLayout('feed')}
-                        className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-[13.5px] font-semibold transition flex items-center gap-1.5 cursor-pointer ${
-                          mobileGigLayout === 'feed'
-                            ? 'bg-[#1877F2] text-white shadow-xs font-bold'
-                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                        }`}
-                      >
-                        <span>📱 ফেসবুক ফিড</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setMobileGigLayout('grid')}
-                        className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-[13.5px] font-semibold transition flex items-center gap-1.5 cursor-pointer ${
-                          mobileGigLayout === 'grid'
-                            ? 'bg-[#1877F2] text-white shadow-xs font-bold'
-                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                        }`}
-                      >
-                        <span>🔲 ২-কলাম</span>
-                      </button>
                     </div>
                   </div>
 
@@ -9329,139 +9742,200 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     </div>
                   )}
 
-                  {/* HIGHLIGHTED VERIFIED PRO SERVICES */}
-                  <div className="p-3.5 sm:p-5 bg-slate-900 text-white rounded-2xl sm:rounded-3xl space-y-3 border border-slate-800 shadow-xl font-bengali">
-                    <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
-                      <div className="space-y-0.5">
-                        <h3 className="text-sm sm:text-base font-black flex items-center gap-1.5">
-                          <span>ভেরিফায়েড প্রো সার্ভিস</span>
-                          <span className="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-bold">⭐ Verified Pro</span>
-                        </h3>
-                        <p className="text-[11px] text-slate-300 font-medium">সেরা ভেরিফায়েড ডেভেলপার ও ডিজাইনার টিম।</p>
+                  {/* HIGHLIGHTED VERIFIED PRO SERVICES (CLEAN IN-FEED HIGHLIGHT WITH DIVIDERS) */}
+                  {filteredGigs.length > 3 && (
+                    <div className="p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3 font-bengali">
+                      <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                        <div className="space-y-0.5">
+                          <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+                            <span>ভেরিফায়েড প্রো সার্ভিস</span>
+                            <span className="text-[10px] bg-amber-500/15 text-amber-600 dark:text-amber-400 px-1.5 py-0.5 rounded font-bold">⭐ Verified Pro</span>
+                          </h3>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">সেরা ভেরিফায়েড ডেভেলপার ও ডিজাইনার টিম।</p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setActiveSubTab('gigs');
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                          className="text-xs font-bold text-[#006A4E] dark:text-emerald-400 hover:text-[#047857] dark:hover:text-emerald-300 hover:underline cursor-pointer shrink-0"
+                        >
+                          সবগুলো →
+                        </button>
                       </div>
-                      <button
-                        onClick={() => setActiveSubTab('gigs')}
-                        className="text-[11px] sm:text-xs font-bold text-[#38BDF8] hover:underline cursor-pointer shrink-0"
-                      >
-                        সবগুলো →
-                      </button>
-                    </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {filteredGigs.slice(0, 2).map(gig => (
-                        <GigCard
-                          key={gig.id}
-                          gig={gig}
-                          onClick={() => openMarketplaceGigDetail(gig, 'premium')}
-                          currentUser={currentUser}
-                          savedGigIds={savedGigIds}
-                          toggleFavorite={toggleFavorite}
-                          deleteGig={deleteGig}
-                          badgeTag="PTENit Pro ⭐"
-                          layoutMode={mobileGigLayout}
-                          openAuthModal={openAuthModal}
-                        />
-                      ))}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {filteredGigs.slice(0, 2).map(gig => (
+                          <GigCard
+                            key={gig.id}
+                            gig={gig}
+                            onClick={() => openMarketplaceGigDetail(gig, 'premium')}
+                            currentUser={currentUser}
+                            savedGigIds={savedGigIds}
+                            toggleFavorite={toggleFavorite}
+                            deleteGig={deleteGig}
+                            badgeTag="PTENit Pro ⭐"
+                            layoutMode={mobileGigLayout}
+                            openAuthModal={openAuthModal}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
-                {/* 3. RIGHT SIDEBAR (ONLINE SPECIALISTS, LIVE BRIEFS & TRUST) */}
-                <div className="hidden lg:block lg:col-span-3 sticky top-20 space-y-4">
-                  {/* Active Live Requests Ticker */}
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="relative flex h-2.5 w-2.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
-                        </span>
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                          লাইভ বায়ার রিকুয়েস্ট
-                        </h4>
+                {/* 3. RIGHT SIDEBAR / MOBILE BOTTOM SECTION (RESPONSIVE: VISIBLE ON BOTH PC & PHONE) */}
+                <div className="w-full lg:col-span-3 lg:sticky lg:top-20">
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-xs font-bengali">
+                    
+                    {/* SECTION 1: ONGOING SERVICE ORDERS (অনলাইন বিশেষজ্ঞ ফ্রিল্যান্সার এর মতো সেইম স্লিম ফরম্যাট) */}
+                    <div>
+                      {(() => {
+                        // শুধুমাত্র আসল চলমান (in_progress) অর্ডার ফিল্টার করা হচ্ছে
+                        const ongoingOrders = (allBuyerOrders || []).filter(o => o.status === 'in_progress');
+                        const totalCount = ongoingOrders.length;
+                        const displayList = ongoingOrders.slice(0, 4);
+
+                        const handleOpenSpecificOrder = (item: any) => {
+                          setActiveSubTab('my-orders');
+                          setOrderHubTab('orders');
+                          setBuyerOrderStatusFilter('in_progress');
+
+                          // নির্দিষ্ট উক্ত অর্ডারটি ফিল্টার করতে সার্চে এর আইডি সেট করা
+                          setOrderSearchQuery(item.id);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                          setTimeout(() => {
+                            const el = document.getElementById(`buyer-order-${item.id}`);
+                            if (el) {
+                              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                              el.classList.add('ring-2', 'ring-[#006A4E]', 'dark:ring-emerald-400');
+                              setTimeout(() => {
+                                el.classList.remove('ring-2', 'ring-[#006A4E]', 'dark:ring-emerald-400');
+                              }, 3500);
+                            }
+                          }, 250);
+                        };
+
+                        return (
+                          <>
+                            {/* হেডার: বর্ডার ছাড়া ইংরেজিতে সংখ্যা সহ যেমন '1টি' */}
+                            <div className="flex items-center justify-between mb-3">
+                              <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                                চলমান সার্ভিস অর্ডার
+                              </h4>
+                              <span className="text-xs font-bold text-[#006A4E] dark:text-emerald-400 font-mono">
+                                {totalCount}টি
+                              </span>
+                            </div>
+
+                            {/* চলমান অর্ডারের তালিকা */}
+                            {displayList.length === 0 ? (
+                              <div className="p-3 text-center rounded-xl bg-slate-50 dark:bg-slate-800/40 text-xs text-slate-500 dark:text-slate-400">
+                                বর্তমানে কোনো চলমান সার্ভিস অর্ডার নেই
+                              </div>
+                            ) : (
+                              <div className="space-y-3">
+                                {displayList.map((item: any, idx: number) => {
+                                  const title = item.title || item.gigTitle || item.projectTitle || 'কাস্টম সার্ভিস অর্ডার';
+                                  const budget = item.amount || item.price || item.totalPrice || item.budget || 5000;
+                                  const formattedBudget = typeof budget === 'number' ? `৳${budget.toLocaleString('bn-BD')}` : budget;
+                                  const seller = item.sellerName || item.seller || 'ভেরিফায়েড এক্সপার্ট';
+                                  const avatar = item.sellerAvatar || item.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
+                                  
+                                  let timeLeft = item.timeLeft;
+                                  if (!timeLeft) {
+                                    if (item.deadlineDate) {
+                                      const diff = new Date(item.deadlineDate).getTime() - Date.now();
+                                      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+                                      timeLeft = days > 0 ? `${days} দিন বাকি` : days === 0 ? 'আজই শেষ দিন' : 'সময়োত্তীর্ণ';
+                                    } else {
+                                      timeLeft = '২ দিন বাকি';
+                                    }
+                                  }
+
+                                  return (
+                                    <div 
+                                      key={item.id || idx} 
+                                      onClick={() => handleOpenSpecificOrder(item)}
+                                      className="flex items-center justify-between gap-2 p-1.5 -mx-1.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition cursor-pointer group"
+                                    >
+                                      <div className="flex items-center gap-2.5 min-w-0">
+                                        <div className="relative shrink-0">
+                                          <img
+                                            src={avatar}
+                                            alt={seller}
+                                            className="w-9 h-9 rounded-full object-cover border border-slate-200 dark:border-slate-700"
+                                          />
+                                          <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-1 ring-white dark:ring-slate-900" />
+                                        </div>
+                                        <div className="min-w-0">
+                                          <p className="text-[13px] font-bold text-slate-900 dark:text-white truncate group-hover:text-[#006A4E] dark:group-hover:text-emerald-400 transition-colors" title={title}>
+                                            {title}
+                                          </p>
+                                          <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                                            <span className="text-emerald-600 dark:text-emerald-400 font-bold">⏳ {timeLeft}</span> • {formattedBudget}
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleOpenSpecificOrder(item);
+                                        }}
+                                        className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-[#006A4E] hover:text-white text-slate-700 dark:text-slate-300 text-xs font-bold transition shrink-0 cursor-pointer shadow-2xs"
+                                      >
+                                        বিস্তারিত
+                                      </button>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+
+                            {/* ৪টির বেশি হলে নিচে 'সবগুলো দেখুন' শো করবে */}
+                            {totalCount > 4 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setActiveSubTab('my-orders');
+                                  setOrderHubTab('orders');
+                                  setBuyerOrderStatusFilter('in_progress');
+                                  setOrderSearchQuery('');
+                                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }}
+                                className="w-full mt-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-[#006A4E] hover:text-white text-slate-700 dark:text-slate-300 text-xs font-bold transition cursor-pointer text-center flex items-center justify-center gap-1.5 shadow-2xs"
+                              >
+                                <span>সবগুলো দেখুন ({totalCount}টি) →</span>
+                              </button>
+                            )}
+                          </>
+                        );
+                      })()}
+                    </div>
+
+                    {/* SECTION 2: PTEN FEATURED DIGITAL PRODUCTS & COURSES (REPLACED অনলাইন বিশেষজ্ঞ ফ্রিল্যান্সার) */}
+                    <div className="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800">
+                      <PtenFeaturedShowcase
+                        digitalProducts={digitalProducts}
+                        courses={courses}
+                        setActiveTab={setActiveTab}
+                        setActiveSubTab={setActiveSubTab}
+                      />
+                    </div>
+
+                    {/* SECTION 3: PTENIT SAFETY ESCROW GUARANTEE (WITH DIVIDER LINE) */}
+                    <div className="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800">
+                      <div className="flex items-center gap-2 text-[#006A4E] dark:text-emerald-400 font-bold text-xs sm:text-sm">
+                        <ShieldCheck className="w-4.5 h-4.5 shrink-0" />
+                        <span>PTENit সেফটি গ্যারান্টি</span>
                       </div>
-                      <span className="text-xs text-[#006A4E] dark:text-sky-400 font-bold bg-blue-500/15 px-2.5 py-0.5 rounded-full">
-                        সক্রিয়
-                      </span>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                        সব পেমেন্ট PTENit এসক্রোতে সুরক্ষিত। কাজ সন্তোষজনকভাবে সম্পন্ন হওয়ার পরেই সেলার পেমেন্ট পান।
+                      </p>
                     </div>
 
-                    <div className="space-y-3">
-                      {[
-                        { title: 'ই-কমার্স ওয়েবসাইট ডেভেলপমেন্ট', budget: '৳১৫,০০০', time: '২ ঘন্টা আগে', bids: 6 },
-                        { title: 'মডার্ন সোশ্যাল মিডিয়া ব্যানার প্যাক', budget: '৳৩,৫০০', time: '৪৫ মিনিট আগে', bids: 9 },
-                        { title: 'ইউটিউব ভিডিও এডিটিং ও কালার গ্রেড', budget: '৳৮,০০০', time: '১০ মিনিট আগে', bids: 4 }
-                      ].map((item, idx) => (
-                        <div key={idx} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 space-y-2">
-                          <p className="text-[14px] sm:text-[15px] font-bold text-slate-900 dark:text-white leading-snug">{item.title}</p>
-                          <div className="flex items-center justify-between text-[13px] text-slate-500 dark:text-slate-400">
-                            <span className="text-[#1877F2] font-black text-sm sm:text-[15px]">{item.budget}</span>
-                            <span>{item.time}</span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setIsPostProjectModalOpen(true)}
-                            className="w-full mt-1.5 py-1.5 rounded-lg bg-slate-200/80 dark:bg-slate-700/80 hover:bg-[#1877F2] hover:text-white text-slate-700 dark:text-slate-200 text-xs sm:text-[13px] font-bold transition cursor-pointer text-center"
-                          >
-                            অফার দিন / বিড করুন ({item.bids})
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Online Verified Specialists */}
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs space-y-3.5">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                        অনলাইন বিশেষজ্ঞ ফ্রিল্যান্সার
-                      </h4>
-                      <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-                    </div>
-
-                    <div className="space-y-3.5">
-                      {filteredGigs.slice(0, 4).map(gig => (
-                        <div key={gig.id} className="flex items-center justify-between gap-2.5">
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className="relative shrink-0">
-                              <img
-                                src={gig.sellerAvatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
-                                alt={gig.sellerName}
-                                className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700"
-                              />
-                              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-blue-500 ring-1 ring-white dark:ring-slate-900" />
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-[14px] sm:text-[15px] font-bold text-slate-900 dark:text-white truncate">{gig.sellerName}</p>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">⭐ {gig.rating?.toFixed(1) || '5.0'} • {gig.category || 'Specialist'}</p>
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (!currentUser && openAuthModal) {
-                                openAuthModal();
-                                return;
-                              }
-                              openMarketplaceGigDetail(gig, 'standard');
-                            }}
-                            className="px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 hover:bg-[#1877F2] text-[#1877F2] hover:text-white text-xs sm:text-[13px] font-bold transition shrink-0 cursor-pointer"
-                          >
-                            মেসেজ
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Safe Payment Escrow Notice */}
-                  <div className="bg-slate-900 text-white rounded-2xl p-4 space-y-2 border border-slate-800">
-                    <div className="flex items-center gap-2 text-[#1877F2] font-bold text-sm">
-                      <ShieldCheck className="w-5 h-5 shrink-0" />
-                      <span>PTENit সেফটি গ্যারান্টি</span>
-                    </div>
-                    <p className="text-[13px] text-slate-300 leading-relaxed">
-                      সব পেমেন্ট PTENit এসক্রোতে লক থাকে। কাজ সন্তোষজনক ভাবে সম্পন্ন ও রিভিশন কনফার্ম করার পরেই সেলার পেমেন্ট পান।
-                    </p>
                   </div>
                 </div>
 
@@ -9469,57 +9943,1024 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             </div>
           )}
 
-          {/* PTENIT AGENCY SERVICES TAB */}
+          {/* PTENIT AGENCY SERVICES TAB (3-COLUMN RESPONSIVE LAYOUT) */}
           {activeSubTab === 'ptenit-services' && (
             <div className="space-y-4 animate-fadeIn font-bengali">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-xl font-black text-slate-900 dark:text-white">
-                    🏢 PTENit কোড অফিশিয়াল আইটি সার্ভিসেস
-                  </h2>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">প্রতিষ্ঠান পরিচালিত শতভাগ বিশ্বস্ত ও উচ্চমানের ওয়েবসাইট, সফটওয়্যার ও মার্কেটিং সলিউশন।</p>
+              {/* মোবাইল ভিউয়ের জন্য কুইক ক্যাটাগরি ও ওভারভিউ সুইচ বার */}
+              <div className="lg:hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 shadow-2xs">
+                <div className="flex items-center gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800 mb-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-[#006A4E]/15 text-[#006A4E] dark:text-emerald-400 flex items-center justify-center shrink-0">
+                    <Briefcase className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm font-black text-slate-900 dark:text-white">ওভারভিউ</h3>
+                    <p className="text-[10.5px] text-slate-500 dark:text-slate-400 truncate">PTENit অফিসিয়াল এজেন্সি ও রিসোর্স হাব</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setAgencyOverviewTab('all')}
+                    className={`py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between cursor-pointer ${
+                      agencyOverviewTab === 'all'
+                        ? 'bg-[#006A4E] text-white shadow-xs'
+                        : 'bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-200'
+                    }`}
+                  >
+                    <span>সব কিছু</span>
+                    <span className={`px-1.5 py-0.5 rounded-full text-[9.5px] font-black ${agencyOverviewTab === 'all' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}>
+                      {services.length + digitalProducts.length + courses.length}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAgencyOverviewTab('products')}
+                    className={`py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between cursor-pointer ${
+                      agencyOverviewTab === 'products'
+                        ? 'bg-[#006A4E] text-white shadow-xs'
+                        : 'bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-200'
+                    }`}
+                  >
+                    <span>ডিজিটাল প্রোডাক্টস</span>
+                    <span className={`px-1.5 py-0.5 rounded-full text-[9.5px] font-black ${agencyOverviewTab === 'products' ? 'bg-white/20 text-white' : 'bg-amber-500/15 text-amber-700 dark:text-amber-300'}`}>
+                      {digitalProducts.length}টি
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAgencyOverviewTab('courses')}
+                    className={`py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between cursor-pointer ${
+                      agencyOverviewTab === 'courses'
+                        ? 'bg-[#006A4E] text-white shadow-xs'
+                        : 'bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-200'
+                    }`}
+                  >
+                    <span>প্রফেশনাল কোর্স</span>
+                    <span className={`px-1.5 py-0.5 rounded-full text-[9.5px] font-black ${agencyOverviewTab === 'courses' ? 'bg-white/20 text-white' : 'bg-blue-500/15 text-blue-700 dark:text-blue-300'}`}>
+                      {courses.length}টি
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAgencyOverviewTab('packages')}
+                    className={`py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between cursor-pointer ${
+                      agencyOverviewTab === 'packages'
+                        ? 'bg-[#006A4E] text-white shadow-xs'
+                        : 'bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-200'
+                    }`}
+                  >
+                    <span>এজেন্সি প্যাকেজসমূহ</span>
+                    <span className={`px-1.5 py-0.5 rounded-full text-[9.5px] font-black ${agencyOverviewTab === 'packages' ? 'bg-white/20 text-white' : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'}`}>
+                      {services.length}টি
+                    </span>
+                  </button>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {services.map(serv => (
-                  <div
-                    key={serv.id}
-                    onClick={() => {
-                      setSelectedService(serv);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 hover:border-blue-600/50 transition shadow-sm hover:shadow-md cursor-pointer flex flex-col justify-between space-y-4 group"
-                  >
-                    <div className="space-y-3">
-                      <div className="relative h-40 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-950">
-                        <img src={serv.thumbnail} alt={serv.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                        <span className="absolute top-3 right-3 px-2.5 py-1 bg-[#006A4E] text-white text-[10px] font-black rounded-full shadow">
-                          অফিশিয়াল সেবা
-                        </span>
+              {/* ৩টি কলাম সম্বলিত রেসপনসিভ গ্রিড লেআউট */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                
+                {/* ১ম কলাম: ওভারভিউ (সব কিছু, ডিজিটাল প্রোডাক্টস, প্রফেশনাল কোর্স, এজেন্সি প্যাকেজসমূহ) */}
+                <div className="hidden lg:block lg:col-span-3 xl:col-span-2 sticky top-20 space-y-4">
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 shadow-xs">
+                    {/* হেডার */}
+                    <div className="flex items-center gap-3 pb-3.5 border-b border-slate-100 dark:border-slate-800">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#006A4E] to-emerald-600 text-white flex items-center justify-center shadow-xs shrink-0">
+                        <Briefcase className="w-5 h-5" />
                       </div>
-                      <h3 className="text-base font-black text-slate-900 dark:text-white group-hover:text-sky-400 transition">
-                        {serv.title}
-                      </h3>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
-                        {serv.shortDescription}
-                      </p>
-                      <div className="space-y-1">
-                        {(serv.features || []).slice(0, 3).map((feat, fIdx) => (
-                          <div key={fIdx} className="flex items-center gap-1.5 text-[11px] text-slate-700 dark:text-slate-300">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-[#38BDF8] shrink-0" />
-                            <span>{feat}</span>
-                          </div>
-                        ))}
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-base font-black text-slate-900 dark:text-white tracking-tight">
+                          ওভারভিউ
+                        </h3>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                          PTENit অফিসিয়াল এজেন্সি হাব
+                        </p>
                       </div>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-500">শুরু মাত্র:</span>
-                      <span className="text-sm font-black text-[#38BDF8]">{serv.priceText}</span>
+                    {/* মেনু লিস্ট: (সব কিছূ, ডিজিটাল প্রোডাক্টস, প্রফেশনাল কোর্স, এজেন্সি প্যাকেজসমূহ) */}
+                    <div className="space-y-1.5 mt-3.5">
+                      {/* ১. সব কিছূ */}
+                      <button
+                        type="button"
+                        onClick={() => setAgencyOverviewTab('all')}
+                        className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition cursor-pointer active:scale-98 ${
+                          agencyOverviewTab === 'all'
+                            ? 'bg-[#006A4E] text-white shadow-xs'
+                            : 'bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Layers className={`w-4 h-4 ${agencyOverviewTab === 'all' ? 'text-white' : 'text-[#006A4E] dark:text-emerald-400'}`} />
+                          <span>সব কিছু</span>
+                        </div>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                          agencyOverviewTab === 'all'
+                            ? 'bg-white/20 text-white'
+                            : 'bg-slate-200/70 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                        }`}>
+                          {services.length + digitalProducts.length + courses.length}
+                        </span>
+                      </button>
+
+                      {/* ২. ডিজিটাল প্রোডাক্টস */}
+                      <button
+                        type="button"
+                        onClick={() => setAgencyOverviewTab('products')}
+                        className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition cursor-pointer active:scale-98 ${
+                          agencyOverviewTab === 'products'
+                            ? 'bg-[#006A4E] text-white shadow-xs'
+                            : 'bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Package className={`w-4 h-4 ${agencyOverviewTab === 'products' ? 'text-white' : 'text-amber-500 dark:text-amber-400'}`} />
+                          <span>ডিজিটাল প্রোডাক্টস</span>
+                        </div>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                          agencyOverviewTab === 'products'
+                            ? 'bg-white/20 text-white'
+                            : 'bg-amber-500/15 text-amber-700 dark:text-amber-300'
+                        }`}>
+                          {digitalProducts.length}টি
+                        </span>
+                      </button>
+
+                      {/* ৩. প্রফেশনাল কোর্স */}
+                      <button
+                        type="button"
+                        onClick={() => setAgencyOverviewTab('courses')}
+                        className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition cursor-pointer active:scale-98 ${
+                          agencyOverviewTab === 'courses'
+                            ? 'bg-[#006A4E] text-white shadow-xs'
+                            : 'bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <GraduationCap className={`w-4 h-4 ${agencyOverviewTab === 'courses' ? 'text-white' : 'text-blue-500 dark:text-blue-400'}`} />
+                          <span>প্রফেশনাল কোর্স</span>
+                        </div>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                          agencyOverviewTab === 'courses'
+                            ? 'bg-white/20 text-white'
+                            : 'bg-blue-500/15 text-blue-700 dark:text-blue-300'
+                        }`}>
+                          {courses.length}টি
+                        </span>
+                      </button>
+
+                      {/* ৪. এজেন্সি প্যাকেজসমূহ */}
+                      <button
+                        type="button"
+                        onClick={() => setAgencyOverviewTab('packages')}
+                        className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition cursor-pointer active:scale-98 ${
+                          agencyOverviewTab === 'packages'
+                            ? 'bg-[#006A4E] text-white shadow-xs'
+                            : 'bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Building2 className={`w-4 h-4 ${agencyOverviewTab === 'packages' ? 'text-white' : 'text-emerald-600 dark:text-emerald-400'}`} />
+                          <span>এজেন্সি প্যাকেজসমূহ</span>
+                        </div>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                          agencyOverviewTab === 'packages'
+                            ? 'bg-white/20 text-white'
+                            : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'
+                        }`}>
+                          {services.length}টি
+                        </span>
+                      </button>
+                    </div>
+
+                    {/* অফিশিয়াল এজেন্সি সিল ও নিশ্চয়তা */}
+                    <div className="mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-800 space-y-2">
+                      <div className="p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-800/60">
+                        <div className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300 font-black text-xs">
+                          <BadgeCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                          <span>PTENit সার্টিফাইড সেবা</span>
+                        </div>
+                        <p className="text-[11px] text-emerald-700/90 dark:text-emerald-400/90 mt-1 leading-relaxed">
+                          প্রতিষ্ঠান পরিচালিত সকল প্রোডাক্ট, কোর্স ও আইটি প্যাকেজ ১০০% কোয়ালিটি নিশ্চয়তা সম্পন্ন।
+                        </p>
+                      </div>
                     </div>
                   </div>
-                ))}
+                </div>
+
+                {/* ২য় কলাম: ফিড ও আইটেম গ্রিড (মাঝের মূল অংশ - ৩টি করে কলাম ও ২টি করে রো) */}
+                <div className="lg:col-span-6 xl:col-span-7 space-y-5 min-w-0">
+                  
+                  {/* কন্ডিশন ১: 'সব কিছু' নির্বাচিত থাকলে (প্রতি ক্যাটাগরিতে ৩টি কলাম ও ২টি রো = ৬টি আইটেম) */}
+                  {agencyOverviewTab === 'all' && (
+                    <div className="space-y-6 animate-fadeIn">
+                      {/* টপ ওয়েলকাম ব্যানার */}
+                      <div className="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50/50 to-white dark:from-slate-900 dark:via-slate-850 dark:to-slate-900 border border-emerald-200/80 dark:border-emerald-900/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-2xs">
+                        <div className="space-y-0.5">
+                          <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#006A4E] dark:text-emerald-400">
+                            <Sparkles className="w-3 h-3" />
+                            <span>PTENit হাব</span>
+                          </div>
+                          <h3 className="text-sm font-black text-slate-900 dark:text-white">
+                            এক নজরে সব
+                          </h3>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                            প্যাকেজ, প্রোডাক্টস ও কোর্স
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-100/80 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 text-[11px] font-black">
+                            {services.length + digitalProducts.length + courses.length}টি আইটেম
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* সেকশন ১: এজেন্সি প্যাকেজসমূহ (৩টি কলাম, ২টি রো = ৬টি আইটেম) */}
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+                          <div className="flex items-center gap-2">
+                            <Building2 className="w-4 h-4 text-[#006A4E] dark:text-emerald-400" />
+                            <h4 className="text-sm font-black text-slate-900 dark:text-white">
+                              এজেন্সি প্যাকেজসমূহ
+                            </h4>
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 text-[10.5px] font-bold border border-emerald-200 dark:border-emerald-800">
+                              {services.length}টি
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAgencyOverviewTab('packages');
+                              setAgencyPackagePage(1);
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                            className="text-xs font-bold text-[#006A4E] dark:text-emerald-400 hover:underline flex items-center gap-1 cursor-pointer"
+                          >
+                            <span>সবগুলো দেখুন</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+
+                        {/* ৩টি কলাম এবং ২টি রো গ্রিড */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-3.5">
+                          {services.slice(0, 6).map((serv) => (
+                            <div
+                              key={serv.id}
+                              className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 hover:border-[#006A4E]/50 dark:hover:border-[#006A4E]/50 transition-all duration-300 flex flex-col justify-between"
+                            >
+                              {/* Thumbnail: Aspect Ratio 16:10 */}
+                              <div
+                                className="relative aspect-[16/10] w-full overflow-hidden bg-slate-950 cursor-pointer"
+                                onClick={() => {
+                                  setSelectedService(serv);
+                                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }}
+                              >
+                                <img
+                                  src={serv.thumbnail}
+                                  alt={serv.title}
+                                  loading="lazy"
+                                  decoding="async"
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                />
+                                <div className="absolute top-2 left-2 z-10">
+                                  <span className="px-2 py-0.5 rounded-md bg-[#006A4E] text-white font-bold text-[9px] shadow-xs uppercase tracking-wider flex items-center gap-1">
+                                    <BadgeCheck className="w-3 h-3 text-white" /> অফিসিয়াল
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* Body Content */}
+                              <div className="p-2.5 sm:p-3 flex-1 flex flex-col justify-between space-y-2">
+                                <div>
+                                  <h3
+                                    onClick={() => {
+                                      setSelectedService(serv);
+                                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                                    }}
+                                    className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors cursor-pointer line-clamp-2 leading-snug min-h-[2.5rem]"
+                                    title={serv.title}
+                                  >
+                                    {serv.title}
+                                  </h3>
+                                </div>
+
+                                {/* Micro Metrics / Key Features */}
+                                <div className="space-y-1 pt-1.5 border-t border-slate-100 dark:border-slate-800/60">
+                                  {(serv.features || []).slice(0, 2).map((feat, fIdx) => (
+                                    <div key={fIdx} className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400">
+                                      <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                                      <span className="truncate">{feat}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Footer Ribbon: PTEN Standard */}
+                              <div className="p-2.5 sm:p-3 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1.5 rounded-b-2xl">
+                                <div className="min-w-0 flex flex-col justify-center">
+                                  <span className="text-[9px] text-slate-400 font-bold block leading-none mb-0.5 uppercase">
+                                    শুরু মাত্র
+                                  </span>
+                                  <span className="text-xs sm:text-sm md:text-base font-black text-[#006A4E] dark:text-emerald-400 block truncate leading-tight">
+                                    {serv.priceText}
+                                  </span>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedService(serv);
+                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                  }}
+                                  className="py-1.5 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-xs font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95 shrink-0 group/btn"
+                                >
+                                  <span>অর্ডার</span>
+                                  <ArrowRight className="w-3.5 h-3.5 text-white group-hover/btn:translate-x-0.5 transition-transform" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* সেকশন ২: ডিজিটাল প্রোডাক্টস (৩টি কলাম, ২টি রো = ৬টি আইটেম) */}
+                      <div className="space-y-3 pt-2">
+                        <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+                          <div className="flex items-center gap-2">
+                            <Package className="w-4 h-4 text-amber-500" />
+                            <h4 className="text-sm font-black text-slate-900 dark:text-white">
+                              ডিজিটাল প্রোডাক্টস
+                            </h4>
+                            <span className="px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 text-[10.5px] font-bold border border-amber-200 dark:border-amber-800">
+                              {digitalProducts.length}টি
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAgencyOverviewTab('products');
+                              setAgencyProductPage(1);
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                            className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1 cursor-pointer"
+                          >
+                            <span>সবগুলো দেখুন</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+
+                        {/* ৩টি কলাম এবং ২টি রো গ্রিড */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-3.5">
+                          {digitalProducts.slice(0, 6).map((prod) => (
+                            <div
+                              key={prod.id}
+                              className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 hover:border-[#006A4E]/50 dark:hover:border-[#006A4E]/50 transition-all duration-300 flex flex-col justify-between"
+                            >
+                              {/* Thumbnail: Aspect Ratio 16:10 */}
+                              <div
+                                className="relative aspect-[16/10] w-full overflow-hidden bg-slate-950 cursor-pointer"
+                                onClick={() => setSelectedDigitalProduct(prod)}
+                              >
+                                <img
+                                  src={prod.thumbnail}
+                                  alt={prod.title}
+                                  loading="lazy"
+                                  decoding="async"
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                />
+                                <div className="absolute top-2 left-2 z-10">
+                                  <span className="px-2 py-0.5 rounded-md bg-[#006A4E] text-white font-bold text-[9px] shadow-xs uppercase tracking-wider">
+                                    {prod.category || 'প্রোডাক্ট'}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* Body Content */}
+                              <div className="p-2.5 sm:p-3 flex-1 flex flex-col justify-between space-y-2">
+                                <div>
+                                  <h3
+                                    onClick={() => setSelectedDigitalProduct(prod)}
+                                    className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors cursor-pointer line-clamp-2 leading-snug min-h-[2.5rem]"
+                                    title={prod.title}
+                                  >
+                                    {prod.title}
+                                  </h3>
+                                </div>
+
+                                {/* Micro Metrics: Rating & Sales */}
+                                <div className="flex items-center justify-between text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 pt-1.5 border-t border-slate-100 dark:border-slate-800/60">
+                                  <div className="flex items-center gap-1 font-bold text-amber-500">
+                                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                                    <span>{prod.rating ? prod.rating.toFixed(1) : '5.0'}</span>
+                                    <span className="text-[10px] text-slate-400 font-normal">({prod.reviewsCount || 12})</span>
+                                  </div>
+                                  <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+                                    <Download className="w-3 h-3 text-slate-400" />
+                                    <span>{prod.salesCount || 15}+ সেলস</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Footer Ribbon: PTEN Standard */}
+                              <div className="p-2.5 sm:p-3 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1.5 rounded-b-2xl">
+                                <div className="min-w-0 flex flex-col justify-center">
+                                  <span className="text-[9px] text-slate-400 font-bold block leading-none mb-0.5 uppercase">
+                                    মূল্য
+                                  </span>
+                                  <span className="text-xs sm:text-sm md:text-base font-black text-[#006A4E] dark:text-emerald-400 block truncate leading-tight">
+                                    ৳{(prod.price || 0).toLocaleString('bn-BD')}
+                                  </span>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => setSelectedDigitalProduct(prod)}
+                                  className="py-1.5 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-xs font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95 shrink-0 group/btn"
+                                >
+                                  <span>কিনুন</span>
+                                  <Download className="w-3.5 h-3.5 text-white" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* সেকশন ৩: প্রফেশনাল কোর্সসমূহ (৩টি কলাম, ২টি রো = ৬টি আইটেম) */}
+                      <div className="space-y-3 pt-2">
+                        <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+                          <div className="flex items-center gap-2">
+                            <GraduationCap className="w-4 h-4 text-blue-500" />
+                            <h4 className="text-sm font-black text-slate-900 dark:text-white">
+                              প্রফেশনাল কোর্স
+                            </h4>
+                            <span className="px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 text-[10.5px] font-bold border border-blue-200 dark:border-blue-800">
+                              {courses.length}টি
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAgencyOverviewTab('courses');
+                              setAgencyCoursePage(1);
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                            className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer"
+                          >
+                            <span>সবগুলো দেখুন</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+
+                        {/* ৩টি কলাম এবং ২টি রো গ্রিড */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-3.5">
+                          {courses.slice(0, 6).map((crs) => (
+                            <div
+                              key={crs.id}
+                              className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 hover:border-[#006A4E]/50 dark:hover:border-[#006A4E]/50 transition-all duration-300 flex flex-col justify-between"
+                            >
+                              {/* Thumbnail: Aspect Ratio 16:10 */}
+                              <div
+                                className="relative aspect-[16/10] w-full overflow-hidden bg-slate-950 cursor-pointer"
+                                onClick={() => {
+                                  if (onOpenDetail) onOpenDetail(crs.id);
+                                  else if (setActiveTab) setActiveTab('courses');
+                                }}
+                              >
+                                <img
+                                  src={crs.thumbnail}
+                                  alt={crs.title}
+                                  loading="lazy"
+                                  decoding="async"
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                />
+                                <div className="absolute top-2 left-2 z-10">
+                                  <span className="px-2 py-0.5 rounded-md bg-blue-600 text-white font-bold text-[9px] shadow-xs uppercase tracking-wider">
+                                    {crs.category || 'কোর্স'}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* Body Content */}
+                              <div className="p-2.5 sm:p-3 flex-1 flex flex-col justify-between space-y-2">
+                                <div>
+                                  <h3
+                                    onClick={() => {
+                                      if (onOpenDetail) onOpenDetail(crs.id);
+                                      else if (setActiveTab) setActiveTab('courses');
+                                    }}
+                                    className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors cursor-pointer line-clamp-2 leading-snug min-h-[2.5rem]"
+                                    title={crs.title}
+                                  >
+                                    {crs.title}
+                                  </h3>
+                                </div>
+
+                                {/* Micro Metrics: 3 items (সময়, ক্লাস, এনরোল্ড) */}
+                                <div className="grid grid-cols-3 gap-1 py-1 border-t border-slate-100 dark:border-slate-800/60 text-[9.5px] sm:text-[10px] text-slate-500 dark:text-slate-400 text-center">
+                                  <div className="flex flex-col items-center">
+                                    <Clock className="w-3 h-3 text-[#38BDF8] mb-0.5" />
+                                    <span className="truncate w-full">{crs.duration || '৪ সপ্তাহ'}</span>
+                                  </div>
+                                  <div className="flex flex-col items-center">
+                                    <BookOpen className="w-3 h-3 text-[#38BDF8] mb-0.5" />
+                                    <span className="truncate w-full">{crs.lessonsCount || 1} ক্লাস</span>
+                                  </div>
+                                  <div className="flex flex-col items-center">
+                                    <Users className="w-3 h-3 text-[#38BDF8] mb-0.5" />
+                                    <span className="truncate w-full">{crs.enrolledCount || 1}+</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Footer Ribbon: PTEN Standard */}
+                              <div className="p-2.5 sm:p-3 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1.5 rounded-b-2xl">
+                                <div className="min-w-0 flex flex-col justify-center">
+                                  <span className="text-[9px] text-slate-400 font-bold block leading-none mb-0.5 uppercase">
+                                    কোর্স ফি
+                                  </span>
+                                  <span className="text-xs sm:text-sm md:text-base font-black text-[#006A4E] dark:text-emerald-400 block truncate leading-tight">
+                                    {crs.isFree ? 'সম্পূর্ণ ফ্রি' : `৳${(crs.discountPrice || crs.price || 0).toLocaleString('bn-BD')}`}
+                                  </span>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (onOpenDetail) onOpenDetail(crs.id);
+                                    else if (setActiveTab) setActiveTab('courses');
+                                  }}
+                                  className="py-1.5 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-xs font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95 shrink-0 group/btn"
+                                >
+                                  <span>বিস্তারিত</span>
+                                  <ArrowRight className="w-3.5 h-3.5 text-white group-hover/btn:translate-x-0.5 transition-transform" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* কন্ডিশন ২: 'ডিজিタル প্রোডাক্টস' নির্বাচিত থাকলে (৩টি করে কলাম ও ২টি রো = ৬টি আইটেম) */}
+                  {agencyOverviewTab === 'products' && (
+                    <div className="space-y-4 animate-fadeIn">
+                      <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+                        <div>
+                          <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                            <Package className="w-5 h-5 text-amber-500" />
+                            <span>ডিজিটাল প্রোডাক্টস ও রেডিমেড সোর্স কোড</span>
+                          </h3>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">সরাসরি ডাউনলোডযোগ্য রেডিমেড সফটওয়্যার, স্ক্রিপ্ট ও UI কিট</p>
+                        </div>
+                        <span className="px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 font-bold text-xs border border-amber-200 dark:border-amber-800">
+                          {digitalProducts.length}টি প্রোডাক্ট
+                        </span>
+                      </div>
+
+                      {/* ৩টি কলাম এবং ২টি রো গ্রিড */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-3.5">
+                        {digitalProducts.slice((agencyProductPage - 1) * 6, agencyProductPage * 6).map((prod) => (
+                          <div
+                            key={prod.id}
+                            className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 hover:border-[#006A4E]/50 dark:hover:border-[#006A4E]/50 transition-all duration-300 flex flex-col justify-between"
+                          >
+                            {/* Thumbnail: Aspect Ratio 16:10 */}
+                            <div
+                              className="relative aspect-[16/10] w-full overflow-hidden bg-slate-950 cursor-pointer"
+                              onClick={() => setSelectedDigitalProduct(prod)}
+                            >
+                              <img
+                                src={prod.thumbnail}
+                                alt={prod.title}
+                                loading="lazy"
+                                decoding="async"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                              />
+                              <div className="absolute top-2 left-2 z-10">
+                                <span className="px-2 py-0.5 rounded-md bg-[#006A4E] text-white font-bold text-[9px] shadow-xs uppercase tracking-wider">
+                                  {prod.category || 'প্রোডাক্ট'}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Body Content */}
+                            <div className="p-2.5 sm:p-3 flex-1 flex flex-col justify-between space-y-2">
+                              <div>
+                                <h3
+                                  onClick={() => setSelectedDigitalProduct(prod)}
+                                  className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors cursor-pointer line-clamp-2 leading-snug min-h-[2.5rem]"
+                                  title={prod.title}
+                                >
+                                  {prod.title}
+                                </h3>
+                              </div>
+
+                              {/* Micro Metrics: Rating & Sales */}
+                              <div className="flex items-center justify-between text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 pt-1.5 border-t border-slate-100 dark:border-slate-800/60">
+                                <div className="flex items-center gap-1 font-bold text-amber-500">
+                                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                                  <span>{prod.rating ? prod.rating.toFixed(1) : '5.0'}</span>
+                                  <span className="text-[10px] text-slate-400 font-normal">({prod.reviewsCount || 12})</span>
+                                </div>
+                                <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+                                  <Download className="w-3 h-3 text-slate-400" />
+                                  <span>{prod.salesCount || 15}+ সেলস</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Footer Ribbon: PTEN Standard */}
+                            <div className="p-2.5 sm:p-3 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1.5 rounded-b-2xl">
+                              <div className="min-w-0 flex flex-col justify-center">
+                                <span className="text-[9px] text-slate-400 font-bold block leading-none mb-0.5 uppercase">
+                                  মূল্য
+                                </span>
+                                <span className="text-xs sm:text-sm md:text-base font-black text-[#006A4E] dark:text-emerald-400 block truncate leading-tight">
+                                  ৳{(prod.price || 0).toLocaleString('bn-BD')}
+                                </span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => setSelectedDigitalProduct(prod)}
+                                className="py-1.5 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-xs font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95 shrink-0 group/btn"
+                              >
+                                <span>কিনুন</span>
+                                <Download className="w-3.5 h-3.5 text-white" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* পেজিনেশন কন্ট্রোল (যদি ৬টির বেশি প্রোডাক্ট থাকে তবে ২ রো বজায় রেখে পেজ পাল্টানো) */}
+                      {digitalProducts.length > 6 && (
+                        <div className="flex items-center justify-center gap-2 pt-4">
+                          <button
+                            type="button"
+                            disabled={agencyProductPage === 1}
+                            onClick={() => setAgencyProductPage(p => Math.max(1, p - 1))}
+                            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition"
+                          >
+                            পূর্ববর্তী
+                          </button>
+                          <span className="text-xs font-black text-slate-600 dark:text-slate-300 px-2">
+                            পৃষ্ঠা {agencyProductPage} / {Math.ceil(digitalProducts.length / 6)}
+                          </span>
+                          <button
+                            type="button"
+                            disabled={agencyProductPage >= Math.ceil(digitalProducts.length / 6)}
+                            onClick={() => setAgencyProductPage(p => p + 1)}
+                            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition"
+                          >
+                            পরবর্তী
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* কন্ডিশন ৩: 'প্রফেশনাল কোর্স' নির্বাচিত থাকলে (৩টি করে কলাম ও ২টি রো = ৬টি আইটেম) */}
+                  {agencyOverviewTab === 'courses' && (
+                    <div className="space-y-4 animate-fadeIn">
+                      <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+                        <div>
+                          <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                            <GraduationCap className="w-5 h-5 text-blue-500" />
+                            <span>প্রফেশনাল কোর্স ও একাডেমি ট্রেনিং</span>
+                          </h3>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">মার্কেটপ্লেস ও প্রফেশনাল কাজের জন্য সরাসরি এক্সপার্টদের সাথে শিখুন</p>
+                        </div>
+                        <span className="px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-bold text-xs border border-blue-200 dark:border-blue-800">
+                          {courses.length}টি কোর্স
+                        </span>
+                      </div>
+
+                      {/* ৩টি কলাম এবং ২টি রো গ্রিড */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-3.5">
+                        {courses.slice((agencyCoursePage - 1) * 6, agencyCoursePage * 6).map((crs) => (
+                          <div
+                            key={crs.id}
+                            className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 hover:border-[#006A4E]/50 dark:hover:border-[#006A4E]/50 transition-all duration-300 flex flex-col justify-between"
+                          >
+                            {/* Thumbnail: Aspect Ratio 16:10 */}
+                            <div
+                              className="relative aspect-[16/10] w-full overflow-hidden bg-slate-950 cursor-pointer"
+                              onClick={() => {
+                                if (onOpenDetail) onOpenDetail(crs.id);
+                                else if (setActiveTab) setActiveTab('courses');
+                              }}
+                            >
+                              <img
+                                src={crs.thumbnail}
+                                alt={crs.title}
+                                loading="lazy"
+                                decoding="async"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                              />
+                              <div className="absolute top-2 left-2 z-10">
+                                <span className="px-2 py-0.5 rounded-md bg-blue-600 text-white font-bold text-[9px] shadow-xs uppercase tracking-wider">
+                                  {crs.category || 'কোর্স'}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Body Content */}
+                            <div className="p-2.5 sm:p-3 flex-1 flex flex-col justify-between space-y-2">
+                              <div>
+                                <h3
+                                  onClick={() => {
+                                    if (onOpenDetail) onOpenDetail(crs.id);
+                                    else if (setActiveTab) setActiveTab('courses');
+                                  }}
+                                  className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors cursor-pointer line-clamp-2 leading-snug min-h-[2.5rem]"
+                                  title={crs.title}
+                                >
+                                  {crs.title}
+                                </h3>
+                              </div>
+
+                              {/* Micro Metrics: 3 items (সময়, ক্লাস, এনরোল্ড) */}
+                              <div className="grid grid-cols-3 gap-1 py-1 border-t border-slate-100 dark:border-slate-800/60 text-[9.5px] sm:text-[10px] text-slate-500 dark:text-slate-400 text-center">
+                                <div className="flex flex-col items-center">
+                                  <Clock className="w-3 h-3 text-[#38BDF8] mb-0.5" />
+                                  <span className="truncate w-full">{crs.duration || '৪ সপ্তাহ'}</span>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                  <BookOpen className="w-3 h-3 text-[#38BDF8] mb-0.5" />
+                                  <span className="truncate w-full">{crs.lessonsCount || 1} ক্লাস</span>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                  <Users className="w-3 h-3 text-[#38BDF8] mb-0.5" />
+                                  <span className="truncate w-full">{crs.enrolledCount || 1}+</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Footer Ribbon: PTEN Standard */}
+                            <div className="p-2.5 sm:p-3 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1.5 rounded-b-2xl">
+                              <div className="min-w-0 flex flex-col justify-center">
+                                <span className="text-[9px] text-slate-400 font-bold block leading-none mb-0.5 uppercase">
+                                  কোর্স ফি
+                                </span>
+                                <span className="text-xs sm:text-sm md:text-base font-black text-[#006A4E] dark:text-emerald-400 block truncate leading-tight">
+                                  {crs.isFree ? 'সম্পূর্ণ ফ্রি' : `৳${(crs.discountPrice || crs.price || 0).toLocaleString('bn-BD')}`}
+                                </span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (onOpenDetail) onOpenDetail(crs.id);
+                                  else if (setActiveTab) setActiveTab('courses');
+                                }}
+                                className="py-1.5 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-xs font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95 shrink-0 group/btn"
+                              >
+                                <span>বিস্তারিত</span>
+                                <ArrowRight className="w-3.5 h-3.5 text-white group-hover/btn:translate-x-0.5 transition-transform" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* পেজিনেশন কন্ট্রোল (যদি ৬টির বেশি কোর্স থাকে তবে ২ রো বজায় রেখে পেজ পাল্টানো) */}
+                      {courses.length > 6 && (
+                        <div className="flex items-center justify-center gap-2 pt-4">
+                          <button
+                            type="button"
+                            disabled={agencyCoursePage === 1}
+                            onClick={() => setAgencyCoursePage(p => Math.max(1, p - 1))}
+                            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition"
+                          >
+                            পূর্ববর্তী
+                          </button>
+                          <span className="text-xs font-black text-slate-600 dark:text-slate-300 px-2">
+                            পৃষ্ঠা {agencyCoursePage} / {Math.ceil(courses.length / 6)}
+                          </span>
+                          <button
+                            type="button"
+                            disabled={agencyCoursePage >= Math.ceil(courses.length / 6)}
+                            onClick={() => setAgencyCoursePage(p => p + 1)}
+                            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition"
+                          >
+                            পরবর্তী
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* কন্ডিশন ৪: 'এজেন্সি প্যাকেজসমূহ' নির্বাচিত থাকলে (৩টি করে কলাম ও ২টি রো = ৬টি আইটেম) */}
+                  {agencyOverviewTab === 'packages' && (
+                    <div className="space-y-4 animate-fadeIn">
+                      <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+                        <div>
+                          <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                            <Building2 className="w-5 h-5 text-[#006A4E] dark:text-emerald-400" />
+                            <span>PTENit কোড অফিশিয়াল আইটি এজেন্সি প্যাকেজসমূহ</span>
+                          </h3>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">প্রতিষ্ঠান পরিচালিত শতভাগ বিশ্বস্ত ও উচ্চমানের ওয়েবসাইট, সফটওয়্যার ও মার্কেটিং সলিউশন</p>
+                        </div>
+                        <span className="px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-bold text-xs border border-emerald-200 dark:border-emerald-800">
+                          {services.length}টি প্যাকেজ
+                        </span>
+                      </div>
+
+                      {/* ৩টি কলাম এবং ২টি রো গ্রিড */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-3.5">
+                        {services.slice((agencyPackagePage - 1) * 6, agencyPackagePage * 6).map((serv) => (
+                          <div
+                            key={serv.id}
+                            className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 hover:border-[#006A4E]/50 dark:hover:border-[#006A4E]/50 transition-all duration-300 flex flex-col justify-between"
+                          >
+                            {/* Thumbnail: Aspect Ratio 16:10 */}
+                            <div
+                              className="relative aspect-[16/10] w-full overflow-hidden bg-slate-950 cursor-pointer"
+                              onClick={() => {
+                                setSelectedService(serv);
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                              }}
+                            >
+                              <img
+                                src={serv.thumbnail}
+                                alt={serv.title}
+                                loading="lazy"
+                                decoding="async"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                              />
+                              <div className="absolute top-2 left-2 z-10">
+                                <span className="px-2 py-0.5 rounded-md bg-[#006A4E] text-white font-bold text-[9px] shadow-xs uppercase tracking-wider flex items-center gap-1">
+                                  <BadgeCheck className="w-3 h-3 text-white" /> অফিসিয়াল
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Body Content */}
+                            <div className="p-2.5 sm:p-3 flex-1 flex flex-col justify-between space-y-2">
+                              <div>
+                                <h3
+                                  onClick={() => {
+                                    setSelectedService(serv);
+                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                  }}
+                                  className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors cursor-pointer line-clamp-2 leading-snug min-h-[2.5rem]"
+                                  title={serv.title}
+                                >
+                                  {serv.title}
+                                </h3>
+                              </div>
+
+                              {/* Micro Metrics / Features */}
+                              <div className="space-y-1 pt-1.5 border-t border-slate-100 dark:border-slate-800/60">
+                                {(serv.features || []).slice(0, 2).map((feat, fIdx) => (
+                                  <div key={fIdx} className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400">
+                                    <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                                    <span className="truncate">{feat}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Footer Ribbon: PTEN Standard */}
+                            <div className="p-2.5 sm:p-3 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1.5 rounded-b-2xl">
+                              <div className="min-w-0 flex flex-col justify-center">
+                                <span className="text-[9px] text-slate-400 font-bold block leading-none mb-0.5 uppercase">
+                                  শুরু মাত্র
+                                </span>
+                                <span className="text-xs sm:text-sm md:text-base font-black text-[#006A4E] dark:text-emerald-400 block truncate leading-tight">
+                                  {serv.priceText}
+                                </span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedService(serv);
+                                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }}
+                                className="py-1.5 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-xs font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95 shrink-0 group/btn"
+                              >
+                                <span>অর্ডার</span>
+                                <ArrowRight className="w-3.5 h-3.5 text-white group-hover/btn:translate-x-0.5 transition-transform" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* পেজিনেশন কন্ট্রোল (যদি ৬টির বেশি প্যাকেজ থাকে তবে ২ রো বজায় রেখে পেজ পাল্টানো) */}
+                      {services.length > 6 && (
+                        <div className="flex items-center justify-center gap-2 pt-4">
+                          <button
+                            type="button"
+                            disabled={agencyPackagePage === 1}
+                            onClick={() => setAgencyPackagePage(p => Math.max(1, p - 1))}
+                            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition"
+                          >
+                            পূর্ববর্তী
+                          </button>
+                          <span className="text-xs font-black text-slate-600 dark:text-slate-300 px-2">
+                            পৃষ্ঠা {agencyPackagePage} / {Math.ceil(services.length / 6)}
+                          </span>
+                          <button
+                            type="button"
+                            disabled={agencyPackagePage >= Math.ceil(services.length / 6)}
+                            onClick={() => setAgencyPackagePage(p => p + 1)}
+                            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition"
+                          >
+                            পরবর্তী
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* ৩য় কলাম: ট্রাস্ট, কাস্টম রিকোয়েস্ট ও সাপোর্ট (ডান কলাম) */}
+                <div className="lg:col-span-3 xl:col-span-3 lg:sticky lg:top-20 space-y-4">
+                  {/* কাস্টম প্রজেক্ট কনসালটেশন কার্ড */}
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 shadow-xs space-y-3 font-bengali">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                        <Sparkles className="w-4 h-4" />
+                      </div>
+                      <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
+                        কাস্টম প্রজেক্ট প্রয়োজন?
+                      </h4>
+                    </div>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                      আপনার নিজস্ব রিকোয়ারমেন্ট অনুযায়ী কাস্টম ওয়েবসাইট, মোবাইল অ্যাপ বা সফটওয়্যার তৈরি করতে অফিশিয়াল টিমের সাথে আলোচনা করুন।
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (openChatWindow) {
+                          openChatWindow({
+                            id: 'ptenit-official',
+                            name: 'PTENit Official Agency',
+                            role: 'agency',
+                            avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'
+                          });
+                        } else {
+                          setActiveSubTab('messenger');
+                        }
+                      }}
+                      className="w-full py-2.5 px-3 rounded-xl bg-[#006A4E] hover:bg-[#00523c] text-white text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-98"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5" />
+                      <span>ফ্রি কনসালটেশন ও ইনবক্স</span>
+                    </button>
+                  </div>
+
+                  {/* এজেন্সি গ্যারান্টি ও নিরাপত্তা */}
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 shadow-xs space-y-3 font-bengali">
+                    <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      <span>এজেন্সি সুবিধা ও নিরাপত্তা</span>
+                    </h4>
+                    <div className="space-y-2.5 text-xs">
+                      <div className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="font-bold text-[11px] text-slate-900 dark:text-white">১০০% কোয়ালিটি গ্যারান্টি</p>
+                          <p className="text-[10.5px] text-slate-500 dark:text-slate-400">আন্তর্জাতিক মানের কোডিং ও প্রফেশনাল ইউজার এক্সপেরিয়েন্স।</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="font-bold text-[11px] text-slate-900 dark:text-white">এসক্রো সুরক্ষিত পেমেন্ট</p>
+                          <p className="text-[10.5px] text-slate-500 dark:text-slate-400">কাজের পূর্ণাঙ্গ সন্তুষ্টি নিশ্চিত হওয়ার পরেই পেমেন্ট রিলিজ হয়।</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="font-bold text-[11px] text-slate-900 dark:text-white">আফটার-সেলস লাইভ সাপোর্ট</p>
+                          <p className="text-[10.5px] text-slate-500 dark:text-slate-400">প্রজেক্ট ডেলিভারির পরেও ডেডিকেটেড সাপোর্ট টিম সহায়তা প্রদান করে।</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* অফিস সময় ও হেল্পলাইন */}
+                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 space-y-2 text-xs font-bengali">
+                    <div className="flex items-center justify-between text-slate-700 dark:text-slate-300">
+                      <span className="flex items-center gap-1.5 font-bold text-[11px]">
+                        <Clock className="w-3.5 h-3.5 text-slate-400" />
+                        <span>অফিস সময়:</span>
+                      </span>
+                      <span className="font-semibold text-[11px] text-slate-900 dark:text-white">সকাল ৯টা - রাত ১১টা</span>
+                    </div>
+                    <div className="flex items-center justify-between text-slate-700 dark:text-slate-300">
+                      <span className="flex items-center gap-1.5 font-bold text-[11px]">
+                        <Zap className="w-3.5 h-3.5 text-amber-500" />
+                        <span>গড় রেসপন্স টাইম:</span>
+                      </span>
+                      <span className="font-semibold text-[11px] text-emerald-600 dark:text-emerald-400 font-mono">৫ - ১৫ মিনিট</span>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           )}
@@ -9574,8 +11015,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     </div>
 
                     <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                      <span className="text-xs font-bold text-[#38BDF8]">কোর্স ফি:</span>
-                      <span className="text-base font-black text-slate-900 dark:text-white">
+                      <span className="text-xs font-bold text-[#006A4E] dark:text-emerald-400">কোর্স ফি:</span>
+                      <span className="text-base font-black text-[#006A4E] dark:text-emerald-400">
                         {crs.isFree ? 'ফ্রি কোর্স' : `৳${(crs.discountPrice || crs.price || 0).toLocaleString('bn-BD')}`}
                       </span>
                     </div>
@@ -9737,22 +11178,427 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
           {/* MY ACTIVE ORDERS TAB (LOGGED IN VIEW) */}
           {(initialCategory === 'my-orders' || ['overview', 'my-orders', 'my-courses', 'settings', 'post-project', 'public-offers', 'messenger'].includes(activeSubTab)) && currentUser && (
-            <div id="my-orders-section" className="space-y-2.5 sm:space-y-3 font-bengali animate-fadeIn">
+            <div id="my-orders-section" className="space-y-4 font-bengali animate-fadeIn">
               
-              {/* UNIFIED BUYER DASHBOARD CONTENT CONTAINER */}
-              <div className="w-full space-y-4 pt-0.5 sm:pt-1 font-bengali">
-                {/* Main Content Area */}
-                <div className="w-full space-y-4 font-bengali">
+              {/* 3-COLUMN DESKTOP LAYOUT (SAME 3 COLUMNS AS MARKETPLACE FEED) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start font-bengali">
+                
+                {/* 1. FIRST COLUMN (LEFT SIDEBAR): BUYER DASHBOARD TABS & PROFILE (PC VIEW) */}
+                <div className="hidden lg:block lg:col-span-4 sticky top-20">
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs font-bengali space-y-4">
+                    {/* Buyer Profile Header */}
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={currentUser?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
+                        alt={currentUser?.name || 'User'}
+                        className="w-12 h-12 rounded-full object-cover border-2 border-[#006A4E]"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-base sm:text-[17px] font-bold text-slate-900 dark:text-white truncate">
+                          {currentUser?.name || 'Mds Kazi Sohag'}
+                        </h3>
+                        <p className="text-xs text-[#006A4E] dark:text-emerald-400 font-semibold flex items-center gap-1.5 mt-0.5">
+                          <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+                          <span>ভেরিফায়েড বায়ার</span>
+                        </p>
+                      </div>
+                    </div>
 
-                    {/* UNIFIED HUB: MY ORDERS, COURSES & OVERVIEW */}
-                    {(activeSubTab === 'my-orders' || activeSubTab === 'my-courses' || activeSubTab === 'overview') && (
-                      <div className="space-y-4 font-bengali animate-fadeIn pt-1 sm:pt-0">
+                    {/* 4 Overview Quick Stats Cards (Phone View Style - Clickable) */}
+                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
+                      <div className="grid grid-cols-2 gap-2 text-center">
+                        {/* 1. 16টি মোট প্রজেক্ট */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOrderHubTab('orders');
+                            setActiveSubTab('my-orders');
+                            setBuyerOrderStatusFilter('all');
+                          }}
+                          className={`p-2.5 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer group active:scale-95 ${
+                            orderHubTab === 'orders' && buyerOrderStatusFilter !== 'public_projects'
+                              ? 'bg-emerald-50/80 dark:bg-emerald-950/30 border-[#006A4E] shadow-2xs'
+                              : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-[#006A4E]/60 hover:shadow-2xs'
+                          }`}
+                        >
+                          <div className="w-8 h-8 rounded-full bg-emerald-500/10 text-[#006A4E] dark:text-emerald-400 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
+                            <Briefcase className="w-4 h-4" />
+                          </div>
+                          <h3 className="text-sm sm:text-base font-black font-heading text-slate-900 dark:text-white leading-none">
+                            <AnimatedOverviewCounter value={`${buyerProjectOrders.length > 0 ? buyerProjectOrders.length : 16}টি`} />
+                          </h3>
+                          <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1">
+                            মোট প্রজেক্ট
+                          </p>
+                        </button>
+
+                        {/* 2. 2টি এনরোল্ড কোর্স */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOrderHubTab('courses');
+                            setActiveSubTab('my-orders');
+                          }}
+                          className={`p-2.5 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer group active:scale-95 ${
+                            orderHubTab === 'courses'
+                              ? 'bg-blue-50/80 dark:bg-blue-950/30 border-blue-500 shadow-2xs'
+                              : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-blue-500/60 hover:shadow-2xs'
+                          }`}
+                        >
+                          <div className="w-8 h-8 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
+                            <BookOpen className="w-4 h-4" />
+                          </div>
+                          <h3 className="text-sm sm:text-base font-black font-heading text-slate-900 dark:text-white leading-none">
+                            <AnimatedOverviewCounter value={`${userEnrollments.length > 0 ? userEnrollments.length : 2}টি`} />
+                          </h3>
+                          <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1">
+                            এনরোল্ড কোর্স
+                          </p>
+                        </button>
+
+                        {/* 3. 11টি পাবলিক পোস্ট */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOrderHubTab('orders');
+                            setActiveSubTab('my-orders');
+                            setBuyerOrderStatusFilter('public_projects');
+                          }}
+                          className={`p-2.5 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer group active:scale-95 ${
+                            orderHubTab === 'orders' && buyerOrderStatusFilter === 'public_projects'
+                              ? 'bg-purple-50/80 dark:bg-purple-950/30 border-purple-500 shadow-2xs'
+                              : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-purple-500/60 hover:shadow-2xs'
+                          }`}
+                        >
+                          <div className="w-8 h-8 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
+                            <Send className="w-4 h-4" />
+                          </div>
+                          <h3 className="text-sm sm:text-base font-black font-heading text-purple-600 dark:text-purple-400 leading-none">
+                            <AnimatedOverviewCounter value={`${allBuyerOrders.filter(o => o.isPublicOffer || o.type === 'custom_agency_order' || o.status === 'pending_approval' || o.status === 'pending' || !o.sellerId || o.sellerId === 'unassigned' || o.sellerId === 'pending_expert').length > 0 ? allBuyerOrders.filter(o => o.isPublicOffer || o.type === 'custom_agency_order' || o.status === 'pending_approval' || o.status === 'pending' || !o.sellerId || o.sellerId === 'unassigned' || o.sellerId === 'pending_expert').length : 11}টি`} />
+                          </h3>
+                          <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1">
+                            পাবলিক পোস্ট
+                          </p>
+                        </button>
+
+                        {/* 4. 2টি প্রোডাক্ট */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOrderHubTab('products');
+                            setActiveSubTab('my-orders');
+                          }}
+                          className={`p-2.5 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer group active:scale-95 ${
+                            orderHubTab === 'products'
+                              ? 'bg-amber-50/80 dark:bg-amber-950/30 border-amber-500 shadow-2xs'
+                              : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-amber-500/60 hover:shadow-2xs'
+                          }`}
+                        >
+                          <div className="w-8 h-8 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
+                            <Package className="w-4 h-4" />
+                          </div>
+                          <h3 className="text-sm sm:text-base font-black font-heading text-amber-600 dark:text-amber-400 leading-none">
+                            <AnimatedOverviewCounter value={`${buyerDigitalOrders.length > 0 ? buyerDigitalOrders.length : 2}টি`} />
+                          </h3>
+                          <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1">
+                            প্রোডাক্ট
+                          </p>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* পেমেন্ট হিস্টোরি: অর্ডার ও কোর্স লেনদেন বিবরণী (একদম ফোন ভিউ এর মত) */}
+                    <div className="pt-3 border-t border-slate-200/90 dark:border-slate-800 space-y-3 font-bengali">
+                      {/* Header & Subtitle + সবগুলো দেখুন Button */}
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="space-y-0.5">
+                          <h4 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+                            <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-[#38BDF8]" />
+                            <span>পেমেন্ট হিস্টোরি</span>
+                          </h4>
+                          <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+                            অর্ডার ও কোর্স লেনদেন বিবরণী
+                          </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOrderHubTab('overview');
+                            setActiveSubTab('my-orders');
+                            setOverviewInnerTab('all');
+                            setIsPaymentHistorySeeAllActive(true);
+                            setTimeout(() => {
+                              const el = document.getElementById('second-column-payment-history');
+                              if (el) {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }
+                            }, 60);
+                          }}
+                          className="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 dark:bg-sky-950/50 dark:hover:bg-sky-900/60 text-sky-700 dark:text-sky-300 border border-sky-200/80 dark:border-sky-800 text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer shrink-0 hover:shadow-xs active:scale-95 group"
+                          title="২য় কলামে সব পেমেন্ট বিস্তারিত দেখুন"
+                        >
+                          <span>সবগুলো দেখুন</span>
+                          <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                        </button>
+                      </div>
+
+                      {/* Filter Pills: সব পেমেন্ট, প্রজেক্ট, কোর্স, প্রডাক্ট */}
+                      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                        <button
+                          type="button"
+                          onClick={() => setOverviewInnerTab('all')}
+                          className={`px-3 py-1 rounded-full text-xs font-black transition cursor-pointer shrink-0 ${
+                            overviewInnerTab === 'all'
+                              ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-950 shadow-xs'
+                              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                          }`}
+                        >
+                          সব পেমেন্ট
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setOverviewInnerTab('orders')}
+                          className={`px-3 py-1 rounded-full text-xs font-black transition cursor-pointer shrink-0 ${
+                            overviewInnerTab === 'orders'
+                              ? 'bg-[#047857] text-white shadow-xs'
+                              : 'bg-emerald-50 dark:bg-emerald-950/40 text-[#006A4E] dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/80 hover:bg-emerald-100'
+                          }`}
+                        >
+                          প্রজেক্ট
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setOverviewInnerTab('courses')}
+                          className={`px-3 py-1 rounded-full text-xs font-black transition cursor-pointer shrink-0 ${
+                            overviewInnerTab === 'courses'
+                              ? 'bg-blue-600 text-white shadow-xs'
+                              : 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/80 hover:bg-blue-100'
+                          }`}
+                        >
+                          কোর্স
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setOverviewInnerTab('products')}
+                          className={`px-3 py-1 rounded-full text-xs font-black transition cursor-pointer shrink-0 ${
+                            overviewInnerTab === 'products'
+                              ? 'bg-amber-600 text-white shadow-xs'
+                              : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/80 hover:bg-amber-100'
+                          }`}
+                        >
+                          প্রডাক্ট
+                        </button>
+                      </div>
+
+                      {/* Transaction List Cards (লাস্ট ৫টি লেনদেন সংক্ষিপ্ত ভিউ) */}
+                      <div className="space-y-1.5">
+                        {(() => {
+                          // 1. Projects payment records
+                          const projectTransactions = buyerProjectOrders.map((ord, idx) => ({
+                            id: `TRX-${ord.id ? ord.id.replace('ord-mkt-', '').substring(0, 8).toUpperCase() : `PRJ-${idx + 1}`}`,
+                            type: 'orders' as const,
+                            typeName: 'প্রজেক্ট',
+                            title: ord.title || 'কাস্টম ফুল-স্ট্যাক ওয়েবসাইট ডেভেলপমেন্ট',
+                            amount: ord.amount || 12000,
+                            method: ord.paymentMethod || (idx % 2 === 0 ? 'bKash' : 'Nagad'),
+                            date: ord.createdAt ? new Date(ord.createdAt).toLocaleDateString('bn-BD') : '১৮/০৮/২৬',
+                            status: ord.status === 'completed' ? 'পরিশোধিত' : 'হোল্ড (এসক্রো)',
+                            isEscrow: ord.status !== 'completed',
+                            party: ord.sellerName || 'এক্সপার্ট ফ্রিল্যান্সার',
+                            rawDate: ord.createdAt ? new Date(ord.createdAt).getTime() : 1723900000000 - idx * 86400000
+                          }));
+
+                          // 2. Digital Products payment records
+                          const productTransactions = buyerDigitalOrders.map((ord, idx) => ({
+                            id: `TRX-${ord.id ? ord.id.replace('ord-', '').substring(0, 8).toUpperCase() : `PRD-${idx + 1}`}`,
+                            type: 'products' as const,
+                            typeName: 'প্রডাক্ট',
+                            title: ord.title || 'ডিজিটাল প্রোডাক্ট ও রিসোর্স',
+                            amount: ord.amount || 750,
+                            method: ord.paymentMethod || (idx % 2 === 0 ? 'bKash' : 'Nagad'),
+                            date: ord.createdAt ? new Date(ord.createdAt).toLocaleDateString('bn-BD') : '২৪/০৮/২৬',
+                            status: ord.status === 'completed' ? 'পরিশোধিত' : 'পরিশোধিত',
+                            isEscrow: false,
+                            party: ord.deliveryType === 'canva_link' || ord.canvaInviteLink ? 'Canva VIP টেমপ্লেট' : 'সোর্স কোড ও ফাইল',
+                            rawDate: ord.createdAt ? new Date(ord.createdAt).getTime() : 1724400000000 - idx * 86400000
+                          }));
+
+                          // 3. Courses payment records
+                          const courseTransactions = [
+                            {
+                              id: 'TRX-CRS-01',
+                              type: 'courses' as const,
+                              typeName: 'কোর্স',
+                              title: 'Full-Stack Web Development (MERN + AI)',
+                              amount: 4500,
+                              method: 'bKash',
+                              date: '১২/০৮/২৬',
+                              status: 'পরিশোধিত',
+                              isEscrow: false,
+                              party: 'PTENit Academy',
+                              rawDate: 1723400000000
+                            },
+                            {
+                              id: 'TRX-CRS-02',
+                              type: 'courses' as const,
+                              typeName: 'কোর্স',
+                              title: 'Python Django & AI Backend Engineering',
+                              amount: 5500,
+                              method: 'Nagad',
+                              date: '০৫/০৭/২৬',
+                              status: 'পরিশোধিত',
+                              isEscrow: false,
+                              party: 'PTENit Academy',
+                              rawDate: 1720100000000
+                            },
+                            {
+                              id: 'TRX-CRS-03',
+                              type: 'courses' as const,
+                              typeName: 'কোর্স',
+                              title: 'Next.js 14 & Tailwind Pro Masterclass',
+                              amount: 3200,
+                              method: 'SSLCommerz',
+                              date: '২৮/০৬/২৬',
+                              status: 'পরিশোধিত',
+                              isEscrow: false,
+                              party: 'PTENit Academy',
+                              rawDate: 1719500000000
+                            }
+                          ];
+
+                          const combined = overviewInnerTab === 'orders'
+                            ? projectTransactions
+                            : overviewInnerTab === 'courses'
+                            ? courseTransactions
+                            : overviewInnerTab === 'products'
+                            ? productTransactions
+                            : [...projectTransactions, ...courseTransactions, ...productTransactions].sort((a, b) => b.rawDate - a.rawDate);
+
+                          const lastFive = combined.slice(0, 5);
+
+                          if (lastFive.length === 0) {
+                            return (
+                              <div className="p-4 text-center bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200/70 dark:border-slate-800">
+                                <Receipt className="w-5 h-5 text-slate-400 mx-auto mb-1 opacity-60" />
+                                <p className="text-[11px] text-slate-500 font-semibold">কোনো পেমেন্ট রেকর্ড নেই</p>
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <>
+                              <div className="space-y-1.5">
+                                {lastFive.map((trx, idx) => {
+                                  const isProject = trx.type === 'orders';
+                                  const isCourse = trx.type === 'courses';
+
+                                  const iconBgClass = isProject
+                                    ? 'bg-emerald-500/10 text-[#006A4E] dark:text-emerald-400'
+                                    : isCourse
+                                    ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400'
+                                    : 'bg-amber-500/10 text-amber-600 dark:text-amber-400';
+
+                                  const typeBadgeClass = isProject
+                                    ? 'bg-emerald-500/15 text-[#006A4E] dark:text-emerald-300'
+                                    : isCourse
+                                    ? 'bg-blue-500/15 text-blue-700 dark:text-blue-300'
+                                    : 'bg-amber-500/15 text-amber-700 dark:text-amber-300';
+
+                                  return (
+                                    <div
+                                      key={idx}
+                                      className="p-2 sm:p-2.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/80 border border-slate-200/80 dark:border-slate-800 transition-all flex items-center justify-between gap-2 text-xs"
+                                    >
+                                      {/* Left: Icon + Type & Title + Details */}
+                                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${iconBgClass}`}>
+                                          {isProject ? (
+                                            <Briefcase className="w-3.5 h-3.5" />
+                                          ) : isCourse ? (
+                                            <BookOpen className="w-3.5 h-3.5" />
+                                          ) : (
+                                            <Package className="w-3.5 h-3.5" />
+                                          )}
+                                        </div>
+
+                                        <div className="min-w-0 flex-1">
+                                          <div className="flex items-center gap-1.5">
+                                            <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-black ${typeBadgeClass}`}>
+                                              {trx.typeName}
+                                            </span>
+                                            <p className="font-bold text-slate-800 dark:text-slate-200 text-[11px] truncate max-w-[140px]" title={trx.title}>
+                                              {trx.title}
+                                            </p>
+                                          </div>
+                                          <div className="flex items-center gap-1 text-[9.5px] text-slate-500 dark:text-slate-400 mt-0.5">
+                                            <span>{trx.date}</span>
+                                            <span>•</span>
+                                            <span className="font-medium text-slate-600 dark:text-slate-300">{trx.method}</span>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      {/* Right: Amount & Status */}
+                                      <div className="flex flex-col items-end shrink-0 pl-1">
+                                        <span className="text-xs font-black text-slate-900 dark:text-white leading-none">
+                                          ৳{trx.amount.toLocaleString('bn-BD')}
+                                        </span>
+                                        <span className={`text-[9px] font-semibold mt-0.5 ${
+                                          trx.isEscrow
+                                            ? 'text-amber-600 dark:text-amber-400'
+                                            : 'text-emerald-600 dark:text-emerald-400'
+                                        }`}>
+                                          {trx.status}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+
+                              {combined.length > 5 && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setOrderHubTab('overview');
+                                    setActiveSubTab('my-orders');
+                                    setOverviewInnerTab('all');
+                                    setIsPaymentHistorySeeAllActive(true);
+                                    setTimeout(() => {
+                                      const el = document.getElementById('second-column-payment-history');
+                                      if (el) {
+                                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                      }
+                                    }, 60);
+                                  }}
+                                  className="w-full mt-1 py-1.5 px-2.5 rounded-lg bg-sky-50/80 hover:bg-sky-100 dark:bg-sky-950/40 dark:hover:bg-sky-900/60 text-sky-700 dark:text-sky-300 text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer border border-sky-200/60 dark:border-sky-800/60"
+                                >
+                                  <span>সবগুলো দেখুন (মোট {combined.length}টি)</span>
+                                  <ArrowRight className="w-3 h-3" />
+                                </button>
+                              )}
+                            </>
+                          );
+                        })()}
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                {/* 2. SECOND COLUMN (CENTER FEED): MAIN ORDERS / HUB CONTENT */}
+                <div className="w-full lg:col-span-5 space-y-4 font-bengali min-w-0">
+                  {/* UNIFIED HUB: MY ORDERS, COURSES & OVERVIEW */}
+                  {(activeSubTab === 'my-orders' || activeSubTab === 'my-courses' || activeSubTab === 'overview') && (
+                    <div className="space-y-4 font-bengali animate-fadeIn pt-1 sm:pt-0">
 
                         {/* VIEW 0: UNIFIED OVERVIEW (ওভারভিউ: একনজরে অর্ডার ও সকল পেমেন্ট হিস্টোরি) */}
                         {orderHubTab === 'overview' && (
                           <div className="space-y-4 sm:space-y-5 animate-fadeIn pt-1.5 sm:pt-2.5">
                             {/* 4 Centered Overview Quick Stats Cards (Clean Centered Design, Mobile-Friendly, Clickable) */}
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 pt-1 sm:pt-2">
+                            {/* পিসি ভিউতে 'সবগুলো দেখুন' ক্লিক করা থাকলে এই ৪টি কার্ড হাইড থাকবে */}
+                            <div className={`grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 pt-1 sm:pt-2 ${isPaymentHistorySeeAllActive ? 'lg:hidden' : ''}`}>
                               {/* 1. মোট প্রজেক্ট */}
                               <button
                                 type="button"
@@ -9763,11 +11609,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 }}
                                 className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center hover:border-blue-500/80 hover:shadow-sm transition-all transform hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer group"
                               >
-                                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-blue-500/10 text-[#006A4E] dark:text-sky-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-emerald-500/10 text-[#006A4E] dark:text-emerald-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                   <Briefcase className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-lg sm:text-2xl font-black font-heading text-slate-900 dark:text-white leading-none">
-                                  <AnimatedOverviewCounter value={`${buyerProjectOrders.length > 0 ? buyerProjectOrders.length : 6}টি`} />
+                                  <AnimatedOverviewCounter value={`${buyerProjectOrders.length > 0 ? buyerProjectOrders.length : 16}টি`} />
                                 </h3>
                                 <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1.5">
                                   মোট প্রজেক্ট
@@ -9787,14 +11633,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <BookOpen className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-lg sm:text-2xl font-black font-heading text-slate-900 dark:text-white leading-none">
-                                  <AnimatedOverviewCounter value={`${userEnrollments.length > 0 ? userEnrollments.length : 3}টি`} />
+                                  <AnimatedOverviewCounter value={`${userEnrollments.length > 0 ? userEnrollments.length : 2}টি`} />
                                 </h3>
                                 <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1.5">
                                   এনরোল্ড কোর্স
                                 </p>
                               </button>
 
-                              {/* 3. ৪টি পাবলিক পোস্ট */}
+                              {/* 3. ১১টি পাবলিক পোস্ট */}
                               <button
                                 type="button"
                                 onClick={() => {
@@ -9808,14 +11654,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <Send className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-lg sm:text-2xl font-black font-heading text-purple-600 dark:text-purple-400 leading-none">
-                                  <AnimatedOverviewCounter value={`${allBuyerOrders.filter(o => o.isPublicOffer || o.type === 'custom_agency_order' || o.status === 'pending_approval' || o.status === 'pending' || !o.sellerId || o.sellerId === 'unassigned' || o.sellerId === 'pending_expert').length || 4}টি`} />
+                                  <AnimatedOverviewCounter value={`${allBuyerOrders.filter(o => o.isPublicOffer || o.type === 'custom_agency_order' || o.status === 'pending_approval' || o.status === 'pending' || !o.sellerId || o.sellerId === 'unassigned' || o.sellerId === 'pending_expert').length > 0 ? allBuyerOrders.filter(o => o.isPublicOffer || o.type === 'custom_agency_order' || o.status === 'pending_approval' || o.status === 'pending' || !o.sellerId || o.sellerId === 'unassigned' || o.sellerId === 'pending_expert').length : 11}টি`} />
                                 </h3>
                                 <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1.5">
                                   পাবলিক পোস্ট
                                 </p>
                               </button>
 
-                              {/* 4. ৪টি প্রোডাক্ট */}
+                              {/* 4. ২টি প্রোডাক্ট */}
                               <button
                                 type="button"
                                 onClick={() => {
@@ -9828,7 +11674,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <Package className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-lg sm:text-2xl font-black font-heading text-amber-600 dark:text-amber-400 leading-none">
-                                  <AnimatedOverviewCounter value={`${buyerDigitalOrders.length > 0 ? buyerDigitalOrders.length : 4}টি`} />
+                                  <AnimatedOverviewCounter value={`${buyerDigitalOrders.length > 0 ? buyerDigitalOrders.length : 2}টি`} />
                                 </h3>
                                 <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1.5">
                                   প্রোডাক্ট
@@ -9837,7 +11683,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             </div>
 
                             {/* COMPREHENSIVE PAYMENT & TRANSACTION HISTORY (প্লেইন ডিজাইন: ক্লিন সিমলেস লিস্ট লেআউট) */}
-                            <div className="pt-2 sm:pt-4 space-y-3 font-bengali">
+                            <div id="second-column-payment-history" className="pt-2 sm:pt-4 space-y-3 font-bengali scroll-mt-20">
                               {/* Header & Filter Section (Plain border-b layout) */}
                               <div className="pb-3 border-b border-slate-200/90 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                                 <div className="space-y-0.5">
@@ -12236,6 +14082,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   return (
                                     <div
                                       key={ord.id}
+                                      id={`buyer-order-${ord.id}`}
                                       className={`relative overflow-hidden bg-gradient-to-b from-white via-slate-50/60 to-blue-50/20 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-950 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs hover:shadow-md transition-all p-3 sm:p-3.5 text-slate-800 dark:text-slate-100 font-bengali ${leftAccentBorder}`}
                                     >
                                       {/* Row 1: Seller Profile (Left) | Order ID & Status Badge (Right) */}
@@ -12500,12 +14347,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                         <button
                                           type="button"
                                           onClick={() => setViewingOrderDetails(ord)}
-                                          className="py-1.5 sm:py-2 px-2.5 bg-slate-700 hover:bg-slate-800 active:scale-95 text-white font-black text-[10px] sm:text-xs rounded-xl transition cursor-pointer flex items-center justify-center gap-1 shadow-xs whitespace-nowrap"
+                                          className="py-1.5 px-2.5 sm:py-2 sm:px-4 bg-[#006A4E] hover:bg-[#047857] active:scale-95 text-white font-bold text-xs sm:text-sm rounded-lg sm:rounded-xl transition cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 shadow-xs whitespace-nowrap"
                                           title="কাজের সম্পূর্ণ তথ্য ও ব্রিফ দেখুন"
                                         >
-                                          <Info className="w-3.5 h-3.5 text-white" />
+                                          <Info className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                                           <span>বিস্তারিত</span>
-                                          <ExternalLink className="w-2.5 h-2.5 text-white/80" />
+                                          <ExternalLink className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white/80" />
                                         </button>
                                       </div>
                                     </div>
@@ -12685,6 +14532,64 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   </div>
                 )}
               </div>
+
+              {/* 3. THIRD COLUMN (RIGHT SIDEBAR): PC VIEW APPROPRIATE WIDGETS */}
+              <div className="hidden lg:block lg:col-span-3 sticky top-20 space-y-4 font-bengali">
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs font-bengali space-y-5">
+                  
+                  {/* SECTION 1: PTEN FEATURED DIGITAL PRODUCTS & COURSES */}
+                  <div>
+                    <PtenFeaturedShowcase
+                      digitalProducts={digitalProducts}
+                      courses={courses}
+                      setActiveTab={setActiveTab}
+                      setActiveSubTab={setActiveSubTab}
+                    />
+                  </div>
+
+                  {/* SECTION 2: PTENIT ESCROW & SAFETY GUARANTEE */}
+                  <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+                    <div className="flex items-center gap-2 text-[#006A4E] dark:text-emerald-400 font-bold text-xs sm:text-sm">
+                      <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                      <span>পিটেন সেফটি এসক্রো প্রটেকশন</span>
+                    </div>
+                    <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                      আপনার প্রতিটি অর্ডার শতভাগ সুরক্ষিত। ফ্রিল্যান্সার কাজ ডেলিভারি দিলে তা যাচাই করে সন্তুষ্ট হলেই কেবল পেমেন্ট রিলিজ হয়।
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      <div className="p-2 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-800/40 text-center">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 mx-auto mb-1" />
+                        <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 block">১০০% মানি-ব্যাক</span>
+                      </div>
+                      <div className="p-2 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-800/40 text-center">
+                        <Lock className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 mx-auto mb-1" />
+                        <span className="text-[10px] font-bold text-blue-800 dark:text-blue-300 block">এসক্রো ডিপোজিট</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* SECTION 3: NEED ORDER ASSISTANCE / SUPPORT */}
+                  <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2">
+                    <div className="flex items-center gap-1.5 text-slate-900 dark:text-white font-bold text-xs">
+                      <HelpCircle className="w-3.5 h-3.5 text-[#006A4E] dark:text-emerald-400 shrink-0" />
+                      <span>অর্ডার নিয়ে কোনো সাহায্য প্রয়োজন?</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                      কাজের কোয়ালিটি বা সময় নিয়ে যেকোনো সহায়তায় আমাদের সাপোর্ট টিম ২৪/৭ প্রস্তুত রয়েছে।
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setIsInboxModalOpen(true)}
+                      className="w-full mt-1 py-2 px-3 rounded-xl bg-slate-100 hover:bg-[#006A4E] hover:text-white dark:bg-slate-800 dark:hover:bg-[#006A4E] text-slate-700 dark:text-slate-200 font-bold text-[11px] transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      <span>লাইভ সাপোর্ট মেসেজ পাঠান</span>
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+
             </div>
           </div>
         )}
@@ -13615,7 +15520,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
               <button
                 type="submit"
-                className="w-full py-2.5 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black text-xs rounded-xl transition shadow cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl transition shadow-xs cursor-pointer flex items-center justify-center gap-2 active:scale-95"
               >
                 <Send className="w-4 h-4" />
                 <span>মেসেজ পাঠান</span>

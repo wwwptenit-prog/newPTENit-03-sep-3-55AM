@@ -474,7 +474,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                 setActiveTab('digital-products');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="inline-flex items-center gap-1 text-[#38BDF8] hover:text-[#006A4E] font-bold text-xs sm:text-sm hover:underline transition-all cursor-pointer font-bengali shrink-0 group"
+              className="inline-flex items-center gap-1 text-[#006A4E] dark:text-emerald-400 hover:text-[#047857] dark:hover:text-emerald-300 font-bold text-xs sm:text-sm hover:underline transition-all cursor-pointer font-bengali shrink-0 group"
             >
               <span>{t('সবগুলো দেখুন →', 'See All →')}</span>
             </button>
@@ -597,7 +597,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                           <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold block leading-none mb-1 uppercase tracking-wider">
                             মূল্য
                           </span>
-                          <span className="text-sm sm:text-base md:text-lg font-black text-[#006A4E] dark:text-sky-400 block truncate leading-none">
+                          <span className="text-sm sm:text-base md:text-lg font-black text-[#006A4E] dark:text-emerald-400 block truncate leading-none">
                             সম্পূর্ণ ফ্রি
                           </span>
                         </div>
@@ -606,7 +606,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                           <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold block leading-none mb-1 uppercase tracking-wider">
                             মূল্য
                           </span>
-                          <span className="text-sm sm:text-base md:text-lg font-black text-slate-900 dark:text-white tracking-tight leading-none">
+                          <span className="text-sm sm:text-base md:text-lg font-black text-[#006A4E] dark:text-emerald-400 tracking-tight leading-none">
                             ৳{product.price.toLocaleString('bn-BD')}
                           </span>
                         </div>
@@ -616,10 +616,10 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                     <button
                       type="button"
                       onClick={() => handleOpenDetail(product)}
-                      className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl font-bold text-[11px] sm:text-xs shadow-xs flex items-center gap-1 sm:gap-1.5 transition-all duration-200 active:scale-95 cursor-pointer shrink-0 bg-[#006A4E] hover:bg-[#047857] text-white"
+                      className="py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold shadow-xs flex items-center justify-center gap-1 sm:gap-1.5 transition-all duration-200 active:scale-95 cursor-pointer shrink-0 bg-[#006A4E] hover:bg-[#047857] text-white group/btn"
                     >
                       <span>বিস্তারিত</span>
-                      <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                      <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white group-hover/btn:translate-x-0.5 transition-transform shrink-0" />
                     </button>
                   </div>
                 </div>

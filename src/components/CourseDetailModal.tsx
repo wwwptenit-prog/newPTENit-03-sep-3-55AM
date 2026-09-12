@@ -311,37 +311,37 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-xs">
 
           {/* 1. TOP BAR: ব্যাক বাটন | সেন্টারে: প্রিমিয়াম সার্ভিস / সম্পূর্ণ ফ্রি | শেয়ার সোশ্যাল মিডিয়া */}
-          <div className="relative bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 rounded-t-2xl sm:rounded-t-3xl">
-            {/* LEFT: BACK BUTTON (বেক বাটন - ChevronLeft, কালো কালার, কোনো বর্ডার ছাড়া) */}
+          <div className="relative bg-[#006A4E] text-white border-b border-[#00543D] px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 rounded-t-2xl sm:rounded-t-3xl shadow-xs">
+            {/* LEFT: BACK BUTTON (বেক বাটন - ChevronLeft, সাদা কালার, কোনো বর্ডার ছাড়া) */}
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
+              className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
               title="ফিরে যান"
             >
-              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5] text-slate-900 dark:text-white" />
-              <span className="hidden xs:inline text-slate-900 dark:text-white">ফিরে যান</span>
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5] text-white" />
+              <span className="hidden xs:inline text-white">ফিরে যান</span>
             </button>
 
-            {/* CENTER: কোর্স হলে সম্পূর্ণ ফ্রি কোর্স বা প্রিমিয়াম কোর্স (কালো আইকন ও টেক্সট) */}
+            {/* CENTER: কোর্স হলে সম্পূর্ণ ফ্রি কোর্স বা প্রিমিয়াম কোর্স (সাদা আইকন ও টেক্সট) */}
             <div className="flex items-center justify-center min-w-0">
               <SinglePromoBadgeView 
                 item={{ id: course.id, title: course.title, price: course.price, isFree: course.isFree, offerBadge: (course as any).offerBadge }} 
                 itemType="course" 
-                textColor="text-slate-900 dark:text-white"
+                textColor="text-white"
               />
             </div>
 
-            {/* RIGHT: শেয়ার সোশ্যাল মিডিয়া (Social Media Share - কালো আইকন ও টেক্সট) */}
+            {/* RIGHT: শেয়ার সোশ্যাল মিডিয়া (Social Media Share - সাদা আইকন ও টেক্সট) */}
             <div className="relative shrink-0">
               <button
                 type="button"
                 onClick={() => setIsShareMenuOpen(!isShareMenuOpen)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
                 title="সোশ্যাল মিডিয়ায় শেয়ার করুন"
               >
-                <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-white" />
-                <span className="hidden sm:inline text-slate-900 dark:text-white">শেয়ার</span>
+                <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                <span className="hidden sm:inline text-white">শেয়ার</span>
               </button>
 
               {/* Share Popover Dropdown */}

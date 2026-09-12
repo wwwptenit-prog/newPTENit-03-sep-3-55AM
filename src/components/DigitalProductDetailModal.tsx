@@ -77,6 +77,13 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
   // Order Placement & Delivery State
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
   const [completedOrder, setCompletedOrder] = useState<MarketplaceOrder | null>(null);
+  const activeCompletedOrder = completedOrder
+    ? (marketplaceOrders.find(o => o.id === completedOrder.id) || completedOrder)
+    : null;
+  const isOrderApproved = isFree || activeCompletedOrder?.paymentStatus === 'verified' || activeCompletedOrder?.accessGranted;
+  const isOrderRejected = activeCompletedOrder?.paymentStatus === 'rejected' || activeCompletedOrder?.status === 'cancelled';
+  const isOrderPending = !isOrderApproved && !isOrderRejected;
+
   const [copiedKey, setCopiedKey] = useState(false);
   const [copiedShareLink, setCopiedShareLink] = useState(false);
   const [copiedNumber, setCopiedNumber] = useState(false);
@@ -339,37 +346,37 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-xs">
 
           {/* 1. TOP BAR: ব্যাক বাটন | সেন্টারে: প্রিমিয়াম সার্ভিস / সম্পূর্ণ ফ্রি | শেয়ার সোশ্যাল মিডিয়া */}
-          <div className="relative bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 rounded-t-2xl sm:rounded-t-3xl">
-            {/* LEFT: BACK BUTTON (বেক বাটন - ChevronLeft, কালো কালার, কোনো বর্ডার ছাড়া) */}
+          <div className="relative bg-[#006A4E] text-white border-b border-[#00543D] px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 rounded-t-2xl sm:rounded-t-3xl shadow-xs">
+            {/* LEFT: BACK BUTTON (বেক বাটন - ChevronLeft, সাদা কালার, কোনো বর্ডার ছাড়া) */}
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
+              className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
               title={t('ফিরে যান', 'Go Back')}
             >
-              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5] text-slate-900 dark:text-white" />
-              <span className="hidden xs:inline text-slate-900 dark:text-white">{t('ফিরে যান', 'Go Back')}</span>
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5] text-white" />
+              <span className="hidden xs:inline text-white">{t('ফিরে যান', 'Go Back')}</span>
             </button>
 
-            {/* CENTER: ডিজিটাল প্রোডাক্টে প্রাইজ থাকলে প্রিমিয়াম সার্ভিস, সম্পূর্ণ ফ্রি থাকলে সম্পূর্ণ ফ্রি (কালো আইকন ও টেক্সট) */}
+            {/* CENTER: ডিজিটাল প্রোডাক্টে প্রাইজ থাকলে প্রিমিয়াম সার্ভিস, সম্পূর্ণ ফ্রি থাকলে সম্পূর্ণ ফ্রি (সাদা আইকন ও টেক্সট) */}
             <div className="flex items-center justify-center min-w-0">
               <SinglePromoBadgeView 
                 item={{ id: product.id, title: product.title, price: product.price, offerBadge: (product as any).offerBadge }} 
                 itemType="digital_product" 
-                textColor="text-slate-900 dark:text-white"
+                textColor="text-white"
               />
             </div>
 
-            {/* RIGHT: শেয়ার সোশ্যাল মিডিয়া (Social Media Share - কালো আইকন ও টেক্সট) */}
+            {/* RIGHT: শেয়ার সোশ্যাল মিডিয়া (Social Media Share - সাদা আইকন ও টেক্সট) */}
             <div className="relative shrink-0">
               <button
                 type="button"
                 onClick={() => setIsShareMenuOpen(!isShareMenuOpen)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
                 title="সোশ্যাল মিডিয়ায় শেয়ার করুন"
               >
-                <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-white" />
-                <span className="hidden sm:inline text-slate-900 dark:text-white">শেয়ার</span>
+                <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                <span className="hidden sm:inline text-white">শেয়ার</span>
               </button>
 
               {/* Share Popover Dropdown */}
@@ -963,30 +970,40 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                 </div>
 
                 {/* Quick Order Success Link if placed */}
-                {isOrderPlaced && completedOrder && (
+                {isOrderPlaced && activeCompletedOrder && (
                   <div className="p-3 bg-blue-50 dark:bg-blue-950/40 rounded-2xl border border-blue-500/30 text-xs space-y-2">
                     <span className="text-blue-700 dark:text-sky-300 font-bold block">
-                      ✅ অর্ডার #{completedOrder.id} নিশ্চিত হয়েছে
+                      {isOrderApproved ? `✅ অর্ডার #${activeCompletedOrder.id} নিশ্চিত হয়েছে` : isOrderRejected ? `✕ অর্ডার #${activeCompletedOrder.id} বাতিল` : `⏳ অর্ডার #${activeCompletedOrder.id} অনুমোদন অপেক্ষমান`}
                     </span>
-                    {completedOrder.deliveryType === 'canva_auto' ? (
-                      <button
-                        type="button"
-                        onClick={handleCanvaAccessNow}
-                        className="w-full py-2 px-3 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
-                      >
-                        <Crown className="w-3.5 h-3.5 text-amber-300" />
-                        <span>Canva Access খুলুন</span>
-                      </button>
+                    {isOrderApproved ? (
+                      activeCompletedOrder.deliveryType === 'canva_auto' ? (
+                        <button
+                          type="button"
+                          onClick={handleCanvaAccessNow}
+                          className="w-full py-2 px-3 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          <Crown className="w-3.5 h-3.5 text-amber-300" />
+                          <span>Canva Access খুলুন</span>
+                        </button>
+                      ) : (
+                        <a
+                          href={activeCompletedOrder.customFileUrl || product.downloadUrl || 'https://drive.google.com'}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="w-full py-2 px-3 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs flex items-center justify-center gap-1.5 text-center"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                          <span>ফাইল ডাউনলোড করুন</span>
+                        </a>
+                      )
+                    ) : isOrderRejected ? (
+                      <div className="text-[11px] text-rose-600 dark:text-rose-400 font-semibold">
+                        পেমেন্ট যাচাই বাতিল করা হয়েছে।
+                      </div>
                     ) : (
-                      <a
-                        href={completedOrder.customFileUrl || product.downloadUrl || 'https://drive.google.com'}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="w-full py-2 px-3 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white font-bold text-xs flex items-center justify-center gap-1.5 text-center"
-                      >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>ফাইল ডাউনলোড করুন</span>
-                      </a>
+                      <div className="text-[11px] text-amber-700 dark:text-amber-300 font-medium">
+                        এডমিন যাচাই ও অনুমোদন করার পর লিঙ্ক সক্রিয় হবে।
+                      </div>
                     )}
                   </div>
                 )}
@@ -1233,13 +1250,71 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                 )}
               </>
             ) : (
-              /* ORDER SUCCESS & MULTI-SYSTEM DELIVERY SCREEN */
+              /* ORDER DELIVERY / PENDING STATUS SCREEN */
               <div className="space-y-4 font-bengali">
-                
-                {/* 1. AUTO CANVA ACCESS FLOW */}
-                {((completedOrder?.deliveryType === 'canva_auto') || (product.deliveryType === 'canva_auto')) && (
+
+                {/* PENDING ADMIN APPROVAL STATE */}
+                {!isFree && isOrderPending && (
                   <div className="space-y-4">
-                    <div className="p-4 bg-blue-500/10 border border-blue-600/50/30 rounded-2xl text-center space-y-1.5">
+                    <div className="p-5 bg-amber-500/10 border-2 border-amber-500/40 rounded-2xl text-center space-y-2.5">
+                      <div className="w-12 h-12 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center mx-auto shadow-sm">
+                        <Clock className="w-6 h-6 animate-spin" />
+                      </div>
+                      <span className="px-3 py-1 bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold text-xs rounded-full inline-block">
+                        অপেক্ষমান (Pending Approval)
+                      </span>
+                      <h4 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                        পেমেন্ট তথ্য সফলভাবে জমা দেওয়া হয়েছে
+                      </h4>
+                      <div className="p-3.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-500/30 rounded-xl text-left space-y-1">
+                        <p className="text-xs sm:text-sm font-semibold text-amber-800 dark:text-amber-300 font-sans leading-relaxed">
+                          Payment submitted successfully. Please wait while we verify your payment. Access will be activated after admin approval.
+                        </p>
+                        <p className="text-xs text-amber-700 dark:text-amber-400 font-bengali">
+                          আপনার পেমেন্ট ভেরিফিকেশন চলছে। এডমিন প্যানেল থেকে অনুমোদন দেওয়ার পর এক্সেস সক্রিয় হবে।
+                        </p>
+                      </div>
+                      <p className="text-xs text-slate-600 dark:text-slate-300">
+                        ইনভয়েস নং: <span className="font-mono font-bold text-amber-600 dark:text-amber-400">#{activeCompletedOrder?.id}</span> • ক্রেতা: <strong className="text-slate-900 dark:text-white">{activeCompletedOrder?.buyerName}</strong>
+                      </p>
+                    </div>
+
+                    <div className="p-4 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center space-y-2">
+                      <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-800 text-amber-500 flex items-center justify-center mx-auto">
+                        <Lock className="w-4 h-4" />
+                      </div>
+                      <h5 className="text-sm font-black text-slate-900 dark:text-white">
+                        🔒 এক্সেস বর্তমানে লক করা রয়েছে
+                      </h5>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
+                        এডমিন TrxID যাচাই ও অনুমোদন সম্পন্ন করলে স্বয়ংক্রিয়ভাবে ডাউনলোড ফাইল ও ক্যানভা লিঙ্ক আনলক হবে।
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* REJECTED PAYMENT STATE */}
+                {!isFree && isOrderRejected && (
+                  <div className="p-5 bg-rose-500/10 border-2 border-rose-500/40 rounded-2xl text-center space-y-2.5">
+                    <div className="w-12 h-12 rounded-full bg-rose-500/20 text-rose-500 flex items-center justify-center mx-auto shadow-sm">
+                      <Lock className="w-6 h-6" />
+                    </div>
+                    <span className="px-3 py-1 bg-rose-500/20 text-rose-600 dark:text-rose-400 font-bold text-xs rounded-full inline-block">
+                      পেমেন্ট বাতিল (Rejected)
+                    </span>
+                    <h4 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                      পেমেন্ট যাচাই বাতিল করা হয়েছে
+                    </h4>
+                    <p className="text-xs text-rose-600 dark:text-rose-400 leading-relaxed max-w-md mx-auto">
+                      আপনার প্রেরিত TrxID যাচাই করা সম্ভব হয়নি বা ভুল তথ্য প্রদান করা হয়েছিল। এক্সেস লক রয়েছে। অনুগ্রহ করে সঠিক তথ্য দিয়ে পুনরায় চেষ্টা করুন।
+                    </p>
+                  </div>
+                )}
+
+                {/* 1. AUTO CANVA ACCESS FLOW (Only when approved or free) */}
+                {isOrderApproved && ((completedOrder?.deliveryType === 'canva_auto') || (product.deliveryType === 'canva_auto')) && (
+                  <div className="space-y-4">
+                    <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-2xl text-center space-y-1.5">
                       <div className="w-11 h-11 rounded-full bg-[#006A4E] text-white flex items-center justify-center mx-auto shadow-md">
                         <Crown className="w-6 h-6 text-amber-300" />
                       </div>
@@ -1307,8 +1382,8 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                   </div>
                 )}
 
-                {/* 2. FILE DOWNLOAD FLOW */}
-                {((completedOrder?.deliveryType === 'file_download' || completedOrder?.deliveryType === 'auto') && (completedOrder?.deliveryType !== 'canva_auto') && (product.deliveryType !== 'canva_auto')) && (
+                {/* 2. FILE DOWNLOAD FLOW (Only when approved or free) */}
+                {isOrderApproved && ((completedOrder?.deliveryType === 'file_download' || completedOrder?.deliveryType === 'auto') && (completedOrder?.deliveryType !== 'canva_auto') && (product.deliveryType !== 'canva_auto')) && (
                   <div className="space-y-4">
                     <div className="p-4 bg-blue-500/10 border border-blue-600/50/30 rounded-2xl text-center space-y-1.5">
                       <div className="w-10 h-10 rounded-full bg-[#006A4E] text-white flex items-center justify-center mx-auto shadow-md">
@@ -1366,8 +1441,8 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                   </div>
                 )}
 
-                {/* 3. EMAIL / WHATSAPP DELIVERY FLOW */}
-                {((completedOrder?.deliveryType === 'email_whatsapp' || completedOrder?.deliveryType === 'manual') && (completedOrder?.deliveryType !== 'canva_auto') && (product.deliveryType !== 'canva_auto')) && (
+                {/* 3. EMAIL / WHATSAPP DELIVERY FLOW (Only when approved or free) */}
+                {isOrderApproved && ((completedOrder?.deliveryType === 'email_whatsapp' || completedOrder?.deliveryType === 'manual') && (completedOrder?.deliveryType !== 'canva_auto') && (product.deliveryType !== 'canva_auto')) && (
                   <div className="space-y-4">
                     <div className="p-4 bg-purple-500/10 border border-purple-500/30 rounded-2xl text-center space-y-1.5">
                       <div className="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center mx-auto shadow-md">

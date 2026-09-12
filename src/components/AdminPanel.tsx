@@ -945,7 +945,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
   const [gigOfferBadge, setGigOfferBadge] = useState('cashback');
   const [gigSellerType, setGigSellerType] = useState<'agency' | 'staff'>('agency');
   const [gigSellerName, setGigSellerName] = useState('PTEN IT Official Agency');
-  const [gigSellerLevel, setGigSellerLevel] = useState('Top Rated Agency');
+  const [gigSellerLevel, setGigSellerLevel] = useState('Top Rated . Agency');
 
   // 3-Tier Packages State
   const [gigBasicTitle, setGigBasicTitle] = useState('বেসিক স্টার্টার');
@@ -1413,7 +1413,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
     setGigOfferBadge('cashback');
     setGigSellerType('agency');
     setGigSellerName('PTEN IT Official Agency');
-    setGigSellerLevel('Top Rated Agency');
+    setGigSellerLevel('Top Rated . Agency');
     
     // Packages
     setGigBasicTitle('বেসিক স্টার্টার');
@@ -1461,7 +1461,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
     setGigOfferBadge(g.offerBadge || 'cashback');
     setGigSellerType(g.sellerId === 'ptenit-official' ? 'agency' : 'staff');
     setGigSellerName(g.sellerName || 'PTEN IT Official Agency');
-    setGigSellerLevel(g.sellerLevel || 'Top Rated Agency');
+    setGigSellerLevel((g.sellerLevel || 'Top Rated . Agency').replace(/[()]/g, ''));
 
     // Populate packages
     const b = g.packages?.basic;
@@ -1550,7 +1550,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
       sellerId: gigSellerType === 'agency' ? 'ptenit-official' : 'ptenit-staff',
       sellerName: gigSellerName || 'PTEN IT Official Agency',
       sellerAvatar: siteSettings.logoUrl || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80',
-      sellerLevel: gigSellerLevel || 'Top Rated Agency',
+      sellerLevel: (gigSellerLevel || 'Top Rated . Agency').replace(/[()]/g, ''),
       isAgencyStaff: true,
       requirements: gigRequirements,
       faqs: gigFaqs,
@@ -1739,7 +1739,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
       <div className="max-w-[1600px] mx-auto px-2.5 sm:px-6 lg:px-8 space-y-3 sm:space-y-4">
         
         {/* DESKTOP TOP NAV HEADER (lg:flex) */}
-        <header className="hidden lg:flex bg-slate-900/95 backdrop-blur-md border border-slate-800 text-white px-4 py-2.5 rounded-2xl shadow-xl justify-between items-center gap-3">
+        <header className="hidden lg:flex bg-[#006A4E] backdrop-blur-md border border-[#00543D] text-white px-4 py-2.5 rounded-2xl shadow-xl justify-between items-center gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <div className="p-2 bg-amber-500/15 rounded-xl border border-amber-500/30 text-amber-400 shrink-0">
               <ShieldCheck className="w-5 h-5" />
@@ -1900,7 +1900,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
         {/* MOBILE DEDICATED PHONE NAVIGATION HEADER (ONLY ON < lg) */}
         <div className="w-full block lg:hidden space-y-1.5 font-bengali sticky top-0 z-30">
           {/* Mobile Top Sticky Bar */}
-          <div className="bg-slate-950/95 backdrop-blur-md border border-slate-800/80 rounded-xl px-2.5 py-1.5 shadow-lg flex items-center justify-between gap-1.5">
+          <div className="bg-[#006A4E] backdrop-blur-md border border-[#00543D] rounded-xl px-2.5 py-1.5 shadow-lg flex items-center justify-between gap-1.5 text-white">
             <div className="flex items-center gap-1.5 min-w-0">
               <div className="p-1 bg-amber-500/20 rounded-lg text-amber-400 shrink-0">
                 <ShieldCheck className="w-4 h-4" />

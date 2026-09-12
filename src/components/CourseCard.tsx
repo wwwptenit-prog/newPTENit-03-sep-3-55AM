@@ -110,36 +110,28 @@ export const CourseCard: React.FC<CourseCardProps> = ({
 
       {/* Price & Actions Ribbon - Harmonized with GigCard and DigitalProducts */}
       <div className="p-2.5 sm:p-3.5 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1.5 rounded-b-2xl">
-        <div className="min-w-0">
+        <div className="min-w-0 flex flex-col justify-center">
           {isEnrolled ? (
             <span className="text-[11px] sm:text-xs font-bold text-[#38BDF8] flex items-center gap-1 truncate">
               <CheckCircle2 className="w-3.5 h-3.5 text-[#38BDF8] shrink-0" />
               <span>অ্যাক্টিভ</span>
             </span>
           ) : course.isFree ? (
-            <div>
-              <span className="text-[9px] sm:text-[10px] text-[#006A4E] dark:text-sky-400 font-bold block leading-none mb-1 uppercase tracking-wider">
-                স্পেশাল
-              </span>
-              <span className="text-sm sm:text-base md:text-lg font-black text-blue-500 dark:text-sky-400 block truncate leading-none">
+            <div className="flex flex-col justify-center min-w-0">
+              <span className="text-sm sm:text-base md:text-lg font-black text-[#006A4E] dark:text-emerald-400 block truncate leading-tight">
                 {t('সম্পূর্ণ ফ্রি', 'Fully Free')}
               </span>
             </div>
           ) : (
-            <div>
-              <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold block leading-none mb-1 uppercase tracking-wider">
-                কোর্স ফি
+            <div className="flex flex-col justify-center min-w-0">
+              <span className="text-sm sm:text-base md:text-lg font-black text-[#006A4E] dark:text-emerald-400 block truncate leading-tight tracking-tight">
+                ৳{(course.discountPrice || course.price).toLocaleString('bn-BD')}
               </span>
-              <div className="flex items-baseline gap-1 sm:gap-1.5">
-                <span className="text-sm sm:text-base md:text-lg font-black text-slate-900 dark:text-white block truncate leading-none tracking-tight">
-                  ৳{(course.discountPrice || course.price).toLocaleString('bn-BD')}
+              {course.discountPrice && (
+                <span className="text-[10px] sm:text-xs text-slate-400 line-through leading-none mt-0.5 block truncate">
+                  ৳{course.price.toLocaleString('bn-BD')}
                 </span>
-                {course.discountPrice && (
-                  <span className="text-[10px] sm:text-xs text-slate-400 line-through leading-none">
-                    ৳{course.price.toLocaleString('bn-BD')}
-                  </span>
-                )}
-              </div>
+              )}
             </div>
           )}
         </div>
@@ -155,19 +147,19 @@ export const CourseCard: React.FC<CourseCardProps> = ({
                   onOpenDetail(course.id);
                 }
               }}
-              className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
+              className="py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 active:scale-95 shrink-0 group/btn"
             >
-              <PlayCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              <PlayCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
               <span>{t('ক্লাসে যান', 'Go to Class')}</span>
             </button>
           ) : (
             <button
               type="button"
               onClick={() => onOpenDetail(course.id)}
-              className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
+              className="py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 active:scale-95 shrink-0 group/btn"
             >
               <span>{t('বিস্তারিত', 'Details')}</span>
-              <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white group-hover/btn:translate-x-0.5 transition-transform shrink-0" />
             </button>
           )}
         </div>

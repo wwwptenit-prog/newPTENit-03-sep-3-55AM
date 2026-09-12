@@ -744,7 +744,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
 
                 <button
                   type="submit"
-                  className="w-full sm:w-auto px-6 py-3 min-h-[44px] bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md cursor-pointer active:scale-98 transition-all"
+                  className="w-full sm:w-auto px-6 py-3 min-h-[44px] bg-[#006A4E] hover:bg-[#047857] text-white font-bold rounded-xl shadow-xs cursor-pointer active:scale-95 transition-all flex items-center justify-center gap-2"
                 >
                   মেসেজ পাঠান
                 </button>

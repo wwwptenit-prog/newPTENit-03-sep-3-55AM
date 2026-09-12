@@ -442,41 +442,40 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
 
   return (
     <div className={`fixed ${isOpen ? 'bottom-2 right-2 sm:bottom-6 sm:right-6' : 'bottom-24 right-3.5 sm:bottom-6 sm:right-6'} z-50 font-sans`}>
-      {/* FLOATING TRIGGER BUTTON - SLEEK BLACK CIRCLE WITH VIBRANT COLORFUL AI AURA */}
+      {/* FLOATING TRIGGER BUTTON - MATCHING #006A4E BRAND COLOR OF বিস্তারিত BUTTON */}
       {!isOpen && (
         <div className="relative group">
-          {/* Vibrant Animated Multi-Color AI Glowing Halo */}
-          <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#006A4E] via-fuchsia-500 via-sky-400 to-amber-300 opacity-85 blur-[3px] group-hover:opacity-100 group-hover:blur-sm transition duration-300 animate-pulse"></div>
+          {/* Emerald AI Glowing Halo */}
+          <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#006A4E] via-emerald-500 to-[#047857] opacity-80 blur-[3px] group-hover:opacity-100 group-hover:blur-sm transition duration-300 animate-pulse"></div>
 
-          {/* Gradient Border Frame around Sleek Black Core */}
-          <div className="relative p-[2px] rounded-full bg-gradient-to-tr from-[#006A4E] via-violet-500 via-pink-500 to-cyan-400 shadow-xl shadow-blue-500/25">
+          {/* Border Frame around Emerald Core */}
+          <div className="relative p-[1.5px] rounded-full bg-emerald-400/40 shadow-lg shadow-emerald-900/30">
             <button
               onClick={() => {
                 setIsOpen(true);
                 playNotificationTone();
               }}
-              className="relative flex items-center justify-center w-11 h-11 sm:w-auto sm:h-auto sm:px-4 sm:py-2.5 bg-black sm:bg-[#091124] text-white rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer border border-slate-700/50"
+              className="relative flex items-center justify-center w-11 h-11 sm:w-auto sm:h-auto sm:px-4 sm:py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer border border-emerald-500/40"
               aria-label="AI Assistant"
               title="AI Assistant"
             >
-              {/* Bot Icon with AI Colorful Sparkles */}
+              {/* Bot Icon */}
               <div className="relative flex items-center justify-center">
-                {/* Bot Icon on Dark Circle - White Color & Prominent Size */}
-                <div className="w-8 h-8 rounded-full bg-black sm:bg-gradient-to-tr sm:from-[#006A4E] sm:to-[#047857] flex items-center justify-center text-white sm:text-white shadow-inner">
-                  <Bot className="w-5.5 h-5.5 sm:w-4 sm:h-4 text-white sm:text-white stroke-[2.2]" />
+                <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center text-white shadow-inner">
+                  <Bot className="w-5 h-5 sm:w-4 sm:h-4 text-white stroke-[2.2]" />
                 </div>
                 
-                {/* Pulsing Red & Green Active Beacon */}
+                {/* Pulsing Active Beacon */}
                 <span className="absolute top-1/2 -translate-y-1/2 -right-1 sm:-top-0.5 sm:translate-y-0 sm:-right-0.5 flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E11D48] opacity-85"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#E11D48] border border-black shadow-[0_0_8px_#E11D48]"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-85"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-300 border border-[#006A4E] shadow-[0_0_8px_#34d399]"></span>
                 </span>
               </div>
 
               {/* Minimal Title & Sparkles (Hidden on mobile, visible on desktop) */}
               <span className="hidden sm:inline-flex font-extrabold text-xs tracking-wide font-heading text-white items-center gap-1.5 pl-2 pr-1">
                 AI Assistant
-                <Sparkles className="w-3.5 h-3.5 text-[#10B981] animate-pulse" />
+                <Sparkles className="w-3.5 h-3.5 text-emerald-200 animate-pulse" />
               </span>
             </button>
           </div>
@@ -750,7 +749,8 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                 <button
                   type="submit"
                   disabled={isBusy || !inputMsg.trim()}
-                  className="p-2.5 bg-[#006A4E] hover:bg-[#19a34a] disabled:opacity-50 text-white font-bold rounded-xl shadow cursor-pointer disabled:cursor-not-allowed transition shrink-0"
+                  className="p-2.5 bg-[#006A4E] hover:bg-[#047857] disabled:opacity-50 text-white font-bold rounded-xl shadow-xs cursor-pointer disabled:cursor-not-allowed transition shrink-0 active:scale-95"
+                  title="মেসেজ পাঠান"
                 >
                   <Send className="w-4 h-4" />
                 </button>

@@ -103,7 +103,7 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({
                   setActiveTab('courses');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#38BDF8] hover:text-[#006A4E] hover:underline cursor-pointer font-bengali transition-colors border-0"
+                className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#006A4E] dark:text-emerald-400 hover:text-[#047857] dark:hover:text-emerald-300 hover:underline cursor-pointer font-bengali transition-colors border-0"
               >
                 <span>{t('সবগুলো দেখুন →', 'See All →')}</span>
               </button>

@@ -1747,7 +1747,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <h1 className="text-sm font-black text-white tracking-wide">PTENit এডমিন সেন্টার</h1>
-                <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" title="সিস্টেম অনলাইন" />
                 <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-sky-400 text-[10px] font-mono font-bold border border-blue-500/20">
                   {currentUser.email}
                 </span>
@@ -1875,7 +1874,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               </div>
             ) : (
               <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs">
-                <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
                 <span className="text-[11px] text-amber-300 font-bold">
                   {(currentUser as any).staffMember.name} ({(currentUser as any).staffMember.department})
                 </span>
@@ -1908,7 +1906,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               <div className="min-w-0">
                 <div className="flex items-center gap-1">
                   <h1 className="text-[11px] font-black text-white truncate">PTENit</h1>
-                  <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse shrink-0" />
                   <span className="text-[10px] font-bold text-amber-400 px-1 py-0.2 bg-amber-500/10 rounded border border-amber-500/20 truncate">
                     {activeMainModule === 'dashboard' ? 'ড্যাশবোর্ড' :
                      activeMainModule === 'academy' ? 'একাডেমি' :
@@ -2192,7 +2189,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     <p className="text-[10px] text-slate-400">নেভিগেশন প্যানেল</p>
                   </div>
                 </div>
-                <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
               </div>
 
               {/* Enterprise Main Modules */}
@@ -2640,7 +2636,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     </div>
                     <div className="mt-1.5">
                       <p className="text-base sm:text-lg font-black text-white font-mono">{totalStudents} <span className="text-[10px] font-normal text-slate-400">জন</span></p>
-                      <p className="text-[9px] text-sky-400 font-bold mt-0.5 truncate">● এক্টিভ ডাটাবেজ</p>
+                      <p className="text-[9px] text-sky-400 font-bold mt-0.5 truncate">এক্টিভ ডাটাবেজ</p>
                     </div>
                   </div>
 
@@ -2654,7 +2650,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     </div>
                     <div className="mt-1.5">
                       <p className="text-base sm:text-lg font-black text-amber-300 font-mono">৳{totalRevenue.toLocaleString()}</p>
-                      <p className="text-[9px] text-amber-400 font-bold mt-0.5 truncate">● পেইড ফি</p>
+                      <p className="text-[9px] text-amber-400 font-bold mt-0.5 truncate">পেইড ফি</p>
                     </div>
                   </div>
 
@@ -2668,7 +2664,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     </div>
                     <div className="mt-1.5">
                       <p className="text-base sm:text-lg font-black text-sky-300 font-mono">{totalCoursesCount} <span className="text-[10px] font-normal text-slate-400">টি</span></p>
-                      <p className="text-[9px] text-sky-400 font-bold mt-0.5 truncate">● লাইভ কোর্স</p>
+                      <p className="text-[9px] text-sky-400 font-bold mt-0.5 truncate">লাইভ কোর্স</p>
                     </div>
                   </div>
 
@@ -2682,7 +2678,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     </div>
                     <div className="mt-1.5">
                       <p className="text-base sm:text-lg font-black text-purple-300 font-mono">{totalEnrollmentsCount} <span className="text-[10px] font-normal text-slate-400">জন</span></p>
-                      <p className="text-[9px] text-purple-400 font-bold mt-0.5 truncate">● নিবন্ধিত ছাত্র</p>
+                      <p className="text-[9px] text-purple-400 font-bold mt-0.5 truncate">নিবন্ধিত ছাত্র</p>
                     </div>
                   </div>
 
@@ -2696,7 +2692,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     </div>
                     <div className="mt-1.5">
                       <p className="text-base sm:text-lg font-black text-indigo-300 font-mono">{services.length} <span className="text-[10px] font-normal text-slate-400">টি</span></p>
-                      <p className="text-[9px] text-indigo-400 font-bold mt-0.5 truncate">● এজেন্সি প্রজেক্ট</p>
+                      <p className="text-[9px] text-indigo-400 font-bold mt-0.5 truncate">এজেন্সি প্রজেক্ট</p>
                     </div>
                   </div>
 
@@ -2710,7 +2706,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                     </div>
                     <div className="mt-1.5">
                       <p className="text-base sm:text-lg font-black text-rose-300 font-mono">{payouts.filter(p => p.status === 'Pending').length} <span className="text-[10px] font-normal text-slate-400">টি</span></p>
-                      <p className="text-[9px] text-rose-400 font-bold mt-0.5 truncate">● উইথড্র রিকোয়েস্ট</p>
+                      <p className="text-[9px] text-rose-400 font-bold mt-0.5 truncate">উইথড্র রিকোয়েস্ট</p>
                     </div>
                   </div>
                 </div>
@@ -2772,7 +2768,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                                     ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
                                     : 'bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse'
                                 }`}>
-                                  {ord.status === 'Approved' ? '✓ অনুমোদিত' : ord.status === 'Rejected' ? '✕ বাতিল' : '● পেন্ডিং'}
+                                  {ord.status === 'Approved' ? '✓ অনুমোদিত' : ord.status === 'Rejected' ? '✕ বাতিল' : 'পেন্ডিং'}
                                 </span>
                               </td>
                               <td className="p-2 text-right">
@@ -2952,7 +2948,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                                 </span>
                               </div>
                               <p className="text-[11px] text-sky-400 font-semibold">{teacher.title || 'ইনস্ট্রাক্টর'}</p>
-                              <p className="text-[10px] text-slate-400 truncate">{teacher.email} • {teacher.mobile || '01700000000'}</p>
+                              <p className="text-[10px] text-slate-400 truncate">{teacher.email} | {teacher.mobile || '01700000000'}</p>
                             </div>
                           </div>
 
@@ -3088,7 +3084,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                                   ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
                                   : 'bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse'
                               }`}>
-                                {p.status === 'Paid' ? '✓ পরিশোধিত' : p.status === 'Rejected' ? '✕ বাতিল' : '● পেন্ডিং'}
+                                {p.status === 'Paid' ? '✓ পরিশোধিত' : p.status === 'Rejected' ? '✕ বাতিল' : 'পেন্ডিং'}
                               </span>
                               {p.transactionId && (
                                 <span className="text-[10px] text-slate-400 block font-mono mt-0.5">TrxID: {p.transactionId}</span>
@@ -6390,7 +6386,7 @@ PTENit ডিজিটাল টিম`;
                           ফাইল বা ড্রাইভ এক্সেস প্রদান
                         </h3>
                         <p className="text-[11px] text-slate-400">
-                          অর্ডার: <span className="font-mono font-bold text-purple-400">#{dpAccessFileModalOrder.id}</span> • {dpAccessFileModalOrder.buyerName}
+                          অর্ডার: <span className="font-mono font-bold text-purple-400">#{dpAccessFileModalOrder.id}</span> | {dpAccessFileModalOrder.buyerName}
                         </p>
                       </div>
                     </div>
@@ -6550,7 +6546,7 @@ PTENit ডিজিটাল টিম`;
                           হোয়াটসঅ্যাপ মেসেজ ও এক্সেস পাঠান
                         </h3>
                         <p className="text-[11px] text-slate-400">
-                          অর্ডার: <span className="font-mono font-bold text-sky-400">#{dpWhatsAppModalOrder.id}</span> • প্রাপক: <span className="text-white font-bold">{dpWhatsAppModalOrder.buyerName}</span> ({dpWhatsAppModalOrder.buyerPhone || 'ফোন নম্বর নেই'})
+                          অর্ডার: <span className="font-mono font-bold text-sky-400">#{dpWhatsAppModalOrder.id}</span> | প্রাপক: <span className="text-white font-bold">{dpWhatsAppModalOrder.buyerName}</span> ({dpWhatsAppModalOrder.buyerPhone || 'ফোন নম্বর নেই'})
                         </p>
                       </div>
                     </div>
@@ -6634,7 +6630,7 @@ PTENit ডিজিটাল টিম`;
                           ইমেইলে এক্সেস ও ডেলিভারি মেসেজ পাঠান
                         </h3>
                         <p className="text-[11px] text-slate-400">
-                          অর্ডার: <span className="font-mono font-bold text-blue-400">#{dpEmailModalOrder.id}</span> • প্রাপক: <span className="text-white font-bold">{dpEmailModalOrder.buyerName}</span> ({dpEmailModalOrder.buyerEmail || 'ইমেইল নেই'})
+                          অর্ডার: <span className="font-mono font-bold text-blue-400">#{dpEmailModalOrder.id}</span> | প্রাপক: <span className="text-white font-bold">{dpEmailModalOrder.buyerName}</span> ({dpEmailModalOrder.buyerEmail || 'ইমেইল নেই'})
                         </p>
                       </div>
                     </div>

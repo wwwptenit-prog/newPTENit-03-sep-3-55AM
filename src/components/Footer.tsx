@@ -50,16 +50,13 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
                   ) : (
                     <>
                       {showBox && (
-                        <div className="w-10 h-10 rounded-xl bg-[#006A4E] flex items-center justify-center font-bold text-2xl text-white shadow-xs shrink-0 relative">
+                        <div className="w-10 h-10 rounded-xl bg-[#006A4E] flex items-center justify-center font-bold text-2xl text-white shadow-xs shrink-0">
                           {boxLetter}
-                          {/* Crimson Red Sun Disc Beacon */}
-                          <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#E11D48] border-2 border-white" />
                         </div>
                       )}
                       <span className="font-heading text-2xl font-black text-slate-900 flex items-center gap-0.5">
                         {textMain}
                         {textHighlight && <span className="text-[#006A4E]">{textHighlight}</span>}
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#E11D48] ml-1 inline-block" title="লাল-সবুজের অহংকার" />
                       </span>
                     </>
                   )}
@@ -178,7 +175,6 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
                       onClick={() => setActiveTab('courses')}
                       className="hover:text-[#006A4E] text-slate-600 transition-colors flex items-center gap-1.5 text-left"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#006A4E] shrink-0" />
                       <span className="line-clamp-1">{c.title}</span>
                     </button>
                   </li>
@@ -188,10 +184,10 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
               {/* Escrow Guarantee Box */}
               <div className="mt-4 p-2.5 sm:p-3 rounded-xl bg-emerald-50 border border-emerald-200 font-bengali space-y-1">
                 <span className="text-[10px] sm:text-[11px] font-black text-[#006A4E] block">
-                  🛡️ শতভাগ নিরাপদ লেনদেন
+                  🛡️ নিরাপদ লেনদেন
                 </span>
                 <p className="text-[9px] sm:text-[10px] text-slate-600 leading-tight sm:leading-normal">
-                  সকল লেনদেন এবং সার্ভিস ডেলিভারির দায়ভার প্রতিষ্ঠান কর্তৃক সরাসরি পরিচালিত।
+                  সকল লেনদেন ও ডেলিভারি সম্পূর্ণ সুরক্ষিত।
                 </p>
               </div>
             </div>
@@ -301,21 +297,8 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
         </div>
 
         {/* Bottom Copyright */}
-        <div className="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-4">
+        <div className="pt-8 flex flex-col sm:flex-row justify-center items-center text-xs text-slate-500 text-center">
           <p>© {new Date().getFullYear()} PTENit. All Rights Reserved.</p>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setActiveTab('admin')}
-              className="text-slate-500 hover:text-[#E11D48] font-bold flex items-center gap-1.5 transition cursor-pointer"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-[#E11D48]" />
-              <span>{t('এডমিন কন্ট্রোল সেন্টার', 'Admin Control')}</span>
-            </button>
-            <span className="text-slate-300">|</span>
-            <p className="text-slate-500 font-bengali">
-              {t('"আপনার ডিজিটাল প্ল্যাটফর্ম এখানে তৈরি করুন"', '"Build Your Digital Platform Here"')}
-            </p>
-          </div>
         </div>
       </div>
     </footer>

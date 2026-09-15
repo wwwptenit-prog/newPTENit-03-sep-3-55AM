@@ -816,7 +816,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
 
             <div className="bg-slate-800/60 p-3 rounded-2xl border border-slate-700 text-xs space-y-1">
               <p className="font-bold text-white">টার্গেট ইউজার: <span className="text-amber-400">{restrictionModalUser.name}</span></p>
-              <p className="text-slate-300 font-mono text-[11px]">{restrictionModalUser.email} • {restrictionModalUser.mobile}</p>
+              <p className="text-slate-300 font-mono text-[11px]">{restrictionModalUser.email} | {restrictionModalUser.mobile}</p>
               <p className="text-[11px] text-slate-400 uppercase font-bold">বর্তমান রোল: {restrictionModalUser.role}</p>
             </div>
 

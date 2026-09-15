@@ -19,6 +19,7 @@ export interface SingleBadgeInfo {
 export interface BadgeItemInput {
   id?: string;
   title?: string;
+  badge?: string;
   offerBadge?: string;
   price?: number;
   isFree?: boolean;
@@ -45,7 +46,7 @@ export const getSingleBadgeInfo = (
   item?: BadgeItemInput,
   itemType: BadgeCategoryType | string = 'gig'
 ): SingleBadgeInfo => {
-  const badge = (item?.offerBadge || '').trim().toLowerCase();
+  const badge = (item?.badge || item?.offerBadge || '').trim().toLowerCase();
   const title = (item?.title || '').trim().toLowerCase();
   const numPrice = item?.price !== undefined && item?.price !== null ? Number(item.price) : undefined;
 
@@ -135,10 +136,11 @@ export const getSingleBadgeInfo = (
     };
   }
 
-  // Default to প্রিমিয়াম সার্ভিস
+  // If explicitly 'প্রিমিয়াম' or 'premium' or service default
+  const isPlainPremium = badge === 'প্রিমিয়াম' || badge === 'premium' || itemType === 'service';
   return {
     type: 'premium_service',
-    label: 'প্রিমিয়াম সার্ভিস',
+    label: isPlainPremium ? 'প্রিমিয়াম' : 'প্রিমিয়াম সার্ভিস',
     iconName: 'Crown',
     topbarTextClass: 'text-emerald-800 dark:text-emerald-400',
     cardClass: 'bg-emerald-800 text-white font-bold',

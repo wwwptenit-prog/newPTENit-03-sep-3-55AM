@@ -207,6 +207,8 @@ export interface Service {
   demoImages?: string[];
   galleryImages?: string[];
   demoUrl?: string;
+  badge?: 'আগে কাজ শুরু' | 'প্রিমিয়াম' | string;
+  offerBadge?: string;
 }
 
 export interface Enrollment {

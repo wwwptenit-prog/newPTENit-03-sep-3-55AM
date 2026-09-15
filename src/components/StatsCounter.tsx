@@ -92,7 +92,7 @@ export const StatsCounter: React.FC = () => {
       label: t('সফল স্টুডেন্ট ও ট্রেইনি', 'Successful Students & Trainees'),
       value: siteSettings.statsStudents || '500+',
       icon: Users,
-      color: 'text-[#16A34A]',
+      color: 'text-[#006A4E]',
       bgColor: 'bg-green-50'
     },
     {
@@ -100,7 +100,7 @@ export const StatsCounter: React.FC = () => {
       label: t('সফল প্রজেক্ট ডেলিভারি', 'Projects Delivered'),
       value: siteSettings.statsProjects || '100+',
       icon: CheckCircle2,
-      color: 'text-[#16A34A]',
+      color: 'text-[#006A4E]',
       bgColor: 'bg-green-50'
     },
     {
@@ -108,7 +108,7 @@ export const StatsCounter: React.FC = () => {
       label: t('পেশাদার ট্রেনিং কোর্স', 'Professional Courses'),
       value: siteSettings.statsCourses || '50+',
       icon: BookOpen,
-      color: 'text-[#DC2626]',
+      color: 'text-[#E31E24]',
       bgColor: 'bg-red-50'
     },
     {
@@ -116,7 +116,7 @@ export const StatsCounter: React.FC = () => {
       label: t('ক্লায়েন্ট স্যাটিসফ্যাকশন', 'Client Satisfaction Rate'),
       value: siteSettings.statsSatisfaction || '95%',
       icon: HeartHandshake,
-      color: 'text-[#16A34A]',
+      color: 'text-[#006A4E]',
       bgColor: 'bg-green-50'
     }
   ];
@@ -130,7 +130,7 @@ export const StatsCounter: React.FC = () => {
             return (
               <div
                 key={stat.id}
-                className="p-3.5 sm:p-5 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2 sm:gap-3.5 hover:border-[#16A34A] transition-all transform hover:-translate-y-0.5 shadow-xs"
+                className="p-3.5 sm:p-5 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2 sm:gap-3.5 hover:border-[#006A4E] transition-all transform hover:-translate-y-0.5 shadow-xs"
               >
                 <div className={`p-2.5 sm:p-3 rounded-lg ${stat.bgColor} ${stat.color} shrink-0`}>
                   <Icon className="w-5 h-5 sm:w-6 sm:h-6" />

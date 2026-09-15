@@ -28,12 +28,11 @@ import {
   Maximize2,
   ImageIcon,
   ExternalLink,
+  Crown,
   Eye
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { Service, MarketplaceGig } from '../types';
-import { GigCard } from './GigCard';
-import { GigDetailPage } from './GigDetailPage';
 import { ServiceDetailModal } from './ServiceDetailModal';
 import { DigitalProductsSection } from './DigitalProductsSection';
 import { getLocalizedService } from '../utils/localization';
@@ -65,31 +64,20 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const { currentUser, services, gigs, siteSettings, t, lang, createDirectGigOrder } = useData();
 
   // Selected Service for Dedicated Service Detail Modal (Matching DigitalProductDetailModal!)
-  const [selectedService, setSelectedService] = useState<Service | null>(null);
-
-  // Selected Gig/Service for Exact Marketplace Gig Detail View
-  const [activeInPlaceGig, setActiveInPlaceGig] = useState<MarketplaceGig | null>(null);
-
-  // Top Trending General Gigs
-  const featuredGigs = gigs.slice(0, 4);
+  const [selectedService, setSelectedService] = useState<Service | MarketplaceGig | null>(null);
 
   const savedServiceScrollPosRef = useRef<number>(0);
 
-  // Open Service Details in Dedicated Service Detail Modal (Exact Digital Product Style!)
+  // Open Service Details in Dedicated Service Detail Modal
   const handleOpenServiceDetail = (service: Service) => {
     savedServiceScrollPosRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-    setSelectedService(service);
-  };
-
-  const navigateToGigDetail = (gig: MarketplaceGig) => {
-    savedServiceScrollPosRef.current = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-    setActiveInPlaceGig(gig);
+    const gigObj = mapServiceToGig(service);
+    setSelectedService(gigObj as any);
   };
 
   const handleCloseServiceDetail = () => {
     const targetY = savedServiceScrollPosRef.current;
     setSelectedService(null);
-    setActiveInPlaceGig(null);
     requestAnimationFrame(() => {
       window.scrollTo({ top: targetY, behavior: 'instant' });
       setTimeout(() => {
@@ -98,7 +86,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     });
   };
 
-  // Helper to map an Agency Service into a Marketplace Gig format for GigCard rendering & detailed package ordering
+  // Helper to map an Agency Service into a Marketplace Gig format for detailed package ordering in ServiceDetailModal
   const mapServiceToGig = (service: Service): MarketplaceGig => {
     const locService = getLocalizedService(service, lang);
 
@@ -172,33 +160,112 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     };
   };
 
-  // Reusable Unified Service Card Component - uses GigCard for exact visual parity
+  // Render Official Agency Package Card - Exactly Styled Like Digital Products (Clean product card, no Facebook post UI)
   const renderServiceCard = (service: Service) => {
-    const gigObj = mapServiceToGig(service);
+    const locService = getLocalizedService(service, lang);
+    const price =
+      service.packages?.basic?.price ??
+      (service.priceText ? parseInt(service.priceText.replace(/[^0-9]/g, '')) || 5000 : 5000);
+
+    const thumbnail =
+      locService.thumbnail ||
+      service.thumbnail ||
+      service.galleryImages?.[0] ||
+      service.demoImages?.[0] ||
+      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80';
+
+    const rating = service.rating || 5.0;
+    const reviewsCount = service.reviewsCount || 48;
+
+    // Determine badge: 'আগে কাজ শুরু' অথবা 'প্রিমিয়াম'
+    const isPremium =
+      service.badge === 'প্রিমিয়াম' ||
+      service.badge === 'Premium' ||
+      service.offerBadge === 'premium' ||
+      (service.badge !== 'আগে কাজ শুরু' && ['web-dev', 'branding', 'software-dev', 'app-development'].includes(service.id));
+
+    const badgeLabel = isPremium ? t('প্রিমিয়াম', 'Premium') : t('আগে কাজ শুরু', 'Start Work First');
+
     return (
-      <GigCard
+      <div
         key={service.id}
-        gig={gigObj}
-        onClick={() => handleOpenServiceDetail(service)}
-        currentUser={currentUser}
-      />
+        className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 hover:border-emerald-600/50 dark:hover:border-emerald-600/50 transition-all duration-300 flex flex-col justify-between"
+      >
+        <div>
+          {/* Clean Cover Thumbnail - purely the image without text overlays */}
+          <div
+            onClick={() => handleOpenServiceDetail(service)}
+            className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-slate-950 cursor-pointer"
+          >
+            <img
+              src={thumbnail}
+              alt={locService.title}
+              loading="lazy"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
+            />
+          </div>
+
+          {/* Card Body */}
+          <div className="p-2.5 sm:p-3.5 space-y-2 flex-1 flex flex-col justify-between">
+            {/* Title & Name */}
+            <div>
+              <h3
+                onClick={() => handleOpenServiceDetail(service)}
+                className="text-xs sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white line-clamp-3 sm:line-clamp-2 leading-snug group-hover:text-[#006A4E] transition-colors cursor-pointer min-h-[3rem] sm:min-h-[2.5rem]"
+                title={locService.title}
+              >
+                {locService.title}
+              </h3>
+            </div>
+
+            {/* Type (আগে কাজ শুরু / প্রিমিয়াম) & Verified Info */}
+            <div className="flex items-center justify-between text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 pt-1.5 border-t border-slate-100 dark:border-slate-800/60">
+              {isPremium ? (
+                <span className="inline-flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400 text-[10px] sm:text-[11px]">
+                  <Crown className="w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0" />
+                  <span>{badgeLabel}</span>
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 font-bold text-[#006A4E] dark:text-emerald-400 text-[10px] sm:text-[11px]">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#006A4E] dark:text-emerald-400 shrink-0" />
+                  <span>{badgeLabel}</span>
+                </span>
+              )}
+              <span className="text-slate-400 dark:text-slate-500 flex items-center gap-1 text-[9px] sm:text-[10px] font-semibold tracking-wide">
+                <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
+                <span>Verified</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card Footer: Harmonized Price & Action Button */}
+        <div className="p-2.5 sm:p-3.5 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1.5 rounded-b-2xl">
+          <div className="min-w-0">
+            <div>
+              <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold block leading-none mb-1 uppercase tracking-wider">
+                {t('শুরু', 'Starts at')}
+              </span>
+              <span className="text-sm sm:text-base md:text-lg font-black text-[#006A4E] dark:text-emerald-400 tracking-tight leading-none">
+                ৳{price.toLocaleString('bn-BD')}
+              </span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => handleOpenServiceDetail(service)}
+            className="py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold shadow-xs flex items-center justify-center gap-1 sm:gap-1.5 transition-all duration-200 active:scale-95 cursor-pointer shrink-0 bg-[#006A4E] hover:bg-[#00543e] text-white group/btn"
+          >
+            <span>{t('বিস্তারিত', 'Details')}</span>
+            <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white group-hover/btn:translate-x-0.5 transition-transform shrink-0" />
+          </button>
+        </div>
+      </div>
     );
   };
 
   const allPublishedServices = services.filter(s => s.published);
-
-  // Exact Marketplace Gig Detail View (renders identical to PTEN's gigs)
-  const renderDetailModal = () => {
-    if (!activeInPlaceGig) return null;
-    return (
-      <ServiceDetailModal
-        service={activeInPlaceGig}
-        onClose={handleCloseServiceDetail}
-        setActiveTab={setActiveTab}
-        openAuthModal={openAuthModal}
-      />
-    );
-  };
 
   // STANDALONE FULL-PAGE VIEW FOR OFFICIAL AGENCY PACKAGES
   if (isStandalonePage) {
@@ -239,18 +306,15 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
 
         </div>
 
-        {/* IN-PLACE SERVICE DETAIL MODAL (Matching DigitalProductDetailModal!) */}
+        {/* IN-PLACE SERVICE DETAIL MODAL */}
         {selectedService && (
           <ServiceDetailModal
             service={selectedService}
-            onClose={() => setSelectedService(null)}
+            onClose={handleCloseServiceDetail}
             setActiveTab={setActiveTab}
             openAuthModal={openAuthModal}
           />
         )}
-
-        {/* IN-PLACE DETAIL MODAL */}
-        {renderDetailModal()}
       </div>
     );
   }
@@ -311,64 +375,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
         </div>
       </section>
 
-      {/* SECTION 3: Popular Freelance Gigs Row - হালকা শেড / অফ-হোয়াইট (Soft Light Shade, not full white) */}
-      <section className="py-10 sm:py-14 bg-slate-100/90 dark:bg-slate-950 text-slate-900 dark:text-white border-y border-slate-200/70 dark:border-slate-800/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-          <div className="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3 mb-4 sm:mb-6">
-            <div className="space-y-0.5 sm:space-y-1 text-left min-w-0">
-              <h2 className="text-sm sm:text-lg md:text-2xl font-bold font-bengali text-slate-900 dark:text-white leading-tight">
-                {t('জনপ্রিয় গিগ ও ডিজিটাল সার্ভিসসমূহ', 'Popular Gigs & Digital Services')}
-              </h2>
-              <p className="text-[11px] sm:text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium font-bengali">
-                {t('PTENit ভেরিফায়েড স্পেশালিস্টদের জনপ্রিয় ফ্রিল্যান্সিং গিগস।', 'Popular freelance gigs and services by verified specialists.')}
-              </p>
-            </div>
-
-            {setActiveTab && (
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveTab('marketplace', 'All');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="inline-flex items-center gap-1 text-[#38BDF8] hover:text-[#006A4E] font-bold text-xs sm:text-sm hover:underline transition-all cursor-pointer font-bengali shrink-0 group"
-                >
-                  <span>{t('সবগুলো দেখুন →', 'See All →')}</span>
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Gigs Grid: Desktop shows 4 in 1 row; Mobile shows 4 */}
-          <div className="space-y-4">
-            {/* Desktop (Hidden on mobile): 1 row of 4 */}
-            <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 lg:gap-5">
-              {featuredGigs.map(gig => (
-                <GigCard
-                  key={gig.id}
-                  gig={gig}
-                  onClick={() => navigateToGigDetail(gig)}
-                  currentUser={currentUser}
-                />
-              ))}
-            </div>
-
-            {/* Mobile (Visible only on mobile): 4 items */}
-            <div className="grid grid-cols-2 gap-2.5 sm:hidden">
-              {gigs.slice(0, 4).map(gig => (
-                <GigCard
-                  key={gig.id}
-                  gig={gig}
-                  onClick={() => navigateToGigDetail(gig)}
-                  currentUser={currentUser}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* IN-PLACE SERVICE DETAIL MODAL (Matching DigitalProductDetailModal!) */}
       {selectedService && (
         <ServiceDetailModal
@@ -378,9 +384,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           openAuthModal={openAuthModal}
         />
       )}
-
-      {/* EXACT MARKETPLACE GIG DETAIL VIEW */}
-      {renderDetailModal()}
     </div>
   );
 };

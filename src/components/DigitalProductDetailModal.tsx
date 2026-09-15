@@ -934,12 +934,12 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                     }
                     setPurchaseError(null);
                   }}
-                  className="w-full py-3.5 px-4 rounded-xl text-white font-bold font-bengali text-sm sm:text-base shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98 bg-[#15803d] hover:bg-[#166534] active:bg-[#14532d]"
+                  className="w-full py-3.5 px-4 rounded-xl text-white font-bold font-bengali text-sm sm:text-base shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98 bg-[#00543e] hover:bg-[#004231] active:bg-[#14532d]"
                 >
                   {isOrderPlaced ? (
                     <>
                       <CheckCircle2 className="w-5 h-5" />
-                      <span>অর্ডার সম্পন্ন • এক্সেস দেখুন</span>
+                      <span>অর্ডার সম্পন্ন: এক্সেস দেখুন</span>
                     </>
                   ) : isFree ? (
                     <>
@@ -949,7 +949,6 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                   ) : (
                     <>
                       <span>অর্ডার করুন</span>
-                      <span className="opacity-60">•</span>
                       <span className="font-extrabold text-amber-200">
                         ৳{product.price.toLocaleString('bn-BD')}
                       </span>
@@ -960,11 +959,11 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                 {/* Standardized Trust & Guarantee Badges under Button */}
                 <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-xs font-medium text-slate-600 dark:text-slate-400 space-y-1.5">
                   <p className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-[#15803d] shrink-0" />
+                    <ShieldCheck className="w-4 h-4 text-[#00543e] shrink-0" />
                     <span>১০-দিনের মানি ব্যাক ও এস্ক্রো গ্যারান্টি</span>
                   </p>
                   <p className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-[#15803d] shrink-0" />
+                    <Zap className="w-4 h-4 text-[#00543e] shrink-0" />
                     <span>দ্রুত অনলাইন টেকনিক্যাল সাপোর্ট</span>
                   </p>
                 </div>
@@ -1041,7 +1040,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                     {checkoutStep === 1 ? 'ধাপ ১: আপনার যোগাযোগের তথ্য' : 'ধাপ ২: পেমেন্ট মেথড ও কনফার্মেশন'}
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-bengali truncate max-w-md mx-auto">
-                    {product.title} — <span className="font-bold text-[#15803d] dark:text-sky-400">
+                    {product.title} — <span className="font-bold text-[#00543e] dark:text-sky-400">
                       {isFree ? 'সম্পূর্ণ ফ্রি' : `৳${product.price.toLocaleString('bn-BD')}`}
                     </span>
                   </p>
@@ -1058,7 +1057,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
                     }`}
                   >
-                    <span className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${checkoutStep === 1 ? 'bg-[#15803d] text-white' : 'bg-slate-300 dark:bg-slate-600 text-slate-700 dark:text-slate-300'}`}>
+                    <span className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${checkoutStep === 1 ? 'bg-[#00543e] text-white' : 'bg-slate-300 dark:bg-slate-600 text-slate-700 dark:text-slate-300'}`}>
                       ১
                     </span>
                     <span>যোগাযোগের তথ্য</span>
@@ -1078,7 +1077,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                         : 'text-slate-400 dark:text-slate-500 disabled:opacity-50'
                     }`}
                   >
-                    <span className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${checkoutStep === 2 ? 'bg-[#15803d] text-white' : 'bg-slate-300 dark:bg-slate-600 text-slate-700 dark:text-slate-300'}`}>
+                    <span className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${checkoutStep === 2 ? 'bg-[#00543e] text-white' : 'bg-slate-300 dark:bg-slate-600 text-slate-700 dark:text-slate-300'}`}>
                       ২
                     </span>
                     <span>{isFree ? 'ডাউনলোড এক্সেস' : 'পেমেন্ট ও অর্ডার'}</span>
@@ -1109,7 +1108,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                           setCustomerName(e.target.value);
                           if (purchaseError) setPurchaseError(null);
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#00543e] dark:focus:border-[#006A4E]"
                       />
                     </div>
 
@@ -1126,7 +1125,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                           setCustomerPhone(e.target.value);
                           if (purchaseError) setPurchaseError(null);
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#00543e] dark:focus:border-[#006A4E]"
                       />
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-bengali">
                         ১১ ডিজিটের বাংলাদেশী মোবাইল নম্বর দিন।
@@ -1146,13 +1145,13 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                           setCustomerEmail(e.target.value);
                           if (purchaseError) setPurchaseError(null);
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#00543e] dark:focus:border-[#006A4E]"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="w-full py-3 px-4 rounded-xl bg-[#15803d] hover:bg-[#166534] text-white font-bold font-bengali text-sm shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98 mt-2"
+                      className="w-full py-3 px-4 rounded-xl bg-[#00543e] hover:bg-[#004231] text-white font-bold font-bengali text-sm shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98 mt-2"
                     >
                       <span>{isFree ? 'ফ্রি ডাউনলোড এক্সেস নিন' : 'পরবর্তী ধাপ: পেমেন্ট মেথড'}</span>
                       <ArrowRight className="w-4 h-4" />
@@ -1175,7 +1174,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                             onClick={() => setPaymentMethod(method)}
                             className={`py-2 px-1 text-center rounded-xl text-xs font-bold border transition cursor-pointer ${
                               paymentMethod === method
-                                ? 'bg-blue-500/15 border-[#15803d] text-[#15803d] dark:text-sky-400'
+                                ? 'bg-blue-500/15 border-[#00543e] text-[#00543e] dark:text-sky-400'
                                 : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400'
                             }`}
                           >
@@ -1222,7 +1221,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                           setTrxId(e.target.value);
                           if (purchaseError) setPurchaseError(null);
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-mono focus:outline-none focus:border-[#15803d]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-mono focus:outline-none focus:border-[#00543e]"
                       />
                     </div>
 
@@ -1240,10 +1239,10 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
 
                       <button
                         type="submit"
-                        className="flex-1 py-3 px-4 rounded-xl bg-[#15803d] hover:bg-[#166534] text-white font-bold text-xs sm:text-sm shadow-md transition cursor-pointer flex items-center justify-center gap-1.5 active:scale-98"
+                        className="flex-1 py-3 px-4 rounded-xl bg-[#00543e] hover:bg-[#004231] text-white font-bold text-xs sm:text-sm shadow-md transition cursor-pointer flex items-center justify-center gap-1.5 active:scale-98"
                       >
                         <ShieldCheck className="w-4 h-4" />
-                        <span>অর্ডার সম্পন্ন করুন • ৳{product.price.toLocaleString('bn-BD')}</span>
+                        <span>অর্ডার সম্পন্ন করুন - ৳{product.price.toLocaleString('bn-BD')}</span>
                       </button>
                     </div>
                   </form>

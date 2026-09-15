@@ -690,8 +690,8 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                   isPendingApproval
                     ? 'bg-amber-600 hover:bg-amber-500'
                     : isEnrolled
-                    ? 'bg-[#15803d] hover:bg-[#166534]'
-                    : 'bg-[#15803d] hover:bg-[#166534] active:bg-[#14532d]'
+                    ? 'bg-[#00543e] hover:bg-[#004231]'
+                    : 'bg-[#00543e] hover:bg-[#004231] active:bg-[#14532d]'
                 }`}
               >
                 {isPendingApproval ? (
@@ -720,11 +720,11 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
               {/* Standardized Trust & Guarantee Badges under Button */}
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-xs font-medium text-slate-600 dark:text-slate-400 space-y-1.5">
                 <p className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-[#15803d] shrink-0" />
+                  <ShieldCheck className="w-4 h-4 text-[#00543e] shrink-0" />
                   <span>১০-দিনের মানি ব্যাক ও এস্ক্রো গ্যারান্টি</span>
                 </p>
                 <p className="flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-[#15803d] shrink-0" />
+                  <Zap className="w-4 h-4 text-[#00543e] shrink-0" />
                   <span>দ্রুত অনলাইন টেকনিক্যাল সাপোর্ট</span>
                 </p>
               </div>
@@ -758,7 +758,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                 {checkoutStep === 1 ? 'ধাপ ১: শিক্ষার্থীর যোগাযোগের তথ্য' : 'ধাপ ২: পেমেন্ট মেথড ও কনফার্মেশন'}
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-bengali truncate max-w-md mx-auto">
-                {course.title} — <span className="font-bold text-[#15803d] dark:text-sky-400">৳{((course.discountPrice || course.price) ?? 0).toLocaleString('bn-BD')}</span>
+                {course.title} — <span className="font-bold text-[#00543e] dark:text-sky-400">৳{((course.discountPrice || course.price) ?? 0).toLocaleString('bn-BD')}</span>
               </p>
             </div>
 
@@ -773,7 +773,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                     : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
                 }`}
               >
-                <span className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${checkoutStep === 1 ? 'bg-[#15803d] text-white' : 'bg-slate-300 dark:bg-slate-600 text-slate-700 dark:text-slate-300'}`}>
+                <span className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${checkoutStep === 1 ? 'bg-[#00543e] text-white' : 'bg-slate-300 dark:bg-slate-600 text-slate-700 dark:text-slate-300'}`}>
                   ১
                 </span>
                 <span>শিক্ষার্থীর তথ্য</span>
@@ -793,7 +793,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                     : 'text-slate-400 dark:text-slate-500 disabled:opacity-50'
                 }`}
               >
-                <span className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${checkoutStep === 2 ? 'bg-[#15803d] text-white' : 'bg-slate-300 dark:bg-slate-600 text-slate-700 dark:text-slate-300'}`}>
+                <span className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${checkoutStep === 2 ? 'bg-[#00543e] text-white' : 'bg-slate-300 dark:bg-slate-600 text-slate-700 dark:text-slate-300'}`}>
                   ২
                 </span>
                 <span>পেমেন্ট ও এক্টিভেশন</span>
@@ -824,7 +824,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                       setStudentName(e.target.value);
                       if (paymentFormError) setPaymentFormError(null);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#00543e] dark:focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -841,7 +841,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                       setStudentPhone(e.target.value);
                       if (paymentFormError) setPaymentFormError(null);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#00543e] dark:focus:border-[#006A4E]"
                   />
                 </div>
 
@@ -858,17 +858,17 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                       setStudentEmail(e.target.value);
                       if (paymentFormError) setPaymentFormError(null);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#00543e] dark:focus:border-[#006A4E]"
                   />
                 </div>
 
                 {/* Course Order Summary Pill */}
                 <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2 min-w-0">
-                    <BookOpen className="w-4 h-4 text-[#15803d] shrink-0" />
+                    <BookOpen className="w-4 h-4 text-[#00543e] shrink-0" />
                     <span className="truncate text-slate-600 dark:text-slate-300">{course.title}</span>
                   </div>
-                  <span className="font-extrabold text-[#15803d] dark:text-sky-400 shrink-0 text-sm">
+                  <span className="font-extrabold text-[#00543e] dark:text-sky-400 shrink-0 text-sm">
                     ৳{((course.discountPrice || course.price) ?? 0).toLocaleString('bn-BD')}
                   </span>
                 </div>
@@ -876,7 +876,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                 {/* Next Step Button */}
                 <button
                   type="submit"
-                  className="w-full py-3.5 px-4 rounded-xl text-white font-bold font-bengali text-sm bg-[#15803d] hover:bg-[#166534] active:bg-[#14532d] shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98 mt-2"
+                  className="w-full py-3.5 px-4 rounded-xl text-white font-bold font-bengali text-sm bg-[#00543e] hover:bg-[#004231] active:bg-[#14532d] shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98 mt-2"
                 >
                   <span>পরবর্তী ধাপ (পেমেন্ট নির্বাচন)</span>
                   <ArrowRight className="w-4 h-4" />
@@ -895,7 +895,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                       onClick={() => setAutoPayTab('instant')}
                       className={`py-2 px-3 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                         autoPayTab === 'instant'
-                          ? 'bg-[#15803d] text-white shadow-md'
+                          ? 'bg-[#00543e] text-white shadow-md'
                           : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
@@ -918,12 +918,12 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                 {/* INSTANT AUTOMATED CHECKOUT VIEW */}
                 {siteSettings?.paymentAutomationMode === 'automated' && autoPayTab === 'instant' ? (
                   <div className="space-y-4 py-2">
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500/10 via-slate-800/40 to-blue-500/5 border border-[#15803d]/30 space-y-3">
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500/10 via-slate-800/40 to-blue-500/5 border border-[#00543e]/30 space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-black text-[#15803d] dark:text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <span className="text-xs font-black text-[#00543e] dark:text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
                           <Zap className="w-4 h-4" /> স্বয়ংক্রিয় পেমেন্ট গেটওয়ে
                         </span>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#15803d]/20 text-[#15803d] dark:text-sky-400 border border-[#15803d]/40">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#00543e]/20 text-[#00543e] dark:text-sky-400 border border-[#00543e]/40">
                           তাৎক্ষণিক এক্সেস
                         </span>
                       </div>
@@ -932,7 +932,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                       </p>
                       <div className="p-3 bg-slate-100 dark:bg-slate-900/80 rounded-xl border border-slate-200 dark:border-slate-700/60 flex items-center justify-between text-xs font-bengali">
                         <span className="text-slate-500 dark:text-slate-400">পরিশোধের পরিমাণ:</span>
-                        <span className="text-lg font-black text-[#15803d] dark:text-sky-400">৳{((course.discountPrice || course.price) ?? 0).toLocaleString('bn-BD')}</span>
+                        <span className="text-lg font-black text-[#00543e] dark:text-sky-400">৳{((course.discountPrice || course.price) ?? 0).toLocaleString('bn-BD')}</span>
                       </div>
                     </div>
 
@@ -940,7 +940,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                       type="button"
                       onClick={handleInstantGatewayPayment}
                       disabled={isAutoProcessing}
-                      className="w-full py-4 bg-[#15803d] hover:bg-[#166534] text-white font-black text-sm rounded-xl shadow-xl transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 active:scale-98"
+                      className="w-full py-4 bg-[#00543e] hover:bg-[#004231] text-white font-black text-sm rounded-xl shadow-xl transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 active:scale-98"
                     >
                       {isAutoProcessing ? (
                         <>
@@ -981,7 +981,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                           onClick={() => setPaymentMethod(m.id as any)}
                           className={`py-2 px-1 rounded-xl font-bold text-xs transition-all cursor-pointer border ${
                             paymentMethod === m.id
-                              ? 'border-[#15803d] ring-2 ring-[#15803d]/40 bg-[#15803d]/10'
+                              ? 'border-[#00543e] ring-2 ring-[#00543e]/40 bg-[#00543e]/10'
                               : 'border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
                           }`}
                         >
@@ -1024,7 +1024,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                               ? (siteSettings?.nagadNumber || '01700000000')
                               : (siteSettings?.rocketNumber || '01900000000')
                           )}
-                          className="px-3.5 py-2 rounded-xl bg-[#15803d] hover:bg-[#166534] text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer transition shadow-sm active:scale-95 shrink-0"
+                          className="px-3.5 py-2 rounded-xl bg-[#00543e] hover:bg-[#004231] text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer transition shadow-sm active:scale-95 shrink-0"
                         >
                           {copiedNumber ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                           <span>{copiedNumber ? 'কপি হয়েছে!' : 'নম্বর কপি'}</span>
@@ -1037,7 +1037,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                           <button
                             type="button"
                             onClick={() => handleCopyNumber(siteSettings?.bankAccountNumber || '2181100098765')}
-                            className="px-3 py-1.5 rounded-lg bg-[#15803d] hover:bg-[#166534] text-white text-xs font-bold flex items-center gap-1 cursor-pointer transition active:scale-95"
+                            className="px-3 py-1.5 rounded-lg bg-[#00543e] hover:bg-[#004231] text-white text-xs font-bold flex items-center gap-1 cursor-pointer transition active:scale-95"
                           >
                             {copiedNumber ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                             <span>{copiedNumber ? 'কপি হয়েছে!' : 'A/C কপি'}</span>
@@ -1054,7 +1054,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                     {/* Amount Display */}
                     <div className="flex items-center justify-between px-3.5 py-2.5 bg-slate-100 dark:bg-slate-800/60 rounded-xl text-xs">
                       <span className="text-slate-600 dark:text-slate-400 font-medium">কোর্স পরিশোধযোগ্য ফি:</span>
-                      <span className="font-black text-base text-[#15803d] dark:text-sky-400">৳{((course.discountPrice || course.price) ?? 0).toLocaleString('bn-BD')}</span>
+                      <span className="font-black text-base text-[#00543e] dark:text-sky-400">৳{((course.discountPrice || course.price) ?? 0).toLocaleString('bn-BD')}</span>
                     </div>
 
                     <form onSubmit={handleConfirmPayment} className="space-y-3">
@@ -1071,7 +1071,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                             setSenderPhone(e.target.value);
                             if (paymentFormError) setPaymentFormError(null);
                           }}
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E]"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#00543e] dark:focus:border-[#006A4E]"
                         />
                       </div>
 
@@ -1088,7 +1088,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                             setTransactionId(e.target.value);
                             if (paymentFormError) setPaymentFormError(null);
                           }}
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#15803d] dark:focus:border-[#006A4E] uppercase font-mono"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#00543e] dark:focus:border-[#006A4E] uppercase font-mono"
                         />
                       </div>
 
@@ -1105,7 +1105,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="py-3 px-4 bg-[#15803d] hover:bg-[#166534] active:bg-[#14532d] active:scale-[0.98] text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+                          className="py-3 px-4 bg-[#00543e] hover:bg-[#004231] active:bg-[#14532d] active:scale-[0.98] text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
                         >
                           <CreditCard className="w-4 h-4" />
                           <span>{isSubmitting ? 'পেমেন্ট হচ্ছে...' : 'অর্ডার সম্পন্ন করুন'}</span>

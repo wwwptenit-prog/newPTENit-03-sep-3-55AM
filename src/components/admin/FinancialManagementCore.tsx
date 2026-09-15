@@ -1288,9 +1288,9 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                       </div>
 
                       <div className="text-[11px] text-slate-400 flex items-center justify-between font-mono bg-slate-950/40 px-2 py-1 rounded-lg">
-                        <span className="flex items-center gap-1">
+                        <span className="flex items-center gap-1.5">
                           <span className="font-bold text-slate-300">{b.gateway}</span>
-                          <span>•</span>
+                          <span className="text-slate-600">/</span>
                           <span className="text-sky-400 font-semibold">{b.transactionId}</span>
                         </span>
                         <span className="text-[10px] text-slate-500">{b.date.slice(0, 10)}</span>
@@ -1622,7 +1622,7 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
                 <div>
                   <h2 className="text-xl font-black text-white tracking-wide">PTEN IT SOLUTIONS</h2>
                   <p className="text-[11px] text-slate-400">Govt. Registered IT Training, Software & Freelance Hub</p>
-                  <p className="text-[10px] text-slate-500">Dhaka, Bangladesh • Hotline: 01712345678 • web: ptenit.com</p>
+                  <p className="text-[10px] text-slate-500">Dhaka, Bangladesh | Hotline: 01712345678 | web: ptenit.com</p>
                 </div>
                 <div className="text-right">
                   <span className={`inline-block px-3 py-1 rounded-full text-xs font-black uppercase border ${

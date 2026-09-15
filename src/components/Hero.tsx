@@ -62,7 +62,7 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-black font-bengali leading-snug lg:leading-tight text-white tracking-tight"
+              className="text-3xl md:text-5xl font-black font-bengali leading-snug lg:leading-tight text-white tracking-tight"
             >
               {siteSettings.heroHeading || t("ডিজিটাল ক্যারিয়ার ও বিজনেস গড়ুন", "Build Your Career & Business")}
             </motion.h1>
@@ -85,19 +85,18 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
             >
               <button
                 onClick={() => setActiveTab('services')}
-                className="px-6 py-3 rounded-xl font-bold text-white bg-[#16A34A] hover:bg-[#15803D] shadow-xs active:scale-95 transition-all cursor-pointer flex items-center gap-2 group text-sm sm:text-base font-bengali relative"
+                className="px-6 py-3 rounded-xl font-bold text-white bg-[#006A4E] hover:bg-[#00543e] shadow-xs active:scale-95 transition-all cursor-pointer flex items-center gap-2 group text-sm sm:text-base font-bengali relative"
               >
                 {t('সার্ভিস দেখুন', 'Services')}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                <span className="w-2 h-2 rounded-full bg-[#DC2626]" />
               </button>
 
               <button
                 onClick={() => setActiveTab('marketplace')}
-                className="px-6 py-3 rounded-xl font-bold text-slate-200 bg-slate-800/80 hover:bg-slate-700/80 hover:text-white border border-slate-700 transition-all cursor-pointer text-sm sm:text-base flex items-center gap-1.5 font-bengali"
+                className="px-6 py-3 rounded-xl font-bold text-white bg-[#E11D48] hover:bg-[#BE123C] active:bg-[#9F1239] shadow-md hover:shadow-rose-900/30 active:scale-95 transition-all cursor-pointer text-sm sm:text-base flex items-center gap-1.5 font-bengali"
               >
                 {t('মার্কেটপ্লেস', 'Marketplace')}
-                <Play className="w-3.5 h-3.5 text-[#16A34A] fill-[#16A34A]" />
+                <Play className="w-3.5 h-3.5 text-white fill-white" />
               </button>
             </motion.div>
 
@@ -110,19 +109,19 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
             >
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 <div className="flex items-center gap-2 justify-start pl-2 sm:pl-0">
-                  <Sparkles className="w-5 h-5 text-[#16A34A] shrink-0 stroke-[2.2]" />
+                  <Sparkles className="w-5 h-5 text-[#006A4E] shrink-0 stroke-[2.2]" />
                   <span className="text-xs sm:text-sm font-bold text-slate-200 font-bengali truncate">AI সাপোর্ট</span>
                 </div>
                 <div className="flex items-center gap-2 justify-start pl-2 sm:pl-0">
-                  <Award className="w-5 h-5 text-[#16A34A] shrink-0 stroke-[2.2]" />
+                  <Award className="w-5 h-5 text-[#006A4E] shrink-0 stroke-[2.2]" />
                   <span className="text-xs sm:text-sm font-bold text-slate-200 font-bengali truncate">{t('সার্টিফিকেট', 'Certificate')}</span>
                 </div>
                 <div className="flex items-center gap-2 justify-start pl-2 sm:pl-0">
-                  <ShieldCheck className="w-5 h-5 text-[#16A34A] shrink-0 stroke-[2.2]" />
+                  <ShieldCheck className="w-5 h-5 text-[#006A4E] shrink-0 stroke-[2.2]" />
                   <span className="text-xs sm:text-sm font-bold text-slate-200 font-bengali truncate">{t('বিশ্বস্ত ট্রেনিং', 'Trusted')}</span>
                 </div>
                 <div className="flex items-center gap-2 justify-start pl-2 sm:pl-0">
-                  <Users className="w-5 h-5 text-[#16A34A] shrink-0 stroke-[2.2]" />
+                  <Users className="w-5 h-5 text-[#006A4E] shrink-0 stroke-[2.2]" />
                   <span className="text-xs sm:text-sm font-bold text-slate-200 font-bengali truncate">{t('লাইফটাইম সাপোর্ট', 'Support')}</span>
                 </div>
               </div>
@@ -190,7 +189,7 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
                     <div className="space-y-4">
                       <div className="grid grid-cols-2 gap-3">
                         <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex items-center gap-3">
-                          <div className="p-2.5 bg-green-950/60 rounded-lg text-[#16A34A] border border-green-500/20">
+                          <div className="p-2.5 bg-green-950/60 rounded-lg text-[#006A4E] border border-green-500/20">
                             <Code2 className="w-5 h-5" />
                           </div>
                           <div>
@@ -211,19 +210,19 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
 
                       <div className="bg-slate-950/90 p-4 rounded-xl border border-slate-800 text-left font-mono text-xs text-slate-300 space-y-2 relative">
                         <div className="text-slate-500">// PTENit Digital Core Engine</div>
-                        <div className="text-[#16A34A]">
+                        <div className="text-[#006A4E]">
                           const <span className="text-white">ptenItPlatform</span> = &#123;
                         </div>
                         <div className="pl-4 text-slate-400">
                           services: <span className="text-sky-300">['Web', 'SEO', 'Marketing', 'Graphics']</span>,
                         </div>
                         <div className="pl-4 text-slate-400">
-                          trainingStatus: <span className="text-[#16A34A] font-bold">'Enrollment Open'</span>
+                          trainingStatus: <span className="text-[#006A4E] font-bold">'Enrollment Open'</span>
                         </div>
-                        <div className="text-[#16A34A]">&#125;;</div>
+                        <div className="text-[#006A4E]">&#125;;</div>
                       </div>
 
-                      <div className="bg-[#16A34A] p-3.5 rounded-xl text-white font-bold text-xs flex items-center justify-between shadow-xs">
+                      <div className="bg-[#006A4E] p-3.5 rounded-xl text-white font-bold text-xs flex items-center justify-between shadow-xs">
                         <span className="font-bengali">{t('লাইভ ক্লাস ও ফ্রিল্যান্সিং গাইডলাইন', 'Live Classes & Freelancing Guidance')}</span>
                         <span className="bg-white/20 px-2 py-1 rounded text-[10px]">ACTIVE</span>
                       </div>

@@ -221,6 +221,11 @@ interface DataContextType {
   rejectMentorApplication: (userId?: string, reason?: string) => void;
   
   // Direct Messages & Popovers
+  rightColumnView: 'default' | 'messages' | 'notifications';
+  setRightColumnView: React.Dispatch<React.SetStateAction<'default' | 'messages' | 'notifications'>>;
+  readConversationIds: string[];
+  markConversationRead: (id: string) => void;
+  markAllConversationsRead: () => void;
   markDirectMessageRead: (id: string) => void;
   markAllDirectMessagesRead: () => void;
   sendDirectMessage: (msg: Omit<DirectMessageItem, 'id' | 'read'>) => void;
@@ -525,7 +530,21 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [services, setServices] = useState<Service[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_services`);
-    return saved ? JSON.parse(saved) : initialServices;
+    if (saved) {
+      try {
+        const parsed: Service[] = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map(s => {
+            const init = initialServices.find(i => i.id === s.id);
+            return {
+              ...s,
+              badge: s.badge || init?.badge || (['web-dev', 'branding'].includes(s.id) ? 'প্রিমিয়াম' : 'আগে কাজ শুরু')
+            };
+          });
+        }
+      } catch {}
+    }
+    return initialServices;
   });
 
   const [gallery, setGallery] = useState<GalleryItem[]>(() => {
@@ -777,6 +796,15 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [activeMessengerOrderId, setActiveMessengerOrderId] = useState<string | null>(null);
   const [isMessengerInboxOpen, setIsMessengerInboxOpen] = useState(false);
   const [initialMessengerTab, setInitialMessengerTab] = useState<'messages' | 'notifications' | 'courses'>('messages');
+  const [rightColumnView, setRightColumnView] = useState<'default' | 'messages' | 'notifications'>('default');
+
+  const [readConversationIds, setReadConversationIds] = useState<string[]>(() => {
+    const saved = localStorage.getItem(`${STORAGE_KEY}_read_convo_ids`);
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return [];
+  });
 
   const [assignments, setAssignments] = useState<Assignment[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_assignments`);
@@ -2059,6 +2087,51 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const markDirectMessageRead = (id: string) => {
     setDirectMessages(prev => prev.map(m => m.id === id ? { ...m, read: true } : m));
+    setReadConversationIds(prev => {
+      if (prev.includes(id)) return prev;
+      const next = [...prev, id];
+      localStorage.setItem(`${STORAGE_KEY}_read_convo_ids`, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const markConversationRead = (convoId: string) => {
+    setReadConversationIds(prev => {
+      if (prev.includes(convoId)) return prev;
+      const next = [...prev, convoId];
+      localStorage.setItem(`${STORAGE_KEY}_read_convo_ids`, JSON.stringify(next));
+      return next;
+    });
+    setDirectMessages(prev => prev.map(m => {
+      const isMatch =
+        m.id === convoId ||
+        m.senderId === convoId ||
+        convoId.includes(m.id) ||
+        (m.senderName && convoId.toLowerCase().includes(m.senderName.toLowerCase())) ||
+        (m.senderName && m.senderName.toLowerCase().includes(convoId.toLowerCase()));
+      if (isMatch) {
+        return { ...m, read: true, unreadCount: 0 };
+      }
+      return m;
+    }));
+  };
+
+  const markAllConversationsRead = () => {
+    setDirectMessages(prev => prev.map(m => ({ ...m, read: true, unreadCount: 0 })));
+    setReadConversationIds(prev => {
+      const allIds = Array.from(new Set([
+        ...prev,
+        ...directMessages.map(m => m.id),
+        'chat-client-sohag',
+        'chat-client-tanjim',
+        'chat-client-sumaiya',
+        'chat-tanvir-ahmed',
+        'chat-creative-pixels',
+        'chat-piten-support'
+      ]));
+      localStorage.setItem(`${STORAGE_KEY}_read_convo_ids`, JSON.stringify(allIds));
+      return allIds;
+    });
   };
 
   const markAllDirectMessagesRead = () => {
@@ -3084,6 +3157,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         applyForMentorship,
         approveMentorApplication,
         rejectMentorApplication,
+        rightColumnView,
+        setRightColumnView,
+        readConversationIds,
+        markConversationRead,
+        markAllConversationsRead,
         markDirectMessageRead,
         markAllDirectMessagesRead,
         sendDirectMessage,

@@ -191,7 +191,7 @@ export const AdminCommandPalette: React.FC<AdminCommandPaletteProps> = ({
                       />
                       <div className="min-w-0">
                         <span className="font-bold text-white block truncate">{user.name}</span>
-                        <span className="text-[10px] text-slate-400 font-mono">{user.email} • {user.mobile || 'No Mobile'}</span>
+                        <span className="text-[10px] text-slate-400 font-mono">{user.email} | {user.mobile || 'No Mobile'}</span>
                       </div>
                     </div>
                     <span className="px-2 py-0.5 rounded text-[10px] bg-slate-900 text-slate-300 border border-slate-700 font-mono">

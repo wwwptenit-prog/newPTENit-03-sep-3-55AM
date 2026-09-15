@@ -225,6 +225,7 @@ export const initialServices: Service[] = [
       "1 Year Technical Support"
     ],
     published: true,
+    badge: "প্রিমিয়াম",
     order: 1
   },
   {
@@ -251,6 +252,7 @@ export const initialServices: Service[] = [
       "Sales Funnel Optimization"
     ],
     published: true,
+    badge: "আগে কাজ শুরু",
     order: 2
   },
   {
@@ -277,6 +279,7 @@ export const initialServices: Service[] = [
       "Unlimited Revisions"
     ],
     published: true,
+    badge: "আগে কাজ শুরু",
     order: 3
   },
   {
@@ -303,6 +306,7 @@ export const initialServices: Service[] = [
       "Fast Turnaround Time"
     ],
     published: true,
+    badge: "আগে কাজ শুরু",
     order: 4
   },
   {
@@ -329,6 +333,7 @@ export const initialServices: Service[] = [
       "Google My Business Rank Boost"
     ],
     published: true,
+    badge: "আগে কাজ শুরু",
     order: 5
   },
   {
@@ -355,6 +360,7 @@ export const initialServices: Service[] = [
       "Growth Analytics"
     ],
     published: true,
+    badge: "আগে কাজ শুরু",
     order: 6
   },
   {
@@ -381,6 +387,7 @@ export const initialServices: Service[] = [
       "Video Tutorial for Admin"
     ],
     published: true,
+    badge: "আগে কাজ শুরু",
     order: 7
   },
   {
@@ -407,6 +414,7 @@ export const initialServices: Service[] = [
       "Brand Storytelling"
     ],
     published: true,
+    badge: "প্রিমিয়াম",
     order: 8
   }
 ];

@@ -5,6 +5,15 @@
   --font-heading: 'Inter', 'Noto Sans Bengali', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-bengali: 'Noto Sans Bengali', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-english: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Official 6 Colors Theme Definition */
+  --color-primary: #006A4E;
+  --color-cta: #E31E24;
+  --color-error: #E31E24;
+  --color-info: #1E3A8A;
+  --color-background: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-text: #111827;
 }
 
 @layer base {
@@ -14,6 +23,15 @@
     --font-heading: var(--font-bilingual);
     --font-bengali: var(--font-bilingual);
     --font-english: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+    /* 6 Official Colors */
+    --color-primary: #006A4E;
+    --color-cta: #E31E24;
+    --color-error: #E31E24;
+    --color-info: #1E3A8A;
+    --color-background: #F8FAFC;
+    --color-surface: #FFFFFF;
+    --color-text: #111827;
   }
 
   html {
@@ -31,7 +49,7 @@
     font-weight: 400;
     line-height: 1.55;
     letter-spacing: normal;
-    background-color: #F5F7FA;
+    background-color: #F8FAFC;
     color: #111827;
     max-width: 100vw;
     overflow-x: hidden;
@@ -87,65 +105,65 @@
 
 /* PTENit Official Brand Identity: Clean Bangladeshi Red & Green (লাল-সবুজ) */
 :root {
-  --pten-green: #16A34A;           /* Clean Vibrant Green */
-  --pten-green-hover: #15803D;     /* Rich Green Hover */
-  --pten-green-active: #166534;    /* Deep Clean Green */
-  --pten-green-light: #22C55E;     /* Bright Green Accent */
+  --pten-green: #006A4E;           /* Clean Vibrant Green */
+  --pten-green-hover: #00543e;     /* Rich Green Hover */
+  --pten-green-active: #004231;    /* Deep Clean Green */
+  --pten-green-light: #008562;     /* Bright Green Accent */
   --pten-green-tint: #F0FDF4;      /* Soft Green Tint */
   --pten-green-border: #BBF7D0;
 
-  --pten-red: #DC2626;             /* Clean Solid Red */
-  --pten-red-hover: #B91C1C;       /* Deep Ruby Red */
+  --pten-red: #E31E24;             /* Clean Solid Red */
+  --pten-red-hover: #B81419;       /* Deep Ruby Red */
   --pten-red-glow: rgba(220, 38, 38, 0.4);
 
   /* Unified Theme Variables */
-  --brand-primary: #16A34A;
-  --brand-accent: #DC2626;
-  --fb-blue: #16A34A;
-  --fb-blue-hover: #15803D;
-  --fb-blue-active: #166534;
-  --gemini-blue: #16A34A;
-  --gemini-rich: #15803D;
-  --gemini-indigo: #16A34A;
-  --gemini-purple: #DC2626;
-  --gemini-sparkle: #16A34A;
-  --gemini-text: #16A34A;
+  --brand-primary: #006A4E;
+  --brand-accent: #E31E24;
+  --fb-blue: #006A4E;
+  --fb-blue-hover: #00543e;
+  --fb-blue-active: #004231;
+  --gemini-blue: #006A4E;
+  --gemini-rich: #00543e;
+  --gemini-indigo: #006A4E;
+  --gemini-purple: #E31E24;
+  --gemini-sparkle: #006A4E;
+  --gemini-text: #006A4E;
 }
 
 .bg-ptenit-green,
 .bg-gemini-blue,
 .bg-fb-blue {
-  background-color: #16A34A !important;
+  background-color: #006A4E !important;
 }
 
 .bg-ptenit-green-rich,
 .bg-gemini-gradient,
 .bg-fb-gradient {
-  background: #16A34A !important;
+  background: #006A4E !important;
 }
 
 .text-ptenit-green,
 .text-gemini-blue,
 .text-fb-blue {
-  color: #16A34A !important;
+  color: #006A4E !important;
 }
 
 .border-ptenit-green,
 .border-gemini-blue,
 .border-fb-blue {
-  border-color: #16A34A !important;
+  border-color: #006A4E !important;
 }
 
 .bg-ptenit-red {
-  background-color: #DC2626 !important;
+  background-color: #E31E24 !important;
 }
 
 .text-ptenit-red {
-  color: #DC2626 !important;
+  color: #E31E24 !important;
 }
 
 .border-ptenit-red {
-  border-color: #DC2626 !important;
+  border-color: #E31E24 !important;
 }
 
 .bg-ptenit-dark {
@@ -154,6 +172,60 @@
 
 .bg-ptenit-card {
   background-color: #FFFFFF;
+}
+
+/* 6 Official Color Utility Helpers */
+.bg-official-primary { background-color: #006A4E !important; }
+.text-official-primary { color: #006A4E !important; }
+.border-official-primary { border-color: #006A4E !important; }
+
+.bg-official-cta, .bg-official-error { background-color: #E31E24 !important; }
+.text-official-cta, .text-official-error { color: #E31E24 !important; }
+.border-official-cta, .border-official-error { border-color: #E31E24 !important; }
+
+.bg-official-info { background-color: #1E3A8A !important; }
+.text-official-info { color: #1E3A8A !important; }
+.border-official-info { border-color: #1E3A8A !important; }
+
+.bg-official-background { background-color: #F8FAFC !important; }
+.bg-official-surface { background-color: #FFFFFF !important; }
+.text-official-main { color: #111827 !important; }
+
+/* Responsive Typography Specification
+   Hero: Mobile text-3xl, Desktop md:text-5xl
+   Page Title: Mobile text-2xl, Desktop md:text-4xl
+   Section: Mobile text-xl, Desktop md:text-3xl
+   Card Title: Mobile text-lg, Desktop md:text-2xl
+   Subtitle: Mobile text-base, Desktop md:text-xl
+   Body: Mobile text-sm, Desktop md:text-base
+   Caption: Mobile text-xs, Desktop text-xs
+*/
+.typo-hero {
+  @apply text-3xl md:text-5xl font-black leading-tight;
+}
+
+.typo-page-title {
+  @apply text-2xl md:text-4xl font-bold leading-snug;
+}
+
+.typo-section {
+  @apply text-xl md:text-3xl font-bold leading-snug;
+}
+
+.typo-card-title {
+  @apply text-lg md:text-2xl font-bold leading-snug;
+}
+
+.typo-subtitle {
+  @apply text-base md:text-xl font-medium leading-relaxed;
+}
+
+.typo-body {
+  @apply text-sm md:text-base font-normal leading-normal;
+}
+
+.typo-caption {
+  @apply text-xs leading-normal;
 }
 
 /* Custom scrollbar */
@@ -208,7 +280,7 @@
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #16a34a;
+    background: #006A4E;
   }
 }
 
@@ -241,7 +313,7 @@
 
 .liquid-glass-interactive:hover {
   background: #F8FAFC !important;
-  border-color: #16A34A !important;
+  border-color: #006A4E !important;
   box-shadow: 0 4px 12px rgba(22, 163, 74, 0.1) !important;
   transform: translateY(-1px);
 }
@@ -255,7 +327,7 @@
 
 .liquid-glass-input:focus {
   background: #FFFFFF !important;
-  border-color: #16A34A !important;
+  border-color: #006A4E !important;
   box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15) !important;
   outline: none;
 }
@@ -358,30 +430,30 @@
 
 /* Global Text Selection - Crisp White Text with Bangladesh National Emerald Green Highlight */
 ::selection {
-  background-color: #16A34A !important;
+  background-color: #006A4E !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }
 
 ::-moz-selection {
-  background-color: #16A34A !important;
+  background-color: #006A4E !important;
   color: #ffffff !important;
 }
 
 *::selection {
-  background-color: #16A34A !important;
+  background-color: #006A4E !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }
 
 *::-moz-selection {
-  background-color: #16A34A !important;
+  background-color: #006A4E !important;
   color: #ffffff !important;
 }
 
 input::selection,
 textarea::selection {
-  background-color: #16A34A !important;
+  background-color: #006A4E !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }

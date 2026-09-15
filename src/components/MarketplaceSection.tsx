@@ -109,6 +109,7 @@ import { StudentDashboard } from './StudentDashboard';
 import { CustomerDashboard } from './CustomerDashboard';
 import { TeacherDashboard } from './TeacherDashboard';
 import { MarketplaceMessengerView } from './MarketplaceMessengerView';
+import { MarketplaceLastColumn } from './MarketplaceLastColumn';
 
 const CATEGORY_PROJECT_TAGS: Record<string, string[]> = {
   "Web Development": ["React", "WordPress", "Node.js", "Laravel", "Tailwind", "Next.js", "PHP", "HTML/CSS"],
@@ -667,6 +668,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     activeMessengerConversationId,
     setActiveMessengerConversationId,
     openMessengerInbox,
+    rightColumnView,
+    setRightColumnView,
     sendDirectMessage,
     customerProjects,
     createCustomerProject,
@@ -1353,6 +1356,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
   const [copiedMethod, setCopiedMethod] = useState<string | null>(null);
   const [isReleaseSuccessToast, setIsReleaseSuccessToast] = useState(false);
   const [isPostProjectModalOpen, setIsPostProjectModalOpen] = useState(false);
+  const [isPostGigModalOpen, setIsPostGigModalOpen] = useState(false);
   const [postTitle, setPostTitle] = useState('');
   const [isPaymentStepOpen, setIsPaymentStepOpen] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -1755,6 +1759,52 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       return true;
     }).length;
   }, [roleScopedDirectMessages, readConversationIds]);
+
+  const handleOpenMessagesInColumn3 = () => {
+    if (!currentUser && openAuthModal) {
+      openAuthModal();
+      return;
+    }
+    if (viewMode === 'selling') {
+      if (specialistMainTab !== 'marketplace') setSpecialistMainTab('marketplace');
+      if (sellerSubTab !== 'gigs' && sellerSubTab !== 'overview') setSellerSubTab('gigs');
+    } else {
+      if (activeSubTab !== 'gigs') setActiveSubTab('gigs');
+    }
+    setRightColumnView(prev => prev === 'messages' ? 'default' : 'messages');
+    if (closeMessengerInbox) closeMessengerInbox();
+    setTimeout(() => {
+      const col3 = document.getElementById('marketplace-column-3-seller')
+        || document.getElementById('marketplace-column-3-agency')
+        || document.getElementById('marketplace-column-3');
+      if (col3) {
+        col3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  };
+
+  const handleOpenNotificationsInColumn3 = () => {
+    if (!currentUser && openAuthModal) {
+      openAuthModal();
+      return;
+    }
+    if (viewMode === 'selling') {
+      if (specialistMainTab !== 'marketplace') setSpecialistMainTab('marketplace');
+      if (sellerSubTab !== 'gigs' && sellerSubTab !== 'overview') setSellerSubTab('gigs');
+    } else {
+      if (activeSubTab !== 'gigs') setActiveSubTab('gigs');
+    }
+    setRightColumnView(prev => prev === 'notifications' ? 'default' : 'notifications');
+    if (closeMessengerInbox) closeMessengerInbox();
+    setTimeout(() => {
+      const col3 = document.getElementById('marketplace-column-3-seller')
+        || document.getElementById('marketplace-column-3-agency')
+        || document.getElementById('marketplace-column-3');
+      if (col3) {
+        col3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  };
 
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'All');
   const [showAllCategories, setShowAllCategories] = useState(false);
@@ -2375,9 +2425,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
   
   // Create New Order Page State (3-Package Dedicated Page)
   const [activePackageStep, setActivePackageStep] = useState<'basic' | 'standard' | 'premium'>('basic');
-  const [packageLayoutMode, setPackageLayoutMode] = useState<'stepped' | 'columns'>('stepped');
+  const [packageLayoutMode, setPackageLayoutMode] = useState<'stepped' | 'columns'>('columns');
   const [newGigTitle, setNewGigTitle] = useState('');
-  const [newGigCategory, setNewGigCategory] = useState('Programming & Tech');
+  const [newGigCategory, setNewGigCategory] = useState('');
   const [newGigOfferBadge, setNewGigOfferBadge] = useState<string>('');
   const [newGigThumbnail, setNewGigThumbnail] = useState('');
   const [newGigGalleryPic, setNewGigGalleryPic] = useState('');
@@ -3353,6 +3403,44 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     }, 1800);
   };
 
+  // Category-specific quick tags for search keywords
+  const getCategoryQuickTags = (cat: string) => {
+    if (!cat) {
+      return ['React', 'Next.js', 'Tailwind', 'Figma', 'UI/UX', 'Python', 'SEO', 'Marketing'];
+    }
+    if (cat.includes('Web') || cat.includes('Programming')) {
+      return ['React', 'Next.js', 'Node.js', 'Tailwind CSS', 'Full Stack', 'Bug Fix', 'Python', 'TypeScript', 'MongoDB', 'API Integration'];
+    }
+    if (cat.includes('App')) {
+      return ['Flutter', 'React Native', 'Android App', 'iOS App', 'Firebase', 'Mobile UI', 'Kotlin', 'Swift', 'REST API'];
+    }
+    if (cat.includes('UI/UX')) {
+      return ['Figma', 'UI/UX Design', 'Landing Page UI', 'Mobile App UI', 'Wireframe', 'Prototype', 'Design System', 'User Research'];
+    }
+    if (cat.includes('Graphics') || cat.includes('Design')) {
+      return ['Logo Design', 'Photoshop', 'Illustrator', 'Banner', 'Branding', 'Vector Art', 'Flyer', 'Thumbnail', 'Social Post'];
+    }
+    if (cat.includes('AI')) {
+      return ['AI Bot', 'ChatGPT', 'Prompt Engineering', 'LangChain', 'Python AI', 'Gemini API', 'Machine Learning', 'Automation'];
+    }
+    if (cat.includes('Marketing')) {
+      return ['Facebook Ads', 'Google Ads', 'Social Media', 'Marketing Strategy', 'Email Marketing', 'Lead Generation', 'Conversion'];
+    }
+    if (cat.includes('SEO')) {
+      return ['SEO', 'Keyword Research', 'On-Page SEO', 'Backlinks', 'Technical SEO', 'Traffic Growth', 'Site Audit'];
+    }
+    if (cat.includes('Video')) {
+      return ['Video Editing', 'Premiere Pro', 'After Effects', 'Reels / Shorts', 'YouTube Video', 'Motion Graphics', 'Color Grading'];
+    }
+    if (cat.includes('Writing') || cat.includes('Content')) {
+      return ['Article Writing', 'Blog Post', 'Copywriting', 'SEO Content', 'Creative Writing', 'Product Description', 'Script Writing'];
+    }
+    if (cat.includes('Cyber') || cat.includes('Security')) {
+      return ['Security Audit', 'Penetration Testing', 'Bug Bounty', 'Vulnerability Assessment', 'Network Security', 'Firewall'];
+    }
+    return ['React', 'Next.js', 'Tailwind', 'Design', 'Full Stack', 'Marketing', 'SEO', 'Mobile App', 'Bug Fix'];
+  };
+
   // Quick helpers to auto-fill Standard / Premium from Basic
   const handleCopyBasicToStandard = () => {
     if (!newStandardTitle || newStandardTitle === 'Standard Pro') {
@@ -3385,6 +3473,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       if (openAuthModal) openAuthModal();
       return;
     }
+    if (!newGigCategory) {
+      alert('অনুগ্রহ করে একটি ক্যাটাগরি নির্বাচন করুন।');
+      return;
+    }
+    if (!newGigOfferBadge) {
+      alert('অনুগ্রহ করে অফার ব্যাজ বা কাজের ধরন নির্বাচন করুন।');
+      return;
+    }
     if (!newGigTitle || !newGigDesc) {
       alert('অনুগ্রহ করে গিগ টাইটেল এবং সার্ভিস বিবরণ পূরণ করুন।');
       return;
@@ -3409,7 +3505,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       title: newGigTitle,
       category: newGigCategory,
       status: 'active',
-      offerBadge: newGigOfferBadge || '৩০% ছাড়',
+      offerBadge: newGigOfferBadge,
       thumbnail: newGigThumbnail || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
       galleryImages: newGigGalleryPic ? [newGigGalleryPic] : [],
       videoUrl: newGigVideoUrl || undefined,
@@ -3446,9 +3542,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     setCreateGigSuccess(true);
     setTimeout(() => {
       setCreateGigSuccess(false);
+      setIsPostGigModalOpen(false);
       setSellerSubTab('gigs');
       setNewGigTitle('');
-      setNewGigOfferBadge('৩০% ছাড়');
+      setNewGigCategory('');
+      setNewGigOfferBadge('');
       setNewGigDesc('');
       setNewGigThumbnail('');
       setNewGigGalleryPic('');
@@ -3523,7 +3621,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       
       {/* PTENit MODERN MARKETPLACE HEADER */}
       {!selectedGig && !(viewMode === 'selling' && sellerSubTab === 'create_gig') && (
-        <div className="sticky top-0 z-40 bg-[#006A4E] text-white px-2 sm:px-4 lg:px-6 mb-0 sm:mb-3 shadow-md border-b border-[#00543D]">
+        <div className={`sticky top-0 z-40 text-white px-2 sm:px-4 lg:px-6 mb-0 sm:mb-3 shadow-md border-b transition-colors duration-200 ${
+          isSellerMode || viewMode === 'selling'
+            ? 'bg-[#E11D48] border-[#BE123C]'
+            : 'bg-[#006A4E] border-[#00543D]'
+        }`}>
           <div className="w-full px-2 sm:px-4 lg:px-6 py-1 sm:py-2 flex flex-col justify-between gap-2">
           
           {/* MOBILE PHONE HEADER (Facebook Lite Style Header & Merged Icon Navigation on Phone & Small Devices) */}
@@ -3562,11 +3664,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <>
                         <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-[#00543D] border border-emerald-400/40 flex items-center justify-center font-bold text-xs sm:text-base text-white shadow-xs shrink-0 relative">
                           P
-                          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#E11D48] border border-white" />
                         </div>
                         <span className="font-heading text-sm sm:text-base font-black tracking-wider text-white flex items-center gap-0.5">
                           PTEN<span className="text-emerald-200">it</span>
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] ml-0.5 inline-block" />
                         </span>
                       </>
                     )}
@@ -3791,17 +3891,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               {/* 3. ✉️ Messenger */}
               <button
                 type="button"
-                onClick={() => {
-                  if (!currentUser) {
-                    if (openAuthModal) openAuthModal();
-                    return;
-                  }
-                  openMessengerInbox();
-                }}
+                onClick={handleOpenMessagesInColumn3}
                 className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer rounded-lg ${
-                  isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-white bg-[#00543D]' : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/50'
+                  rightColumnView === 'messages' ? 'text-white bg-[#00543D]' : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/50'
                 }`}
-                title={viewMode === 'selling' ? 'মেসেঞ্জার (সেলার ইনবক্স)' : 'মেসেঞ্জার'}
+                title={viewMode === 'selling' ? 'মেসেঞ্জার (সেলার ইনবক্স - ৩ নং কলাম)' : 'মেসেঞ্জার (৩ নং কলাম)'}
               >
                 <Mail className="w-5 h-5 text-white stroke-[2.2]" />
                 {unreadMarketplaceMsgCount > 0 && (
@@ -3814,17 +3908,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               {/* 4. 🔔 Notification */}
               <button
                 type="button"
-                onClick={() => {
-                  if (!currentUser) {
-                    if (openAuthModal) openAuthModal();
-                    return;
-                  }
-                  openNotificationCenter();
-                }}
+                onClick={handleOpenNotificationsInColumn3}
                 className={`flex-1 flex justify-center items-center py-1.5 transition relative active:scale-95 cursor-pointer rounded-lg ${
-                  isNotificationCenterOpen ? 'text-white bg-[#00543D]' : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/50'
+                  rightColumnView === 'notifications' ? 'text-white bg-[#00543D]' : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/50'
                 }`}
-                title="নোটিফিকেশন"
+                title="নোটিফিকেশন (৩ নং কলাম)"
               >
                 <Bell className="w-5 h-5 text-white stroke-[2.2]" />
                 {roleScopedNotifications.filter(n => !n.read).length > 0 && (
@@ -4386,7 +4474,6 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <div>
                         <div className="flex items-center gap-1.5">
                           <h2 className="text-sm font-black text-slate-900 tracking-tight leading-none">Messages</h2>
-                          <span className="w-2 h-2 rounded-full bg-[#006A4E]" />
                         </div>
                         <p className="text-[10px] font-semibold text-slate-500 tracking-wide leading-tight mt-0.5 font-sans">PTENit Marketplace Inbox</p>
                       </div>
@@ -4537,11 +4624,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         <div className="flex items-center gap-1.5">
                           <div className="w-7 h-7 rounded-lg bg-white text-[#006A4E] flex items-center justify-center font-bold text-base shadow-xs shrink-0 relative">
                             P
-                            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#E11D48] border-2 border-white" />
                           </div>
                           <span className="font-heading text-lg lg:text-xl font-black tracking-tight text-white flex items-center gap-0.5">
                             PTEN<span className="text-emerald-200">it</span>
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] ml-1 inline-block" title="লাল-সবুজের অহংকার" />
                           </span>
                         </div>
                       )}
@@ -4747,17 +4832,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     {/* মেসেঞ্জার ও চ্যাট */}
                     <button
                       type="button"
-                      onClick={() => {
-                        if (!currentUser && openAuthModal) {
-                          openAuthModal();
-                          return;
-                        }
-                        openMessengerInbox();
-                      }}
+                      onClick={handleOpenMessagesInColumn3}
                       className={`p-1.5 lg:p-2 rounded-lg relative text-emerald-100 hover:text-white hover:bg-[#00543D] transition cursor-pointer active:scale-95 ${
-                        isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-white bg-[#00543D]' : ''
+                        rightColumnView === 'messages' ? 'text-white bg-[#00543D]' : ''
                       }`}
-                      title="মেসেঞ্জার ও চ্যাট"
+                      title="মেসেঞ্জার ও চ্যাট (৩ নং কলাম)"
                     >
                       <Mail className="w-4 lg:w-5 h-4 lg:h-5" />
                       {unreadMarketplaceMsgCount > 0 && (
@@ -4770,17 +4849,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     {/* নোটিফিকেশন */}
                     <button
                       type="button"
-                      onClick={() => {
-                        if (!currentUser && openAuthModal) {
-                          openAuthModal();
-                          return;
-                        }
-                        openNotificationCenter();
-                      }}
+                      onClick={handleOpenNotificationsInColumn3}
                       className={`p-1.5 lg:p-2 rounded-lg relative text-emerald-100 hover:text-white hover:bg-[#00543D] transition cursor-pointer active:scale-95 ${
-                        isNotificationCenterOpen ? 'text-white bg-[#00543D]' : ''
+                        rightColumnView === 'notifications' ? 'text-white bg-[#00543D]' : ''
                       }`}
-                      title="নোটিফিকেশন"
+                      title="নোটিফিকেশন (৩ নং কলাম)"
                     >
                       <Bell className="w-4 lg:w-5 h-4 lg:h-5" />
                       {roleScopedNotifications.filter(n => !n.read).length > 0 && (
@@ -4839,21 +4912,23 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               </div>
             ) : (
               /* --------------------------------------------------------------------- */
-              /* 2. SELLER HUB NAVIGATION BAR (পিসিতে সেলার মেনুবার)                     */
+              /* 2. SELLER HUB NAVIGATION BAR (পিসিতে লাল সেলার মেনুবার)                  */
               /* --------------------------------------------------------------------- */
-              <div className="flex items-center justify-between w-full h-14 gap-2 lg:gap-4 py-1">
-                {/* Left: Brand Logo + Seller Hub Badge + Quick Main Site Link */}
-                <div className="flex items-center gap-2 lg:gap-3 shrink-0">
+              <div className="flex items-center justify-between w-full h-14 gap-3 lg:gap-4 py-1">
+                {/* Left: Brand Logo + Navigation (সেলার হোম, ক্লায়েন্ট অর্ডারসমূহ, মেন্টর ড্যাশবোর্ড, আয় ও ক্যাশআউট) */}
+                <div className="flex items-center h-full gap-1 sm:gap-1.5 shrink-0">
+                  {/* PTENit Brand Logo */}
                   <button
                     type="button"
                     onClick={() => {
                       setSelectedGig(null);
+                      setViewMode('selling');
                       setSpecialistMainTab('marketplace');
                       setSellerSubTab('overview');
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="flex items-center gap-1.5 cursor-pointer group"
-                    title="PTENit সেলার হাব ড্যাশবোর্ড"
+                    className="flex items-center gap-1.5 cursor-pointer group shrink-0 mr-2"
+                    title="PTENit"
                   >
                     {marketplaceLogo ? (
                       <img
@@ -4863,58 +4938,40 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       />
                     ) : (
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-xl bg-white text-[#006A4E] flex items-center justify-center font-bold text-lg shadow-xs shrink-0 relative">
+                        <div className="w-8 h-8 rounded-xl bg-white text-[#E11D48] flex items-center justify-center font-bold text-lg shadow-xs shrink-0 relative">
                           P
-                          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#E11D48] border-2 border-white" />
                         </div>
                         <span className="font-heading text-xl lg:text-2xl font-black tracking-tight text-white flex items-center gap-0.5">
-                          PTEN<span className="text-emerald-200">it</span>
-                          <span className="w-2 h-2 rounded-full bg-[#E11D48] ml-1 inline-block" title="লাল-সবুজের অহংকার" />
-                        </span>
-                        <span className="px-2 py-0.5 bg-[#00543D] text-white border border-emerald-400/40 rounded-md text-[10px] lg:text-[11px] font-black uppercase tracking-wider flex items-center gap-1 shadow-xs">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48]" />
-                          Seller Hub
+                          PTEN<span className="text-rose-200">it</span>
                         </span>
                       </div>
                     )}
                   </button>
 
-                  {/* Quick Link back to PTENit Main Website */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (setActiveTab) setActiveTab('home');
-                    }}
-                    className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold text-white bg-[#00543D] hover:bg-[#00412F] rounded-lg border border-emerald-400/30 transition cursor-pointer active:scale-95 shadow-xs shrink-0"
-                    title="পিটেনআইটি মূল ওয়েবসাইটে ফিরে যান (হোম, কোর্স ও সার্ভিস)"
-                  >
-                    <Home className="w-3.5 h-3.5 text-emerald-200" />
-                    <span className="hidden xl:inline">মূল ওয়েবসাইট</span>
-                    <span className="xl:hidden">হোম</span>
-                  </button>
-                </div>
-
-                {/* Center: Seller Hub Navigation Links */}
-                <div className="flex items-center gap-1 lg:gap-1.5 flex-1 justify-center max-w-2xl px-1">
-                  {/* Link 1: Dashboard */}
+                  {/* বাটন ১: সেলার হোম (শুধু আইকন ও আন্ডার সিলেক্ট) */}
                   <button
                     type="button"
                     onClick={() => {
                       setSelectedGig(null);
+                      setViewMode('selling');
                       setSpecialistMainTab('marketplace');
                       setSellerSubTab('overview');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className={`px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap ${
-                      sellerSubTab === 'overview'
-                        ? 'text-white font-bold bg-[#00543D] border-b-2 border-white'
-                        : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/60'
+                    className={`h-full flex items-center justify-center relative px-3 lg:px-3.5 transition cursor-pointer group active:scale-95 ${
+                      sellerSubTab === 'overview' && specialistMainTab === 'marketplace'
+                        ? 'text-white'
+                        : 'text-white/80 hover:text-white hover:bg-white/10'
                     }`}
+                    title="সেলার হোম"
                   >
-                    <LayoutDashboard className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
-                    <span>ড্যাশবোর্ড</span>
+                    <Home className="w-5 h-5 text-white transition group-hover:scale-105" />
+                    {sellerSubTab === 'overview' && specialistMainTab === 'marketplace' && (
+                      <span className="absolute bottom-0 left-1.5 right-1.5 h-[3px] bg-white rounded-t-full shadow-sm" />
+                    )}
                   </button>
 
-                  {/* Link 2: Orders with Badge */}
+                  {/* বাটন ২: ক্লায়েন্ট অর্ডারসমূহ (শুধু আইকন, কাউন্টার ও আন্ডার সিলেক্ট) */}
                   <button
                     type="button"
                     onClick={() => {
@@ -4922,69 +4979,27 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       setSpecialistMainTab('marketplace');
                       setSellerSubTab('orders');
                     }}
-                    className={`px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 rounded-lg relative whitespace-nowrap ${
-                      sellerSubTab === 'orders'
-                        ? 'text-white font-bold bg-[#00543D] border-b-2 border-white'
-                        : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/60'
+                    className={`h-full flex items-center justify-center relative px-3 lg:px-3.5 transition cursor-pointer group active:scale-95 ${
+                      sellerSubTab === 'orders' && specialistMainTab === 'marketplace'
+                        ? 'text-white'
+                        : 'text-white/80 hover:text-white hover:bg-white/10'
                     }`}
+                    title="ক্লায়েন্ট অর্ডারসমূহ"
                   >
-                    <ShoppingBag className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
-                    <span>অর্ডারসমূহ</span>
-                    {marketplaceOrders.length > 0 && (
-                      <span className="ml-0.5 px-1.5 py-0.2 bg-rose-500 text-white text-[9px] font-black rounded-full shadow-xs">
-                        {marketplaceOrders.length}
-                      </span>
+                    <div className="relative flex items-center justify-center">
+                      <ShoppingBag className="w-5 h-5 text-white transition group-hover:scale-105" />
+                      {marketplaceOrders.length > 0 && (
+                        <span className="absolute -top-1.5 -right-2.5 min-w-[18px] h-[18px] px-1 bg-white text-[#E11D48] text-[10px] font-black rounded-full shadow-xs flex items-center justify-center border border-rose-600">
+                          {marketplaceOrders.length}
+                        </span>
+                      )}
+                    </div>
+                    {sellerSubTab === 'orders' && specialistMainTab === 'marketplace' && (
+                      <span className="absolute bottom-0 left-1.5 right-1.5 h-[3px] bg-white rounded-t-full shadow-sm" />
                     )}
                   </button>
 
-                  {/* Link 3: My Gigs */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedGig(null);
-                      setSpecialistMainTab('marketplace');
-                      setSellerSubTab('gigs');
-                    }}
-                    className={`px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap ${
-                      sellerSubTab === 'gigs' && specialistMainTab === 'marketplace'
-                        ? 'text-white font-bold bg-[#00543D] border-b-2 border-white'
-                        : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/60'
-                    }`}
-                  >
-                    <Folder className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
-                    <span>আমার গিগস</span>
-                  </button>
-
-                  {/* Link 4: Earnings & Statement */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedGig(null);
-                      setSpecialistMainTab('payments');
-                      setSellerSubTab('earnings');
-                    }}
-                    className={`px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap ${
-                      specialistMainTab === 'payments'
-                        ? 'text-white font-bold bg-[#00543D] border-b-2 border-white'
-                        : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/60'
-                    }`}
-                  >
-                    <Wallet className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
-                    <span>উপার্জন</span>
-                  </button>
-
-                  {/* Link 5: Buyer Requests */}
-                  <button
-                    type="button"
-                    onClick={() => setIsPostProjectModalOpen(true)}
-                    className="px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold text-emerald-100 hover:text-white hover:bg-[#00543D]/60 transition cursor-pointer flex items-center gap-1.5 rounded-lg whitespace-nowrap"
-                    title="লাইভ বায়ার রিকোয়েস্ট ও কাস্টম প্রজেক্ট"
-                  >
-                    <FileText className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-emerald-200" />
-                    <span>বায়ার রিকোয়েস্ট</span>
-                  </button>
-
-                  {/* Link 6: Growth & Mentorship */}
+                  {/* বাটন ৩: মেন্টর ড্যাশবোর্ড (শুধু আইকন ও আন্ডার সিলেক্ট) */}
                   <button
                     type="button"
                     onClick={() => {
@@ -4992,135 +5007,178 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       setSpecialistMainTab('mentor');
                       setSellerSubTab('courses');
                     }}
-                    className={`hidden 2xl:flex px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-semibold transition cursor-pointer items-center gap-1.5 rounded-lg whitespace-nowrap ${
+                    className={`h-full flex items-center justify-center relative px-3 lg:px-3.5 transition cursor-pointer group active:scale-95 ${
                       specialistMainTab === 'mentor'
-                        ? 'text-white font-bold bg-[#00543D] border-b-2 border-white'
-                        : 'text-emerald-100 hover:text-white hover:bg-[#00543D]/60'
+                        ? 'text-white'
+                        : 'text-white/80 hover:text-white hover:bg-white/10'
                     }`}
+                    title="মেন্টর ড্যাশবোর্ড"
                   >
-                    <GraduationCap className="w-3.5 lg:w-4 h-3.5 lg:h-4" />
-                    <span>একাডেমি</span>
+                    <GraduationCap className="w-5 h-5 text-white transition group-hover:scale-105" />
+                    {specialistMainTab === 'mentor' && (
+                      <span className="absolute bottom-0 left-1.5 right-1.5 h-[3px] bg-white rounded-t-full shadow-sm" />
+                    )}
+                  </button>
+
+                  {/* বাটন ৪: আয় ও ক্যাশআউট (শুধু আইকন ও আন্ডার সিলেক্ট) */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedGig(null);
+                      setSpecialistMainTab('payments');
+                      setSellerSubTab('earnings');
+                    }}
+                    className={`h-full flex items-center justify-center relative px-3 lg:px-3.5 transition cursor-pointer group active:scale-95 ${
+                      specialistMainTab === 'payments'
+                        ? 'text-white'
+                        : 'text-white/80 hover:text-white hover:bg-white/10'
+                    }`}
+                    title="আয় ও ক্যাশআউট"
+                  >
+                    <Wallet className="w-5 h-5 text-white transition group-hover:scale-105" />
+                    {specialistMainTab === 'payments' && (
+                      <span className="absolute bottom-0 left-1.5 right-1.5 h-[3px] bg-white rounded-t-full shadow-sm" />
+                    )}
                   </button>
                 </div>
 
-                {/* Right: Seller Hub Actions */}
-                <div className="flex items-center gap-1.5 lg:gap-2.5 shrink-0">
-                  {/* Switch to Buying */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setViewMode('buying');
-                      setActiveSubTab('gigs');
-                      setSelectedCategory('All');
-                      setSelectedGig(null);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className="text-xs lg:text-sm font-bold text-white bg-[#00543D] hover:bg-[#00412F] px-2.5 lg:px-3 py-1.5 rounded-lg border border-emerald-400/40 transition cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap active:scale-95 shadow-xs"
-                    title="বায়ার ব্রাউজিং মোডে ফিরে যান"
-                  >
-                    <ShoppingBag className="w-3.5 h-3.5 text-emerald-200" />
-                    <span>Switch to Buying</span>
-                  </button>
-
-                  {/* + Create a New Gig Button */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedGig(null);
-                      setSellerSubTab('create_gig');
-                    }}
-                    className="px-3 lg:px-3.5 py-1.5 bg-white hover:bg-emerald-50 text-[#006A4E] font-bold text-xs lg:text-sm rounded-lg transition shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 shrink-0 whitespace-nowrap relative group"
-                    title="নতুন প্রফেশনাল গিগ তৈরি করুন"
-                  >
-                    <Plus className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-[#006A4E]" />
-                    <span>নতুন গিগ তৈরি</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48]" />
-                  </button>
-
-                  {/* Action Icons (Messages, Notifications, Sound) */}
-                  <div className="flex items-center gap-0.5 sm:gap-1">
-                    {/* Messages Icon */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (!currentUser && openAuthModal) {
-                          openAuthModal();
-                          return;
-                        }
-                        openMessengerInbox();
-                      }}
-                      className={`p-1.5 lg:p-2 rounded-lg relative text-emerald-100 hover:text-white hover:bg-[#00543D] transition cursor-pointer ${
-                        isMessengerInboxOpen || activeSubTab === 'messenger' ? 'text-white bg-[#00543D]' : ''
-                      }`}
-                      title="ইনবক্স / ক্লায়েন্ট মেসেজ"
-                    >
-                      <Mail className="w-4 lg:w-5 h-4 lg:h-5" />
-                      {unreadMarketplaceMsgCount > 0 && (
-                        <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
-                          {unreadMarketplaceMsgCount}
-                        </span>
-                      )}
-                    </button>
-
-                    {/* Notifications Icon */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (!currentUser && openAuthModal) {
-                          openAuthModal();
-                          return;
-                        }
-                        openNotificationCenter();
-                      }}
-                      className={`p-1.5 lg:p-2 rounded-lg relative text-emerald-100 hover:text-white hover:bg-[#00543D] transition cursor-pointer ${
-                        isNotificationCenterOpen ? 'text-white bg-[#00543D]' : ''
-                      }`}
-                      title="অর্ডার ও সেলার নোটিফিকেশন"
-                    >
-                      <Bell className="w-4 lg:w-5 h-4 lg:h-5" />
-                      {roleScopedNotifications.filter(n => !n.read).length > 0 && (
-                        <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
-                          {roleScopedNotifications.filter(n => !n.read).length}
-                        </span>
-                      )}
-                    </button>
-
-                    {/* Sound Toggle */}
-                    <button
-                      type="button"
-                      onClick={toggleOfferSound}
-                      className="w-7 lg:w-8 h-7 lg:h-8 rounded-lg bg-[#00543D] hover:bg-[#00412F] text-white border border-emerald-400/30 flex items-center justify-center transition active:scale-95 cursor-pointer relative"
-                      title={isOfferSoundEnabled ? "অর্ডার নোটিফিকেশন সাউন্ড চালু" : "অর্ডার নোটিফিকেশন সাউন্ড বন্ধ"}
-                    >
-                      {isOfferSoundEnabled ? (
-                        <Volume2 className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-emerald-200" />
-                      ) : (
-                        <VolumeX className="w-3.5 lg:w-4 h-3.5 lg:h-4 text-emerald-300/60" />
-                      )}
-                    </button>
+                {/* Center: সার্চ বার */}
+                <div className="flex-1 max-w-sm lg:max-w-md mx-2 relative">
+                  <div className="relative w-full flex items-center">
+                    <Search className="w-4 h-4 text-white/70 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="অর্ডার, গিগ বা সার্ভিস সার্চ করুন..."
+                      className="w-full pl-9 pr-8 py-1.5 bg-white/15 hover:bg-white/20 focus:bg-white/25 border border-white/25 focus:border-white text-white placeholder-white/70 text-xs lg:text-sm rounded-full outline-none transition shadow-xs focus:ring-1 focus:ring-white/40 font-bengali"
+                    />
+                    {searchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/70 hover:text-white p-0.5 cursor-pointer"
+                        title="মুছে ফেলুন"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
 
-                  {/* Seller Avatar */}
-                  {currentUser ? (
-                    <div
-                      onClick={() => setIsMobileMarketplaceMenuOpen(true)}
-                      className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-[#00543D] hover:bg-[#00412F] transition cursor-pointer border border-emerald-400/40 shrink-0 select-none text-white shadow-xs"
-                      title={`সেলার প্রোফাইল: ${currentUser.name}`}
-                    >
-                      <div className="relative">
-                        <img
-                          src={currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
-                          alt={currentUser.name}
-                          className="w-6 h-6 lg:w-7 lg:h-7 rounded-full object-cover border border-emerald-300"
-                        />
-                        <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-white" />
+                  {/* Live Search Results Dropdown */}
+                  {searchQuery.trim() && (
+                    <div className="absolute left-0 top-full mt-2 w-full bg-white border border-slate-200 rounded-2xl shadow-2xl p-3 z-50 text-slate-800 max-h-96 overflow-y-auto font-bengali">
+                      <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1.5 flex items-center justify-between">
+                        <span>সার্চ ফলাফল ({filteredGigs.length})</span>
+                        <span className="text-[11px] text-[#E11D48] font-bold">লাইভ ফলাফল</span>
                       </div>
-                      <span className="hidden xl:inline text-xs font-bold text-white max-w-[65px] truncate">
-                        {currentUser.name.split(' ')[0]}
-                      </span>
-                      <ChevronDown className="w-3 h-3 text-emerald-200" />
+                      {filteredGigs.length > 0 ? (
+                        <div className="space-y-1.5">
+                          {filteredGigs.slice(0, 5).map(gig => {
+                            const gigPrice = gig.packages?.basic?.price ?? (gig as any).price ?? 2500;
+                            const gigThumb = gig.images?.[0] || gig.sellerAvatar || 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=300&q=80';
+                            return (
+                              <div
+                                key={gig.id}
+                                onClick={() => {
+                                  setSelectedGig(gig);
+                                  setSearchQuery('');
+                                }}
+                                className="flex items-center gap-2.5 p-2 hover:bg-slate-50 rounded-xl cursor-pointer transition bg-white border border-slate-200"
+                              >
+                                <img
+                                  src={gigThumb}
+                                  alt={gig.title}
+                                  className="w-10 h-10 rounded-lg object-cover shrink-0 border border-slate-200"
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <p className="font-semibold text-xs text-slate-900 truncate">{gig.title}</p>
+                                  <div className="flex items-center justify-between mt-1">
+                                    <span className="text-[10px] text-slate-500 truncate max-w-[120px]">{gig.sellerName}</span>
+                                    <span className="text-xs text-[#E11D48] font-bold">
+                                      ৳{gigPrice.toLocaleString('en-US')}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <p className="text-center text-slate-500 py-3 text-xs">
+                          কোনো গিগ বা সার্ভিস পাওয়া যায়নি।
+                        </p>
+                      )}
                     </div>
-                  ) : null}
+                  )}
+                </div>
+
+                {/* Right: Action Icon Buttons (মেসেঞ্জার, নোটিফিকেশন, সাউন্ড, প্রোফাইল) */}
+                <div className="flex items-center gap-1 lg:gap-2 shrink-0">
+                  {/* ১. মেসেঞ্জার (ইনবক্স) */}
+                  <button
+                    type="button"
+                    onClick={handleOpenMessagesInColumn3}
+                    className={`p-2 rounded-xl relative text-white/90 hover:text-white hover:bg-white/15 transition cursor-pointer active:scale-95 ${
+                      rightColumnView === 'messages' ? 'text-white bg-white/20' : ''
+                    }`}
+                    title="মেসেঞ্জার (৩ নং কলাম)"
+                  >
+                    <Mail className="w-5 h-5 text-white" />
+                    {unreadMarketplaceMsgCount > 0 && (
+                      <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-white text-[#E11D48] text-[10px] font-black flex items-center justify-center shadow-xs border border-rose-600">
+                        {unreadMarketplaceMsgCount}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* ২. নোটিফিকেশন বাটন */}
+                  <button
+                    type="button"
+                    onClick={handleOpenNotificationsInColumn3}
+                    className={`p-2 rounded-xl relative text-white/90 hover:text-white hover:bg-white/15 transition cursor-pointer active:scale-95 ${
+                      rightColumnView === 'notifications' ? 'text-white bg-white/20' : ''
+                    }`}
+                    title="নোটিফিকেশন বাটন (৩ নং কলাম)"
+                  >
+                    <Bell className="w-5 h-5 text-white" />
+                    {roleScopedNotifications.filter(n => !n.read).length > 0 && (
+                      <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-white text-[#E11D48] text-[10px] font-black flex items-center justify-center shadow-xs border border-rose-600">
+                        {roleScopedNotifications.filter(n => !n.read).length}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* ৩. সাউন্ড বাটন */}
+                  <button
+                    type="button"
+                    onClick={toggleOfferSound}
+                    className="w-8 h-8 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/25 flex items-center justify-center transition active:scale-95 cursor-pointer"
+                    title={isOfferSoundEnabled ? "সাউন্ড চালু" : "সাউন্ড বন্ধ"}
+                  >
+                    {isOfferSoundEnabled ? (
+                      <Volume2 className="w-4 h-4 text-white" />
+                    ) : (
+                      <VolumeX className="w-4 h-4 text-white/70" />
+                    )}
+                  </button>
+
+                  {/* ৪. প্রোফাইল আইকন (শুধু আইকন) */}
+                  <div
+                    onClick={() => setIsMobileMarketplaceMenuOpen(true)}
+                    className="flex items-center gap-1 p-1 pr-1.5 rounded-full bg-white/15 hover:bg-white/25 transition cursor-pointer border border-white/30 shrink-0 select-none text-white shadow-xs active:scale-95"
+                    title={currentUser ? `সেলার প্রোফাইল: ${currentUser.name}` : "প্রোফাইল মেনু"}
+                  >
+                    <div className="relative">
+                      <img
+                        src={currentUser?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
+                        alt={currentUser?.name || "Profile"}
+                        className="w-7 h-7 rounded-full object-cover border border-white/60"
+                      />
+                      <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-white" />
+                    </div>
+                    <ChevronDown className="w-3.5 h-3.5 text-white/80" />
+                  </div>
                 </div>
               </div>
             )}
@@ -5504,10 +5562,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           type="button"
                           onClick={() => {
                             setIsMobileMarketplaceMenuOpen(false);
-                            openMessengerInbox();
+                            handleOpenMessagesInColumn3();
                           }}
                           className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
-                            isMessengerInboxOpen || activeSubTab === 'messenger'
+                            rightColumnView === 'messages'
                               ? 'bg-[#006A4E] text-white font-black'
                               : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
                           }`}
@@ -5519,6 +5577,29 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           {unreadMarketplaceMsgCount > 0 && (
                             <span className="px-1.5 py-0.5 rounded-full bg-[#E11D48] text-white text-[10px] font-bold">
                               {unreadMarketplaceMsgCount}
+                            </span>
+                          )}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsMobileMarketplaceMenuOpen(false);
+                            handleOpenNotificationsInColumn3();
+                          }}
+                          className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
+                            rightColumnView === 'notifications'
+                              ? 'bg-[#006A4E] text-white font-black'
+                              : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-100'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <Bell className="w-4 h-4 text-blue-600" />
+                            <span>নোটিফিকেশন</span>
+                          </span>
+                          {roleScopedNotifications.filter(n => !n.read).length > 0 && (
+                            <span className="px-1.5 py-0.5 rounded-full bg-[#E11D48] text-white text-[10px] font-bold">
+                              {roleScopedNotifications.filter(n => !n.read).length}
                             </span>
                           )}
                         </button>
@@ -5707,31 +5788,43 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             <select
                               value={newGigCategory}
                               onChange={(e) => setNewGigCategory(e.target.value)}
+                              required
                               className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                             >
-                              <option value="Programming & Tech">Programming & Tech</option>
-                              <option value="AI Services">AI Services</option>
-                              <option value="Graphics & Design">Graphics & Design</option>
-                              <option value="Digital Marketing">Digital Marketing</option>
-                              <option value="Video & Animation">Video & Animation</option>
-                              <option value="SEO & Growth">SEO & Growth</option>
+                              <option value="" disabled>-- ক্যাটাগরি নির্বাচন করুন * --</option>
+                              <option value="Web Development">Web Development (ওয়েব ডেভেলপমেন্ট)</option>
+                              <option value="App Development">App Development (মোবাইল অ্যাপ)</option>
+                              <option value="UI/UX Design">UI/UX Design (ইউআই/ইউএক্স ডিজাইন)</option>
+                              <option value="Programming & Tech">Programming & Tech (প্রোগ্রামিং ও টেক)</option>
+                              <option value="Graphics & Design">Graphics & Design (গ্রাফিক্স ও ডিজাইন)</option>
+                              <option value="AI Services">AI Services (এআই সার্ভিসেস)</option>
+                              <option value="Digital Marketing">Digital Marketing (ডিজিটাল মার্কেটিং)</option>
+                              <option value="SEO & Growth">SEO & Growth (এসইও ও গ্রোথ)</option>
+                              <option value="Video & Animation">Video & Animation (ভিডিও ও অ্যানিমেশন)</option>
+                              <option value="Content Writing">Content Writing (কনটেন্ট ও আর্টিকেল)</option>
+                              <option value="Cyber Security">Cyber Security (সাইবার সিকিউরিটি)</option>
                             </select>
                           </div>
 
                           <div className="space-y-1">
                             <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                              অফার ব্যাজ <span className="text-rose-500">*</span>
+                              অফার ব্যাজ ও কাজের ধরন <span className="text-rose-500">*</span>
                             </label>
                             <select
                               value={newGigOfferBadge}
                               onChange={(e) => setNewGigOfferBadge(e.target.value)}
+                              required
                               className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E] font-bold"
                             >
-                              <option value="৩০% ছাড়">{t('🎁 ৩০% ছাড়', '🎁 30% Discount')}</option>
-                              <option value="২০% ছাড়">{t('🎁 ২০% ছাড়', '🎁 20% Discount')}</option>
-                              <option value="১০% ছাড়">{t('🎁 ১০% ছাড়', '🎁 10% Discount')}</option>
-                              <option value="৫০% ছাড়">{t('🎁 ৫০% ছাড়', '🎁 50% Discount')}</option>
-                              <option value="আগে কাজ শুরু">{t('⚡ আগে কাজ শুরু', '⚡ Work First')}</option>
+                              <option value="" disabled>-- অফার ব্যাজ বা কাজের ধরন নির্বাচন করুন * --</option>
+                              <option value="⚡ আগে কাজ শুরু">⚡ আগে কাজ শুরু</option>
+                              <option value="🎁 ৩০% ছাড়">🎁 ৩০% ছাড়</option>
+                              <option value="🎁 ২০% ছাড়">🎁 ২০% ছাড়</option>
+                              <option value="🎁 ১০% ছাড়">🎁 ১০% ছাড়</option>
+                              <option value="🎁 ৫০% ছাড়">🎁 ৫০% ছাড়</option>
+                              <option value="🔥 হট ডিল">🔥 হট ডিল</option>
+                              <option value="⭐ টপ রেটেড">⭐ টপ রেটেড</option>
+                              <option value="রেগুলার">রেগুলার সার্ভিস</option>
                             </select>
                           </div>
 
@@ -5759,17 +5852,56 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               onChange={(e) => setNewGigTitle(e.target.value)}
                               className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                             />
-                            <div className="p-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/50 rounded-lg text-[11px] leading-relaxed text-amber-800 dark:text-amber-300 flex items-start gap-1.5">
-                              <span className="text-sm shrink-0">💡</span>
-                              <span><strong>হিন্ট:</strong> টাইটেল <strong>৫০ থেকে ৯০ ক্যারেক্টারের</strong> মধ্যে রাখা সবচেয়ে উপযুক্ত, যাতে ফোন ভিউতে সুন্দরভাবে ৩ লাইনে স্পষ্টভাবে দেখা যায়।</span>
-                            </div>
                           </div>
                         </div>
 
-                        {/* Search Keywords / Tags */}
-                        <div className="space-y-1 pt-1">
+                        {/* Quick Offer Badge Pills */}
+                        <div className="flex items-center gap-1.5 flex-wrap pt-1">
+                          <span className="text-xs font-bold text-slate-500 dark:text-slate-400">কুইক ব্যাজ নির্বাচন:</span>
+                          {[
+                            { val: '⚡ আগে কাজ শুরু', label: '⚡ আগে কাজ শুরু', cls: 'bg-amber-500/15 text-amber-700 dark:text-amber-400 hover:bg-amber-500/25 border-amber-500/30' },
+                            { val: '🎁 ৩০% ছাড়', label: '🎁 ৩০% ছাড়', cls: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/25 border-emerald-500/30' },
+                            { val: '🎁 ২০% ছাড়', label: '🎁 ২০% ছাড়', cls: 'bg-blue-500/15 text-blue-700 dark:text-blue-400 hover:bg-blue-500/25 border-blue-500/30' },
+                            { val: '🎁 ৫০% ছাড়', label: '🎁 ৫০% ছাড়', cls: 'bg-purple-500/15 text-purple-700 dark:text-purple-400 hover:bg-purple-500/25 border-purple-500/30' },
+                            { val: '🔥 হট ডিল', label: '🔥 হট ডিল', cls: 'bg-rose-500/15 text-rose-700 dark:text-rose-400 hover:bg-rose-500/25 border-rose-500/30' },
+                            { val: '⭐ টপ রেটেড', label: '⭐ টপ রেটেড', cls: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-400 hover:bg-indigo-500/25 border-indigo-500/30' }
+                          ].map((item) => (
+                            <button
+                              key={item.val}
+                              type="button"
+                              onClick={() => setNewGigOfferBadge(item.val)}
+                              className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition cursor-pointer ${
+                                newGigOfferBadge === item.val
+                                  ? 'bg-[#006A4E] text-white border-[#006A4E] shadow-xs'
+                                  : `${item.cls} bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700`
+                              }`}
+                            >
+                              {item.label}
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Work First Guarantee Highlight */}
+                        {newGigOfferBadge.includes('আগে কাজ') && (
+                          <div className="p-2.5 sm:p-3 bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-amber-600/10 border border-amber-500/30 rounded-xl flex items-center gap-2.5 text-xs text-slate-700 dark:text-slate-300">
+                            <div className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+                              <Zap className="w-3.5 h-3.5 fill-amber-500" />
+                            </div>
+                            <div className="leading-snug">
+                              <strong className="font-black text-amber-600 dark:text-amber-400 mr-1.5">
+                                ⚡ আগে কাজ শুরু সক্রিয়:
+                              </strong>
+                              <span className="text-slate-600 dark:text-slate-400">
+                                বায়ারকে কোনো অগ্রিম পেমেন্ট দিতে হবে না। আগে কাজ জমা দিয়ে ক্লায়েন্ট সন্তুষ্ট হলে পেমেন্ট রিলিজ হবে।
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Search Keywords / Tags with Dynamic Category Quick Tags */}
+                        <div className="space-y-1.5 pt-1">
                           <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                            সার্চ কিওয়ার্ড ও ট্যাগস
+                            সার্চ কিওয়ার্ড ও স্কিল ট্যাগস
                           </label>
                           <input
                             type="text"
@@ -5778,6 +5910,26 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             onChange={(e) => setNewGigTags(e.target.value)}
                             className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                           />
+                          <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
+                            <span className="text-[11px] font-bold text-slate-400">
+                              কুইক ট্যাগস {newGigCategory ? `(${newGigCategory}):` : '(ক্যাটাগরি সিলেক্ট করুন):'}
+                            </span>
+                            {getCategoryQuickTags(newGigCategory).map((tag) => (
+                              <button
+                                key={tag}
+                                type="button"
+                                onClick={() => {
+                                  const tagList = newGigTags ? newGigTags.split(',').map(s => s.trim()).filter(Boolean) : [];
+                                  if (!tagList.includes(tag)) {
+                                    setNewGigTags(tagList.length > 0 ? `${newGigTags}, ${tag}` : tag);
+                                  }
+                                }}
+                                className="px-2 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 hover:bg-[#006A4E] hover:text-white text-slate-700 dark:text-slate-300 text-[11px] font-bold transition cursor-pointer"
+                              >
+                                +{tag}
+                              </button>
+                            ))}
+                          </div>
                         </div>
                       </div>
 
@@ -5794,27 +5946,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             </p>
                           </div>
 
-                          {/* Desktop Layout Switcher */}
-                          <div className="hidden md:flex items-center gap-1 bg-slate-200/80 dark:bg-slate-900 p-1 rounded-xl border border-slate-300/80 dark:border-slate-700 text-xs font-bold">
-                            <button
-                              type="button"
-                              onClick={() => setPackageLayoutMode('stepped')}
-                              className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${packageLayoutMode === 'stepped' ? 'bg-white dark:bg-slate-800 text-[#38BDF8] shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
-                            >
-                              স্টেপ ট্যাব
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setPackageLayoutMode('columns')}
-                              className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${packageLayoutMode === 'columns' ? 'bg-white dark:bg-slate-800 text-[#38BDF8] shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
-                            >
-                              ৩ কলাম ভিউ
-                            </button>
+                          <div className="hidden md:flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 text-[#006A4E] dark:text-emerald-400 text-xs font-black rounded-xl border border-[#006A4E]/20">
+                            <ShieldCheck className="w-3.5 h-3.5" />
+                            <span>৩ কলাম ভিউ সক্রিয়</span>
                           </div>
                         </div>
 
-                        {/* 3 Interactive Package Stepper Tabs - ALWAYS VISIBLE FOR FAST NAVIGATION */}
-                        <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5 p-1 sm:p-1.5 bg-slate-200/60 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
+                        {/* 3 Interactive Package Stepper Tabs - MOBILE ONLY */}
+                        <div className="md:hidden grid grid-cols-3 gap-1.5 sm:gap-2.5 p-1 sm:p-1.5 bg-slate-200/60 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
                           {/* 1. BASIC TAB */}
                           <button
                             type="button"
@@ -5858,10 +5997,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           </button>
                         </div>
 
-                        {/* STEPPED VIEW OR COLUMNS VIEW */}
-                        {packageLayoutMode === 'columns' ? (
-                          /* SIDE-BY-SIDE 3 COLUMNS VIEW (FOR DESKTOP) */
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+                        {/* SIDE-BY-SIDE 3 COLUMNS VIEW (FOR DESKTOP / PC) */}
+                        <div className="hidden md:grid md:grid-cols-3 gap-3.5">
                             {/* 1. BASIC CARD */}
                             <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-blue-600/50 rounded-2xl p-3.5 space-y-3 shadow-xs transition">
                               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
@@ -6075,9 +6212,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               </div>
                             </div>
                           </div>
-                        ) : (
-                          /* STEP-BY-STEP PROGRESSIVE VIEW (EASY ON MOBILE & DESKTOP) */
-                          <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xs">
+
+                          {/* STEP-BY-STEP PROGRESSIVE VIEW (MOBILE ONLY) */}
+                          <div className="md:hidden bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xs">
                             
                             {/* ACTIVE STEP 1: BASIC */}
                             {activePackageStep === 'basic' && (
@@ -6396,10 +6533,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               </div>
                             )}
                           </div>
-                        )}
-                      </div>
+                        </div>
 
-                      {/* SECTION 3: মিডিয়া ও থাম্বনেইল (MEDIA) */}
+                        {/* SECTION 3: মিডিয়া ও থাম্বনেইল (MEDIA) */}
                       <div className="p-3.5 sm:p-5 bg-slate-50 dark:bg-slate-950/70 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3">
                         <h3 className="text-xs sm:text-sm font-black uppercase text-[#38BDF8] flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-2">
                           <ImageIcon className="w-4 h-4 shrink-0" />
@@ -6610,7 +6746,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               <span>{selectedOfferForModal.typeLabel.replace(/^[⚡🔒]\s*/, '')}</span>
                             </span>
                           )}
-                          <span className="text-xs text-slate-400 font-bold">• {selectedOfferForModal.source}</span>
+                          <span className="text-xs text-slate-400 font-bold">{selectedOfferForModal.source}</span>
                           <span className="text-xs text-amber-400 font-bold">★ {selectedOfferForModal.rating}</span>
                         </div>
                         <h3 className="text-base sm:text-lg font-black text-white">
@@ -6618,7 +6754,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         </h3>
                         <p className="text-xs text-slate-400">
                           {selectedOfferForModal.type === 'course' || selectedOfferForModal.typeLabel.includes('কোর্স') ? 'অর্গানাইজেশন / একাডেমি: ' : 'ক্লায়েন্ট: '}
-                          <strong className="text-white">{selectedOfferForModal.clientName}</strong> ({selectedOfferForModal.clientLocation}) • {selectedOfferForModal.postedTime}
+                          <strong className="text-white">{selectedOfferForModal.clientName}</strong> ({selectedOfferForModal.clientLocation}) | {selectedOfferForModal.postedTime}
                         </p>
                       </div>
                     </div>
@@ -6961,7 +7097,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                   <button
                     type="button"
-                    onClick={() => openMessengerInbox()}
+                    onClick={handleOpenMessagesInColumn3}
                     className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/70 transition text-left cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
@@ -8057,32 +8193,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   {/* SUBTAB 1: Active Uploaded Orders */}
                   {specialistMainTab === 'marketplace' && (sellerSubTab === 'gigs' || sellerSubTab === 'overview') && (
                     <div className="space-y-3.5 sm:space-y-6">
-                      {/* DESKTOP PC FIVERR-STYLE PERFORMANCE METRICS BAR */}
-                      <div className="hidden lg:grid grid-cols-4 gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3.5 rounded-2xl shadow-xs">
-                        <div className="p-3 bg-blue-50/70 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800/50">
-                          <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold block">সক্রিয় অর্ডার</span>
-                          <span className="text-lg font-black text-slate-900 dark:text-white mt-0.5 block">{marketplaceOrders.length}টি</span>
-                        </div>
-                        <div className="p-3 bg-blue-50/70 dark:bg-blue-950/20 rounded-xl border border-blue-100 dark:border-blue-900/50">
-                          <span className="text-[10px] text-[#006A4E] dark:text-sky-400 font-bold block">লাইভ গিগসমূহ</span>
-                          <span className="text-lg font-black text-slate-900 dark:text-white mt-0.5 block">{sellerGigs.length}টি</span>
-                        </div>
-                        <div className="p-3 bg-purple-50/70 dark:bg-purple-900/20 rounded-xl border border-purple-100 dark:border-purple-800/50">
-                          <span className="text-[10px] text-purple-600 dark:text-purple-400 font-bold block">মোট রেটিং</span>
-                          <span className="text-lg font-black text-slate-900 dark:text-white mt-0.5 block">★ ৫.০ (২৪)</span>
-                        </div>
-                        <div className="p-3 bg-amber-50/70 dark:bg-amber-900/20 rounded-xl border border-amber-100 dark:border-amber-800/50">
-                          <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold block">রেসপন্স রেট</span>
-                          <span className="text-lg font-black text-slate-900 dark:text-white mt-0.5 block">১০০% (১ ঘণ্টা)</span>
-                        </div>
-                      </div>
-
-                      {/* 🌟 SELLER MODE COMPACT ACTION CARDS (ONLY ON PHONE/TABLET, ON PC IT IS IN LEFT SIDEBAR & METRICS BAR) */}
-                      <div className="space-y-2 sm:space-y-3 lg:hidden">
+                      {/* 🌟 SELLER MODE COMPACT ACTION CARDS (PHONE & PC DESKTOP HOME) */}
+                      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-xs space-y-2 sm:space-y-3 font-bengali">
                         <div className="flex items-center justify-between gap-2 w-full py-1 flex-nowrap">
                           <h1 className="text-xs sm:text-base md:text-lg font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-1 sm:gap-1.5 min-w-0 truncate whitespace-nowrap">
-                            <span className="shrink-0">Welcome back,</span>
-                            <span className="text-[#38BDF8] font-extrabold truncate">
+                            <span className="shrink-0 text-slate-700 dark:text-slate-300">Welcome back,</span>
+                            <span className="text-[#006A4E] dark:text-emerald-400 font-extrabold truncate">
                               {(activeAccount.name || currentUser?.name || 'Mds Kazi Sohag')
                                 .replace(/\s*\((?:ফ্রিলা্যান্সার\s*)?সেলার\)/gi, '')
                                 .replace(/\s*\((?:গ্রাহক\s*)?বায়ার\)/gi, '')
@@ -8096,37 +8212,31 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         </div>
 
                         {/* TWO RECOMMENDED ACTION CARDS FOR SELLER (POST A GIG + BUYER MODE) */}
-                        <div className="grid grid-cols-2 gap-2.5 sm:gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4">
                           
                           {/* CARD 1: POST A GIG */}
                           <div 
                             onClick={() => {
-                              setViewMode('selling');
-                              setSellerSubTab('create_gig');
-                              setSelectedGig(null);
-                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                              setIsPostGigModalOpen(true);
                             }}
-                            className="p-3 sm:p-3.5 bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-2xs hover:border-blue-600/50 dark:hover:border-blue-600/50 transition cursor-pointer group"
+                            className="p-3 sm:p-3.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-between gap-2.5 shadow-2xs hover:border-[#006A4E]/50 dark:hover:border-emerald-500/50 transition cursor-pointer group"
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
-                              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#006A4E]/15 dark:bg-[#006A4E]/25 text-[#38BDF8] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#006A4E]/15 dark:bg-[#006A4E]/25 text-[#006A4E] dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                                 <PlusCircle className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
                               </div>
                               <div className="min-w-0 flex-1">
-                                <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white leading-tight truncate">পোস্ট গিগ</h3>
-                                <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium truncate mt-0.5">৩টি প্যাকেজ</p>
+                                <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight truncate">পোস্ট গিগ</h3>
+                                <p className="text-xs sm:text-[13px] text-slate-500 dark:text-slate-400 font-medium truncate mt-0.5">৩টি প্যাকেজ</p>
                               </div>
                             </div>
                             <button
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setViewMode('selling');
-                                setSellerSubTab('create_gig');
-                                setSelectedGig(null);
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                setIsPostGigModalOpen(true);
                               }}
-                              className="w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 bg-[#006A4E] hover:bg-[#00523d] active:bg-[#004432] text-white text-xs sm:text-sm font-bold rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-sm active:scale-95 border border-[#006A4E]"
+                              className="w-full sm:w-auto px-3.5 py-1.5 sm:px-4 sm:py-2 bg-[#006A4E] hover:bg-[#00523d] active:bg-[#004432] text-white text-xs sm:text-sm font-bold rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-sm active:scale-95 border border-[#006A4E]"
                             >
                               Get started
                             </button>
@@ -8140,7 +8250,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               setSelectedGig(null);
                               window.scrollTo({ top: 0, behavior: 'smooth' });
                             }}
-                            className="p-3 sm:p-3.5 bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-2xs hover:border-blue-500 dark:hover:border-blue-500 transition cursor-pointer group"
+                            className="p-3 sm:p-3.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-between gap-2.5 shadow-2xs hover:border-blue-500 dark:hover:border-blue-500 transition cursor-pointer group"
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
                               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-500/15 dark:bg-blue-500/25 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -8160,7 +8270,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 setSelectedGig(null);
                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                               }}
-                              className="w-full sm:w-auto px-3 py-1 sm:px-4 sm:py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:from-blue-800 active:to-indigo-800 text-white text-xs sm:text-sm font-black rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-xs active:scale-95"
+                              className="px-3 py-1 sm:px-4 sm:py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:from-blue-800 active:to-indigo-800 text-white text-xs sm:text-sm font-black rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-xs active:scale-95"
                             >
                               সুইচ করুন
                             </button>
@@ -9184,8 +9294,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
               {/* 3. RIGHT SIDEBAR (PC ONLY - SHOWN ON GIGS/OVERVIEW) */}
               {specialistMainTab === 'marketplace' && (sellerSubTab === 'gigs' || sellerSubTab === 'overview') && (
-                <div className="hidden lg:block lg:col-span-3 sticky top-20 space-y-4">
-                  {/* Live Client Requests / Briefs */}
+                <div className="hidden lg:block lg:col-span-3 sticky top-20 space-y-4" id="marketplace-column-3-seller">
+                  <MarketplaceLastColumn
+                    isSellerMode={true}
+                    onNavigateTab={(tab) => { if (setActiveTab) setActiveTab(tab); }}
+                  >
+                    {/* Live Client Requests / Briefs */}
                   <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -9261,6 +9375,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       কাজ সম্পন্ন হওয়ার সাথে সাথেই টাকা আপনার সেলার ওয়ালেটে ক্রেডিট হয়। বিকাশ, নগদ বা ব্যাংকে ইনস্ট্যান্ট ক্যাশআউট নিন।
                     </p>
                   </div>
+                  </MarketplaceLastColumn>
                 </div>
               )}
             </div>
@@ -9301,7 +9416,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         .replace(/\s*\(Student\s*\/\s*Buyer\)/gi, '')
                         .trim()}
                     </span>
-                    <span className="text-blue-700 dark:text-sky-400 font-bold text-xs sm:text-sm shrink-0">
+                    <span className="text-[#E53935] font-bold text-xs sm:text-sm shrink-0">
                       (বায়ার)
                     </span>
                   </h1>
@@ -9366,7 +9481,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         setSelectedGig(null);
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
-                      className="w-full sm:w-auto px-3 py-1 sm:px-4 sm:py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 active:from-amber-700 active:to-amber-800 text-white text-xs sm:text-sm font-black rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-xs active:scale-95"
+                      className="w-full sm:w-auto px-3 py-1 sm:px-4 sm:py-1.5 bg-[#E53935] hover:bg-[#D32F2F] active:bg-[#B71C1C] focus:bg-[#E53935] border border-[#E53935] hover:border-[#D32F2F] active:border-[#B71C1C] focus:border-[#E53935] focus:outline-none focus:ring-2 focus:ring-[#E53935] focus:ring-offset-1 text-white text-xs sm:text-sm font-black rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-xs active:scale-95"
                     >
                       সুইচ করুন
                     </button>
@@ -9635,7 +9750,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             .replace(/\s*\(Student\s*\/\s*Buyer\)/gi, '')
                             .trim()}
                         </span>
-                        <span className="text-blue-700 dark:text-sky-400 font-bold text-xs sm:text-sm shrink-0">
+                        <span className="text-[#E53935] font-bold text-xs sm:text-sm shrink-0">
                           (বায়ার)
                         </span>
                       </h1>
@@ -9699,7 +9814,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             setSelectedGig(null);
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
-                          className="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 active:from-amber-700 active:to-amber-800 text-white text-xs font-bold rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-xs active:scale-95"
+                          className="px-3.5 py-1.5 bg-[#E53935] hover:bg-[#D32F2F] active:bg-[#B71C1C] focus:bg-[#E53935] border border-[#E53935] hover:border-[#D32F2F] active:border-[#B71C1C] focus:border-[#E53935] focus:outline-none focus:ring-2 focus:ring-[#E53935] focus:ring-offset-1 text-white text-xs font-bold rounded-lg transition cursor-pointer whitespace-nowrap text-center shadow-xs active:scale-95"
                         >
                           সুইচ করুন
                         </button>
@@ -9785,8 +9900,17 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 </div>
 
                 {/* 3. RIGHT SIDEBAR / MOBILE BOTTOM SECTION (RESPONSIVE: VISIBLE ON BOTH PC & PHONE) */}
-                <div className="w-full lg:col-span-3 lg:sticky lg:top-20">
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-xs font-bengali">
+                <div className="w-full lg:col-span-3 lg:sticky lg:top-20" id="marketplace-column-3">
+                  <MarketplaceLastColumn
+                    isSellerMode={false}
+                    onOpenOrder={(orderId) => {
+                      setActiveSubTab('my-orders');
+                      setOrderHubTab('orders');
+                      setOrderSearchQuery(orderId);
+                    }}
+                    onNavigateTab={(tab) => { if (setActiveTab) setActiveTab(tab); }}
+                  >
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-xs font-bengali">
                     
                     {/* SECTION 1: ONGOING SERVICE ORDERS (অনলাইন বিশেষজ্ঞ ফ্রিল্যান্সার এর মতো সেইম স্লিম ফরম্যাট) */}
                     <div>
@@ -9874,7 +9998,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                             {title}
                                           </p>
                                           <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                                            <span className="text-emerald-600 dark:text-emerald-400 font-bold">⏳ {timeLeft}</span> • {formattedBudget}
+                                            <span className="text-emerald-600 dark:text-emerald-400 font-bold">⏳ {timeLeft}</span> | {formattedBudget}
                                           </p>
                                         </div>
                                       </div>
@@ -9937,6 +10061,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     </div>
 
                   </div>
+                  </MarketplaceLastColumn>
                 </div>
 
               </div>
@@ -10876,8 +11001,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 </div>
 
                 {/* ৩য় কলাম: ট্রাস্ট, কাস্টম রিকোয়েস্ট ও সাপোর্ট (ডান কলাম) */}
-                <div className="lg:col-span-3 xl:col-span-3 lg:sticky lg:top-20 space-y-4">
-                  {/* কাস্টম প্রজেক্ট কনসালটেশন কার্ড */}
+                <div className="lg:col-span-3 xl:col-span-3 lg:sticky lg:top-20 space-y-4" id="marketplace-column-3-agency">
+                  <MarketplaceLastColumn
+                    isSellerMode={false}
+                    onNavigateTab={(tab) => { if (setActiveTab) setActiveTab(tab); }}
+                  >
+                    {/* কাস্টম প্রজেক্ট কনসালটেশন কার্ড */}
                   <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 shadow-xs space-y-3 font-bengali">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
@@ -10959,6 +11088,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <span className="font-semibold text-[11px] text-emerald-600 dark:text-emerald-400 font-mono">৫ - ১৫ মিনিট</span>
                     </div>
                   </div>
+                  </MarketplaceLastColumn>
                 </div>
 
               </div>
@@ -11531,9 +11661,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                               {trx.title}
                                             </p>
                                           </div>
-                                          <div className="flex items-center gap-1 text-[9.5px] text-slate-500 dark:text-slate-400 mt-0.5">
+                                          <div className="flex items-center gap-1.5 text-[9.5px] text-slate-500 dark:text-slate-400 mt-0.5">
                                             <span>{trx.date}</span>
-                                            <span>•</span>
                                             <span className="font-medium text-slate-600 dark:text-slate-300">{trx.method}</span>
                                           </div>
                                         </div>
@@ -11900,11 +12029,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                                             <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 flex-wrap">
                                               <span className="font-mono text-slate-600 dark:text-slate-300 font-semibold">{trx.id}</span>
-                                              <span>•</span>
+                                              <span className="text-slate-400">/</span>
                                               <span>{trx.date}</span>
-                                              <span>•</span>
+                                              <span className="text-slate-400">/</span>
                                               <span>{trx.party}</span>
-                                              <span>•</span>
+                                              <span className="text-slate-400">/</span>
                                               <span className="text-slate-700 dark:text-slate-300 font-medium">{trx.method}</span>
                                             </div>
                                           </div>
@@ -15574,10 +15703,6 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   onChange={(e) => setEditGigTitle(e.target.value)}
                   className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
                 />
-                <div className="mt-1.5 p-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/50 rounded-lg text-[11px] leading-relaxed text-amber-800 dark:text-amber-300 flex items-start gap-1.5">
-                  <span className="text-sm shrink-0">💡</span>
-                  <span><strong>হিন্ট:</strong> টাইটেল <strong>৫০ থেকে ৯০ ক্যারেক্টারের</strong> মধ্যে রাখা সবচেয়ে উপযুক্ত, যাতে ফোন ভিউতে সুন্দরভাবে ৩ লাইনে স্পষ্টভাবে দেখা যায়।</span>
-                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -15866,7 +15991,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   {t('ফাইনাল কাজ জমা দিন', 'Deliver Order')}
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  অর্ডার ID: #{deliveringOrder.id} • বায়ার: {deliveringOrder.buyerName}
+                  অর্ডার ID: #{deliveringOrder.id} | বায়ার: {deliveringOrder.buyerName}
                 </p>
               </div>
             </div>
@@ -16141,7 +16266,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         <BadgeCheck className="w-4 h-4 text-[#38BDF8] shrink-0" />
                       </div>
                       <span className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 block font-medium">
-                        অর্ডার প্লেসমেন্ট • {getTimeAgoBengali(viewingOrderDetails.createdAt)}
+                        অর্ডার প্লেসমেন্ট | {getTimeAgoBengali(viewingOrderDetails.createdAt)}
                       </span>
                     </div>
                   </div>
@@ -16530,6 +16655,1085 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* SELLER GIG POST MODAL - COMPREHENSIVE WITH ALL FEATURES (WORK FIRST, 3-PACKAGES, MEDIA, FAQS, REQUIREMENTS) */}
+      {isPostGigModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 animate-fadeIn font-bengali">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl w-full max-w-5xl lg:max-w-6xl max-h-[94vh] sm:max-h-[90vh] flex flex-col overflow-hidden relative">
+            
+            {/* COMPREHENSIVE HEADER */}
+            <div className="px-4 sm:px-6 py-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 shrink-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md z-10">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-9 h-9 rounded-xl bg-[#006A4E]/15 text-[#006A4E] dark:text-emerald-400 flex items-center justify-center font-black shrink-0">
+                  <PlusCircle className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-tight">
+                      পোস্ট এ গিগ (৩টি প্যাকেজ)
+                    </h3>
+                    <span className="px-2.5 py-0.5 rounded-full bg-[#006A4E]/15 text-[#006A4E] dark:text-emerald-400 text-[11px] font-black border border-[#006A4E]/30">
+                      ৩টি প্যাকেজ
+                    </span>
+                    {newGigOfferBadge.includes('আগে কাজ') && (
+                      <span className="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 text-[10px] font-black border border-amber-500/30 flex items-center gap-1">
+                        <Zap className="w-3 h-3" />
+                        <span>আগে কাজ শুরু</span>
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">
+                    প্যাকেজ প্রাইসিং, অফার ব্যাজ/আগে কাজ শুরু, মিডিয়া, বিবরণ ও FAQ সহ সম্পূর্ণ গিগ তৈরি করুন
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPostGigModalOpen(false)}
+                className="p-2 rounded-xl text-slate-400 hover:text-white bg-slate-100 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 transition cursor-pointer shrink-0"
+                title="বন্ধ করুন"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* MODAL BODY (PHONE & DESKTOP SCROLLABLE) */}
+            {createGigSuccess ? (
+              <div className="p-8 sm:p-14 text-center space-y-4 my-auto">
+                <div className="w-16 h-16 bg-[#006A4E]/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto ring-6 ring-[#006A4E]/10 animate-bounce">
+                  <CheckCircle2 className="w-9 h-9" />
+                </div>
+                <div className="space-y-1.5">
+                  <h4 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
+                    গিগ ও প্যাকেজ সফলভাবে পোস্ট করা হয়েছে!
+                  </h4>
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+                    আপনার গিগটি এখন মার্কেটপ্লেস, সেলার প্রোফাইল ও পাবলিক ফিডে যুক্ত হয়েছে। বায়াররা সরাসরি ৩টি প্যাকেজ অর্ডার করতে পারবেন।
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleCreateGigSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
+                
+                {/* 1. সাধারণ তথ্য ও টাইটেল (OVERVIEW & TITLE) */}
+                <div className="p-4 sm:p-5 bg-slate-50/80 dark:bg-slate-950/70 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800 pb-3 gap-2">
+                    <h3 className="text-xs sm:text-sm font-black uppercase text-[#006A4E] dark:text-emerald-400 flex items-center gap-2">
+                      <Layers className="w-4 h-4 shrink-0" />
+                      <span>১. সাধারণ তথ্য ও টাইটেল</span>
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={handleOptimizeWithGemini}
+                      disabled={isAiOptimizing}
+                      className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#00523d] text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 fill-white text-white shrink-0" />
+                      <span>{isAiOptimizing ? 'AI সাজাচ্ছে...' : 'AI সাজান'}</span>
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+                    {/* CATEGORY */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                        ক্যাটাগরি <span className="text-rose-500">*</span>
+                      </label>
+                      <select
+                        value={newGigCategory}
+                        onChange={(e) => setNewGigCategory(e.target.value)}
+                        required
+                        className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
+                      >
+                        <option value="" disabled>-- ক্যাটাগরি নির্বাচন করুন * --</option>
+                        <option value="Programming & Tech">Programming & Tech (প্রোগ্রামিং ও টেক)</option>
+                        <option value="Web Development">Web Development (ওয়েব ডেভেলপমেন্ট)</option>
+                        <option value="App Development">App Development (মোবাইল অ্যাপ)</option>
+                        <option value="Graphics & Design">Graphics & Design (গ্রাফিক্স ও ডিজাইন)</option>
+                        <option value="UI/UX Design">UI/UX Design (ইউআই/ইউএক্স ডিজাইন)</option>
+                        <option value="AI Services">AI Services (এআই সার্ভিসেস)</option>
+                        <option value="Digital Marketing">Digital Marketing (ডিজিটাল মার্কেটিং)</option>
+                        <option value="Video & Animation">Video & Animation (ভিডিও ও অ্যানিমেশন)</option>
+                        <option value="SEO & Growth">SEO & Growth (এসইও ও গ্রোথ)</option>
+                        <option value="Content Writing">Content Writing (কনটেন্ট ও আর্টিকেল)</option>
+                        <option value="Cyber Security">Cyber Security (সাইবার সিকিউরিটি)</option>
+                      </select>
+                    </div>
+
+                    {/* OFFER BADGE / WORK FIRST (আগে কাজ শুরু) */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                        <span>অফার ব্যাজ ও কাজের ধরন <span className="text-rose-500">*</span></span>
+                      </label>
+                      <select
+                        value={newGigOfferBadge}
+                        onChange={(e) => setNewGigOfferBadge(e.target.value)}
+                        required
+                        className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E] font-bold"
+                      >
+                        <option value="" disabled>-- অফার ব্যাজ বা কাজের ধরন নির্বাচন করুন * --</option>
+                        <option value="⚡ আগে কাজ শুরু">⚡ আগে কাজ শুরু</option>
+                        <option value="🎁 ৩০% ছাড়">🎁 ৩০% ছাড়</option>
+                        <option value="🎁 ২০% ছাড়">🎁 ২০% ছাড়</option>
+                        <option value="🎁 ১০% ছাড়">🎁 ১০% ছাড়</option>
+                        <option value="🎁 ৫০% ছাড়">🎁 ৫০% ছাড়</option>
+                        <option value="🔥 হট ডিল">🔥 হট ডিল</option>
+                        <option value="⭐ টপ রেটেড">⭐ টপ রেটেড</option>
+                        <option value="রেগুলার">রেগুলার সার্ভিস</option>
+                      </select>
+                    </div>
+
+                    {/* PROJECT / GIG TITLE */}
+                    <div className="space-y-1.5 sm:col-span-2 md:col-span-1">
+                      <div className="flex items-center justify-between">
+                        <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                          গিগ টাইটেল <span className="text-rose-500">*</span>
+                        </label>
+                        <span className={`text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                          newGigTitle.length > 90
+                            ? 'bg-rose-100 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400'
+                            : newGigTitle.length >= 35 && newGigTitle.length <= 90
+                              ? 'bg-emerald-100 text-[#006A4E] dark:bg-emerald-950/40 dark:text-emerald-400'
+                              : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
+                        }`}>
+                          {newGigTitle.length}/৯০ ক্যারেক্টার
+                        </span>
+                      </div>
+                      <input
+                        type="text"
+                        required
+                        maxLength={95}
+                        placeholder="যেমন: আমি আধুনিক ফুল-স্ট্যাক ওয়েব অ্যাপ্লিকেশন ডেভেলপ করবো"
+                        value={newGigTitle}
+                        onChange={(e) => setNewGigTitle(e.target.value)}
+                        className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* QUICK OFFER BADGE PILLS */}
+                  <div className="flex items-center gap-1.5 flex-wrap pt-1">
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">কুইক ব্যাজ নির্বাচন:</span>
+                    {[
+                      { val: '⚡ আগে কাজ শুরু', label: '⚡ আগে কাজ শুরু', cls: 'bg-amber-500/15 text-amber-700 dark:text-amber-400 hover:bg-amber-500/25 border-amber-500/30' },
+                      { val: '🎁 ৩০% ছাড়', label: '🎁 ৩০% ছাড়', cls: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/25 border-emerald-500/30' },
+                      { val: '🎁 ২০% ছাড়', label: '🎁 ২০% ছাড়', cls: 'bg-blue-500/15 text-blue-700 dark:text-blue-400 hover:bg-blue-500/25 border-blue-500/30' },
+                      { val: '🎁 ৫০% ছাড়', label: '🎁 ৫০% ছাড়', cls: 'bg-purple-500/15 text-purple-700 dark:text-purple-400 hover:bg-purple-500/25 border-purple-500/30' },
+                      { val: '🔥 হট ডিল', label: '🔥 হট ডিল', cls: 'bg-rose-500/15 text-rose-700 dark:text-rose-400 hover:bg-rose-500/25 border-rose-500/30' },
+                      { val: '⭐ টপ রেটেড', label: '⭐ টপ রেটেড', cls: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-400 hover:bg-indigo-500/25 border-indigo-500/30' }
+                    ].map((item) => (
+                      <button
+                        key={item.val}
+                        type="button"
+                        onClick={() => setNewGigOfferBadge(item.val)}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition cursor-pointer ${
+                          newGigOfferBadge === item.val
+                            ? 'bg-[#006A4E] text-white border-[#006A4E] shadow-xs'
+                            : `${item.cls} bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700`
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* SPECIAL "আগে কাজ শুরু" HIGHLIGHT BANNER */}
+                  {newGigOfferBadge.includes('আগে কাজ') && (
+                    <div className="p-2.5 sm:p-3 bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-amber-600/10 border border-amber-500/30 rounded-xl flex items-center gap-2.5 text-xs text-slate-700 dark:text-slate-300">
+                      <div className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+                        <Zap className="w-3.5 h-3.5 fill-amber-500" />
+                      </div>
+                      <div className="leading-snug">
+                        <strong className="font-black text-amber-600 dark:text-amber-400 mr-1.5">
+                          ⚡ আগে কাজ শুরু সক্রিয়:
+                        </strong>
+                        <span className="text-slate-600 dark:text-slate-400">
+                          বায়ারকে কোনো অগ্রিম পেমেন্ট দিতে হবে না। আগে সন্তোষজনক কাজ/ড্রাফট জমা দিবেন, ক্লায়েন্ট সন্তুষ্ট হলে পেমেন্ট রিলিজ করবেন।
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* SEARCH KEYWORDS / TAGS WITH DYNAMIC QUICK TAGS */}
+                  <div className="space-y-1.5 pt-1">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                      সার্চ কিওয়ার্ড ও স্কিল ট্যাগস
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="যেমন: React, Next.js, AI, FullStack, Node.js, Tailwind (কমা দিয়ে লিখুন)"
+                      value={newGigTags}
+                      onChange={(e) => setNewGigTags(e.target.value)}
+                      className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
+                    />
+                    <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
+                      <span className="text-[11px] font-bold text-slate-400">
+                        কুইক ট্যাগস {newGigCategory ? `(${newGigCategory}):` : '(ক্যাটাগরি সিলেক্ট করুন):'}
+                      </span>
+                      {getCategoryQuickTags(newGigCategory).map((tag) => (
+                        <button
+                          key={tag}
+                          type="button"
+                          onClick={() => {
+                            const tagList = newGigTags ? newGigTags.split(',').map(s => s.trim()).filter(Boolean) : [];
+                            if (!tagList.includes(tag)) {
+                              setNewGigTags(tagList.length > 0 ? `${newGigTags}, ${tag}` : tag);
+                            }
+                          }}
+                          className="px-2 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 hover:bg-[#006A4E] hover:text-white text-slate-700 dark:text-slate-300 text-[11px] font-bold transition cursor-pointer"
+                        >
+                          +{tag}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. ৩টি প্রাইসিং প্যাকেজ (SIDE-BY-SIDE BUILDER) */}
+                <div className="p-4 sm:p-5 bg-slate-50/80 dark:bg-slate-950/70 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800 pb-3 gap-2 flex-wrap">
+                    <div>
+                      <h3 className="text-xs sm:text-sm font-black uppercase text-[#006A4E] dark:text-emerald-400 flex items-center gap-2">
+                        <DollarSign className="w-4 h-4 shrink-0" />
+                        <span>২. প্যাকেজ প্রাইসিং (৩টি প্যাকেজ)</span>
+                      </h3>
+                      <p className="text-[11px] text-slate-500 font-medium mt-0.5">
+                        Basic, Standard ও Premium প্যাকেজের নাম, মূল্য, ডেলিভারি ও স্কোপ কনফিগার করুন
+                      </p>
+                    </div>
+
+                    <div className="hidden md:flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 text-[#006A4E] dark:text-emerald-400 text-xs font-black rounded-xl border border-[#006A4E]/20">
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span>৩ কলাম ভিউ সক্রিয়</span>
+                    </div>
+                  </div>
+
+                  {/* 3 INTERACTIVE PACKAGE STEPPER TABS - MOBILE ONLY */}
+                  <div className="md:hidden grid grid-cols-3 gap-2 p-1.5 bg-slate-200/60 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
+                    {/* 1. BASIC TAB */}
+                    <button
+                      type="button"
+                      onClick={() => setActivePackageStep('basic')}
+                      className={`py-2 sm:py-2.5 px-1.5 rounded-xl transition flex flex-col items-center justify-center gap-1 cursor-pointer text-center ${
+                        activePackageStep === 'basic'
+                          ? 'bg-white dark:bg-slate-800 text-[#006A4E] dark:text-emerald-400 shadow-md ring-2 ring-[#006A4E] font-black'
+                          : 'hover:bg-white/50 dark:hover:bg-slate-800/60 text-slate-600 dark:text-slate-400 font-bold'
+                      }`}
+                    >
+                      <div className="flex items-center gap-1">
+                        <Zap className={`w-3.5 h-3.5 shrink-0 ${activePackageStep === 'basic' ? 'text-[#006A4E] dark:text-emerald-400' : 'text-slate-500'}`} />
+                        <span className="text-xs">১. বেসিক</span>
+                      </div>
+                      <span className="text-[11px] opacity-80">{newBasicPrice ? `৳${newBasicPrice}` : 'প্রাইস দিন'}</span>
+                    </button>
+
+                    {/* 2. STANDARD TAB */}
+                    <button
+                      type="button"
+                      onClick={() => setActivePackageStep('standard')}
+                      className={`py-2 sm:py-2.5 px-1.5 rounded-xl transition flex flex-col items-center justify-center gap-1 cursor-pointer text-center ${
+                        activePackageStep === 'standard'
+                          ? 'bg-white dark:bg-slate-800 text-blue-500 shadow-md ring-2 ring-blue-500 font-black'
+                          : 'hover:bg-white/50 dark:hover:bg-slate-800/60 text-slate-600 dark:text-slate-400 font-bold'
+                      }`}
+                    >
+                      <div className="flex items-center gap-1">
+                        <Star className={`w-3.5 h-3.5 shrink-0 ${activePackageStep === 'standard' ? 'text-blue-500' : 'text-slate-500'}`} />
+                        <span className="text-xs">২. স্ট্যান্ডার্ড</span>
+                      </div>
+                      <span className="text-[11px] opacity-80">{newStandardPrice ? `৳${newStandardPrice}` : 'প্রাইস দিন'}</span>
+                    </button>
+
+                    {/* 3. PREMIUM TAB */}
+                    <button
+                      type="button"
+                      onClick={() => setActivePackageStep('premium')}
+                      className={`py-2 sm:py-2.5 px-1.5 rounded-xl transition flex flex-col items-center justify-center gap-1 cursor-pointer text-center ${
+                        activePackageStep === 'premium'
+                          ? 'bg-white dark:bg-slate-800 text-amber-500 shadow-md ring-2 ring-amber-500 font-black'
+                          : 'hover:bg-white/50 dark:hover:bg-slate-800/60 text-slate-600 dark:text-slate-400 font-bold'
+                      }`}
+                    >
+                      <div className="flex items-center gap-1">
+                        <Crown className={`w-3.5 h-3.5 shrink-0 ${activePackageStep === 'premium' ? 'text-amber-500' : 'text-slate-500'}`} />
+                        <span className="text-xs">৩. প্রিমিয়াম</span>
+                      </div>
+                      <span className="text-[11px] opacity-80">{newPremiumPrice ? `৳${newPremiumPrice}` : 'প্রাইস দিন'}</span>
+                    </button>
+                  </div>
+
+                  {/* SIDE-BY-SIDE 3 COLUMNS VIEW (FOR DESKTOP / PC) */}
+                  <div className="hidden md:grid md:grid-cols-3 gap-3.5 pt-1">
+                      {/* 1. BASIC CARD */}
+                      <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-[#006A4E] rounded-2xl p-3.5 space-y-3 shadow-xs transition">
+                        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                          <div className="flex items-center gap-1.5">
+                            <Zap className="w-4 h-4 text-[#006A4E] dark:text-emerald-400" />
+                            <span className="text-xs font-black text-slate-900 dark:text-white">Basic প্যাকেজ</span>
+                          </div>
+                          <span className="text-[10px] font-bold text-slate-400">স্টার্টার</span>
+                        </div>
+                        <div className="space-y-2">
+                          <div>
+                            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">প্যাকেজ নাম</label>
+                            <input
+                              type="text"
+                              placeholder="যেমন: Basic Starter"
+                              value={newBasicTitle}
+                              onChange={(e) => setNewBasicTitle(e.target.value)}
+                              className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">মূল্য (৳ BDT) *</label>
+                            <input
+                              type="number"
+                              min="300"
+                              placeholder="যেমন: ২৫০০"
+                              value={newBasicPrice}
+                              onChange={(e) => setNewBasicPrice(e.target.value === '' ? '' : Number(e.target.value))}
+                              className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-bold text-[#006A4E] dark:text-emerald-400"
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">ডেলিভারি (দিন)</label>
+                              <input
+                                type="number"
+                                min="1"
+                                placeholder="৩"
+                                value={newBasicDelivery}
+                                onChange={(e) => setNewBasicDelivery(e.target.value === '' ? '' : Number(e.target.value))}
+                                className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">রিভিশন</label>
+                              <select
+                                value={newBasicRevisions}
+                                onChange={(e) => setNewBasicRevisions(e.target.value)}
+                                className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs"
+                              >
+                                <option value="1">১ বার</option>
+                                <option value="2">২ বার</option>
+                                <option value="3">৩ বার</option>
+                                <option value="Unlimited">আনলিমিটেড</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">প্যাকেজ বিবরণ</label>
+                            <textarea
+                              rows={2}
+                              placeholder="বেসিক প্যাকেজের সার্ভিস সংক্ষেপ..."
+                              value={newBasicDesc}
+                              onChange={(e) => setNewBasicDesc(e.target.value)}
+                              className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs resize-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 2. STANDARD CARD */}
+                      <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-blue-500 rounded-2xl p-3.5 space-y-3 shadow-xs transition">
+                        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                          <div className="flex items-center gap-1.5">
+                            <Star className="w-4 h-4 text-blue-500" />
+                            <span className="text-xs font-black text-slate-900 dark:text-white">Standard প্যাকেজ</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleCopyBasicToStandard}
+                            className="text-[10px] font-bold text-blue-500 hover:underline cursor-pointer flex items-center gap-0.5"
+                          >
+                            <Copy className="w-3 h-3" />
+                            <span>অটো ফিল</span>
+                          </button>
+                        </div>
+                        <div className="space-y-2">
+                          <div>
+                            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">প্যাকেজ নাম</label>
+                            <input
+                              type="text"
+                              placeholder="যেমন: Standard Pro"
+                              value={newStandardTitle}
+                              onChange={(e) => setNewStandardTitle(e.target.value)}
+                              className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">মূল্য (৳ BDT) *</label>
+                            <input
+                              type="number"
+                              min="500"
+                              placeholder="যেমন: ৬০০০"
+                              value={newStandardPrice}
+                              onChange={(e) => setNewStandardPrice(e.target.value === '' ? '' : Number(e.target.value))}
+                              className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-bold text-blue-500"
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">ডেলিভারি (দিন)</label>
+                              <input
+                                type="number"
+                                min="1"
+                                placeholder="২"
+                                value={newStandardDelivery}
+                                onChange={(e) => setNewStandardDelivery(e.target.value === '' ? '' : Number(e.target.value))}
+                                className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">রিভিশন</label>
+                              <select
+                                value={newStandardRevisions}
+                                onChange={(e) => setNewStandardRevisions(e.target.value)}
+                                className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs"
+                              >
+                                <option value="2">২ বার</option>
+                                <option value="3">৩ বার</option>
+                                <option value="5">৫ বার</option>
+                                <option value="Unlimited">আনলিমিটেড</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">প্যাকেজ বিবরণ</label>
+                            <textarea
+                              rows={2}
+                              placeholder="স্ট্যান্ডার্ড প্যাকেজের বিবরণ..."
+                              value={newStandardDesc}
+                              onChange={(e) => setNewStandardDesc(e.target.value)}
+                              className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs resize-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 3. PREMIUM CARD */}
+                      <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 rounded-2xl p-3.5 space-y-3 shadow-xs transition">
+                        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                          <div className="flex items-center gap-1.5">
+                            <Crown className="w-4 h-4 text-amber-500" />
+                            <span className="text-xs font-black text-slate-900 dark:text-white">Premium প্যাকেজ</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleCopyStandardToPremium}
+                            className="text-[10px] font-bold text-amber-500 hover:underline cursor-pointer flex items-center gap-0.5"
+                          >
+                            <Copy className="w-3 h-3" />
+                            <span>অটো ফিল</span>
+                          </button>
+                        </div>
+                        <div className="space-y-2">
+                          <div>
+                            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">প্যাকেজ নাম</label>
+                            <input
+                              type="text"
+                              placeholder="যেমন: Premium VIP"
+                              value={newPremiumTitle}
+                              onChange={(e) => setNewPremiumTitle(e.target.value)}
+                              className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">মূল্য (৳ BDT) *</label>
+                            <input
+                              type="number"
+                              min="1000"
+                              placeholder="যেমন: ১৫০০০"
+                              value={newPremiumPrice}
+                              onChange={(e) => setNewPremiumPrice(e.target.value === '' ? '' : Number(e.target.value))}
+                              className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-bold text-amber-500"
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">ডেলিভারি (দিন)</label>
+                              <input
+                                type="number"
+                                min="1"
+                                placeholder="১"
+                                value={newPremiumDelivery}
+                                onChange={(e) => setNewPremiumDelivery(e.target.value === '' ? '' : Number(e.target.value))}
+                                className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">রিভিশন</label>
+                              <select
+                                value={newPremiumRevisions}
+                                onChange={(e) => setNewPremiumRevisions(e.target.value)}
+                                className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs"
+                              >
+                                <option value="3">৩ বার</option>
+                                <option value="5">৫ বার</option>
+                                <option value="Unlimited">আনলিমিটেড</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">প্যাকেজ বিবরণ</label>
+                            <textarea
+                              rows={2}
+                              placeholder="প্রিমিয়াম প্যাকেজের ভিআইপি সার্ভিস..."
+                              value={newPremiumDesc}
+                              onChange={(e) => setNewPremiumDesc(e.target.value)}
+                              className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg text-xs resize-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* STEPPED VIEW (FOR MOBILE) */}
+                    <div className="md:hidden p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+                      {/* ACTIVE STEP 1: BASIC */}
+                      {activePackageStep === 'basic' && (
+                        <div className="space-y-4 animate-fadeIn">
+                          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                            <div className="flex items-center gap-2">
+                              <div className="w-7 h-7 rounded-lg bg-[#006A4E]/20 text-[#006A4E] dark:text-emerald-400 flex items-center justify-center font-black">
+                                <Zap className="w-4 h-4" />
+                              </div>
+                              <div>
+                                <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
+                                  ১. Basic প্যাকেজ কনফিগারেশন
+                                </h4>
+                                <p className="text-[11px] text-slate-500">স্টার্টার ও এন্ট্রি-লেভেল প্রাইসিং</p>
+                              </div>
+                            </div>
+                            <span className="px-2.5 py-1 bg-[#006A4E]/10 text-[#006A4E] dark:text-emerald-400 text-xs font-black rounded-lg">
+                              টিয়ার ১
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            <div className="space-y-1">
+                              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                                প্যাকেজের নাম
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="যেমন: Basic Starter"
+                                value={newBasicTitle}
+                                onChange={(e) => setNewBasicTitle(e.target.value)}
+                                className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                                মূল্য (৳ BDT) <span className="text-rose-500">*</span>
+                              </label>
+                              <input
+                                type="number"
+                                min="300"
+                                value={newBasicPrice}
+                                onChange={(e) => setNewBasicPrice(e.target.value === '' ? '' : Number(e.target.value))}
+                                placeholder="যেমন: ২৫০০"
+                                className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-black text-[#006A4E] dark:text-emerald-400 focus:ring-2 focus:ring-[#006A4E]"
+                              />
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 sm:col-span-2 md:col-span-1">
+                              <div className="space-y-1">
+                                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">ডেলিভারি (দিন)</label>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  placeholder="৩"
+                                  value={newBasicDelivery}
+                                  onChange={(e) => setNewBasicDelivery(e.target.value === '' ? '' : Number(e.target.value))}
+                                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">রিভিশন</label>
+                                <select
+                                  value={newBasicRevisions}
+                                  onChange={(e) => setNewBasicRevisions(e.target.value)}
+                                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm"
+                                >
+                                  <option value="1">১ বার</option>
+                                  <option value="2">২ বার</option>
+                                  <option value="3">৩ বার</option>
+                                  <option value="Unlimited">আনলিমিটেড</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                              প্যাকেজ বিবরণ ও ফিচার স্কোপ
+                            </label>
+                            <textarea
+                              rows={2}
+                              placeholder="যেমন: সিঙ্গেল পেজ রেসপন্সিভ ল্যান্ডিং পেজ + ক্লিন সোর্স কোড + ৩ দিনের সাপোর্ট..."
+                              value={newBasicDesc}
+                              onChange={(e) => setNewBasicDesc(e.target.value)}
+                              className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm resize-none focus:ring-2 focus:ring-[#006A4E]"
+                            />
+                          </div>
+
+                          <div className="flex justify-end pt-2 border-t border-slate-100 dark:border-slate-800">
+                            <button
+                              type="button"
+                              onClick={() => setActivePackageStep('standard')}
+                              className="w-full sm:w-auto px-5 py-2.5 bg-[#006A4E] hover:bg-[#00523d] text-white font-black text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-md active:scale-95"
+                            >
+                              <span>Standard প্যাকেজে যান</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* ACTIVE STEP 2: STANDARD */}
+                      {activePackageStep === 'standard' && (
+                        <div className="space-y-4 animate-fadeIn">
+                          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                            <div className="flex items-center gap-2">
+                              <div className="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-500 flex items-center justify-center font-black">
+                                <Star className="w-4 h-4" />
+                              </div>
+                              <div>
+                                <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
+                                  ২. Standard প্যাকেজ কনফিগারেশন
+                                </h4>
+                                <p className="text-[11px] text-slate-500">মোস্ট পপুলার প্রাইসিং ও ফিচার</p>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={handleCopyBasicToStandard}
+                              className="px-2.5 py-1 bg-blue-500/10 hover:bg-blue-500/20 text-blue-500 font-bold text-xs rounded-lg transition flex items-center gap-1 cursor-pointer"
+                            >
+                              <Copy className="w-3.5 h-3.5" />
+                              <span>Basic থেকে অটো ফিল (2.2x)</span>
+                            </button>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            <div className="space-y-1">
+                              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                                প্যাকেজের নাম
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="যেমন: Standard Pro"
+                                value={newStandardTitle}
+                                onChange={(e) => setNewStandardTitle(e.target.value)}
+                                className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                                মূল্য (৳ BDT) <span className="text-rose-500">*</span>
+                              </label>
+                              <input
+                                type="number"
+                                min="500"
+                                value={newStandardPrice}
+                                onChange={(e) => setNewStandardPrice(e.target.value === '' ? '' : Number(e.target.value))}
+                                placeholder="যেমন: ৬০০০"
+                                className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-black text-blue-500 focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 sm:col-span-2 md:col-span-1">
+                              <div className="space-y-1">
+                                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">ডেলিভারি (দিন)</label>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  placeholder="২"
+                                  value={newStandardDelivery}
+                                  onChange={(e) => setNewStandardDelivery(e.target.value === '' ? '' : Number(e.target.value))}
+                                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">রিভিশন</label>
+                                <select
+                                  value={newStandardRevisions}
+                                  onChange={(e) => setNewStandardRevisions(e.target.value)}
+                                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm"
+                                >
+                                  <option value="2">২ বার</option>
+                                  <option value="3">৩ বার</option>
+                                  <option value="5">৫ বার</option>
+                                  <option value="Unlimited">আনলিমিটেড</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                              প্যাকেজ বিবরণ ও ফিচার স্কোপ
+                            </label>
+                            <textarea
+                              rows={2}
+                              placeholder="যেমন: ফুল স্ট্যাক প্রজেক্ট সেটআপ + ডাটাবেজ ইন্টিগ্রেশন + কমপ্লিট রেসপন্সিভ ডিজাইন..."
+                              value={newStandardDesc}
+                              onChange={(e) => setNewStandardDesc(e.target.value)}
+                              className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm resize-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setActivePackageStep('basic')}
+                              className="px-4 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-bold text-xs sm:text-sm rounded-xl transition cursor-pointer"
+                            >
+                              ← বেসিক
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setActivePackageStep('premium')}
+                              className="w-full sm:w-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-md active:scale-95"
+                            >
+                              <span>Premium প্যাকেজে যান</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* ACTIVE STEP 3: PREMIUM */}
+                      {activePackageStep === 'premium' && (
+                        <div className="space-y-4 animate-fadeIn">
+                          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                            <div className="flex items-center gap-2">
+                              <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-500 flex items-center justify-center font-black">
+                                <Crown className="w-4 h-4" />
+                              </div>
+                              <div>
+                                <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
+                                  ৩. Premium প্যাকেজ কনফিগারেশন
+                                </h4>
+                                <p className="text-[11px] text-slate-500">ভিআইপি এন্টারপ্রাইজ প্রাইসিং ও লাইফটাইম সাপোর্ট</p>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={handleCopyStandardToPremium}
+                              className="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 font-bold text-xs rounded-lg transition flex items-center gap-1 cursor-pointer"
+                            >
+                              <Copy className="w-3.5 h-3.5" />
+                              <span>Standard থেকে অটো ফিল (2.5x)</span>
+                            </button>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            <div className="space-y-1">
+                              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                                প্যাকেজের নাম
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="যেমন: Premium VIP Enterprise"
+                                value={newPremiumTitle}
+                                onChange={(e) => setNewPremiumTitle(e.target.value)}
+                                className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                                মূল্য (৳ BDT) <span className="text-rose-500">*</span>
+                              </label>
+                              <input
+                                type="number"
+                                min="1000"
+                                value={newPremiumPrice}
+                                onChange={(e) => setNewPremiumPrice(e.target.value === '' ? '' : Number(e.target.value))}
+                                placeholder="যেমন: ১৫০০০"
+                                className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-black text-amber-500 focus:ring-2 focus:ring-amber-500"
+                              />
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 sm:col-span-2 md:col-span-1">
+                              <div className="space-y-1">
+                                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">ডেলিভারি (দিন)</label>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  placeholder="১"
+                                  value={newPremiumDelivery}
+                                  onChange={(e) => setNewPremiumDelivery(e.target.value === '' ? '' : Number(e.target.value))}
+                                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">রিভিশন</label>
+                                <select
+                                  value={newPremiumRevisions}
+                                  onChange={(e) => setNewPremiumRevisions(e.target.value)}
+                                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm"
+                                >
+                                  <option value="3">৩ বার</option>
+                                  <option value="5">৫ বার</option>
+                                  <option value="Unlimited">আনলিমিটেড</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                              প্যাকেজ বিবরণ ও ফিচার স্কোপ
+                            </label>
+                            <textarea
+                              rows={2}
+                              placeholder="যেমন: ফুল স্ট্যাক সম্পূর্ণ প্রজেক্ট + কাস্টম API + লাইফটাইম ভিআইপি সাপোর্ট..."
+                              value={newPremiumDesc}
+                              onChange={(e) => setNewPremiumDesc(e.target.value)}
+                              className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm resize-none focus:ring-2 focus:ring-amber-500"
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setActivePackageStep('standard')}
+                              className="px-4 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-bold text-xs sm:text-sm rounded-xl transition cursor-pointer"
+                            >
+                              ← স্ট্যান্ডার্ড
+                            </button>
+                            <div className="flex items-center gap-1.5 text-xs font-bold text-[#006A4E] dark:text-emerald-400 bg-[#006A4E]/10 px-3 py-2 rounded-xl">
+                              <CheckCircle2 className="w-4 h-4 text-[#006A4E] dark:text-emerald-400" />
+                              <span>৩টি প্যাকেজ সম্পন্ন</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                </div>
+
+                {/* 3. থাম্বনেইল ও মিডিয়া লিঙ্ক (MEDIA, SAMPLES & VIDEO) */}
+                <div className="p-4 sm:p-5 bg-slate-50/80 dark:bg-slate-950/70 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+                  <h3 className="text-xs sm:text-sm font-black uppercase text-[#006A4E] dark:text-emerald-400 flex items-center gap-2 border-b border-slate-200/80 dark:border-slate-800 pb-3">
+                    <ImageIcon className="w-4 h-4 shrink-0" />
+                    <span>৩. থাম্বনেইল ও মিডিয়া লিঙ্ক</span>
+                  </h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+                    {/* PRIMARY THUMBNAIL (UPLOAD & URL) */}
+                    <div className="space-y-2">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                        <span>প্রধান থাম্বনেইল ইমেজ <span className="text-rose-500">*</span></span>
+                        <span className="text-[10px] text-slate-400">আপলোড বা URL</span>
+                      </label>
+
+                      {newGigThumbnail ? (
+                        <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 h-28 group">
+                          <img
+                            src={newGigThumbnail}
+                            alt="Gig Thumbnail"
+                            className="w-full h-full object-cover"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setNewGigThumbnail("")}
+                            className="absolute top-2 right-2 p-1.5 rounded-lg bg-rose-600 text-white hover:bg-rose-700 transition cursor-pointer shadow-md"
+                            title="ছবি মুছুন"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <label className="p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-[#006A4E] rounded-xl flex items-center justify-center gap-2 cursor-pointer bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-xs font-bold text-slate-700 dark:text-slate-200">
+                            <UploadCloud className="w-4 h-4 text-[#006A4E] dark:text-emerald-400" />
+                            <span>ইমেজ ফাইল আপলোড</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  const reader = new FileReader();
+                                  reader.onload = () => {
+                                    if (typeof reader.result === "string") {
+                                      setNewGigThumbnail(reader.result);
+                                    }
+                                  };
+                                  reader.readAsDataURL(file);
+                                }
+                              }}
+                            />
+                          </label>
+                          <input
+                            type="url"
+                            placeholder="বা ছবির সরাসরি লিঙ্ক লিখুন..."
+                            value={newGigThumbnail}
+                            onChange={(e) => setNewGigThumbnail(e.target.value)}
+                            className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* SAMPLE GALLERY WORK PHOTO */}
+                    <div className="space-y-2">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                        স্যাম্পল কাজের ফটো URL (ঐচ্ছিক)
+                      </label>
+                      <input
+                        type="url"
+                        placeholder="https://images.unsplash.com/..."
+                        value={newGigGalleryPic}
+                        onChange={(e) => setNewGigGalleryPic(e.target.value)}
+                        className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
+                      />
+                      {newGigGalleryPic && (
+                        <div className="rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 h-16 w-full">
+                          <img src={newGigGalleryPic} alt="Sample Work" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* DEMO VIDEO URL */}
+                    <div className="space-y-2">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                        <Video className="w-3.5 h-3.5 text-blue-500" />
+                        <span>ডেমো ভিডিও লিঙ্ক (ঐচ্ছিক)</span>
+                      </label>
+                      <input
+                        type="url"
+                        placeholder="YouTube / Vimeo / Loom লিঙ্ক..."
+                        value={newGigVideoUrl}
+                        onChange={(e) => setNewGigVideoUrl(e.target.value)}
+                        className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
+                      />
+                      <p className="text-[11px] text-slate-400">
+                        ভিডিও ডেমো দিলে বায়ারদের অর্ডার কনভার্সন শতকরা ২০০% বৃদ্ধি পায়।
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. সার্ভিস বিবরণ ও বায়ার নির্দেশিকা (DETAILS & REQUIREMENTS) */}
+                <div className="p-4 sm:p-5 bg-slate-50/80 dark:bg-slate-950/70 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+                  <h3 className="text-xs sm:text-sm font-black uppercase text-[#006A4E] dark:text-emerald-400 flex items-center gap-2 border-b border-slate-200/80 dark:border-slate-800 pb-3">
+                    <FileText className="w-4 h-4 shrink-0" />
+                    <span>৪. সার্ভিস বিবরণ ও বায়ার নির্দেশিকা</span>
+                  </h3>
+
+                  <div className="space-y-3.5">
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                        সম্পূর্ণ সার্ভিস বিবরণ <span className="text-rose-500">*</span>
+                      </label>
+                      <textarea
+                        required
+                        rows={4}
+                        placeholder="আপনার সার্ভিস, কাজের অভিজ্ঞতা ও বায়ার কেন আপনাকে বেছে নেবে বিস্তারিত লিখুন..."
+                        value={newGigDesc}
+                        onChange={(e) => setNewGigDesc(e.target.value)}
+                        className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E] resize-y leading-relaxed"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                        বায়ার রিকোয়ারমেন্টস (কাজ শুরু করতে বায়ারকে কী দিতে হবে)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="যেমন: প্রজেক্ট ব্রিফ, ব্র্যান্ড লোগো বা রেফারেন্স ডিজাইন ফাইল, হোস্টিং এক্সেস..."
+                        value={newGigRequirements}
+                        onChange={(e) => setNewGigRequirements(e.target.value)}
+                        className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#006A4E]"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 5. সচরাচর প্রশ্ন ও উত্তর (DYNAMIC FAQ BUILDER) */}
+                <div className="p-4 sm:p-5 bg-slate-50/80 dark:bg-slate-950/70 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800 pb-3 gap-2">
+                    <h3 className="text-xs sm:text-sm font-black uppercase text-[#006A4E] dark:text-emerald-400 flex items-center gap-2">
+                      <HelpCircle className="w-4 h-4 shrink-0" />
+                      <span>৫. সচরাচর প্রশ্ন ও উত্তর (FAQ)</span>
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => setNewGigFaqs(prev => [...prev, { id: Date.now().toString(), question: "", answer: "" }])}
+                      className="px-3 py-1.5 bg-[#006A4E]/10 hover:bg-[#006A4E]/20 text-[#006A4E] dark:text-emerald-400 font-bold text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer active:scale-95"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>প্রশ্ন যোগ করুন</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {newGigFaqs.map((faq, idx) => (
+                      <div key={faq.id} className="p-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl space-y-2.5 relative group">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">প্রশ্ন #{idx + 1}</span>
+                          {newGigFaqs.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => setNewGigFaqs(prev => prev.filter(f => f.id !== faq.id))}
+                              className="text-rose-500 hover:text-rose-700 p-1 transition cursor-pointer"
+                              title="মুছে ফেলুন"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="প্রশ্ন (যেমন: আপনি কি সোর্স কোড ও ডকুমেন্টেশন দিবেন?)"
+                          value={faq.question}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setNewGigFaqs(prev => prev.map(f => f.id === faq.id ? { ...f, question: val } : f));
+                          }}
+                          className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold text-slate-900 dark:text-white"
+                        />
+                        <textarea
+                          rows={2}
+                          placeholder="উত্তর (যেমন: হ্যাঁ, সম্পূর্ণ ক্লিন সোর্স কোড, গিটহাব রিপো ও সেটআপ গাইড পাবেন।)"
+                          value={faq.answer}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setNewGigFaqs(prev => prev.map(f => f.id === faq.id ? { ...f, answer: val } : f));
+                          }}
+                          className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-900 dark:text-white resize-none"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* MODAL FOOTER BUTTONS */}
+                <div className="pt-3 flex items-center justify-between gap-3 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95">
+                  <button
+                    type="button"
+                    onClick={() => setIsPostGigModalOpen(false)}
+                    className="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 transition cursor-pointer flex items-center gap-1.5"
+                  >
+                    <X className="w-4 h-4 text-rose-500" />
+                    <span>বাতিল</span>
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="px-7 py-2.5 rounded-xl bg-gradient-to-r from-[#006A4E] to-emerald-600 hover:from-[#00523d] hover:to-emerald-700 active:from-[#004432] text-white text-xs sm:text-sm font-black transition cursor-pointer shadow-lg shadow-emerald-500/20 active:scale-95 flex items-center gap-2"
+                  >
+                    <Sparkles className="w-4 h-4 fill-white text-white" />
+                    <span>গিগ পাবলিশ করুন</span>
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}

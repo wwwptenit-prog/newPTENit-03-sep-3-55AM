@@ -288,7 +288,7 @@ export const AdminFloatingHub: React.FC<AdminFloatingHubProps> = ({
                       <div className="flex justify-between items-start">
                         <div>
                           <span className="font-bold text-white block">{b.payerName}</span>
-                          <span className="text-[10px] text-slate-400 font-mono">{b.gateway} • Trx: {b.transactionId}</span>
+                          <span className="text-[10px] text-slate-400 font-mono">{b.gateway} | Trx: {b.transactionId}</span>
                         </div>
                         <span className="font-mono font-bold text-emerald-400 text-sm">৳{b.amount}</span>
                       </div>
@@ -352,7 +352,7 @@ export const AdminFloatingHub: React.FC<AdminFloatingHubProps> = ({
                         <span className="text-[10px] text-amber-400 font-mono">আবেদনকারী</span>
                       </div>
                       <p className="text-[10px] text-slate-400 font-normal">
-                        অভিজ্ঞতা: {u.mentorApplication?.experience || 'উল্লেখ নেই'} • স্কিল: {u.mentorApplication?.expertise || 'General'}
+                        অভিজ্ঞতা: {u.mentorApplication?.experience || 'উল্লেখ নেই'} | স্কিল: {u.mentorApplication?.expertise || 'General'}
                       </p>
                       <div className="flex items-center justify-end gap-1.5 pt-1 border-t border-slate-700/80">
                         <button

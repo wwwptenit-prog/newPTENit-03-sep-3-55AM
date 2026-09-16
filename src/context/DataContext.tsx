@@ -84,6 +84,8 @@ interface DataContextType {
   initialMessengerTab: 'messages' | 'notifications' | 'courses';
   openMessengerInbox: (conversationId?: string, initialTab?: 'messages' | 'notifications' | 'courses', orderId?: string) => void;
   closeMessengerInbox: () => void;
+  marketplaceMode: 'buying' | 'selling';
+  setMarketplaceMode: (mode: 'buying' | 'selling') => void;
   assignments: Assignment[];
   submissions: AssignmentSubmission[];
   customerProjects: CustomerProject[];
@@ -2239,6 +2241,21 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsMessengerInboxOpen(false);
   };
 
+  const [marketplaceMode, setMarketplaceModeState] = useState<'buying' | 'selling'>(() => {
+    try {
+      const saved = localStorage.getItem('marketplace_mode');
+      if (saved === 'selling' || saved === 'buying') return saved;
+    } catch {}
+    return 'buying';
+  });
+
+  const setMarketplaceMode = (mode: 'buying' | 'selling') => {
+    setMarketplaceModeState(mode);
+    try {
+      localStorage.setItem('marketplace_mode', mode);
+    } catch {}
+  };
+
   const clearAllNotifications = () => {
     setNotifications([]);
   };
@@ -3066,6 +3083,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         initialMessengerTab,
         openMessengerInbox,
         closeMessengerInbox,
+        marketplaceMode,
+        setMarketplaceMode,
         isNotificationCenterOpen,
         setIsNotificationCenterOpen,
         openNotificationCenter,

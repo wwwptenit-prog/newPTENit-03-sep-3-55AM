@@ -20,6 +20,8 @@ import {
   Ban,
   Eye,
   ExternalLink,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { MarketplaceGig, User as UserType } from "../types";
 import { useData } from "../context/DataContext";
@@ -37,6 +39,7 @@ interface GigCardProps {
   savedGigIds?: string[];
   toggleFavorite?: (gigId: string, e: React.MouseEvent) => void;
   deleteGig?: (gigId: string) => void;
+  onEdit?: (gig: MarketplaceGig) => void;
   badgeTag?: string;
   className?: string;
   layoutMode?: 'feed' | 'grid' | 'auto';
@@ -51,6 +54,7 @@ export const GigCard: React.FC<GigCardProps> = ({
   savedGigIds = [],
   toggleFavorite,
   deleteGig,
+  onEdit,
   badgeTag,
   className = "",
   layoutMode = 'auto',
@@ -434,6 +438,21 @@ export const GigCard: React.FC<GigCardProps> = ({
                 onClick={(e) => e.stopPropagation()}
                 className="absolute right-0 top-9 z-30 w-48 bg-white border border-slate-200 rounded-xl shadow-xl p-1 text-xs space-y-0.5 animate-fadeIn"
               >
+                {isOwnerOrAdmin && onEdit && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsMenuOpen(false);
+                      onEdit(gig);
+                    }}
+                    className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-rose-50 flex items-center gap-2 text-[#E11D48] font-bold cursor-pointer"
+                  >
+                    <Pencil className="w-3.5 h-3.5 text-[#E11D48]" />
+                    <span>এডিট করুন</span>
+                  </button>
+                )}
+
                 <button
                   type="button"
                   onClick={(e) => {
@@ -456,6 +475,26 @@ export const GigCard: React.FC<GigCardProps> = ({
                   <ShoppingBag className="w-3.5 h-3.5 text-[#006A4E]" />
                   <span>View Full Gig</span>
                 </button>
+
+                {isOwnerOrAdmin && deleteGig && (
+                  <>
+                    <div className="border-t border-slate-100 my-1" />
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMenuOpen(false);
+                        if (window.confirm(`আপনি কি সত্যিই '${gig.title}' মুছে ফেলতে চান?`)) {
+                          deleteGig(gig.id);
+                        }
+                      }}
+                      className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-red-50 flex items-center gap-2 text-red-600 font-bold cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5 text-red-600" />
+                      <span>মুছে ফেলুন</span>
+                    </button>
+                  </>
+                )}
 
                 <div className="border-t border-slate-100 my-1" />
 
@@ -579,57 +618,39 @@ export const GigCard: React.FC<GigCardProps> = ({
           </div>
         )}
 
-        {/* --- Reactions & Engagement Counter Bar --- */}
-        <div className="px-3.5 py-2 flex items-center justify-between gap-1 text-[13.5px] text-slate-600">
-          {/* 1. Left: Engagement Counter (Total votes in PC view, Likes in Mobile view) */}
+        {/* --- Reactions & Engagement Counter Bar (Unified: Exact same on Phone & PC) --- */}
+        <div className="px-3 sm:px-3.5 py-2 flex items-center justify-between gap-1 text-xs sm:text-[13.5px] text-slate-600">
+          {/* 1. Left: Votes Summary */}
           <div className="flex items-center gap-2 shrink-0">
-            {/* PC View Votes Summary */}
-            <div className="hidden sm:flex items-center gap-2">
-              <div className="flex -space-x-1 items-center">
-                <span className="w-4.5 h-4.5 rounded-full bg-[#006A4E] text-white flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white">
-                  <ThumbsUp className="w-2.5 h-2.5 fill-white text-white" />
-                </span>
-                <span className="w-4.5 h-4.5 rounded-full bg-slate-300 text-slate-600 flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white">
-                  <ThumbsDown className="w-2.5 h-2.5 fill-slate-600 text-slate-600" />
-                </span>
-              </div>
-              <span className="font-semibold text-slate-700 text-[13.5px]">
-                মোট {upCount + downCount} জন ভোট দিয়েছেন
+            <div className="flex -space-x-1 items-center">
+              <span className="w-4.5 h-4.5 rounded-full bg-[#006A4E] text-white flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white">
+                <ThumbsUp className="w-2.5 h-2.5 fill-white text-white" />
+              </span>
+              <span className="w-4.5 h-4.5 rounded-full bg-slate-300 text-slate-600 flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white">
+                <ThumbsDown className="w-2.5 h-2.5 fill-slate-600 text-slate-600" />
               </span>
             </div>
-
-            {/* Mobile View Likes */}
-            <div className="flex sm:hidden items-center gap-2">
-              <div className="flex -space-x-1 items-center">
-                <span className="w-4.5 h-4.5 rounded-full bg-[#006A4E] text-white flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white">
-                  <ThumbsUp className="w-2.5 h-2.5 fill-white text-white" />
-                </span>
-                <span className="w-4.5 h-4.5 rounded-full bg-[#E31E24] text-white flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white">
-                  <Heart className="w-2.5 h-2.5 fill-white text-white" />
-                </span>
-              </div>
-              <span className="font-medium text-slate-600 text-[13.5px]">
-                {likeCount} {likeCount === 1 ? "like" : "likes"}
-              </span>
-            </div>
+            <span className="font-semibold text-slate-700 text-xs sm:text-[13.5px]">
+              মোট {upCount + downCount} জন ভোট দিয়েছেন
+            </span>
           </div>
 
           {/* 2. Right: Views Counter */}
-          <div className="flex items-center gap-1.5 text-[13.5px] text-slate-500 shrink-0">
-            <Eye className="w-4 h-4 text-slate-400" />
-            <span className="font-medium text-slate-500 text-[13.5px]">
+          <div className="flex items-center gap-1.5 text-xs sm:text-[13.5px] text-slate-500 shrink-0">
+            <Eye className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-slate-400" />
+            <span className="font-medium text-slate-500">
               {viewCountInK} ভিউ
             </span>
           </div>
         </div>
 
-        {/* --- Action Bar: PC View (Up, Down, Details - Like/Message/Share removed) --- */}
-        <div className="hidden sm:grid sm:grid-cols-3 gap-2.5 items-center px-3.5 py-2.5 border-t border-slate-100 bg-white">
+        {/* --- Action Bar (Unified for Both Phone & PC: Up, Down, Details) --- */}
+        <div className="grid grid-cols-3 gap-2 sm:gap-2.5 items-center px-2.5 sm:px-3.5 py-2 sm:py-2.5 border-t border-slate-100 bg-white">
           {/* 1. আপ বাটন (Upvote - বাটনে কাউন্ট ছাড়া) */}
           <button
             type="button"
             onClick={handleUpvoteToggle}
-            className={`py-2.5 px-4 rounded-xl text-[14px] font-bold flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer border ${
+            className={`py-2 sm:py-2.5 px-2 sm:px-4 rounded-xl text-xs sm:text-[14px] font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all active:scale-95 cursor-pointer border ${
               isUpvoted
                 ? "text-[#006A4E] bg-emerald-50 border-emerald-300 shadow-2xs"
                 : "text-slate-700 bg-slate-100 hover:bg-slate-200 border-slate-200/70"
@@ -637,7 +658,7 @@ export const GigCard: React.FC<GigCardProps> = ({
             title="আপভোট"
           >
             <ThumbsUp
-              className={`w-4 h-4 transition-transform ${
+              className={`w-3.5 sm:w-4 h-3.5 sm:h-4 transition-transform ${
                 isUpvoted ? "fill-[#006A4E] text-[#006A4E] scale-110" : "text-slate-600"
               }`}
             />
@@ -648,7 +669,7 @@ export const GigCard: React.FC<GigCardProps> = ({
           <button
             type="button"
             onClick={handleDownvoteToggle}
-            className={`py-2.5 px-4 rounded-xl text-[14px] font-bold flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer border ${
+            className={`py-2 sm:py-2.5 px-2 sm:px-4 rounded-xl text-xs sm:text-[14px] font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all active:scale-95 cursor-pointer border ${
               isDownvoted
                 ? "text-rose-600 bg-rose-50 border-rose-300 shadow-2xs"
                 : "text-slate-700 bg-slate-100 hover:bg-slate-200 border-slate-200/70"
@@ -656,7 +677,7 @@ export const GigCard: React.FC<GigCardProps> = ({
             title="ডাউনভোট"
           >
             <ThumbsDown
-              className={`w-4 h-4 transition-transform ${
+              className={`w-3.5 sm:w-4 h-3.5 sm:h-4 transition-transform ${
                 isDownvoted ? "fill-rose-600 text-rose-600 scale-110" : "text-slate-600"
               }`}
             />
@@ -670,86 +691,11 @@ export const GigCard: React.FC<GigCardProps> = ({
               e.stopPropagation();
               onClick();
             }}
-            className="py-2.5 px-4 rounded-xl text-[14px] font-bold text-white bg-[#006A4E] hover:bg-[#00543e] flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer shadow-xs group/btn"
+            className="py-2 sm:py-2.5 px-2 sm:px-4 rounded-xl text-xs sm:text-[14px] font-bold text-white bg-[#006A4E] hover:bg-[#00543e] flex items-center justify-center gap-1 sm:gap-1.5 transition-all active:scale-95 cursor-pointer shadow-xs group/btn"
             title="বিস্তারিত দেখুন"
           >
             <span>বিস্তারিত দেখুন</span>
-            <ArrowRight className="w-4 h-4 text-white group-hover/btn:translate-x-0.5 transition-transform" />
-          </button>
-        </div>
-
-        {/* --- Action Bar: Mobile View (< sm) --- */}
-        <div className="sm:hidden px-2.5 py-2 grid grid-cols-4 gap-1.5 items-center border-t border-slate-100 bg-white">
-          {/* 1. Like / Upvote */}
-          <button
-            type="button"
-            onClick={handleUpvoteToggle}
-            className={`py-2 px-1.5 rounded-full text-xs font-semibold flex items-center justify-center gap-1 transition active:scale-95 cursor-pointer shadow-2xs ${
-              isUpvoted
-                ? "text-[#006A4E] bg-green-50 font-bold"
-                : "text-slate-700 bg-slate-100 hover:bg-slate-200"
-            }`}
-            title="লাইক"
-          >
-            <ThumbsUp
-              className={`w-3.5 h-3.5 ${
-                isUpvoted ? "fill-[#006A4E] text-[#006A4E]" : "text-slate-600"
-              }`}
-            />
-            <span>লাইক</span>
-            <span className="text-[11px] font-bold">{upCount}</span>
-          </button>
-
-          {/* 2. Message / চ্যাট */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (openMessengerInbox) {
-                openMessengerInbox(gig.sellerId, gig.sellerName);
-              } else {
-                onClick();
-              }
-            }}
-            className="py-2 px-1.5 rounded-full text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 flex items-center justify-center gap-1 transition active:scale-95 cursor-pointer shadow-2xs"
-            title={isBuyerPost ? "বায়ারকে ইনবক্স করুন" : "সেলারকে ইনবক্স করুন"}
-          >
-            <MessageCircle className="w-3.5 h-3.5 text-[#006A4E]" />
-            <span>মেসেজ</span>
-          </button>
-
-          {/* 3. Share / লিঙ্ক কপি */}
-          <button
-            type="button"
-            onClick={handleShareLink}
-            className="py-2 px-1.5 rounded-full text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 flex items-center justify-center gap-1 transition active:scale-95 cursor-pointer shadow-2xs"
-            title="গিগ লিঙ্ক কপি করুন"
-          >
-            {copiedLink ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-[#006A4E]" />
-                <span className="text-[#006A4E] font-bold">কপি</span>
-              </>
-            ) : (
-              <>
-                <Share2 className="w-3.5 h-3.5 text-slate-600" />
-                <span>শেয়ার</span>
-              </>
-            )}
-          </button>
-
-          {/* 4. Details Button */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}
-            className="py-2 px-1.5 rounded-full text-xs font-bold text-white bg-[#006A4E] hover:bg-[#00543e] flex items-center justify-center gap-1 transition active:scale-95 cursor-pointer shadow-xs"
-            title="বিস্তারিত দেখুন"
-          >
-            <span>বিস্তারিত</span>
-            <ArrowRight className="w-3.5 h-3.5 text-white" />
+            <ArrowRight className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-white group-hover/btn:translate-x-0.5 transition-transform" />
           </button>
         </div>
       </div>

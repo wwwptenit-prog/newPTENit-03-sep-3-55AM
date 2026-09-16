@@ -577,10 +577,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <span className="flex items-center gap-2.5">
-                    <Home className="w-4 h-4 text-[#006A4E]" />
+                    <Home className={`w-4 h-4 ${activeTab === 'home' ? 'text-white' : 'text-[#006A4E]'}`} />
                     <span>হোমপেজ</span>
                   </span>
-                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                  <ChevronRight className={`w-4 h-4 ${activeTab === 'home' ? 'text-white/80' : 'text-slate-400'}`} />
                 </button>
 
                 <button
@@ -596,10 +596,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <span className="flex items-center gap-2.5">
-                    <BookOpen className="w-4 h-4 text-[#006A4E]" />
+                    <BookOpen className={`w-4 h-4 ${activeTab === 'courses' ? 'text-white' : 'text-[#006A4E]'}`} />
                     <span>কোর্সসমূহ</span>
                   </span>
-                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                  <ChevronRight className={`w-4 h-4 ${activeTab === 'courses' ? 'text-white/80' : 'text-slate-400'}`} />
                 </button>
 
                 <button
@@ -615,10 +615,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <span className="flex items-center gap-2.5">
-                    <Briefcase className="w-4 h-4 text-[#006A4E]" />
+                    <Briefcase className={`w-4 h-4 ${activeTab === 'services' ? 'text-white' : 'text-[#006A4E]'}`} />
                     <span>আইটি সার্ভিসসমূহ</span>
                   </span>
-                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                  <ChevronRight className={`w-4 h-4 ${activeTab === 'services' ? 'text-white/80' : 'text-slate-400'}`} />
                 </button>
 
                 <button
@@ -634,10 +634,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <span className="flex items-center gap-2.5">
-                    <ShoppingBag className="w-4 h-4 text-[#006A4E]" />
+                    <ShoppingBag className={`w-4 h-4 ${activeTab === 'marketplace' ? 'text-white' : 'text-[#006A4E]'}`} />
                     <span>মার্কেটপ্লেস</span>
                   </span>
-                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                  <ChevronRight className={`w-4 h-4 ${activeTab === 'marketplace' ? 'text-white/80' : 'text-slate-400'}`} />
                 </button>
 
                 <button
@@ -653,10 +653,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <span className="flex items-center gap-2.5">
-                    <Award className="w-4 h-4 text-[#E31E24]" />
+                    <Award className={`w-4 h-4 ${activeTab === 'verify' ? 'text-white' : 'text-[#E31E24]'}`} />
                     <span>সার্টিফিকেট যাচাই</span>
                   </span>
-                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                  <ChevronRight className={`w-4 h-4 ${activeTab === 'verify' ? 'text-white/80' : 'text-slate-400'}`} />
                 </button>
 
                 <button
@@ -672,10 +672,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <span className="flex items-center gap-2.5">
-                    <PhoneCall className="w-4 h-4 text-[#006A4E]" />
+                    <PhoneCall className={`w-4 h-4 ${activeTab === 'contact' ? 'text-white' : 'text-[#006A4E]'}`} />
                     <span>যোগাযোগ ও সাপোর্ট</span>
                   </span>
-                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                  <ChevronRight className={`w-4 h-4 ${activeTab === 'contact' ? 'text-white/80' : 'text-slate-400'}`} />
                 </button>
               </div>
 

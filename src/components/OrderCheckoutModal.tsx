@@ -72,14 +72,18 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
       setFormError('');
       setProjectNote('');
       setTrxId('');
-      const isWorkFirst = gig.offerBadge === 'work_first' || gig.offerBadge === 'আগে কাজ শুরু';
-      setOrderMode(isWorkFirst ? 'pay_after_work' : 'instant_escrow');
+      const isPremiumGig = gig.offerBadge === 'premium' || gig.offerBadge === 'প্রিমিয়াম' || gig.offerBadge === 'প্রিমিয়াম গিগ' || gig.offerBadge?.includes('প্রিমিয়াম') || gig.category === 'Digital Products' || gig.tags?.includes('প্রিমিয়াম');
+      const isWorkFirstGig = !isPremiumGig && (gig.offerBadge === 'work_first' || gig.offerBadge === 'আগে কাজ শুরু' || gig.offerBadge?.includes('আগে কাজ শুরু'));
+      setOrderMode(isWorkFirstGig ? 'pay_after_work' : 'instant_escrow');
       setCurrentStep(2); // Directly go to Contact step (Step 1 of 2)
       setCompletedOrder(null);
     }
   }, [gig, defaultPackage, currentUser, isOpen]);
 
   if (!isOpen || !gig) return null;
+
+  const isPremium = gig.offerBadge === 'premium' || gig.offerBadge === 'প্রিমিয়াম' || gig.offerBadge === 'প্রিমিয়াম গিগ' || gig.offerBadge?.includes('প্রিমিয়াম') || gig.category === 'Digital Products' || gig.tags?.includes('প্রিমিয়াম');
+  const isWorkFirst = !isPremium && (gig.offerBadge === 'work_first' || gig.offerBadge === 'আগে কাজ শুরু' || gig.offerBadge?.includes('আগে কাজ শুরু'));
 
   const pkg = gig.packages[selectedPkgType] || gig.packages.standard || gig.packages.basic;
   const basePrice = pkg?.price ?? 2000;
@@ -116,20 +120,20 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
     const finalClientPhone = clientPhone.trim() || currentUser?.mobile || currentUser?.phone || '01712345678';
     const finalClientEmail = clientEmail.trim() || currentUser?.email || 'client@ptenit.com';
 
-    if (orderMode === 'instant_escrow' && !trxId.trim()) {
-      setFormError('ইনস্ট্যান্ট এস্ক্রো পেমেন্টের জন্য Transaction ID (TrxID) আবশ্যক।');
+    if ((orderMode === 'instant_escrow' || isPremium) && !trxId.trim()) {
+      setFormError(isPremium ? 'প্রিমিয়াম সার্ভিসের বিল পরিশোধ সম্পন্ন করে Transaction ID (TrxID) প্রদান করুন।' : 'ইনস্ট্যান্ট এস্ক্রো পেমেন্টের জন্য Transaction ID (TrxID) আবশ্যক।');
       return;
     }
 
     setFormError('');
 
-    const formattedNote = `[অর্ডার মোড: ${orderMode === 'instant_escrow' ? 'ইনস্ট্যান্ট এস্ক্রো (৫% ক্যাশব্যাক)' : 'আগে কাজ, পরে বিল (Zero Risk)'}] | ক্লায়েন্ট: ${finalClientName} | Phone: ${finalClientPhone} | Email: ${finalClientEmail} | TrxID: ${trxId || 'N/A'} | নোট: ${projectNote || 'কোনো অতিরিক্ত নোট নেই'}`;
+    const formattedNote = `[অর্ডার মোড: ${orderMode === 'instant_escrow' ? (isPremium ? 'প্রিমিয়াম বিল পরিশোধ' : 'ইনস্ট্যান্ট এস্ক্রো (৫% ক্যাশব্যাক)') : 'আগে কাজ, পরে বিল (Zero Risk)'}] | ক্লায়েন্ট: ${finalClientName} | Phone: ${finalClientPhone} | Email: ${finalClientEmail} | TrxID: ${trxId || 'N/A'} | নোট: ${projectNote || 'কোনো অতিরিক্ত নোট নেই'}`;
 
     const createdOrder = createDirectGigOrder(gig.id, selectedPkgType, formattedNote, {
       name: finalClientName,
       email: finalClientEmail,
       phone: finalClientPhone,
-      paymentMethod: orderMode === 'instant_escrow' ? `Escrow (${paymentMethod})` : 'Pay After Delivery',
+      paymentMethod: orderMode === 'instant_escrow' ? (isPremium ? `প্রিমিয়াম বিল (${paymentMethod})` : `Escrow (${paymentMethod})`) : 'Pay After Delivery',
       transactionId: trxId || `TRX-FREE-${Math.floor(100000 + Math.random() * 900000)}`
     });
 
@@ -331,7 +335,11 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                               অফার:
                             </span>
                             <span className="text-[#006A4E] dark:text-sky-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20 font-black">
-                              {(gig.offerBadge === 'work_first' || gig.offerBadge === 'আগে কাজ শুরু') ? 'আগে কাজ শুরু' : ((gig.offerBadge === '৩০% ক্যাশব্যাক') ? '৩০% ছাড়' : (gig.offerBadge || '৩০% ছাড়'))}
+                              {(gig.offerBadge === 'work_first' || gig.offerBadge === 'আগে কাজ শুরু' || gig.offerBadge?.includes('আগে কাজ শুরু'))
+                                ? 'আগে কাজ শুরু'
+                                : (gig.offerBadge === 'premium' || gig.offerBadge === 'প্রিমিয়াম' || gig.offerBadge === 'প্রিমিয়াম গিগ' || gig.offerBadge?.includes('প্রিমিয়াম'))
+                                  ? 'প্রিমিয়াম'
+                                  : ((gig.offerBadge === '৩০% ক্যাশব্যাক') ? '৩০% ছাড়' : (gig.offerBadge || '৩০% ছাড়'))}
                             </span>
                           </span>
                           <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
@@ -538,8 +546,15 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                   </div>
                 </div>
               ) : (
-                /* Standard Order: Payment Method Selector */
+                /* Standard / Premium Order: Payment Method Selector */
                 <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3.5">
+                  {isPremium && (
+                    <div className="p-3 bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/30 rounded-xl flex items-center gap-2.5 text-xs font-bold text-amber-900 dark:text-amber-200">
+                      <ShieldCheck className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
+                      <span>⭐ <strong>প্রিমিয়াম সার্ভিস / প্রোডাক্ট:</strong> ডিজিটাল প্রোডাক্টের মতো প্রিমিয়াম সেবার ক্ষেত্রে অগ্রিম বিল পরিশোধ সম্পন্ন করে TrxID দিয়ে নিশ্চিত করুন।</span>
+                    </div>
+                  )}
+
                   <div className="flex justify-between items-center text-xs font-black text-slate-800 dark:text-slate-200">
                     <span className="text-xs font-extrabold text-[#38BDF8]">পেমেন্ট মেথড নির্বাচন করুন:</span>
                     <span className="text-[#38BDF8] font-black bg-[#006A4E]/10 px-2.5 py-1 rounded-lg border border-blue-600/50/20">

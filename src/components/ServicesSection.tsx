@@ -167,6 +167,21 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       service.packages?.basic?.price ??
       (service.priceText ? parseInt(service.priceText.replace(/[^0-9]/g, '')) || 5000 : 5000);
 
+    const isFree =
+      price === 0 ||
+      service.badge === 'ফ্রি' ||
+      service.badge === 'সম্পূর্ণ ফ্রি' ||
+      service.offerBadge === 'সম্পূর্ণ ফ্রি' ||
+      service.offerBadge === 'ফ্রি' ||
+      (service as any).isFree === true;
+
+    const discountPrice = (service as any).discountPrice || (service as any).offerPrice;
+    const regularPrice = (service as any).originalPrice || (service as any).regularPrice;
+    const displayPrice = discountPrice || price;
+    const strikethroughPrice = discountPrice
+      ? (regularPrice || price)
+      : (regularPrice && regularPrice > price ? regularPrice : null);
+
     const thumbnail =
       locService.thumbnail ||
       service.thumbnail ||
@@ -211,7 +226,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
             <div>
               <h3
                 onClick={() => handleOpenServiceDetail(service)}
-                className="text-xs sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white line-clamp-3 sm:line-clamp-2 leading-snug group-hover:text-[#006A4E] transition-colors cursor-pointer min-h-[3rem] sm:min-h-[2.5rem]"
+                className="text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#006A4E] transition-colors cursor-pointer min-h-[2.25rem] sm:min-h-[2.5rem]"
                 title={locService.title}
               >
                 {locService.title}
@@ -239,27 +254,41 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           </div>
         </div>
 
-        {/* Card Footer: Harmonized Price & Action Button */}
+        {/* Card Footer: Harmonized Price & Action Button (Matching CourseCard) */}
         <div className="p-2.5 sm:p-3.5 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1.5 rounded-b-2xl">
-          <div className="min-w-0">
-            <div>
-              <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold block leading-none mb-1 uppercase tracking-wider">
-                {t('শুরু', 'Starts at')}
-              </span>
-              <span className="text-sm sm:text-base md:text-lg font-black text-[#006A4E] dark:text-emerald-400 tracking-tight leading-none">
-                ৳{price.toLocaleString('bn-BD')}
-              </span>
-            </div>
+          <div className="min-w-0 flex flex-col justify-center">
+            {isFree ? (
+              <div className="flex flex-col justify-center min-w-0 leading-tight">
+                <span className="text-xs sm:text-sm md:text-base font-black text-[#006A4E] dark:text-emerald-400 block leading-tight">
+                  {t('সম্পূর্ণ', 'Fully')}
+                </span>
+                <span className="text-xs sm:text-sm md:text-base font-black text-[#006A4E] dark:text-emerald-400 block leading-tight">
+                  {t('ফ্রি', 'Free')}
+                </span>
+              </div>
+            ) : (
+              <div className="flex flex-col justify-center min-w-0">
+                <span className="text-xs sm:text-sm md:text-base font-black text-[#006A4E] dark:text-emerald-400 block truncate leading-tight tracking-tight">
+                  ৳{displayPrice.toLocaleString('bn-BD')}
+                </span>
+                {strikethroughPrice && (
+                  <span className="text-[10px] sm:text-xs text-slate-400 line-through leading-none mt-0.5 block truncate">
+                    ৳{strikethroughPrice.toLocaleString('bn-BD')}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
-          <button
-            type="button"
-            onClick={() => handleOpenServiceDetail(service)}
-            className="py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold shadow-xs flex items-center justify-center gap-1 sm:gap-1.5 transition-all duration-200 active:scale-95 cursor-pointer shrink-0 bg-[#006A4E] hover:bg-[#00543e] text-white group/btn"
-          >
-            <span>{t('বিস্তারিত', 'Details')}</span>
-            <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white group-hover/btn:translate-x-0.5 transition-transform shrink-0" />
-          </button>
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              type="button"
+              onClick={() => handleOpenServiceDetail(service)}
+              className="py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
+            >
+              <span>{t('বিস্তারিত', 'Details')}</span>
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -330,10 +359,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           <div className="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3 mb-4 sm:mb-6">
             <div className="space-y-0.5 sm:space-y-1 text-left min-w-0">
               <h2 className="text-sm sm:text-lg md:text-2xl font-bold font-bengali text-slate-900 dark:text-white leading-tight">
-                {t('আমাদের অফিশিয়াল এজেন্সি প্যাকেজসমূহ', 'Our Official Agency Packages')}
+                {t('অফিশিয়াল এজেন্সি প্যাকেজ', 'Official Agency Packages')}
               </h2>
               <p className="text-[11px] sm:text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium font-bengali">
-                {t('PTENit এর গ্যারান্টিযুক্ত সার্ভিস প্যাকেজ।', 'Guaranteed official IT service packages.')}
+                {t('গ্যারান্টিযুক্ত সার্ভিস প্যাকেজ', 'Guaranteed service packages')}
               </p>
             </div>
 
@@ -345,7 +374,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                     setActiveTab('services');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="inline-flex items-center gap-1 text-[#38BDF8] hover:text-[#006A4E] font-bold text-xs sm:text-sm hover:underline transition-all cursor-pointer font-bengali shrink-0 group"
+                  className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#006A4E] dark:text-emerald-400 hover:text-[#047857] dark:hover:text-emerald-300 hover:underline cursor-pointer font-bengali transition-colors border-0 shrink-0"
                 >
                   <span>{t('সবগুলো দেখুন →', 'See All →')}</span>
                 </button>

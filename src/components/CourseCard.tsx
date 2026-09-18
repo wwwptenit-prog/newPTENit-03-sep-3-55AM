@@ -117,9 +117,12 @@ export const CourseCard: React.FC<CourseCardProps> = ({
               <span>অ্যাক্টিভ</span>
             </span>
           ) : course.isFree ? (
-            <div className="flex flex-col justify-center min-w-0">
-              <span className="text-sm sm:text-base md:text-lg font-black text-[#006A4E] dark:text-emerald-400 block truncate leading-tight">
-                {t('সম্পূর্ণ ফ্রি', 'Fully Free')}
+            <div className="flex flex-col justify-center min-w-0 leading-tight">
+              <span className="text-xs sm:text-sm md:text-base font-black text-[#006A4E] dark:text-emerald-400 block leading-tight">
+                {t('সম্পূর্ণ', 'Fully')}
+              </span>
+              <span className="text-xs sm:text-sm md:text-base font-black text-[#006A4E] dark:text-emerald-400 block leading-tight">
+                {t('ফ্রি', 'Free')}
               </span>
             </div>
           ) : (
@@ -156,10 +159,9 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             <button
               type="button"
               onClick={() => onOpenDetail(course.id)}
-              className="py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 active:scale-95 shrink-0 group/btn"
+              className="py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
             >
               <span>{t('বিস্তারিত', 'Details')}</span>
-              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white group-hover/btn:translate-x-0.5 transition-transform shrink-0" />
             </button>
           )}
         </div>

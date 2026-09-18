@@ -362,7 +362,7 @@ const MainAppContent: React.FC = () => {
   return (
     <div
       style={siteSettings?.customScalePercent && siteSettings.customScalePercent !== 100 ? { zoom: `${siteSettings.customScalePercent}%` } : undefined}
-      className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-[#006A4E] selection:text-white max-w-full overflow-x-hidden"
+      className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-[#006A4E] selection:text-white max-w-full overflow-x-clip"
     >
       
       {/* Top Main Navbar (Only shown on public website pages, not in dashboards or marketplace) */}
@@ -376,7 +376,7 @@ const MainAppContent: React.FC = () => {
       )}
 
       {/* Page Routing Views */}
-      <main className="flex-1 max-w-full overflow-x-hidden">
+      <main className="flex-1 max-w-full overflow-x-clip">
         <React.Suspense fallback={<LazyFallback />}>
           {/* VIEW 1: HOME PAGE */}
           {activeTab === 'home' && (

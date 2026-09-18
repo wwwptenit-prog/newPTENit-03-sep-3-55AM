@@ -169,7 +169,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
         
         {/* MOBILE APP TOP HEADER (Visible on Mobile & Tablet < lg) */}
         {!hideHeaderBanner && (
-          <div className="lg:hidden bg-slate-900 border border-slate-800 p-2.5 px-3 rounded-2xl shadow-lg mb-4 flex items-center justify-between gap-2 text-white font-bengali sticky top-2 z-30">
+          <div className="lg:hidden bg-slate-900/95 backdrop-blur-md border border-slate-800 p-2.5 px-3 rounded-2xl shadow-lg mb-4 flex items-center justify-between gap-2 text-white font-bengali sticky top-0 z-40">
             {/* Left: Dashboard Icon + Text */}
             <div className="flex items-center gap-2 min-w-0">
               <div className="p-2 bg-gradient-to-tr from-[#006A4E] to-sky-400 text-white rounded-xl shadow shrink-0">
@@ -350,7 +350,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
 
         {/* DESKTOP TOP BAR (Hidden on mobile) */}
         {!hideHeaderBanner && (
-          <div className="hidden lg:flex bg-slate-900 border border-slate-800 p-3 sm:p-4 rounded-2xl sm:rounded-3xl shadow-lg mb-4 sm:mb-6 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-white font-bengali">
+          <div className="hidden lg:flex sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border border-slate-800 p-3 sm:p-4 rounded-2xl sm:rounded-3xl shadow-lg mb-4 sm:mb-6 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-white font-bengali">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#006A4E] to-sky-400 flex items-center justify-center font-black text-white text-base shadow shrink-0">
                 P

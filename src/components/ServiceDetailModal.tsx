@@ -301,11 +301,27 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
 
   const currentPackage = servicePackages[selectedTier];
 
-  // Work-first condition: If service is 'আগে কাজ শুরু', no upfront payment is needed; payment is after work delivery!
+  // Premium condition: Digital products, software, and items explicitly marked as 'প্রিমিয়াম'
+  // In accordance with user directive: "যেটা প্রিমিয়াম সেটাতে বিল প্রদান করতে হবে, যেমন ডিজিটাল প্রডাক্ট সহ যা কিনতে হয়।"
+  const isPremium =
+    service.badge === 'প্রিমিয়াম' ||
+    service.badge === 'Premium' ||
+    service.offerBadge === 'premium' ||
+    service.offerBadge === 'প্রিমিয়াম' ||
+    service.offerBadge?.includes('প্রিমিয়াম') ||
+    service.category === 'Digital Products' ||
+    service.category === 'ডিজিটাল প্রোডাক্ট' ||
+    service.tags?.includes('প্রিমিয়াম') ||
+    ['web-dev', 'branding', 'software-dev', 'premium-app', 'digital-product', 'source-code', 'fullstack-app', 'saas-system'].includes(service.id);
+
+  // Work-first condition: If service is explicitly 'আগে কাজ শুরু', no upfront payment is needed; payment is after delivery.
+  // Premium services and digital products strictly require bill payment / escrow checkout.
   const isWorkFirst =
-    service.badge === 'আগে কাজ শুরু' ||
-    service.offerBadge === 'work_first' ||
-    (service.badge !== 'প্রিমিয়াম' && service.badge !== 'Premium' && service.offerBadge !== 'premium' && !['web-dev', 'branding'].includes(service.id));
+    !isPremium &&
+    (service.badge === 'আগে কাজ শুরু' ||
+      service.offerBadge === 'work_first' ||
+      service.offerBadge === 'আগে কাজ শুরু' ||
+      service.offerBadge?.includes('আগে কাজ শুরু'));
 
   // Lightbox keyboard controls
   useEffect(() => {
@@ -822,19 +838,19 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                   {isWorkFirst ? 'প্রদেয় অগ্রিম' : 'অফার'}
                 </span>
-                <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                    isWorkFirst
-                      ? 'text-emerald-800 dark:text-emerald-300 bg-emerald-100/70 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-700'
-                      : selectedTier === 'basic'
-                      ? 'text-[#00543e] bg-blue-50 dark:bg-blue-950/40 border-sky-300/80 dark:border-blue-700/60'
-                      : selectedTier === 'standard'
-                      ? 'text-red-600 bg-red-50 dark:bg-red-950/40 border-red-300/80 dark:border-red-700/60'
-                      : 'text-purple-600 bg-purple-50 dark:bg-purple-950/40 border-purple-300/80 dark:border-purple-700/60'
-                  }`}
-                >
-                  {isWorkFirst ? '০ টাকা অগ্রিম | কাজের পর পেমেন্ট' : '৩০% ছাড়'}
-                </span>
+                {!isWorkFirst && (
+                  <span
+                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                      selectedTier === 'basic'
+                        ? 'text-[#00543e] bg-blue-50 dark:bg-blue-950/40 border-sky-300/80 dark:border-blue-700/60'
+                        : selectedTier === 'standard'
+                        ? 'text-red-600 bg-red-50 dark:bg-red-950/40 border-red-300/80 dark:border-red-700/60'
+                        : 'text-purple-600 bg-purple-50 dark:bg-purple-950/40 border-purple-300/80 dark:border-purple-700/60'
+                    }`}
+                  >
+                    ৩০% ছাড়
+                  </span>
+                )}
               </div>
               <div
                 className={`text-2xl sm:text-3xl font-black tracking-tight ${
@@ -1017,141 +1033,142 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
     : (siteSettings?.bankAccountNumber || '2181100098765');
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 overflow-y-auto min-h-screen font-bengali p-3 sm:p-6 md:p-8 animate-fadeIn text-slate-800 dark:text-slate-100">
-      <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6">
-        
-        {/* Main Service Content Container (Matching DigitalProductDetailModal!) */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-xs">
+    <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 overflow-y-auto min-h-screen font-bengali animate-fadeIn text-slate-800 dark:text-slate-100 flex flex-col">
+      {/* 1. TOP BAR: সম্পূর্ণ স্ক্রিনের শীর্ষে ফিক্সড/স্টিকি (স্ক্রোল করার সময় উপরে কোনো ফাঁকা থাকবে না) */}
+      <header className="sticky top-0 z-40 w-full bg-[#006A4E] text-white border-b border-[#00543D] shadow-sm shrink-0">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2">
+          {/* LEFT: BACK BUTTON (বেক বাটন - ChevronLeft, সাদা কালার, কোনো বর্ডার ছাড়া) */}
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
+            title={t('ফিরে যান', 'Go Back')}
+          >
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5] text-white" />
+            <span className="hidden xs:inline text-white">{t('ফিরে যান', 'Go Back')}</span>
+          </button>
 
-          {/* 1. TOP BAR: ব্যাক বাটন | সেন্টারে: আগে কাজ শুরু / প্রিমিয়াম সার্ভিস | শেয়ার সোশ্যাল মিডিয়া */}
-          <div className="relative bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 rounded-t-2xl sm:rounded-t-3xl">
-            {/* LEFT: BACK BUTTON (বেক বাটন - ChevronLeft, কালো কালার, কোনো বর্ডার ছাড়া) */}
+          {/* CENTER: সার্ভিস বা গিগ হলে আগে কাজ শুরু বা প্রিমিয়াম সার্ভিস শো করবে (সাদা আইকন ও টেক্সট) */}
+          <div className="flex items-center justify-center min-w-0">
+            <SinglePromoBadgeView 
+              item={{ id: service.id, title: service.title, price: (service as any).price, badge: service.badge, offerBadge: (service as any).offerBadge }} 
+              itemType="service" 
+              textColor="text-white"
+            />
+          </div>
+
+          {/* RIGHT: শেয়ার সোশ্যাল মিডিয়া (Social Media Share - সাদা আইকন ও টেক্সট) */}
+          <div className="relative shrink-0">
             <button
               type="button"
-              onClick={onClose}
-              className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
-              title={t('ফিরে যান', 'Go Back')}
+              onClick={() => setIsShareMenuOpen(!isShareMenuOpen)}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
+              title="সোশ্যাল মিডিয়ায় শেয়ার করুন"
             >
-              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5] text-slate-900 dark:text-white" />
-              <span className="hidden xs:inline text-slate-900 dark:text-white">{t('ফিরে যান', 'Go Back')}</span>
+              <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              <span className="hidden sm:inline text-white">শেয়ার</span>
             </button>
 
-            {/* CENTER: সার্ভিস বা গিগ হলে আগে কাজ শুরু বা প্রিমিয়াম সার্ভিস শো করবে (কালো আইকন ও টেক্সট) */}
-            <div className="flex items-center justify-center min-w-0">
-              <SinglePromoBadgeView 
-                item={{ id: service.id, title: service.title, price: (service as any).price, badge: service.badge, offerBadge: (service as any).offerBadge }} 
-                itemType="service" 
-                textColor="text-slate-900 dark:text-white"
-              />
-            </div>
-
-            {/* RIGHT: শেয়ার সোশ্যাল মিডিয়া (Social Media Share - কালো আইকন ও টেক্সট) */}
-            <div className="relative shrink-0">
-              <button
-                type="button"
-                onClick={() => setIsShareMenuOpen(!isShareMenuOpen)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
-                title="সোশ্যাল মিডিয়ায় শেয়ার করুন"
-              >
-                <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900 dark:text-white" />
-                <span className="hidden sm:inline text-slate-900 dark:text-white">শেয়ার</span>
-              </button>
-
-              {/* Share Popover Dropdown */}
-              {isShareMenuOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setIsShareMenuOpen(false)}
-                  />
-                  <div className="absolute right-0 top-full mt-2 z-50 w-56 sm:w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-3 space-y-2 animate-fadeIn font-bengali">
-                    <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1 border-b border-slate-100 dark:border-slate-800 pb-1.5 flex items-center justify-between">
-                      <span>সোশ্যাল মিডিয়ায় শেয়ার করুন</span>
-                      <button
-                        type="button"
-                        onClick={() => setIsShareMenuOpen(false)}
-                        className="text-slate-400 hover:text-slate-600 dark:hover:text-white"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-1.5 pt-1">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          shareWhatsApp();
-                          setIsShareMenuOpen(false);
-                        }}
-                        className="flex items-center gap-2 p-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-950/60 text-blue-700 dark:text-sky-300 text-xs font-bold transition cursor-pointer"
-                      >
-                        <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
-                        <span className="truncate">হোয়াটসঅ্যাপ</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          shareFacebook();
-                          setIsShareMenuOpen(false);
-                        }}
-                        className="flex items-center gap-2 p-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-xs font-bold transition cursor-pointer"
-                      >
-                        <Facebook className="w-4 h-4 text-[#1877F2] shrink-0" />
-                        <span className="truncate">ফেসবুক</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          shareTwitter();
-                          setIsShareMenuOpen(false);
-                        }}
-                        className="flex items-center gap-2 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition cursor-pointer"
-                      >
-                        <svg className="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
-                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                        </svg>
-                        <span className="truncate">টুইটার (X)</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={handleCopyLink}
-                        className="flex items-center gap-2 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition cursor-pointer"
-                      >
-                        {copiedLink ? (
-                          <>
-                            <Check className="w-4 h-4 text-blue-500 shrink-0" />
-                            <span className="text-[#006A4E] dark:text-sky-400 font-bold truncate">কপি হয়েছে!</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-4 h-4 text-slate-600 dark:text-slate-400 shrink-0" />
-                            <span className="truncate">লিংক কপি</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-
-                    {typeof navigator !== 'undefined' && !!navigator.share && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          handleNativeShare();
-                          setIsShareMenuOpen(false);
-                        }}
-                        className="w-full py-1.5 px-2 mt-1 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium flex items-center justify-center gap-1.5 transition cursor-pointer"
-                      >
-                        <Share2 className="w-3.5 h-3.5 text-[#38BDF8]" />
-                        <span>অন্যান্য অ্যাপসে শেয়ার</span>
-                      </button>
-                    )}
+            {/* Share Popover Dropdown */}
+            {isShareMenuOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setIsShareMenuOpen(false)}
+                />
+                <div className="absolute right-0 top-full mt-2 z-50 w-56 sm:w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-3 space-y-2 animate-fadeIn font-bengali">
+                  <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1 border-b border-slate-100 dark:border-slate-800 pb-1.5 flex items-center justify-between">
+                    <span>সোশ্যাল মিডিয়ায় শেয়ার করুন</span>
+                    <button
+                      type="button"
+                      onClick={() => setIsShareMenuOpen(false)}
+                      className="text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-                </>
-              )}
-            </div>
+
+                  <div className="grid grid-cols-2 gap-1.5 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        shareWhatsApp();
+                        setIsShareMenuOpen(false);
+                      }}
+                      className="flex items-center gap-2 p-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-950/60 text-blue-700 dark:text-sky-300 text-xs font-bold transition cursor-pointer"
+                    >
+                      <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
+                      <span className="truncate">হোয়াটসঅ্যাপ</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        shareFacebook();
+                        setIsShareMenuOpen(false);
+                      }}
+                      className="flex items-center gap-2 p-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-xs font-bold transition cursor-pointer"
+                    >
+                      <Facebook className="w-4 h-4 text-[#1877F2] shrink-0" />
+                      <span className="truncate">ফেসবুক</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        shareTwitter();
+                        setIsShareMenuOpen(false);
+                      }}
+                      className="flex items-center gap-2 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition cursor-pointer"
+                    >
+                      <svg className="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                      <span className="truncate">টুইটার (X)</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleCopyLink}
+                      className="flex items-center gap-2 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition cursor-pointer"
+                    >
+                      {copiedLink ? (
+                        <>
+                          <Check className="w-4 h-4 text-blue-500 shrink-0" />
+                          <span className="text-[#006A4E] dark:text-sky-400 font-bold truncate">কপি হয়েছে!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-4 h-4 text-slate-600 dark:text-slate-400 shrink-0" />
+                          <span className="truncate">লিংক কপি</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {typeof navigator !== 'undefined' && !!navigator.share && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleNativeShare();
+                        setIsShareMenuOpen(false);
+                      }}
+                      className="w-full py-1.5 px-2 mt-1 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium flex items-center justify-center gap-1.5 transition cursor-pointer"
+                    >
+                      <Share2 className="w-3.5 h-3.5 text-[#38BDF8]" />
+                      <span>অন্যান্য অ্যাপসে শেয়ার</span>
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
           </div>
+        </div>
+      </header>
+
+      {/* Main Service Content Container */}
+      <div className="max-w-6xl mx-auto w-full p-3 sm:p-6 md:p-8 space-y-4 sm:space-y-6 flex-1">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-xs overflow-hidden">
 
           {/* Service Banner Image - Click to Zoom & Subtle Prev/Next Navigation */}
           <div 
@@ -1770,9 +1787,9 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
 
             </div>
 
-            {/* Right Action Sidebar (Desktop Only: sticky top-4) */}
+            {/* Right Action Sidebar (Desktop Only: sticky top-20 to sit comfortably below the sticky top bar) */}
             <div className="hidden lg:block lg:col-span-4">
-              <div className="sticky top-4">
+              <div className="sticky top-20">
                 {renderPackageAndOrder(false)}
               </div>
             </div>
@@ -1803,9 +1820,11 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                   <span className={`px-3 py-1 font-bold text-xs rounded-full inline-block ${
                     isWorkFirst
                       ? 'bg-emerald-500/15 text-[#006A4E] dark:text-emerald-400'
+                      : isPremium
+                      ? 'bg-amber-500/15 text-amber-800 dark:text-amber-300'
                       : 'bg-blue-500/15 text-blue-700 dark:text-sky-400'
                   }`}>
-                    {isWorkFirst ? 'আগে কাজ শুরু — ০ টাকা অগ্রিম' : 'সার্ভিস বুকিং ও পেমেন্ট'}
+                    {isWorkFirst ? 'আগে কাজ শুরু — ০ টাকা অগ্রিম' : isPremium ? '👑 প্রিমিয়াম সার্ভিস' : 'সার্ভিস বুকিং ও পেমেন্ট'}
                   </span>
                   <h3 className="text-lg sm:text-xl font-black font-heading text-slate-900 dark:text-white">
                     {isWorkFirst
@@ -1883,7 +1902,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                       <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 rounded-2xl text-emerald-900 dark:text-emerald-200 text-xs space-y-1 font-bengali shadow-xs">
                         <div className="flex items-center gap-2 font-bold text-sm text-[#006A4E] dark:text-emerald-300">
                           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                          <span>আগে কাজ শুরু — কোনো অগ্রিম পেমেন্ট নেই!</span>
+                          <span>আগে কাজ শুরু</span>
                         </div>
                         <p className="text-[11px] leading-relaxed text-emerald-800 dark:text-emerald-300/90 font-normal">
                           আপনাকে এখনই কোনো টাকা দিতে হবে না। ফর্মটি সাবমিট করলে আমাদের এজেন্সি অবিলম্বে কাজ শুরু করবে।
@@ -1986,11 +2005,11 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                       {isWorkFirst ? (
                         <>
                           <CheckCircle2 className="w-4 h-4 text-emerald-200" />
-                          <span>আগে কাজ শুরু করুন (৳০ অগ্রিম, কাজের পর পেমেন্ট)</span>
+                          <span>আগে কাজ শুরু করুন</span>
                         </>
                       ) : (
                         <>
-                          <span>পরবর্তী ধাপ: পেমেন্ট মেথড</span>
+                          <span>পরবর্তী ধাপ</span>
                           <ArrowRight className="w-4 h-4" />
                         </>
                       )}

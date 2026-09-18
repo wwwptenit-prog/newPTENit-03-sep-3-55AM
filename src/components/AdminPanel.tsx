@@ -1739,7 +1739,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
       <div className="max-w-[1600px] mx-auto px-2.5 sm:px-6 lg:px-8 space-y-3 sm:space-y-4">
         
         {/* DESKTOP TOP NAV HEADER (lg:flex) */}
-        <header className="hidden lg:flex bg-[#006A4E] backdrop-blur-md border border-[#00543D] text-white px-4 py-2.5 rounded-2xl shadow-xl justify-between items-center gap-3">
+        <header className="hidden lg:flex sticky top-0 z-40 bg-[#006A4E]/95 backdrop-blur-md border border-[#00543D] text-white px-4 py-2.5 rounded-2xl shadow-xl justify-between items-center gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <div className="p-2 bg-amber-500/15 rounded-xl border border-amber-500/30 text-amber-400 shrink-0">
               <ShieldCheck className="w-5 h-5" />

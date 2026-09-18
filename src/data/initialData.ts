@@ -1379,6 +1379,186 @@ export const initialCourses: Course[] = [
 
 export const initialGigs: MarketplaceGig[] = [
   {
+    id: "gig-workfirst-web",
+    sellerId: "teacher-1",
+    sellerName: "প্রকৌশলী আল-আমিন",
+    sellerAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+    sellerTitle: "Senior Full Stack Architect (PTENit Core Team)",
+    sellerLevel: "Level 2 Seller",
+    sellerRating: 5.0,
+    isAgencyStaff: true,
+    title: "আমি কোনো অগ্রিম বিল ছাড়াই আধুনিক ফুল-স্ট্যাক ও ই-কমার্স ওয়েবসাইট তৈরি করব (আগে কাজ শুরু)",
+    category: "Web Development",
+    description: "আগে কাজ শুরু অফার: আপনার ব্যবসার জন্য প্রফেশনাল ও রেসপন্সিভ ওয়েবসাইট বা ওয়েব অ্যাপ্লিকেশন তৈরি করে দেওয়া হবে সম্পূর্ণ বিনা অগ্রিম বিলে। কাজ সম্পন্ন হওয়ার পর লাইভ রিভিউ দেখে বিল পরিশোধ করবেন। সাথে পাবেন ১ বছর ফ্রি মেইনটেন্যান্স ও টেকনিক্যাল সাপোর্ট।",
+    thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80"
+    ],
+    packages: {
+      basic: { name: "ল্যান্ডিং পেজ / সিঙ্গেল পেজ", price: 6500, deliveryDays: 3, revisions: 3, features: ["১টি রেসপন্সিভ ল্যান্ডিং পেজ", "মোবাইল ফ্রেন্ডলি UI", "কন্টাক্ট ফর্ম & হোয়াটসঅ্যাপ বাটন", "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"] },
+      standard: { name: "ডায়নামিক বিজনেস ওয়েবসাইট", price: 16000, deliveryDays: 6, revisions: 5, features: ["৮টি ডায়নামিক পেজ", "এডমিন প্যানেল CMS", "পেমেন্ট গেটওয়ে ইন্টিগ্রেশন", "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"] },
+      premium: { name: "ফুল ই-কমার্স / SaaS সলিউশন", price: 38000, deliveryDays: 12, revisions: "Unlimited", features: ["সম্পূর্ণ কাস্টম ই-কমার্স শপ", "ইনভেন্টরি & অর্ডার ট্র্যাকিং", "১ বছর টেকনিক্যাল সাপোর্ট", "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"] }
+    },
+    rating: 5.0,
+    reviewsCount: 38,
+    salesCount: 54,
+    status: "active",
+    offerBadge: "আগে কাজ শুরু",
+    tags: ["Next.js", "React", "E-commerce", "আগে কাজ শুরু", "Web Development"],
+    createdAt: "2026-03-01"
+  },
+  {
+    id: "gig-premium-erp",
+    sellerId: "ptenit-agency",
+    sellerName: "PTENit Official Agency",
+    sellerAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+    sellerTitle: "Official IT Solutions & Software Agency",
+    sellerLevel: "Top Rated Agency",
+    sellerRating: 5.0,
+    isAgencyStaff: true,
+    title: "PTENit অফিশিয়াল প্রিমিয়াম এন্টারপ্রাইজ ইআরপি, কাস্টম সফটওয়্যার ও ক্লাউড পজ সিস্টেম",
+    category: "Software Development",
+    description: "প্রিমিয়াম অফিশিয়াল সার্ভিস: মাঝারি ও বড় ব্যবসা, সুপারশপ এবং কর্পোরেট প্রতিষ্ঠানের জন্য কাস্টম ইআরপি, ইনভেন্টরি, একাউন্টিং ও মাল্টি-ব্রাঞ্চ বিলিং সফটওয়্যার। ক্লাউড ব্যাকআপ, রোল পারমিশন ও ডেডিকেটেড লাইফটাইম সাপোর্ট সহ।",
+    thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80"
+    ],
+    packages: {
+      basic: { name: "Starter POS & Billing", price: 20000, deliveryDays: 5, revisions: 3, features: ["ইনভয়েস ও বারকোড বিলিং", "স্টক ও সেলস ট্র্যাকিং", "ক্যাশ ও বাকি রেজিস্টার", "লাইফটাইম অফিশিয়াল সাপোর্ট"] },
+      standard: { name: "Multi-Branch Cloud ERP", price: 55000, deliveryDays: 14, revisions: 5, features: ["মাল্টি-ব্রাঞ্চ সিঙ্ক", "অ্যাকাউন্টিং ও পে-রোল", "কাস্টমার লেজার ও রিপোর্ট", "অনলাইন ক্লাউড হোস্টিং"] },
+      premium: { name: "Enterprise Custom SaaS Engine", price: 130000, deliveryDays: 30, revisions: "Unlimited", features: ["ফুল কাস্টম বিজনেস সফটওয়্যার", "মোবাইল অ্যাপ ইন্টিগ্রেশন", "সোর্স কোড ও এপিআই অ্যাক্সেস", "১ বছর ২৪/৭ প্রায়োরিটি সাপোর্ট"] }
+    },
+    rating: 5.0,
+    reviewsCount: 46,
+    salesCount: 89,
+    status: "active",
+    offerBadge: "প্রিমিয়াম",
+    tags: ["ERP", "POS", "Software", "প্রিমিয়াম", "Official Agency"],
+    createdAt: "2026-03-01"
+  },
+  {
+    id: "gig-workfirst-marketing",
+    sellerId: "teacher-2",
+    sellerName: "আরিফ হোসেন",
+    sellerAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+    sellerTitle: "Digital Marketing Specialist & Media Buyer",
+    sellerLevel: "Top Rated Seller",
+    sellerRating: 4.9,
+    isAgencyStaff: true,
+    title: "আমি সেলস বহুগুণ বাড়াতে টার্গেটেড ফেসবুক ও গুগল এডস ফানেল সেটআপ করব (আগে কাজ শুরু)",
+    category: "Digital Marketing",
+    description: "আগে কাজ শুরু সুবিধা: কোনো অগ্রিম পেমেন্ট ছাড়াই আপনার ব্র্যান্ডের জন্য ফেসবুক ও গুগল এডস ক্যাম্পেইন, পিক্সেল ট্র্যাকিং এবং লিড ফানেল সেটআপ করব। ড্রাফট ও প্রাথমিক রেজাল্ট যাচাই করে বিল রিলিজ করবেন।",
+    thumbnail: "https://images.unsplash.com/photo-1557838923-2985c318be48?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80"
+    ],
+    packages: {
+      basic: { name: "টার্গেটেড এডস সেটআপ", price: 3000, deliveryDays: 2, revisions: 3, features: ["১টি অডিয়েন্স ক্যাম্পেইন", "পিক্সেল সেটআপ", "এড কপিরাইটিং", "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"] },
+      standard: { name: "গ্রোথ সেলস ফানেল", price: 7500, deliveryDays: 5, revisions: 5, features: ["৩টি ক্যাম্পেইন A/B টেস্ট", "কনভার্সন অপটিমাইজেশন", "রিটার্গেটিং অডিয়েন্স", "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"] },
+      premium: { name: "৩০ দিন ফুল এডস ম্যানেজমেন্ট", price: 16000, deliveryDays: 30, revisions: "Unlimited", features: ["মাসব্যাপী এড ম্যানেজমেন্ট", "উচ্চ ROI স্ট্র্যাটেজি", "সাপ্তাহিক প্রগ্রেস রিপোর্ট", "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"] }
+    },
+    rating: 4.9,
+    reviewsCount: 31,
+    salesCount: 42,
+    status: "active",
+    offerBadge: "আগে কাজ শুরু",
+    tags: ["Facebook Ads", "Google Ads", "Digital Marketing", "আগে কাজ শুরু"],
+    createdAt: "2026-03-02"
+  },
+  {
+    id: "gig-premium-mobile",
+    sellerId: "teacher-1",
+    sellerName: "প্রকৌশলী আল-আমিন",
+    sellerAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+    sellerTitle: "Senior Mobile & Full Stack Architect",
+    sellerLevel: "Level 2 Seller",
+    sellerRating: 5.0,
+    isAgencyStaff: true,
+    title: "প্রিমিয়াম ফ্লাটার ও রিয়্যাক্ট নেটিভ দিয়ে গুগল প্লে-স্টোর ও অ্যাপল অ্যাপ তৈরি করব",
+    category: "Mobile App",
+    description: "প্রিমিয়াম মোবাইল সলিউশন: এক কোডবেসেই অ্যান্ড্রয়েড এবং আইওএস অ্যাপ। পুশ নোটিফিকেশন, লোকাল পেমেন্ট গেটওয়ে (bKash/Nagad), রিয়েলটাইম ফায়ারবেস ব্যাকএন্ড এবং প্লে-স্টোর পাবলিশিং গাইডেন্স অন্তর্ভুক্ত।",
+    thumbnail: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1526498460520-4c246339dccb?auto=format&fit=crop&w=800&q=80"
+    ],
+    packages: {
+      basic: { name: "হাইব্রিড প্রোটোটাইপ অ্যাপ", price: 15000, deliveryDays: 5, revisions: 3, features: ["৩টি মেইন স্ক্রিন", "মডার্ন UI কম্পোনেন্ট", "Android APK বিল্ড", "প্রিমিয়াম কোয়ালিটি কোড"] },
+      standard: { name: "কমপ্লিট ডায়নামিক মোবাইল অ্যাপ", price: 35000, deliveryDays: 12, revisions: 5, features: ["৮টি স্ক্রিন + API কানেকশন", "ইউজার লগইন ও পুশ নোটিফিকেশন", "Android + iOS বিল্ড", "প্লে-স্টোর রেডি"] },
+      premium: { name: "ফুল ই-কমার্স / অন-ডিমান্ড অ্যাপ", price: 75000, deliveryDays: 20, revisions: "Unlimited", features: ["কমপ্লিট অনলাইন পেমেন্ট ইন্টিগ্রেশন", "রিয়েলটাইম ট্র্যাকিং & চ্যাট", "অ্যাডমিন ড্যাশবোর্ড প্যানেল", "৬ মাস ফ্রি মেইনটেন্যান্স"] }
+    },
+    rating: 5.0,
+    reviewsCount: 33,
+    salesCount: 51,
+    status: "active",
+    offerBadge: "প্রিমিয়াম",
+    tags: ["Flutter", "React Native", "Mobile App", "প্রিমিয়াম"],
+    createdAt: "2026-03-02"
+  },
+  {
+    id: "gig-workfirst-design",
+    sellerId: "student-1",
+    sellerName: "সাব্বির রহমান",
+    sellerAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+    sellerTitle: "Professional Brand Identity & Graphic Designer",
+    sellerLevel: "Level 1 Seller",
+    sellerRating: 4.9,
+    isAgencyStaff: false,
+    title: "আমি ইউনিক ভেক্টর লোগো ও আকর্ষণীয় সোশ্যাল মিডিয়া ব্র্যান্ডিং প্যাক ডিজাইন করব (আগে কাজ শুরু)",
+    category: "Graphic Design",
+    description: "আগে কাজ শুরু স্পেশাল: আপনার ব্যবসার ব্র্যান্ড ভ্যালু বাড়াতে প্রিমিয়াম কোয়ালিটির ভেক্টর লোগো, ফেসবুক কাভার এবং সোশ্যাল মিডিয়া পোস্ট ডিজাইন। ফাইনাল ডিজাইন দেখে সন্তুষ্ট হয়ে বিল পরিশোধের শতভাগ নিশ্চয়তা।",
+    thumbnail: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&w=800&q=80"
+    ],
+    packages: {
+      basic: { name: "স্টার্টার সোশ্যাল প্যাক", price: 1500, deliveryDays: 1, revisions: 3, features: ["৩টি সোশ্যাল ব্যানার", "হাই-রেজুলেশন PNG/JPG", "কাস্টম ব্র্যান্ড কালার", "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"] },
+      standard: { name: "কমপ্লিট ব্র্যান্ড লোগো কিট", price: 4000, deliveryDays: 2, revisions: 5, features: ["২টি কনসেপ্ট ভেক্টর লোগো", "ভিজিটিং কার্ড ডিজাইন", "ভেক্টর সোর্স ফাইল (AI/EPS)", "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"] },
+      premium: { name: "ফুল সোশ্যাল মিডিয়া ব্র্যান্ডিং", price: 9500, deliveryDays: 5, revisions: "Unlimited", features: ["লোগো + ১৫টি পোস্ট ব্যানার", "স্টোরি ও রিলস কাভার", "ব্র্যান্ড গাইডলাইন বুকলেট", "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"] }
+    },
+    rating: 4.9,
+    reviewsCount: 24,
+    salesCount: 37,
+    status: "active",
+    offerBadge: "আগে কাজ শুরু",
+    tags: ["Logo Design", "Branding", "Graphics", "আগে কাজ শুরু"],
+    createdAt: "2026-03-03"
+  },
+  {
+    id: "gig-premium-ai",
+    sellerId: "teacher-1",
+    sellerName: "প্রকৌশলী আল-আমিন",
+    sellerAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+    sellerTitle: "AI Specialist & Enterprise Architect",
+    sellerLevel: "Level 2 Seller",
+    sellerRating: 5.0,
+    isAgencyStaff: true,
+    title: "প্রিমিয়াম জেমিনি AI চ্যাটবট, বিজনেস অটোমেশন ও স্মার্ট CRM ইন্টিগ্রেশন সার্ভিস",
+    category: "AI Services",
+    description: "প্রিমিয়াম এআই সলিউশন: আপনার ব্যবসা ও গ্রাহক সেবাকে অটোমেট করতে Google Gemini AI ও ChatGPT চালিত ইন্টেলিজেন্ট চ্যাটবট। ফেসবুক মেসেঞ্জার, হোয়াটসঅ্যাপ ও ওয়েবসাইটে ২৪/৭ সেলস ও লিড জেনারেশন এজেন্ট সেটআপ।",
+    thumbnail: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1676299081847-824916de030a?auto=format&fit=crop&w=800&q=80"
+    ],
+    packages: {
+      basic: { name: "AI চ্যাটবট ইন্টিগ্রেশন", price: 6000, deliveryDays: 2, revisions: 3, features: ["ওয়েবসাইটে AI চ্যাট উইজেট", "কাস্টম প্রম্পট টিউনিং", "প্রিমিয়াম রেসপন্স কোয়ালিটি", "সার্ভিস গ্যারান্টি"] },
+      standard: { name: "মাল্টি-চ্যানেল AI বোট", price: 15000, deliveryDays: 5, revisions: 5, features: ["ওয়েবসাইট + ফেসবুক পেজ", "প্রোডাক্ট ক্যাটালগ রিকমেন্ডেশন", "অটোমেটেড লিড ক্যাপচার", "CRM ডাটাবেস সেভ"] },
+      premium: { name: "এন্টারপ্রাইজ ফুল AI এজেন্ট", price: 35000, deliveryDays: 10, revisions: "Unlimited", features: ["সম্পূর্ণ কাস্টম বিজনেস নলেজবেস", "ভয়েস ও টেক্সট AI অ্যাসিস্ট্যান্ট", "এপিআই ও ব্যাকএন্ড কানেক্টিভিটি", "১ বছর প্রায়োরিটি সাপোর্ট"] }
+    },
+    rating: 5.0,
+    reviewsCount: 27,
+    salesCount: 39,
+    status: "active",
+    offerBadge: "প্রিমিয়াম",
+    tags: ["Gemini AI", "AI Chatbot", "Automation", "প্রিমিয়াম"],
+    createdAt: "2026-03-03"
+  },
+  {
     id: "gig-1",
     sellerId: "teacher-1",
     sellerName: "প্রকৌশলী আল-আমিন",

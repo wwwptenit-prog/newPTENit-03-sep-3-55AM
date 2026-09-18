@@ -129,7 +129,12 @@ interface DataContextType {
   ) => MarketplaceOrder | null;
   deliverMarketplaceOrder: (orderId: string, note: string, fileUrl?: string, fileName?: string) => void;
   requestOrderRevision: (orderId: string, note: string) => void;
-  approveOrderAndReleaseEscrow: (orderId: string, rating?: number, reviewComment?: string) => void;
+  approveOrderAndReleaseEscrow: (
+    orderId: string,
+    rating?: number,
+    reviewComment?: string,
+    paymentInfo?: { method?: string; transactionId?: string; senderPhone?: string }
+  ) => void;
   cancelMarketplaceOrder: (orderId: string, reason?: string) => void;
   updateMarketplaceOrderStatus: (orderId: string, status: MarketplaceOrder['status'], updateNote?: string) => void;
   addMarketplaceOrder: (order: MarketplaceOrder) => void;
@@ -1112,7 +1117,22 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
-          const officialIds = ['web-dev', 'digital-marketing', 'graphics-design', 'app-development', 'seo-optimization', 'video-editing', 'cyber-security', 'software-dev'];
+          const officialIds = [
+            'gig-workfirst-web',
+            'gig-premium-erp',
+            'gig-workfirst-marketing',
+            'gig-premium-mobile',
+            'gig-workfirst-design',
+            'gig-premium-ai',
+            'web-dev',
+            'digital-marketing',
+            'graphics-design',
+            'app-development',
+            'seo-optimization',
+            'video-editing',
+            'cyber-security',
+            'software-dev'
+          ];
           const missingOfficial = initialGigs.filter(g => officialIds.includes(g.id) && !parsed.some(p => p.id === g.id));
           if (missingOfficial.length > 0) {
             return [...missingOfficial, ...parsed];
@@ -2854,7 +2874,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     ]);
   };
 
-  const approveOrderAndReleaseEscrow = (orderId: string, rating = 5, reviewComment?: string) => {
+  const approveOrderAndReleaseEscrow = (
+    orderId: string,
+    rating = 5,
+    reviewComment?: string,
+    paymentInfo?: { method?: string; transactionId?: string; senderPhone?: string }
+  ) => {
     setMarketplaceOrders(prev => prev.map(o => {
       if (o.id === orderId) {
         const bonus = o.sellerReviewBonus || 0;
@@ -2865,7 +2890,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           status: 'completed',
           rating,
           reviewComment,
-          sellerPayout: finalPayout
+          sellerPayout: finalPayout,
+          ...(paymentInfo?.method ? { paymentMethod: paymentInfo.method } : {}),
+          ...(paymentInfo?.transactionId ? { transactionId: paymentInfo.transactionId } : {}),
+          ...(paymentInfo?.senderPhone ? { buyerPhone: paymentInfo.senderPhone } : {}),
+          isWorkFirstPaid: true,
+          paidAt: new Date().toISOString()
         };
       }
       return o;
@@ -2874,8 +2904,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setNotifications(prev => [
       {
         id: `notif-${Date.now()}`,
-        title: '🎉 প্রজেক্ট কমপ্লিট & এস্ক্রো পেমেন্ট রিলিজ!',
-        message: `অর্ডার ID #${orderId} সফলভাবে সম্পন্ন হয়েছে এবং ফান্ড রিলিজ করা হয়েছে। (রেটিং: ${rating}★)`,
+        title: paymentInfo?.transactionId ? '🎉 প্রজেক্ট কমপ্লিট & বকেয়া বিল পরিশোধ সম্পন্ন!' : '🎉 প্রজেক্ট কমপ্লিট & এস্ক্রো পেমেন্ট রিলিজ!',
+        message: paymentInfo?.transactionId
+          ? `অর্ডার ID #${orderId} এর বকেয়া বিল (TrxID: ${paymentInfo.transactionId}) সফলভাবে পরিশোধ ও ফান্ড রিলিজ করা হয়েছে। সেলার তার ওয়ালেটে পেআউট পেয়েছেন। (রেটিং: ${rating}★)`
+          : `অর্ডার ID #${orderId} সফলভাবে সম্পন্ন হয়েছে এবং ফান্ড রিলিজ করা হয়েছে। (রেটিং: ${rating}★)`,
         time: 'এখনই',
         read: false,
         type: 'success',
@@ -2993,6 +3025,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const deleteMarketplaceOrder = (id: string) => {
     setMarketplaceOrders(prev => prev.filter(o => o.id !== id));
+    setCustomerProjects(prev => prev.filter(p => p.id !== id && `ord-${p.id}` !== id && `ord-ptenit-${p.id}` !== id));
   };
 
   const updateMarketplaceOrder = (id: string, updates: Partial<MarketplaceOrder>) => {

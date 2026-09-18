@@ -2,7 +2,6 @@ import React, { useState, useMemo, useRef } from "react";
 import {
   Heart,
   CheckCircle2,
-  ArrowRight,
   ChevronLeft,
   ChevronRight,
   ThumbsUp,
@@ -16,12 +15,15 @@ import {
   Bookmark,
   ShoppingBag,
   Sparkles,
+  Crown,
   Flag,
   Ban,
   Eye,
   ExternalLink,
   Pencil,
   Trash2,
+  X,
+  AlertTriangle,
 } from "lucide-react";
 import { MarketplaceGig, User as UserType } from "../types";
 import { useData } from "../context/DataContext";
@@ -86,7 +88,17 @@ export const GigCard: React.FC<GigCardProps> = ({
         gig.sellerName.toLowerCase().includes(effectiveUser.name.toLowerCase())));
 
   const price = gig.packages?.basic?.price ?? 2000;
+  const isFree =
+    price === 0 ||
+    gig.packages?.basic?.price === 0 ||
+    gig.offerBadge === "সম্পূর্ণ ফ্রি" ||
+    gig.offerBadge === "ফ্রি" ||
+    (gig as any).isFree === true ||
+    gig.tags?.some((t) => t.includes("ফ্রি") || t.toLowerCase().includes("free")) ||
+    gig.category?.toLowerCase().includes("free");
   const isAgency = gig.sellerId === "ptenit-agency" || gig.isAgencyStaff;
+  const isPremium = gig.offerBadge === "premium" || gig.offerBadge === "প্রিমিয়াম" || gig.offerBadge === "প্রিমিয়াম গিগ" || gig.offerBadge?.includes("প্রিমিয়াম") || gig.offerBadge === "অফিশিয়াল গ্যারান্টি" || gig.category === "Digital Products" || gig.tags?.includes("প্রিমিয়াম");
+  const isWorkFirst = !isPremium && (gig.offerBadge === "work_first" || gig.offerBadge === "আগে কাজ শুরু" || gig.offerBadge?.includes("আগে কাজ শুরু"));
 
   // Facebook post interactive states
   const [isLiked, setIsLiked] = useState<boolean>(isFavorite);
@@ -106,6 +118,32 @@ export const GigCard: React.FC<GigCardProps> = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isReported, setIsReported] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportReason, setReportReason] = useState('spam');
+  const [reportDetails, setReportDetails] = useState('');
+  const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const triggerToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage((prev) => (prev === msg ? null : prev));
+    }, 2800);
+  };
+
+  const isOwner = isBuyerPost ? (
+    !effectiveUser ||
+    !gig.sellerId ||
+    gig.sellerId === effectiveUser.id ||
+    gig.sellerId === 'buyer-self' ||
+    (effectiveUser.name && gig.sellerName && gig.sellerName.toLowerCase().trim() === effectiveUser.name.toLowerCase().trim())
+  ) : !!(
+    effectiveUser && (
+      (gig.sellerId && gig.sellerId === effectiveUser.id) ||
+      (effectiveUser.name && gig.sellerName && gig.sellerName.toLowerCase().trim() === effectiveUser.name.toLowerCase().trim())
+    )
+  );
   const [shareCount, setShareCount] = useState<number>(() => {
     return 5 + ((gig.id.charCodeAt(gig.id.length - 1) || 1) % 8);
   });
@@ -202,11 +240,10 @@ export const GigCard: React.FC<GigCardProps> = ({
   }, [gig]);
 
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef<number | null>(null);
   const isDragging = useRef(false);
   const dragMoved = useRef(false);
   const startX = useRef(0);
-  const scrollStart = useRef(0);
 
   // Facebook post relative time (e.g. 18h)
   const postTime = useMemo(() => {
@@ -223,34 +260,43 @@ export const GigCard: React.FC<GigCardProps> = ({
     return "18h";
   }, [gig]);
 
-  const handleCarouselScroll = () => {
-    if (carouselRef.current) {
-      const scrollLeft = carouselRef.current.scrollLeft;
-      const cardWidth = carouselRef.current.firstElementChild?.clientWidth || 260;
-      const index = Math.round(scrollLeft / (cardWidth + 8));
-      setCurrentImgIndex(Math.min(Math.max(0, index), imageList.length - 1));
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff > 35) {
+      setCurrentImgIndex((prev) => (prev === imageList.length - 1 ? 0 : prev + 1));
+    } else if (diff < -35) {
+      setCurrentImgIndex((prev) => (prev === 0 ? imageList.length - 1 : prev - 1));
     }
+    touchStartX.current = null;
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (!carouselRef.current) return;
     isDragging.current = true;
     dragMoved.current = false;
-    startX.current = e.pageX - carouselRef.current.offsetLeft;
-    scrollStart.current = carouselRef.current.scrollLeft;
+    startX.current = e.clientX;
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging.current || !carouselRef.current) return;
-    const x = e.pageX - carouselRef.current.offsetLeft;
-    const walk = x - startX.current;
-    if (Math.abs(walk) > 4) {
+    if (!isDragging.current) return;
+    if (Math.abs(e.clientX - startX.current) > 6) {
       dragMoved.current = true;
     }
-    carouselRef.current.scrollLeft = scrollStart.current - walk;
   };
 
-  const handleMouseUpOrLeave = () => {
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (isDragging.current && dragMoved.current) {
+      const diff = startX.current - e.clientX;
+      if (diff > 35) {
+        setCurrentImgIndex((prev) => (prev === imageList.length - 1 ? 0 : prev + 1));
+      } else if (diff < -35) {
+        setCurrentImgIndex((prev) => (prev === 0 ? imageList.length - 1 : prev - 1));
+      }
+    }
     isDragging.current = false;
   };
 
@@ -323,13 +369,19 @@ export const GigCard: React.FC<GigCardProps> = ({
   const handleShareLink = (e: React.MouseEvent) => {
     e.stopPropagation();
     const shareUrl = `${window.location.origin}/?tab=marketplace&gig=${gig.id}`;
-    if (navigator.clipboard) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(shareUrl).then(() => {
         setCopiedLink(true);
+        triggerToast("✓ পোস্টের লিংক ক্লিপবোর্ডে কপি হয়েছে!");
+        setTimeout(() => setCopiedLink(false), 2200);
+      }).catch(() => {
+        setCopiedLink(true);
+        triggerToast("✓ পোস্টের লিংক কপি হয়েছে!");
         setTimeout(() => setCopiedLink(false), 2200);
       });
     } else {
       setCopiedLink(true);
+      triggerToast("✓ পোস্টের লিংক কপি হয়েছে!");
       setTimeout(() => setCopiedLink(false), 2200);
     }
   };
@@ -339,17 +391,18 @@ export const GigCard: React.FC<GigCardProps> = ({
 
   if (isBlocked) {
     return (
-      <div className={`${isFeedMode ? "flex sm:hidden" : "hidden"} p-4 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700 text-center font-bengali space-y-2`}>
-        <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
-          🚫 <strong>{gig.sellerName}</strong>-কে ব্লক করা হয়েছে। এই সেলারের পোস্ট লুকানো রয়েছে।
+      <div className="p-3.5 sm:p-4 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700 text-center font-bengali space-y-2 my-2">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium">
+          🚫 <strong>{gig.sellerName}</strong>-কে ব্লক করা হয়েছে। এই পোস্ট লুকানো রয়েছে।
         </p>
         <button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
             setIsBlocked(false);
+            triggerToast("✓ ব্যবহারকারীকে আনব্লক করা হয়েছে।");
           }}
-          className="text-xs font-bold text-[#006A4E] hover:underline cursor-pointer"
+          className="px-3.5 py-1.5 bg-white dark:bg-slate-700 hover:bg-slate-50 text-xs font-bold text-[#006A4E] dark:text-emerald-400 rounded-lg shadow-2xs border border-slate-200 dark:border-slate-600 cursor-pointer active:scale-95 transition"
         >
           আনব্লক করুন
         </button>
@@ -366,14 +419,14 @@ export const GigCard: React.FC<GigCardProps> = ({
         onClick={onClick}
         className={`${
           isFeedMode ? "flex" : "hidden"
-        } flex-col bg-white border ${
+        } flex-col bg-white dark:bg-slate-900 border ${
           userOrder
             ? "border-[#006A4E] ring-1 ring-[#006A4E]/20 shadow-md"
-            : "border-slate-200"
-        } rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-200 cursor-pointer font-bengali ${className}`}
+            : "border-slate-200 dark:border-slate-800"
+        } rounded-xl sm:rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer font-bengali w-full ${className}`}
       >
         {/* --- Facebook Post Header --- */}
-        <div className="p-3 pb-2 flex items-center justify-between gap-2">
+        <div className="p-2.5 sm:p-3 pb-1 sm:pb-1.5 flex items-center justify-between gap-2">
           {/* Seller Avatar & Meta */}
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <div className="relative shrink-0">
@@ -383,34 +436,45 @@ export const GigCard: React.FC<GigCardProps> = ({
                   "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
                 }
                 alt={gig.sellerName}
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover ring-2 ring-[#006A4E]/20 border border-slate-200"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-1.5 ring-[#006A4E]/20 border border-slate-200 dark:border-slate-700"
               />
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#006A4E] rounded-full ring-2 ring-white animate-pulse" />
+              <span className="absolute bottom-0 right-0 w-2 h-2 bg-[#006A4E] rounded-full ring-1.5 ring-white dark:ring-slate-900 animate-pulse" />
             </div>
 
             <div className="min-w-0 flex-1">
               {/* Line 1: Name + Verified Green Tick */}
               <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-[15px] sm:text-base font-bold text-slate-900 truncate">
+                <span className="text-[12.5px] sm:text-[14px] font-bold text-slate-900 dark:text-white truncate">
                   {gig.sellerName}
                 </span>
                 <CheckCircle2
-                  className="w-4 h-4 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
+                  className="w-3.5 h-3.5 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
                   title="Verified Profile"
                 />
               </div>
 
               {/* Line 2: Meta Info */}
-              <div className="flex items-center gap-2 text-[12.5px] sm:text-[13px] text-slate-500 font-medium mt-0.5 whitespace-nowrap flex-nowrap overflow-hidden">
+              <div className="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-[11.5px] text-slate-500 dark:text-slate-400 font-medium mt-0.5 whitespace-nowrap flex-nowrap overflow-hidden">
                 <span className="shrink-0">{postTime}</span>
-                <span className={`font-semibold shrink-0 ${isBuyerPost ? 'text-blue-600' : 'text-[#006A4E]'}`}>
+                <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
+                <span className={`font-semibold shrink-0 ${isBuyerPost ? 'text-blue-600 dark:text-blue-400' : 'text-[#006A4E] dark:text-emerald-400'}`}>
                   {isBuyerPost ? "ভেরিফায়েড বায়ার" : (gig.sellerLevel || "টপ রেটেড")}
                 </span>
-                {!isBuyerPost && isAgency && (
-                  <span className="font-medium text-slate-700 shrink-0">Agency</span>
+                {gig.category && (
+                  <>
+                    <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
+                    <span className="truncate max-w-[120px] sm:max-w-[170px] font-medium text-slate-600 dark:text-slate-300">{gig.category}</span>
+                  </>
                 )}
+                {!isBuyerPost && isAgency && (
+                  <>
+                    <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
+                    <span className="font-medium text-slate-700 dark:text-slate-300 shrink-0">Agency</span>
+                  </>
+                )}
+                <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
                 <Globe
-                  className="w-3.5 h-3.5 text-slate-400 shrink-0"
+                  className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400 shrink-0"
                   aria-label="Public"
                 />
               </div>
@@ -426,276 +490,330 @@ export const GigCard: React.FC<GigCardProps> = ({
                 e.stopPropagation();
                 setIsMenuOpen((prev) => !prev);
               }}
-              className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition cursor-pointer"
-              title="Menu"
+              className="p-1.5 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition cursor-pointer"
+              title="মেনু"
             >
-              <MoreHorizontal className="w-5 h-5" />
+              <MoreHorizontal className="w-4.5 h-4.5" />
             </button>
 
             {/* Quick 3-Dots Dropdown Menu */}
             {isMenuOpen && (
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className="absolute right-0 top-9 z-30 w-48 bg-white border border-slate-200 rounded-xl shadow-xl p-1 text-xs space-y-0.5 animate-fadeIn"
-              >
-                {isOwnerOrAdmin && onEdit && (
+              <>
+                <div
+                  className="fixed inset-0 z-20"
+                  onClick={() => setIsMenuOpen(false)}
+                />
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute right-0 top-9 z-30 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl p-1 text-xs space-y-0.5 animate-fadeIn font-bengali"
+                >
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      handleShareLink(e);
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200 font-medium cursor-pointer transition"
+                  >
+                    <Copy className="w-3.5 h-3.5 text-[#006A4E] dark:text-emerald-400" />
+                    <span>{copiedLink ? "লিংক কপি হয়েছে!" : "লিংক কপি করুন"}</span>
+                  </button>
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsMenuOpen(false);
-                      onEdit(gig);
+                      onClick();
                     }}
-                    className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-rose-50 flex items-center gap-2 text-[#E11D48] font-bold cursor-pointer"
+                    className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200 font-medium cursor-pointer transition"
                   >
-                    <Pencil className="w-3.5 h-3.5 text-[#E11D48]" />
-                    <span>এডিট করুন</span>
+                    <ShoppingBag className="w-3.5 h-3.5 text-[#006A4E] dark:text-emerald-400" />
+                    <span>বিস্তারিত</span>
                   </button>
-                )}
 
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    handleShareLink(e);
-                    setIsMenuOpen(false);
-                  }}
-                  className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-slate-100 flex items-center gap-2 text-slate-700 font-medium cursor-pointer"
-                >
-                  <Copy className="w-3.5 h-3.5 text-[#006A4E]" />
-                  <span>{copiedLink ? "Copied!" : "Copy Link"}</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    onClick();
-                  }}
-                  className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-slate-100 flex items-center gap-2 text-slate-700 font-medium cursor-pointer"
-                >
-                  <ShoppingBag className="w-3.5 h-3.5 text-[#006A4E]" />
-                  <span>View Full Gig</span>
-                </button>
+                  {isOwner ? (
+                    <>
+                      {onEdit && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsMenuOpen(false);
+                            onEdit(gig);
+                          }}
+                          className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950/30 flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium cursor-pointer transition"
+                        >
+                          <Pencil className="w-3.5 h-3.5 text-blue-500" />
+                          <span>এডিট করুন</span>
+                        </button>
+                      )}
+                      {deleteGig && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsMenuOpen(false);
+                            setIsDeleteModalOpen(true);
+                          }}
+                          className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center gap-2 text-rose-600 dark:text-rose-400 font-medium cursor-pointer transition"
+                        >
+                          <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+                          <span>মুছে ফেলুন</span>
+                        </button>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsMenuOpen(false);
+                          if (toggleFavorite) {
+                            toggleFavorite(gig.id, e);
+                          }
+                          triggerToast(!isFavorite ? "✓ পোস্টটি পছন্দের তালিকায় সংরক্ষণ করা হয়েছে!" : "পোস্টটি পছন্দের তালিকা থেকে সরানো হয়েছে।");
+                        }}
+                        className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200 font-medium cursor-pointer transition"
+                      >
+                        <Bookmark className={`w-3.5 h-3.5 ${isFavorite ? 'text-amber-500 fill-amber-500' : 'text-slate-500 dark:text-slate-400'}`} />
+                        <span>{isFavorite ? "সংরক্ষিত থেকে সরান" : "সংরক্ষণ করুন"}</span>
+                      </button>
 
-                {isOwnerOrAdmin && deleteGig && (
-                  <>
-                    <div className="border-t border-slate-100 my-1" />
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsMenuOpen(false);
-                        if (window.confirm(`আপনি কি সত্যিই '${gig.title}' মুছে ফেলতে চান?`)) {
-                          deleteGig(gig.id);
-                        }
-                      }}
-                      className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-red-50 flex items-center gap-2 text-red-600 font-bold cursor-pointer"
-                    >
-                      <Trash2 className="w-3.5 h-3.5 text-red-600" />
-                      <span>মুছে ফেলুন</span>
-                    </button>
-                  </>
-                )}
+                      <div className="border-t border-slate-100 dark:border-slate-800 my-1" />
 
-                <div className="border-t border-slate-100 my-1" />
+                      {/* Report Option */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsMenuOpen(false);
+                          setIsReportModalOpen(true);
+                        }}
+                        className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center gap-2 text-rose-600 dark:text-rose-400 font-medium cursor-pointer transition"
+                      >
+                        <Flag className="w-3.5 h-3.5 text-rose-500" />
+                        <span>{isReported ? "রিপোর্ট গৃহীত হয়েছে" : "রিপোর্ট করুন"}</span>
+                      </button>
 
-                {/* Report Option */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsMenuOpen(false);
-                    setIsReported(true);
-                    alert(`Report submitted for "${gig.title}". Our team will review this.`);
-                  }}
-                  className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-red-50 flex items-center gap-2 text-red-600 font-medium cursor-pointer"
-                >
-                  <Flag className="w-3.5 h-3.5 text-red-500" />
-                  <span>{isReported ? "Reported" : "Report"}</span>
-                </button>
-
-                {/* Block Option */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsMenuOpen(false);
-                    if (window.confirm(`Block "${gig.sellerName}"? All posts from this seller will be hidden from your feed.`)) {
-                      setIsBlocked(true);
-                    }
-                  }}
-                  className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-red-50 flex items-center gap-2 text-red-600 font-medium cursor-pointer"
-                >
-                  <Ban className="w-3.5 h-3.5 text-red-500" />
-                  <span>Block Seller</span>
-                </button>
-              </div>
+                      {/* Block Option */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsMenuOpen(false);
+                          setIsBlockModalOpen(true);
+                        }}
+                        className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 flex items-center gap-2 text-red-600 font-medium cursor-pointer transition"
+                      >
+                        <Ban className="w-3.5 h-3.5 text-red-500" />
+                        <span>ব্লক করুন</span>
+                      </button>
+                    </>
+                  )}
+                </div>
+              </>
             )}
           </div>
         </div>
 
         {/* --- Facebook Post Caption / Title --- */}
-        <div className="px-3.5 pt-1 pb-2.5">
-          <p className="text-[15px] sm:text-base font-normal text-slate-800 leading-relaxed">
+        <div className="px-2.5 sm:px-3 pt-0 pb-1.5">
+          <p className="text-[12.5px] sm:text-[14px] font-normal text-slate-800 dark:text-slate-200 leading-snug line-clamp-2">
             {gig.title}
           </p>
         </div>
 
-        {/* --- Facebook Media: Single Card OR Facebook-style Carousel Cards --- */}
-        {imageList.length <= 1 ? (
-          /* Single Image Card: Image + "Start Work First" & Price */
-          <div className="relative w-full overflow-hidden select-none bg-slate-950">
-            <div className="aspect-[4/3] w-full overflow-hidden">
-              <img
-                src={activeImage}
-                alt={gig.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            {/* Card Bottom: Start Work First + Starts at ৳2,000 */}
-            <div className="px-3.5 py-2 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-2">
-              <span className="text-sm font-semibold text-[#E31E24] flex items-center gap-1.5">
-                {isBuyerPost ? "পাবলিক অফার" : "Start Work First"}
-              </span>
-              <div className="flex items-center gap-1 text-sm">
-                <span className="text-slate-500 font-normal">{isBuyerPost ? "বাজেট" : "Starts at"}</span>
-                <span className="font-bold text-base text-[#006A4E]">
-                  ৳{price.toLocaleString("en-US")}
-                </span>
-              </div>
-            </div>
-          </div>
-        ) : (
-          /* Multi-Image: Facebook Carousel Cards */
-          <div className="relative w-full select-none">
-            {/* Horizontal Snap Scroll Carousel Track */}
-            <div
-              ref={carouselRef}
-              onScroll={handleCarouselScroll}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUpOrLeave}
-              onMouseLeave={handleMouseUpOrLeave}
-              className="flex gap-2 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar px-3 py-0.5 scroll-pl-3 scroll-pr-3 cursor-grab active:cursor-grabbing"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
-              {imageList.map((img, idx) => (
-                <div
-                  key={idx}
-                  onClick={(e) => {
-                    if (dragMoved.current) {
-                      e.stopPropagation();
-                      return;
-                    }
-                    e.stopPropagation();
-                    onClick();
-                  }}
-                  className="w-[72%] sm:w-[250px] shrink-0 snap-start rounded-lg border border-slate-200 bg-white overflow-hidden shadow-2xs cursor-pointer group/card flex flex-col"
-                >
-                  {/* Carousel Card Image */}
-                  <div className="relative w-full aspect-[4/3] bg-slate-950 overflow-hidden">
-                    <img
-                      src={img}
-                      alt={`${gig.title} - ${idx + 1}`}
-                      className="w-full h-full object-cover group-hover/card:scale-102 transition duration-300 pointer-events-none"
-                    />
-                  </div>
+        {/* --- Facebook Media: Single Image OR Full-Slide Carousel (Shows 1 image at a time on PC) --- */}
+        <div className="relative w-full select-none bg-slate-950 overflow-hidden group/media">
+          {/* Main Media Image Frame - Compact on PC to ensure full post fits within screen */}
+          <div
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={() => { isDragging.current = false; }}
+            className="aspect-[16/10] sm:aspect-[16/9] max-h-[220px] sm:max-h-[260px] md:max-h-[285px] w-full overflow-hidden relative cursor-pointer"
+          >
+            <img
+              src={activeImage}
+              alt={`${gig.title} - ${currentImgIndex + 1}`}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover/media:scale-101 pointer-events-none"
+            />
 
-                  {/* Carousel Card Bottom: Start Work First + Starts at ৳2,000 */}
-                  <div className="px-3 py-2 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-1.5">
-                    <span className="text-sm font-semibold text-[#E31E24] flex items-center gap-1 truncate">
-                      {isBuyerPost ? "পাবলিক অফার" : "Start Work First"}
-                    </span>
-                    <div className="flex items-center gap-1 text-sm shrink-0">
-                      <span className="text-slate-500 font-normal">{isBuyerPost ? "বাজেট" : "Starts at"}</span>
-                      <span className="font-bold text-base text-[#006A4E]">
-                        ৳{price.toLocaleString("en-US")}
-                      </span>
-                    </div>
-                  </div>
+            {/* If Carousel: Navigation Arrows, Slide Counter Pill & Dots (Shows ONLY 1 image at a time) */}
+            {imageList.length > 1 && (
+              <>
+                {/* Left Navigation Arrow */}
+                <button
+                  type="button"
+                  onClick={handlePrevImage}
+                  className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black/60 hover:bg-black/85 text-white flex items-center justify-center backdrop-blur-xs shadow-md transition-all active:scale-90 cursor-pointer"
+                  title="পূর্ববর্তী ছবি"
+                  aria-label="Previous Image"
+                >
+                  <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                </button>
+
+                {/* Right Navigation Arrow */}
+                <button
+                  type="button"
+                  onClick={handleNextImage}
+                  className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black/60 hover:bg-black/85 text-white flex items-center justify-center backdrop-blur-xs shadow-md transition-all active:scale-90 cursor-pointer"
+                  title="পরবর্তী ছবি"
+                  aria-label="Next Image"
+                >
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                </button>
+
+                {/* Image Counter Badge */}
+                <div className="absolute top-2 right-2 z-20 bg-black/65 backdrop-blur-xs text-white text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs pointer-events-none">
+                  <span>{currentImgIndex + 1}</span>
+                  <span>/</span>
+                  <span>{imageList.length}</span>
                 </div>
-              ))}
+
+                {/* Indicator Dots */}
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-xs pointer-events-auto">
+                  {imageList.map((_, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCurrentImgIndex(idx);
+                      }}
+                      className={`transition-all rounded-full cursor-pointer ${
+                        idx === currentImgIndex
+                          ? "w-3.5 sm:w-4.5 h-1 sm:h-1.5 bg-white"
+                          : "w-1 sm:w-1.5 h-1 sm:h-1.5 bg-white/60 hover:bg-white/90"
+                      }`}
+                      title={`ছবি ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Card Bottom: Start Work First / Premium / Public Offer + Price */}
+          <div className="px-2.5 sm:px-3 py-1 sm:py-1.5 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+            <span className={`text-[11px] sm:text-[13px] font-semibold flex items-center gap-1 ${isWorkFirst ? 'text-[#E31E24]' : isPremium ? 'text-amber-600 dark:text-amber-400' : 'text-[#006A4E] dark:text-emerald-400'}`}>
+              {isBuyerPost ? (
+                "পাবলিক অফার"
+              ) : isWorkFirst ? (
+                "⚡ আগে কাজ শুরু"
+              ) : isPremium ? (
+                <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-300 font-bold">
+                  <Crown className="w-3.5 h-3.5 fill-amber-500 text-amber-500 shrink-0" />
+                  <span>প্রিমিয়াম</span>
+                </span>
+              ) : (
+                gig.offerBadge || "স্পেশাল গিগ"
+              )}
+            </span>
+            <div className="flex items-center gap-1 text-[11px] sm:text-[13px]">
+              {isFree ? (
+                <div className="text-right leading-tight">
+                  <span className="font-black text-[10.5px] sm:text-xs text-[#006A4E] dark:text-emerald-400 block">
+                    সম্পূর্ণ
+                  </span>
+                  <span className="font-black text-[10.5px] sm:text-xs text-[#006A4E] dark:text-emerald-400 block">
+                    ফ্রি
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <span className="text-slate-500 dark:text-slate-400 font-normal">{isBuyerPost ? "বাজেট:" : isPremium ? "বিল:" : "Starts at"}</span>
+                  <span className="font-bold text-xs sm:text-sm md:text-base text-[#006A4E] dark:text-emerald-400">
+                    ৳{price.toLocaleString("en-US")}
+                  </span>
+                </>
+              )}
             </div>
           </div>
-        )}
+        </div>
 
         {/* --- Reactions & Engagement Counter Bar (Unified: Exact same on Phone & PC) --- */}
-        <div className="px-3 sm:px-3.5 py-2 flex items-center justify-between gap-1 text-xs sm:text-[13.5px] text-slate-600">
+        <div className="px-2.5 sm:px-3 py-1 sm:py-1.5 flex items-center justify-between gap-1 text-[10px] sm:text-[11.5px] text-slate-600 dark:text-slate-400">
           {/* 1. Left: Votes Summary */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
             <div className="flex -space-x-1 items-center">
-              <span className="w-4.5 h-4.5 rounded-full bg-[#006A4E] text-white flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white">
-                <ThumbsUp className="w-2.5 h-2.5 fill-white text-white" />
+              <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#006A4E] text-white flex items-center justify-center text-[8px] sm:text-[9px] shadow-xs ring-1 ring-white">
+                <ThumbsUp className="w-2 h-2 fill-white text-white" />
               </span>
-              <span className="w-4.5 h-4.5 rounded-full bg-slate-300 text-slate-600 flex items-center justify-center text-[10px] shadow-xs ring-1 ring-white">
-                <ThumbsDown className="w-2.5 h-2.5 fill-slate-600 text-slate-600" />
+              <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-slate-300 text-slate-600 flex items-center justify-center text-[8px] sm:text-[9px] shadow-xs ring-1 ring-white">
+                <ThumbsDown className="w-2 h-2 fill-slate-600 text-slate-600" />
               </span>
             </div>
-            <span className="font-semibold text-slate-700 text-xs sm:text-[13.5px]">
+            <span className="font-semibold text-slate-700 dark:text-slate-300 text-[10.5px] sm:text-[12px]">
               মোট {upCount + downCount} জন ভোট দিয়েছেন
             </span>
           </div>
 
-          {/* 2. Right: Views Counter */}
-          <div className="flex items-center gap-1.5 text-xs sm:text-[13.5px] text-slate-500 shrink-0">
-            <Eye className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-slate-400" />
-            <span className="font-medium text-slate-500">
-              {viewCountInK} ভিউ
-            </span>
+          {/* 2. Right: Views Counter & Proposals */}
+          <div className="flex items-center gap-1.5 sm:gap-2 text-[10.5px] sm:text-[12px] text-slate-500 dark:text-slate-400 shrink-0">
+            <div className="flex items-center gap-1">
+              <Eye className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400" />
+              <span className="font-medium">
+                {viewCountInK} ভিউ
+              </span>
+            </div>
+            {isBuyerPost && (
+              <>
+                <span>•</span>
+                <span className="text-[#006A4E] dark:text-emerald-400 font-bold">
+                  {gig.salesCount || 14}টি প্রস্তাবনা
+                </span>
+              </>
+            )}
           </div>
         </div>
 
         {/* --- Action Bar (Unified for Both Phone & PC: Up, Down, Details) --- */}
-        <div className="grid grid-cols-3 gap-2 sm:gap-2.5 items-center px-2.5 sm:px-3.5 py-2 sm:py-2.5 border-t border-slate-100 bg-white">
-          {/* 1. আপ বাটন (Upvote - বাটনে কাউন্ট ছাড়া) */}
+        <div className="grid grid-cols-3 gap-1 sm:gap-2 items-center px-2 sm:px-3 py-1 sm:py-1.5 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+          {/* 1. আপ বাটন (Upvote - সাথে সংখ্যা, ফুল বর্ডার কালার ছাড়া শুধু আইকন কালার) */}
           <button
             type="button"
             onClick={handleUpvoteToggle}
-            className={`py-2 sm:py-2.5 px-2 sm:px-4 rounded-xl text-xs sm:text-[14px] font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all active:scale-95 cursor-pointer border ${
-              isUpvoted
-                ? "text-[#006A4E] bg-emerald-50 border-emerald-300 shadow-2xs"
-                : "text-slate-700 bg-slate-100 hover:bg-slate-200 border-slate-200/70"
-            }`}
+            className="py-1 sm:py-1.5 px-1 sm:px-2 rounded-lg text-[10px] sm:text-xs md:text-[12.5px] font-bold flex items-center justify-center gap-1 sm:gap-1.5 transition-all active:scale-95 cursor-pointer border border-slate-200/70 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 whitespace-nowrap"
             title="আপভোট"
           >
             <ThumbsUp
-              className={`w-3.5 sm:w-4 h-3.5 sm:h-4 transition-transform ${
-                isUpvoted ? "fill-[#006A4E] text-[#006A4E] scale-110" : "text-slate-600"
+              className={`w-3 sm:w-3.5 h-3 sm:h-3.5 transition-transform shrink-0 ${
+                isUpvoted ? "fill-[#006A4E] text-[#006A4E] scale-110" : "text-slate-600 dark:text-slate-400"
               }`}
             />
-            <span>আপ</span>
+            <span>আপ {upCount}</span>
           </button>
 
-          {/* 2. ডাউন বাটন (Downvote - বাটনে কাউন্ট ছাড়া) */}
+          {/* 2. ডাউন বাটন (Downvote - সাথে সংখ্যা, ফুল বর্ডার কালার ছাড়া শুধু আইকন কালার) */}
           <button
             type="button"
             onClick={handleDownvoteToggle}
-            className={`py-2 sm:py-2.5 px-2 sm:px-4 rounded-xl text-xs sm:text-[14px] font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all active:scale-95 cursor-pointer border ${
-              isDownvoted
-                ? "text-rose-600 bg-rose-50 border-rose-300 shadow-2xs"
-                : "text-slate-700 bg-slate-100 hover:bg-slate-200 border-slate-200/70"
-            }`}
+            className="py-1 sm:py-1.5 px-1 sm:px-2 rounded-lg text-[10px] sm:text-xs md:text-[12.5px] font-bold flex items-center justify-center gap-1 sm:gap-1.5 transition-all active:scale-95 cursor-pointer border border-slate-200/70 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 whitespace-nowrap"
             title="ডাউনভোট"
           >
             <ThumbsDown
-              className={`w-3.5 sm:w-4 h-3.5 sm:h-4 transition-transform ${
-                isDownvoted ? "fill-rose-600 text-rose-600 scale-110" : "text-slate-600"
+              className={`w-3 sm:w-3.5 h-3 sm:h-3.5 transition-transform shrink-0 ${
+                isDownvoted ? "fill-rose-600 text-rose-600 scale-110" : "text-slate-600 dark:text-slate-400"
               }`}
             />
-            <span>ডাউন</span>
+            <span>ডাউন {downCount}</span>
           </button>
 
-          {/* 3. বিস্তারিত বাটন (Details) */}
+          {/* 3. বিস্তারিত বাটন (Details - Short Text, No Icon as requested) */}
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               onClick();
             }}
-            className="py-2 sm:py-2.5 px-2 sm:px-4 rounded-xl text-xs sm:text-[14px] font-bold text-white bg-[#006A4E] hover:bg-[#00543e] flex items-center justify-center gap-1 sm:gap-1.5 transition-all active:scale-95 cursor-pointer shadow-xs group/btn"
-            title="বিস্তারিত দেখুন"
+            className="py-1 sm:py-1.5 px-2 sm:px-3 rounded-lg text-[10.5px] sm:text-xs md:text-[12.5px] font-bold text-white bg-[#006A4E] hover:bg-[#00543e] flex items-center justify-center transition-all active:scale-95 cursor-pointer shadow-xs whitespace-nowrap"
+            title="বিস্তারিত"
           >
-            <span>বিস্তারিত দেখুন</span>
-            <ArrowRight className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-white group-hover/btn:translate-x-0.5 transition-transform" />
+            <span>বিস্তারিত</span>
           </button>
         </div>
       </div>
@@ -727,9 +845,14 @@ export const GigCard: React.FC<GigCardProps> = ({
 
             {/* Top Floating Badges Section */}
             <div className="absolute top-2 left-2 sm:top-2.5 sm:left-2.5 z-10 flex items-center gap-1 sm:gap-1.5 flex-wrap max-w-[70%] pointer-events-none">
-              {gig.offerBadge === "work_first" || gig.offerBadge === "আগে কাজ শুরু" ? (
-                <span className="bg-[#E31E24] text-white text-[9px] sm:text-[11px] font-medium px-1.5 py-0.5 sm:px-2 rounded shadow-xs">
-                  Start Work First
+              {isWorkFirst ? (
+                <span className="bg-[#E31E24] text-white text-[9px] sm:text-[11px] font-semibold px-1.5 py-0.5 sm:px-2 rounded shadow-xs flex items-center gap-1">
+                  <span>⚡ আগে কাজ শুরু</span>
+                </span>
+              ) : isPremium ? (
+                <span className="bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 text-white text-[9px] sm:text-[11px] font-bold px-1.5 py-0.5 sm:px-2 rounded shadow-xs flex items-center gap-1 border border-amber-300/30">
+                  <Crown className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 fill-white text-white shrink-0" />
+                  <span>প্রিমিয়াম</span>
                 </span>
               ) : (
                 <span className="bg-[#006A4E] text-white text-[9px] sm:text-[11px] font-medium px-1.5 py-0.5 sm:px-2 rounded shadow-xs">
@@ -817,7 +940,7 @@ export const GigCard: React.FC<GigCardProps> = ({
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-1">
-                    <span className="text-xs sm:text-[15px] font-bold text-slate-900 truncate hover:text-[#006A4E] transition-colors">
+                    <span className="text-xs sm:text-sm md:text-[15px] font-bold text-slate-900 truncate hover:text-[#006A4E] transition-colors">
                       {gig.sellerName}
                     </span>
                     <CheckCircle2
@@ -825,7 +948,7 @@ export const GigCard: React.FC<GigCardProps> = ({
                       title="Verified Profile"
                     />
                   </div>
-                  <span className="text-[11px] sm:text-xs text-slate-500 block truncate font-medium">
+                  <span className="text-[10px] sm:text-xs text-slate-500 block truncate font-medium">
                     {isBuyerPost ? "ভেরিফায়েড বায়ার" : (gig.sellerLevel || "টপ রেটেড")}
                   </span>
                 </div>
@@ -847,7 +970,7 @@ export const GigCard: React.FC<GigCardProps> = ({
             </div>
 
             {/* Gig Title */}
-            <h3 className="text-sm sm:text-base font-bold text-slate-900 line-clamp-2 leading-snug hover:text-[#006A4E] transition-colors min-h-[2.5rem] sm:min-h-[2.75rem]">
+            <h3 className="text-xs sm:text-sm md:text-base font-bold text-slate-900 line-clamp-2 leading-snug hover:text-[#006A4E] transition-colors min-h-[2rem] sm:min-h-[2.5rem]">
               {gig.title}
             </h3>
 
@@ -868,16 +991,29 @@ export const GigCard: React.FC<GigCardProps> = ({
         </div>
 
         {/* Footer Price & Action Ribbon */}
-        <div className="p-2.5 sm:p-3.5 md:p-4 border-t border-slate-100 flex items-center justify-between gap-1 bg-slate-50 rounded-b-2xl sm:rounded-b-3xl">
+        <div className="p-2 sm:p-3 sm:p-3.5 md:p-4 border-t border-slate-100 flex items-center justify-between gap-1 bg-slate-50 rounded-b-2xl sm:rounded-b-3xl">
           <div className="min-w-0">
-            <span className="text-[10px] sm:text-xs text-slate-500 font-medium block leading-tight">
-              Starts at
-            </span>
-            <div className="flex items-baseline gap-0.5 sm:gap-1">
-              <span className="text-sm sm:text-base md:text-lg font-black text-[#006A4E] block leading-tight">
-                ৳{price.toLocaleString("en-US")}
-              </span>
-            </div>
+            {isFree ? (
+              <div className="leading-tight">
+                <span className="text-[11px] sm:text-xs md:text-sm font-black text-[#006A4E] block">
+                  সম্পূর্ণ
+                </span>
+                <span className="text-[11px] sm:text-xs md:text-sm font-black text-[#006A4E] block">
+                  ফ্রি
+                </span>
+              </div>
+            ) : (
+              <>
+                <span className="text-[10px] sm:text-xs text-slate-500 font-medium block leading-tight">
+                  {isBuyerPost ? "বাজেট:" : isPremium ? "বিল প্রদেয়" : isWorkFirst ? "০ টাকা অগ্রিম" : "Starts at"}
+                </span>
+                <div className="flex items-baseline gap-0.5 sm:gap-1">
+                  <span className="text-xs sm:text-sm md:text-base lg:text-lg font-black text-[#006A4E] block leading-tight">
+                    ৳{price.toLocaleString("en-US")}
+                  </span>
+                </div>
+              </>
+            )}
           </div>
           <button
             type="button"
@@ -885,13 +1021,201 @@ export const GigCard: React.FC<GigCardProps> = ({
               e.stopPropagation();
               onClick();
             }}
-            className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold text-white bg-[#006A4E] hover:bg-[#00543e] shadow-xs transition-all cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
+            className="px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-xs md:text-sm font-bold text-white bg-[#006A4E] hover:bg-[#00543e] shadow-xs transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
           >
-            <span>বিস্তারিত</span>
-            <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
+            <span>{isBuyerPost ? "বিস্তারিত" : isPremium ? "কিনুন" : isWorkFirst ? "কাজ শুরু" : "বিস্তারিত"}</span>
           </button>
         </div>
       </div>
+
+      {/* Floating Action Feedback Toast */}
+      {toastMessage && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 bg-slate-900/95 dark:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold rounded-2xl shadow-2xl border border-slate-700 dark:border-slate-300 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 font-bengali pointer-events-none">
+          <Check className="w-4 h-4 text-emerald-400 dark:text-emerald-600" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Report Modal */}
+      {isReportModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs font-bengali"
+          onClick={() => setIsReportModalOpen(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-md p-4 sm:p-5 shadow-2xl space-y-4 animate-in fade-in zoom-in-95"
+          >
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex items-center gap-2 text-rose-600">
+                <Flag className="w-5 h-5" />
+                <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+                  পোস্ট রিপোর্ট করুন
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsReportModalOpen(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-1">
+              পোস্ট: <strong>"{gig.title}"</strong> ({gig.sellerName})
+            </p>
+
+            <div className="space-y-1.5 text-xs">
+              <label className="font-bold text-slate-700 dark:text-slate-200 block">
+                রিপোর্টের কারণ নির্বাচন করুন:
+              </label>
+              {[
+                { id: 'spam', label: 'স্প্যাম বা ভুয়া অফার' },
+                { id: 'misleading', label: 'বিভ্রান্তিকর বা অসত্য বিবরণ' },
+                { id: 'inappropriate', label: 'অনুপযুক্ত বা আপত্তিকর কন্টেন্ট' },
+                { id: 'copyright', label: 'কপিরাইট বা বুদ্ধিবৃত্তিক সম্পদ লঙ্ঘন' },
+                { id: 'other', label: 'অন্যান্য কারণ' },
+              ].map((item) => (
+                <label
+                  key={item.id}
+                  className="flex items-center gap-2 p-2 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer transition"
+                >
+                  <input
+                    type="radio"
+                    name={`report-reason-${gig.id}`}
+                    value={item.id}
+                    checked={reportReason === item.id}
+                    onChange={() => setReportReason(item.id)}
+                    className="accent-[#006A4E]"
+                  />
+                  <span className="text-slate-700 dark:text-slate-300">{item.label}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
+                অতিরিক্ত তথ্য (ঐচ্ছিক):
+              </label>
+              <textarea
+                rows={2}
+                value={reportDetails}
+                onChange={(e) => setReportDetails(e.target.value)}
+                placeholder="বিস্তারিত বিবরণ লিখুন..."
+                className="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none focus:border-[#006A4E]"
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+              <button
+                type="button"
+                onClick={() => setIsReportModalOpen(false)}
+                className="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              >
+                বাতিল
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsReported(true);
+                  setIsReportModalOpen(false);
+                  triggerToast("✓ আপনার রিপোর্টটি জমা হয়েছে। টিম এটি পর্যালোচনা করবে।");
+                }}
+                className="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition shadow-xs"
+              >
+                রিপোর্ট জমা দিন
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Block Confirmation Modal */}
+      {isBlockModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs font-bengali"
+          onClick={() => setIsBlockModalOpen(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-sm p-4 sm:p-5 shadow-2xl space-y-3.5 animate-in fade-in zoom-in-95 text-center"
+          >
+            <div className="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-600 flex items-center justify-center mx-auto">
+              <Ban className="w-6 h-6" />
+            </div>
+            <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+              {gig.sellerName}-কে ব্লক করতে চান?
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              এই ব্যবহারকারীর সমস্ত পোস্ট ও সার্ভিস আপনার ফিড থেকে লুকিয়ে রাখা হবে। পরবর্তীতে যেকোনো সময় আনব্লক করতে পারবেন।
+            </p>
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsBlockModalOpen(false)}
+                className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              >
+                না, ফিরে যান
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsBlocked(true);
+                  setIsBlockModalOpen(false);
+                  triggerToast("🚫 ব্যবহারকারীকে ব্লক করা হয়েছে।");
+                }}
+                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition shadow-xs"
+              >
+                হ্যাঁ, ব্লক করুন
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal (Owner Only) */}
+      {isDeleteModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs font-bengali"
+          onClick={() => setIsDeleteModalOpen(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-sm p-4 sm:p-5 shadow-2xl space-y-3.5 animate-in fade-in zoom-in-95 text-center"
+          >
+            <div className="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-600 flex items-center justify-center mx-auto">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+              পোস্টটি মুছে ফেলতে চান?
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              "{gig.title}" পোস্টটি সম্পূর্ণভাবে মুছে ফেলা হবে।
+            </p>
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              >
+                বাতিল
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsDeleteModalOpen(false);
+                  if (deleteGig) deleteGig(gig.id);
+                  triggerToast("✓ পোস্টটি সফলভাবে মুছে ফেলা হয়েছে।");
+                }}
+                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition shadow-xs"
+              >
+                মুছে ফেলুন
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

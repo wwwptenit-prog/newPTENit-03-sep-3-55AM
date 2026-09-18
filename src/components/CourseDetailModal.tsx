@@ -304,141 +304,142 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 overflow-y-auto min-h-screen font-bengali p-2 sm:p-4 md:p-6 lg:p-8 animate-fadeIn text-slate-800 dark:text-slate-100">
-      <div className="max-w-6xl mx-auto space-y-3 sm:space-y-4">
+    <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 overflow-y-auto min-h-screen font-bengali animate-fadeIn text-slate-800 dark:text-slate-100 flex flex-col">
+      {/* 1. TOP BAR: সম্পূর্ণ স্ক্রিনের শীর্ষে ফিক্সড/স্টিকি (স্ক্রোল করার সময় উপরে কোনো ফাঁকা থাকবে না) */}
+      <header className="sticky top-0 z-40 w-full bg-[#006A4E] text-white border-b border-[#00543D] shadow-sm shrink-0">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2">
+          {/* LEFT: BACK BUTTON (বেক বাটন - ChevronLeft, সাদা কালার, কোনো বর্ডার ছাড়া) */}
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
+            title="ফিরে যান"
+          >
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5] text-white" />
+            <span className="hidden xs:inline text-white">ফিরে যান</span>
+          </button>
 
-        {/* Main Course Content Container */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-xs">
+          {/* CENTER: কোর্স হলে সম্পূর্ণ ফ্রি কোর্স বা প্রিমিয়াম কোর্স (সাদা আইকন ও টেক্সট) */}
+          <div className="flex items-center justify-center min-w-0">
+            <SinglePromoBadgeView 
+              item={{ id: course.id, title: course.title, price: course.price, isFree: course.isFree, offerBadge: (course as any).offerBadge }} 
+              itemType="course" 
+              textColor="text-white"
+            />
+          </div>
 
-          {/* 1. TOP BAR: ব্যাক বাটন | সেন্টারে: প্রিমিয়াম সার্ভিস / সম্পূর্ণ ফ্রি | শেয়ার সোশ্যাল মিডিয়া */}
-          <div className="relative bg-[#006A4E] text-white border-b border-[#00543D] px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 rounded-t-2xl sm:rounded-t-3xl shadow-xs">
-            {/* LEFT: BACK BUTTON (বেক বাটন - ChevronLeft, সাদা কালার, কোনো বর্ডার ছাড়া) */}
+          {/* RIGHT: শেয়ার সোশ্যাল মিডিয়া (Social Media Share - সাদা আইকন ও টেক্সট) */}
+          <div className="relative shrink-0">
             <button
               type="button"
-              onClick={onClose}
-              className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
-              title="ফিরে যান"
+              onClick={() => setIsShareMenuOpen(!isShareMenuOpen)}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
+              title="সোশ্যাল মিডিয়ায় শেয়ার করুন"
             >
-              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5] text-white" />
-              <span className="hidden xs:inline text-white">ফিরে যান</span>
+              <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              <span className="hidden sm:inline text-white">শেয়ার</span>
             </button>
 
-            {/* CENTER: কোর্স হলে সম্পূর্ণ ফ্রি কোর্স বা প্রিমিয়াম কোর্স (সাদা আইকন ও টেক্সট) */}
-            <div className="flex items-center justify-center min-w-0">
-              <SinglePromoBadgeView 
-                item={{ id: course.id, title: course.title, price: course.price, isFree: course.isFree, offerBadge: (course as any).offerBadge }} 
-                itemType="course" 
-                textColor="text-white"
-              />
-            </div>
-
-            {/* RIGHT: শেয়ার সোশ্যাল মিডিয়া (Social Media Share - সাদা আইকন ও টেক্সট) */}
-            <div className="relative shrink-0">
-              <button
-                type="button"
-                onClick={() => setIsShareMenuOpen(!isShareMenuOpen)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
-                title="সোশ্যাল মিডিয়ায় শেয়ার করুন"
-              >
-                <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                <span className="hidden sm:inline text-white">শেয়ার</span>
-              </button>
-
-              {/* Share Popover Dropdown */}
-              {isShareMenuOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setIsShareMenuOpen(false)}
-                  />
-                  <div className="absolute right-0 top-full mt-2 z-50 w-56 sm:w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-3 space-y-2 animate-fadeIn font-bengali">
-                    <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1 border-b border-slate-100 dark:border-slate-800 pb-1.5 flex items-center justify-between">
-                      <span>সোশ্যাল মিডিয়ায় শেয়ার করুন</span>
-                      <button
-                        type="button"
-                        onClick={() => setIsShareMenuOpen(false)}
-                        className="text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-1.5 pt-1">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          shareWhatsApp();
-                          setIsShareMenuOpen(false);
-                        }}
-                        className="flex items-center gap-2 p-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-950/60 text-blue-700 dark:text-sky-300 text-xs font-bold transition cursor-pointer"
-                      >
-                        <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
-                        <span className="truncate">হোয়াটসঅ্যাপ</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          shareFacebook();
-                          setIsShareMenuOpen(false);
-                        }}
-                        className="flex items-center gap-2 p-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-xs font-bold transition cursor-pointer"
-                      >
-                        <Facebook className="w-4 h-4 text-[#1877F2] shrink-0" />
-                        <span className="truncate">ফেসবুক</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          shareTwitter();
-                          setIsShareMenuOpen(false);
-                        }}
-                        className="flex items-center gap-2 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition cursor-pointer"
-                      >
-                        <svg className="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
-                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                        </svg>
-                        <span className="truncate">টুইটার (X)</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={handleCopyLink}
-                        className="flex items-center gap-2 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition cursor-pointer"
-                      >
-                        {copiedLink ? (
-                          <>
-                            <Check className="w-4 h-4 text-blue-500 shrink-0" />
-                            <span className="text-[#006A4E] dark:text-sky-400 font-bold truncate">কপি হয়েছে!</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-4 h-4 text-slate-600 dark:text-slate-400 shrink-0" />
-                            <span className="truncate">লিংক কপি</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-
-                    {typeof navigator !== 'undefined' && !!navigator.share && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          handleNativeShare();
-                          setIsShareMenuOpen(false);
-                        }}
-                        className="w-full py-1.5 px-2 mt-1 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium flex items-center justify-center gap-1.5 transition cursor-pointer"
-                      >
-                        <Share2 className="w-3.5 h-3.5 text-[#38BDF8]" />
-                        <span>অন্যান্য অ্যাপসে শেয়ার</span>
-                      </button>
-                    )}
+            {/* Share Popover Dropdown */}
+            {isShareMenuOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setIsShareMenuOpen(false)}
+                />
+                <div className="absolute right-0 top-full mt-2 z-50 w-56 sm:w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-3 space-y-2 animate-fadeIn font-bengali">
+                  <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1 border-b border-slate-100 dark:border-slate-800 pb-1.5 flex items-center justify-between">
+                    <span>সোশ্যাল মিডিয়ায় শেয়ার করুন</span>
+                    <button
+                      type="button"
+                      onClick={() => setIsShareMenuOpen(false)}
+                      className="text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-                </>
-              )}
-            </div>
+
+                  <div className="grid grid-cols-2 gap-1.5 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        shareWhatsApp();
+                        setIsShareMenuOpen(false);
+                      }}
+                      className="flex items-center gap-2 p-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-950/60 text-blue-700 dark:text-sky-300 text-xs font-bold transition cursor-pointer"
+                    >
+                      <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
+                      <span className="truncate">হোয়াটসঅ্যাপ</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        shareFacebook();
+                        setIsShareMenuOpen(false);
+                      }}
+                      className="flex items-center gap-2 p-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-xs font-bold transition cursor-pointer"
+                    >
+                      <Facebook className="w-4 h-4 text-[#1877F2] shrink-0" />
+                      <span className="truncate">ফেসবুক</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        shareTwitter();
+                        setIsShareMenuOpen(false);
+                      }}
+                      className="flex items-center gap-2 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition cursor-pointer"
+                    >
+                      <svg className="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                      <span className="truncate">টুইটার (X)</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleCopyLink}
+                      className="flex items-center gap-2 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition cursor-pointer"
+                    >
+                      {copiedLink ? (
+                        <>
+                          <Check className="w-4 h-4 text-blue-500 shrink-0" />
+                          <span className="text-[#006A4E] dark:text-sky-400 font-bold truncate">কপি হয়েছে!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-4 h-4 text-slate-600 dark:text-slate-400 shrink-0" />
+                          <span className="truncate">লিংক কপি</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {typeof navigator !== 'undefined' && !!navigator.share && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleNativeShare();
+                        setIsShareMenuOpen(false);
+                      }}
+                      className="w-full py-1.5 px-2 mt-1 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium flex items-center justify-center gap-1.5 transition cursor-pointer"
+                    >
+                      <Share2 className="w-3.5 h-3.5 text-[#38BDF8]" />
+                      <span>অন্যান্য অ্যাপসে শেয়ার</span>
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
           </div>
+        </div>
+      </header>
+
+      {/* Main Course Content Container */}
+      <div className="max-w-6xl mx-auto w-full p-2 sm:p-4 md:p-6 lg:p-8 space-y-3 sm:space-y-4 flex-1">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-xs overflow-hidden">
 
           {/* Clean Course Banner Image */}
           <div className="relative aspect-video sm:aspect-[21/9] w-full bg-slate-950 overflow-hidden">
@@ -637,7 +638,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
 
           {/* Right Action Sidebar */}
           <div className="lg:col-span-4">
-            <div className="bg-slate-50 dark:bg-slate-800/80 p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-700/80 sticky top-4 space-y-5">
+            <div className="bg-slate-50 dark:bg-slate-800/80 p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-700/80 sticky top-20 space-y-5">
               
               {/* Pricing Box */}
               <div className="text-center pb-4 border-b border-slate-200 dark:border-slate-700">

@@ -137,10 +137,9 @@ export const getSingleBadgeInfo = (
   }
 
   // If explicitly 'প্রিমিয়াম' or 'premium' or service default
-  const isPlainPremium = badge === 'প্রিমিয়াম' || badge === 'premium' || itemType === 'service';
   return {
     type: 'premium_service',
-    label: isPlainPremium ? 'প্রিমিয়াম' : 'প্রিমিয়াম সার্ভিস',
+    label: 'প্রিমিয়াম',
     iconName: 'Crown',
     topbarTextClass: 'text-emerald-800 dark:text-emerald-400',
     cardClass: 'bg-emerald-800 text-white font-bold',

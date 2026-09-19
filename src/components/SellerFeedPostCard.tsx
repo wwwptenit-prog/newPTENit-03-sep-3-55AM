@@ -14,6 +14,7 @@ import {
   X,
 } from 'lucide-react';
 import { MarketplaceGig, User as UserType } from '../types';
+import { formatFeedTime, cleanFeedSellerLevel } from '../utils/badgeHelper';
 
 interface SellerFeedPostCardProps {
   gig: MarketplaceGig;
@@ -121,17 +122,7 @@ export const SellerFeedPostCard: React.FC<SellerFeedPostCardProps> = ({
     gig.category?.toLowerCase().includes("free");
   const isAgency = gig.sellerId === "ptenit-agency" || gig.isAgencyStaff;
   const postTime = useMemo(() => {
-    if ((gig as any).createdAt) {
-      try {
-        const diffMs = Date.now() - new Date((gig as any).createdAt).getTime();
-        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-        if (diffHours >= 1 && diffHours < 24) return `${diffHours}h`;
-        if (diffHours >= 24) return `${Math.floor(diffHours / 24)}d`;
-      } catch {
-        // ignore
-      }
-    }
-    return "18h";
+    return formatFeedTime((gig as any).createdAt);
   }, [gig]);
   const sellerName = currentUser?.name || gig.sellerName || 'Mds Kazi Sohag';
   const sellerAvatar = currentUser?.avatar || gig.sellerAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
@@ -165,18 +156,17 @@ export const SellerFeedPostCard: React.FC<SellerFeedPostCardProps> = ({
               <span className="shrink-0">{postTime}</span>
               <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
               <span className="text-[#006A4E] dark:text-emerald-400 font-semibold shrink-0">
-                {gig.sellerLevel || "সক্রিয় গিগ"}
+                {cleanFeedSellerLevel(gig.sellerLevel)}
               </span>
-              {isAgency && (
-                <>
-                  <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
-                  <span className="font-medium text-slate-700 dark:text-slate-300 shrink-0">Agency</span>
-                </>
+              <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
+              {isAgency ? (
+                <span className="font-medium text-slate-700 dark:text-slate-300 shrink-0">Agency</span>
+              ) : (
+                <span className="inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400 shrink-0">
+                  Public
+                  <Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400 shrink-0" aria-label="Public" />
+                </span>
               )}
-              <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
-              <span className="truncate">{gig.category}</span>
-              <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
-              <Globe className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 shrink-0" />
             </div>
           </div>
         </div>
@@ -332,7 +322,7 @@ export const SellerFeedPostCard: React.FC<SellerFeedPostCardProps> = ({
           <div className="flex items-center gap-1 sm:gap-1.5">
             <Eye className="w-3 sm:w-4 h-3 sm:h-4 text-slate-400" />
             <span className="font-medium text-slate-500 dark:text-slate-400">
-              {reachFormatted} ভিউ
+              {reachFormatted} views
             </span>
           </div>
           {salesCount > 0 && (

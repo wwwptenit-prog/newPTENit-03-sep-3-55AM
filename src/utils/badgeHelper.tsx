@@ -179,3 +179,68 @@ export const SinglePromoBadgeView: React.FC<{
     </div>
   );
 };
+
+/**
+ * Format relative time for post feeds:
+ * - ১ ঘণ্টার কম হলে: মি শো করবে (e.g. 15মি)
+ * - ১ দিনের কম হলে: ঘন্টা শো করবে (e.g. 5 ঘন্টা)
+ * - ১ থেকে ৭ দিন হলে: দিন শো করবে (e.g. 2 দিন)
+ * - ৭ দিনের বেশি হলে: তারিখ শো করবে (e.g. 1 Mar)
+ */
+export const formatFeedTime = (dateInput?: string | number | Date | null): string => {
+  if (!dateInput) return "১ ঘন্টা";
+  try {
+    const created = new Date(dateInput);
+    const timeMs = created.getTime();
+    if (isNaN(timeMs)) return "১ ঘন্টা";
+
+    const now = Date.now();
+    const diffMs = Math.max(0, now - timeMs);
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    // ১ ঘণ্টার কম হলে মি শো করবে
+    if (diffMinutes < 60) {
+      const mins = Math.max(1, diffMinutes);
+      return `${mins}মি`;
+    }
+
+    // ১ দিনের কম হলে ঘন্টা শো করবে
+    if (diffHours < 24) {
+      return `${diffHours} ঘন্টা`;
+    }
+
+    // ১ থেকে ৭ দিন হলে দিন শো করবে
+    if (diffDays <= 7) {
+      return `${diffDays} দিন`;
+    }
+
+    // ৭ দিনের বেশি হলে তারিখ শো করবে
+    const day = created.getDate();
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = months[created.getMonth()] || created.toLocaleString('default', { month: 'short' });
+    const currentYear = new Date().getFullYear();
+    const createdYear = created.getFullYear();
+
+    if (createdYear === currentYear) {
+      return `${day} ${month}`;
+    }
+    return `${day} ${month}, ${createdYear}`;
+  } catch {
+    return "১ ঘন্টা";
+  }
+};
+
+/**
+ * Format seller level without redundant 'Agency' or 'Seller' words:
+ * e.g. "Top Rated Agency" -> "Top Rated"
+ */
+export const cleanFeedSellerLevel = (level?: string, isBuyer?: boolean): string => {
+  if (isBuyer) return "ভেরিফায়েড বায়ার";
+  if (!level) return "Top Rated";
+  let cleaned = level.trim();
+  cleaned = cleaned.replace(/Agency/gi, '').replace(/Seller/gi, '').replace(/[()]/g, '').trim();
+  if (!cleaned || cleaned === 'Official') return 'Top Rated';
+  return cleaned;
+};

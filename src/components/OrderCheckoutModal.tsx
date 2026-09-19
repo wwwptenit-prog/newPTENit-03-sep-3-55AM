@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { MarketplaceGig, User as UserType, SiteSettings } from '../types';
 import { useData } from '../context/DataContext';
+import { extractDiscountPercent, calculateOriginalPrice } from '../utils/discountHelper';
 
 interface OrderCheckoutModalProps {
   gig: MarketplaceGig | null;
@@ -84,6 +85,7 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
 
   const isPremium = gig.offerBadge === 'premium' || gig.offerBadge === 'প্রিমিয়াম' || gig.offerBadge === 'প্রিমিয়াম গিগ' || gig.offerBadge?.includes('প্রিমিয়াম') || gig.category === 'Digital Products' || gig.tags?.includes('প্রিমিয়াম');
   const isWorkFirst = !isPremium && (gig.offerBadge === 'work_first' || gig.offerBadge === 'আগে কাজ শুরু' || gig.offerBadge?.includes('আগে কাজ শুরু'));
+  const discountPercent = !isWorkFirst && !isPremium ? extractDiscountPercent(gig.offerBadge) : null;
 
   const pkg = gig.packages[selectedPkgType] || gig.packages.standard || gig.packages.basic;
   const basePrice = pkg?.price ?? 2000;
@@ -335,11 +337,13 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                               অফার:
                             </span>
                             <span className="text-[#006A4E] dark:text-sky-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20 font-black">
-                              {(gig.offerBadge === 'work_first' || gig.offerBadge === 'আগে কাজ শুরু' || gig.offerBadge?.includes('আগে কাজ শুরু'))
+                              {isWorkFirst
                                 ? 'আগে কাজ শুরু'
-                                : (gig.offerBadge === 'premium' || gig.offerBadge === 'প্রিমিয়াম' || gig.offerBadge === 'প্রিমিয়াম গিগ' || gig.offerBadge?.includes('প্রিমিয়াম'))
+                                : isPremium
                                   ? 'প্রিমিয়াম'
-                                  : ((gig.offerBadge === '৩০% ক্যাশব্যাক') ? '৩০% ছাড়' : (gig.offerBadge || '৩০% ছাড়'))}
+                                  : discountPercent
+                                    ? `${discountPercent.toLocaleString('bn-BD')}% ছাড়`
+                                    : (gig.offerBadge && gig.offerBadge !== 'রেগুলার' && gig.offerBadge !== 'রেগুলার সার্ভিস' ? gig.offerBadge : 'রেগুলার')}
                             </span>
                           </span>
                           <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
@@ -352,8 +356,15 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
                           {pData.name}
                         </div>
 
-                        <div className="text-base font-black text-[#38BDF8]">
-                          ৳{pData.price.toLocaleString('bn-BD')}
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-base font-black text-[#38BDF8]">
+                            ৳{pData.price.toLocaleString('bn-BD')}
+                          </span>
+                          {discountPercent ? (
+                            <span className="text-xs text-slate-400 line-through font-bold">
+                              ৳{calculateOriginalPrice(pData.price, discountPercent).toLocaleString('bn-BD')}
+                            </span>
+                          ) : null}
                         </div>
 
                         <ul className="text-[11px] text-slate-600 dark:text-slate-300 space-y-1 border-t border-slate-200 dark:border-slate-800/80 pt-2">

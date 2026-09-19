@@ -27,6 +27,8 @@ import {
 } from "lucide-react";
 import { MarketplaceGig, User as UserType } from "../types";
 import { useData } from "../context/DataContext";
+import { formatFeedTime, cleanFeedSellerLevel } from "../utils/badgeHelper";
+import { extractDiscountPercent, calculateOriginalPrice } from "../utils/discountHelper";
 
 // Bengali numeral converter helper
 export const toBengaliNumber = (num: number | string): string => {
@@ -99,6 +101,7 @@ export const GigCard: React.FC<GigCardProps> = ({
   const isAgency = gig.sellerId === "ptenit-agency" || gig.isAgencyStaff;
   const isPremium = gig.offerBadge === "premium" || gig.offerBadge === "প্রিমিয়াম" || gig.offerBadge === "প্রিমিয়াম গিগ" || gig.offerBadge?.includes("প্রিমিয়াম") || gig.offerBadge === "অফিশিয়াল গ্যারান্টি" || gig.category === "Digital Products" || gig.tags?.includes("প্রিমিয়াম");
   const isWorkFirst = !isPremium && (gig.offerBadge === "work_first" || gig.offerBadge === "আগে কাজ শুরু" || gig.offerBadge?.includes("আগে কাজ শুরু"));
+  const discountPercent = !isWorkFirst && !isPremium ? extractDiscountPercent(gig.offerBadge) : null;
 
   // Facebook post interactive states
   const [isLiked, setIsLiked] = useState<boolean>(isFavorite);
@@ -245,19 +248,9 @@ export const GigCard: React.FC<GigCardProps> = ({
   const dragMoved = useRef(false);
   const startX = useRef(0);
 
-  // Facebook post relative time (e.g. 18h)
+  // Facebook post relative time (e.g. 15মি / 5 ঘন্টা / 2 দিন / 1 Mar)
   const postTime = useMemo(() => {
-    if ((gig as any).createdAt) {
-      try {
-        const diffMs = Date.now() - new Date((gig as any).createdAt).getTime();
-        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-        if (diffHours >= 1 && diffHours < 24) return `${diffHours}h`;
-        if (diffHours >= 24) return `${Math.floor(diffHours / 24)}d`;
-      } catch {
-        // ignore
-      }
-    }
-    return "18h";
+    return formatFeedTime((gig as any).createdAt);
   }, [gig]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -453,36 +446,59 @@ export const GigCard: React.FC<GigCardProps> = ({
                 />
               </div>
 
-              {/* Line 2: Meta Info */}
+              {/* Line 2: Meta Info (Time · Top Rated · Agency/Public) */}
               <div className="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-[11.5px] text-slate-500 dark:text-slate-400 font-medium mt-0.5 whitespace-nowrap flex-nowrap overflow-hidden">
                 <span className="shrink-0">{postTime}</span>
                 <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
                 <span className={`font-semibold shrink-0 ${isBuyerPost ? 'text-blue-600 dark:text-blue-400' : 'text-[#006A4E] dark:text-emerald-400'}`}>
-                  {isBuyerPost ? "ভেরিফায়েড বায়ার" : (gig.sellerLevel || "টপ রেটেড")}
+                  {cleanFeedSellerLevel(gig.sellerLevel, isBuyerPost)}
                 </span>
-                {gig.category && (
-                  <>
-                    <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
-                    <span className="truncate max-w-[120px] sm:max-w-[170px] font-medium text-slate-600 dark:text-slate-300">{gig.category}</span>
-                  </>
-                )}
-                {!isBuyerPost && isAgency && (
-                  <>
-                    <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
-                    <span className="font-medium text-slate-700 dark:text-slate-300 shrink-0">Agency</span>
-                  </>
-                )}
                 <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
-                <Globe
-                  className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400 shrink-0"
-                  aria-label="Public"
-                />
+                {isAgency ? (
+                  <span className="font-medium text-slate-700 dark:text-slate-300 shrink-0">Agency</span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400 shrink-0">
+                    Public
+                    <Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400 shrink-0" aria-label="Public" />
+                  </span>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Right Header Options (3-dots Menu) */}
-          <div className="flex items-center gap-1.5 shrink-0 relative">
+          {/* Right Header Options (Favorite + 3-dots Menu) */}
+          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 relative">
+            {/* Favorite Button (Directly next to 3-dots on Seller Offers) */}
+            {!isBuyerPost && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (toggleFavorite) {
+                    toggleFavorite(gig.id, e);
+                  }
+                  triggerToast(
+                    !isFavorite
+                      ? "✓ পছন্দের তালিকায় যোগ করা হয়েছে!"
+                      : "পছন্দের তালিকা থেকে সরানো হয়েছে"
+                  );
+                }}
+                className={`p-1.5 rounded-full transition cursor-pointer active:scale-90 ${
+                  isFavorite
+                    ? "text-rose-500 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50"
+                    : "text-slate-400 hover:text-rose-500 dark:text-slate-400 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                }`}
+                title={isFavorite ? "পছন্দের তালিকা থেকে সরান" : "পছন্দের তালিকায় যুক্ত করুন"}
+                aria-label={isFavorite ? "পছন্দের তালিকা থেকে সরান" : "পছন্দের তালিকায় যুক্ত করুন"}
+              >
+                <Heart
+                  className={`w-4.5 h-4.5 transition-all duration-200 ${
+                    isFavorite ? "fill-rose-500 text-rose-500 scale-105" : "stroke-[1.8]"
+                  }`}
+                />
+              </button>
+            )}
+
             {/* 3-dots More Menu */}
             <button
               type="button"
@@ -572,12 +588,12 @@ export const GigCard: React.FC<GigCardProps> = ({
                           if (toggleFavorite) {
                             toggleFavorite(gig.id, e);
                           }
-                          triggerToast(!isFavorite ? "✓ পোস্টটি পছন্দের তালিকায় সংরক্ষণ করা হয়েছে!" : "পোস্টটি পছন্দের তালিকা থেকে সরানো হয়েছে।");
+                          triggerToast(!isFavorite ? "✓ পোস্টটি পছন্দের তালিকায় যোগ করা হয়েছে!" : "পোস্টটি পছন্দের তালিকা থেকে সরানো হয়েছে।");
                         }}
                         className="w-full px-2.5 py-1.5 text-left rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 text-slate-700 dark:text-slate-200 font-medium cursor-pointer transition"
                       >
-                        <Bookmark className={`w-3.5 h-3.5 ${isFavorite ? 'text-amber-500 fill-amber-500' : 'text-slate-500 dark:text-slate-400'}`} />
-                        <span>{isFavorite ? "সংরক্ষিত থেকে সরান" : "সংরক্ষণ করুন"}</span>
+                        <Heart className={`w-3.5 h-3.5 ${isFavorite ? 'text-rose-500 fill-rose-500' : 'text-slate-500 dark:text-slate-400'}`} />
+                        <span>{isFavorite ? "পছন্দের তালিকা থেকে সরান" : "পছন্দের তালিকায় রাখুন"}</span>
                       </button>
 
                       <div className="border-t border-slate-100 dark:border-slate-800 my-1" />
@@ -699,7 +715,7 @@ export const GigCard: React.FC<GigCardProps> = ({
 
           {/* Card Bottom: Start Work First / Premium / Public Offer + Price */}
           <div className="px-2.5 sm:px-3 py-1 sm:py-1.5 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
-            <span className={`text-[11px] sm:text-[13px] font-semibold flex items-center gap-1 ${isWorkFirst ? 'text-[#E31E24]' : isPremium ? 'text-amber-600 dark:text-amber-400' : 'text-[#006A4E] dark:text-emerald-400'}`}>
+            <span className={`text-[11px] sm:text-[13px] ${isBuyerPost ? 'font-normal text-slate-600 dark:text-slate-400' : 'font-semibold'} flex items-center gap-1 ${isWorkFirst ? 'text-[#E31E24]' : isPremium ? 'text-amber-600 dark:text-amber-400' : 'text-[#006A4E] dark:text-emerald-400'}`}>
               {isBuyerPost ? (
                 "পাবলিক অফার"
               ) : isWorkFirst ? (
@@ -709,8 +725,10 @@ export const GigCard: React.FC<GigCardProps> = ({
                   <Crown className="w-3.5 h-3.5 fill-amber-500 text-amber-500 shrink-0" />
                   <span>প্রিমিয়াম</span>
                 </span>
+              ) : discountPercent ? (
+                <span>🎁 {discountPercent.toLocaleString('bn-BD')}% ছাড়</span>
               ) : (
-                gig.offerBadge || "স্পেশাল গিগ"
+                gig.offerBadge && gig.offerBadge !== 'রেগুলার' && gig.offerBadge !== 'রেগুলার সার্ভিস' ? gig.offerBadge : "স্পেশাল গিগ"
               )}
             </span>
             <div className="flex items-center gap-1 text-[11px] sm:text-[13px]">
@@ -726,9 +744,16 @@ export const GigCard: React.FC<GigCardProps> = ({
               ) : (
                 <>
                   <span className="text-slate-500 dark:text-slate-400 font-normal">{isBuyerPost ? "বাজেট:" : isPremium ? "বিল:" : "Starts at"}</span>
-                  <span className="font-bold text-xs sm:text-sm md:text-base text-[#006A4E] dark:text-emerald-400">
-                    ৳{price.toLocaleString("en-US")}
-                  </span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="font-bold text-xs sm:text-sm md:text-base text-[#006A4E] dark:text-emerald-400">
+                      ৳{price.toLocaleString("en-US")}
+                    </span>
+                    {discountPercent ? (
+                      <span className="text-[10px] text-slate-400 line-through font-bold">
+                        ৳{calculateOriginalPrice(price, discountPercent).toLocaleString("en-US")}
+                      </span>
+                    ) : null}
+                  </div>
                 </>
               )}
             </div>
@@ -752,22 +777,14 @@ export const GigCard: React.FC<GigCardProps> = ({
             </span>
           </div>
 
-          {/* 2. Right: Views Counter & Proposals */}
+          {/* 2. Right: Views Counter */}
           <div className="flex items-center gap-1.5 sm:gap-2 text-[10.5px] sm:text-[12px] text-slate-500 dark:text-slate-400 shrink-0">
             <div className="flex items-center gap-1">
               <Eye className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400" />
               <span className="font-medium">
-                {viewCountInK} ভিউ
+                {viewCountInK}
               </span>
             </div>
-            {isBuyerPost && (
-              <>
-                <span>•</span>
-                <span className="text-[#006A4E] dark:text-emerald-400 font-bold">
-                  {gig.salesCount || 14}টি প্রস্তাবনা
-                </span>
-              </>
-            )}
           </div>
         </div>
 
@@ -854,11 +871,15 @@ export const GigCard: React.FC<GigCardProps> = ({
                   <Crown className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 fill-white text-white shrink-0" />
                   <span>প্রিমিয়াম</span>
                 </span>
-              ) : (
-                <span className="bg-[#006A4E] text-white text-[9px] sm:text-[11px] font-medium px-1.5 py-0.5 sm:px-2 rounded shadow-xs">
-                  {gig.offerBadge === "৩০% ক্যাশব্যাক" ? "30% Off" : gig.offerBadge || "30% Off"}
+              ) : discountPercent ? (
+                <span className="bg-[#006A4E] text-white text-[9px] sm:text-[11px] font-semibold px-1.5 py-0.5 sm:px-2 rounded shadow-xs">
+                  {discountPercent.toLocaleString('bn-BD')}% ছাড়
                 </span>
-              )}
+              ) : gig.offerBadge && gig.offerBadge !== "রেগুলার" && gig.offerBadge !== "রেগুলার সার্ভিস" ? (
+                <span className="bg-[#006A4E] text-white text-[9px] sm:text-[11px] font-medium px-1.5 py-0.5 sm:px-2 rounded shadow-xs">
+                  {gig.offerBadge}
+                </span>
+              ) : null}
 
               {userOrder && (
                 <span className="bg-[#006A4E] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 py-0.5 rounded flex items-center gap-0.5 shadow-xs">
@@ -1007,10 +1028,15 @@ export const GigCard: React.FC<GigCardProps> = ({
                 <span className="text-[10px] sm:text-xs text-slate-500 font-medium block leading-tight">
                   {isBuyerPost ? "বাজেট:" : isPremium ? "বিল প্রদেয়" : isWorkFirst ? "০ টাকা অগ্রিম" : "Starts at"}
                 </span>
-                <div className="flex items-baseline gap-0.5 sm:gap-1">
+                <div className="flex items-baseline gap-1 sm:gap-1.5 flex-wrap">
                   <span className="text-xs sm:text-sm md:text-base lg:text-lg font-black text-[#006A4E] block leading-tight">
                     ৳{price.toLocaleString("en-US")}
                   </span>
+                  {discountPercent ? (
+                    <span className="text-[10px] sm:text-xs text-slate-400 line-through font-bold">
+                      ৳{calculateOriginalPrice(price, discountPercent).toLocaleString("en-US")}
+                    </span>
+                  ) : null}
                 </div>
               </>
             )}

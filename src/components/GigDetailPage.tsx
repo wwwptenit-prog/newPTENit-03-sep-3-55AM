@@ -40,6 +40,7 @@ import {
 import { MarketplaceGig, User as UserType } from '../types';
 import { useData } from '../context/DataContext';
 import { OrderCheckoutModal } from './OrderCheckoutModal';
+import { extractDiscountPercent, calculateOriginalPrice } from '../utils/discountHelper';
 
 interface GigDetailPageProps {
   gig: MarketplaceGig;
@@ -129,7 +130,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
   const [editDeliveryDays, setEditDeliveryDays] = useState(gig.packages?.basic?.deliveryDays || 3);
   const [editThumbnail, setEditThumbnail] = useState(gig.thumbnail);
   const [editDesc, setEditDesc] = useState(gig.description || '');
-  const [editOfferBadge, setEditOfferBadge] = useState<string>(gig.offerBadge === '৩০% ক্যাশব্যাক' ? '৩০% ছাড়' : (gig.offerBadge || '৩০% ছাড়'));
+  const [editOfferBadge, setEditOfferBadge] = useState<string>(gig.offerBadge || '');
   const [editSuccess, setEditSuccess] = useState(false);
 
   const [isPerformanceModalOpen, setIsPerformanceModalOpen] = useState(false);
@@ -160,8 +161,11 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
     features: ['হাই-কোয়ালিটি ডিজাইন ও কোড', 'রেসপন্সিভ অল ডিভাইস', 'সোর্স ফাইল', '৩০ দিন সাপোর্ট']
   };
 
-  const isPremium = gig.offerBadge === 'premium' || gig.offerBadge === 'প্রিমিয়াম' || gig.offerBadge === 'প্রিমিয়াম গিগ' || gig.offerBadge?.includes('প্রিমিয়াম') || gig.category === 'Digital Products' || gig.category === 'ডিজিটাল প্রোডাক্ট' || gig.tags?.includes('প্রিমিয়াম');
-  const isWorkFirst = !isPremium && (gig.offerBadge === 'work_first' || gig.offerBadge === 'আগে কাজ শুরু' || gig.offerBadge?.includes('আগে কাজ শুরু'));
+  // Active badge and discount computation
+  const activeOfferBadge = (editOfferBadge || gig.offerBadge || '').trim();
+  const isPremium = activeOfferBadge === 'premium' || activeOfferBadge === 'প্রিমিয়াম' || activeOfferBadge === '👑 প্রিমিয়াম' || activeOfferBadge.includes('প্রিমিয়াম') || gig.category === 'Digital Products' || gig.category === 'ডিজিটাল প্রোডাক্ট' || gig.tags?.includes('প্রিমিয়াম');
+  const isWorkFirst = !isPremium && (activeOfferBadge === 'work_first' || activeOfferBadge === 'আগে কাজ শুরু' || activeOfferBadge === '⚡ আগে কাজ শুরু' || activeOfferBadge.includes('আগে কাজ শুরু'));
+  const discountPercent = !isWorkFirst && !isPremium ? extractDiscountPercent(activeOfferBadge) : null;
 
   const isOwnerOrAdmin = currentUser && (
     currentUser.role === 'admin' ||
@@ -363,9 +367,17 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 <Crown className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-amber-500 text-amber-500 shrink-0" />
                 <span>প্রিমিয়াম</span>
               </span>
+            ) : discountPercent ? (
+              <span className="text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded border border-emerald-500/20 flex items-center gap-1">
+                <span>🎁 {discountPercent.toLocaleString('bn-BD')}% ছাড়</span>
+              </span>
+            ) : activeOfferBadge && activeOfferBadge !== 'রেগুলার' && activeOfferBadge !== 'রেগুলার সার্ভিস' ? (
+              <span className="text-xs sm:text-sm font-bold text-[#38BDF8] bg-blue-500/10 px-3 py-1 rounded border border-blue-500/20 flex items-center">
+                {activeOfferBadge}
+              </span>
             ) : (
-              <span className="text-xs sm:text-sm font-bold text-[#38BDF8] bg-[#006A4E]/10 px-3 py-1 rounded border border-blue-600/50/20 flex items-center">
-                {gig.offerBadge === '৩০% ক্যাশব্যাক' ? '৩০% ছাড়' : (gig.offerBadge || '৩০% ছাড়')}
+              <span className="text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded border border-slate-200 dark:border-slate-700 flex items-center">
+                রেগুলার সার্ভিস
               </span>
             )}
 
@@ -518,11 +530,15 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                           <Crown className="w-3.5 h-3.5 fill-amber-500 text-amber-500 shrink-0" />
                           <span>প্রিমিয়াম</span>
                         </span>
-                      ) : (
-                        <span className="px-2.5 py-0.5 bg-blue-500/10 text-[#006A4E] dark:text-sky-400 border border-blue-500/20 text-xs sm:text-sm font-bold rounded flex items-center">
-                          {(gig.offerBadge === '৩০% ক্যাশব্যাক' || editOfferBadge === '৩০% ক্যাশব্যাক') ? '৩০% ছাড়' : (gig.offerBadge || editOfferBadge || '৩০% ছাড়')}
+                      ) : discountPercent ? (
+                        <span className="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs sm:text-sm font-bold rounded flex items-center gap-1">
+                          <span>🎁 {discountPercent.toLocaleString('bn-BD')}% ছাড়</span>
                         </span>
-                      )}
+                      ) : activeOfferBadge && activeOfferBadge !== 'রেগুলার' && activeOfferBadge !== 'রেগুলার সার্ভিস' ? (
+                        <span className="px-2.5 py-0.5 bg-blue-500/10 text-[#006A4E] dark:text-sky-400 border border-blue-500/20 text-xs sm:text-sm font-bold rounded flex items-center">
+                          {activeOfferBadge}
+                        </span>
+                      ) : null}
                     </h3>
                   </div>
 
@@ -582,9 +598,17 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                                     <Crown className="w-3 h-3 fill-amber-500 text-amber-500 shrink-0" />
                                     <span>প্রিমিয়াম</span>
                                   </span>
-                                ) : (
+                                ) : discountPercent ? (
+                                  <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/20">
+                                    🎁 {discountPercent.toLocaleString('bn-BD')}% ছাড়
+                                  </span>
+                                ) : activeOfferBadge && activeOfferBadge !== 'রেগুলার' && activeOfferBadge !== 'রেগুলার সার্ভিস' ? (
                                   <span className="text-xs font-black text-[#006A4E] dark:text-sky-400 bg-blue-500/10 px-2.5 py-0.5 rounded-md border border-blue-500/20">
-                                    {(gig.offerBadge === '৩০% ক্যাশব্যাক' || editOfferBadge === '৩০% ক্যাশব্যাক') ? '৩০% ছাড়' : (gig.offerBadge || editOfferBadge || '৩০% ছাড়')}
+                                    {activeOfferBadge}
+                                  </span>
+                                ) : (
+                                  <span className="text-xs font-black text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-md border border-slate-200 dark:border-slate-700">
+                                    রেগুলার সার্ভিস
                                   </span>
                                 )}
                               </div>
@@ -596,9 +620,11 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                               <span className="text-2xl sm:text-3xl font-black text-[#38BDF8]">
                                 ৳{(pkg.price ?? 0).toLocaleString('bn-BD')}
                               </span>
-                              <span className="text-xs sm:text-sm text-slate-400 line-through font-bold">
-                                ৳{((pkg.price ?? 0) + 1650).toLocaleString('bn-BD')}
-                              </span>
+                              {discountPercent ? (
+                                <span className="text-xs sm:text-sm text-slate-400 line-through font-bold">
+                                  ৳{calculateOriginalPrice(pkg.price ?? 0, discountPercent).toLocaleString('bn-BD')}
+                                </span>
+                              ) : null}
                             </div>
 
                             <div className="text-xs sm:text-sm space-y-2 border-t border-slate-200 dark:border-slate-800 pt-2.5 text-slate-700 dark:text-slate-200">
@@ -929,8 +955,20 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                       {currentPkg.name || (selectedPackage === 'basic' ? 'বেসিক প্যাকেজ' : selectedPackage === 'standard' ? 'স্ট্যান্ডার্ড প্যাকেজ' : 'প্রিমিয়াম প্যাকেজ')}
                     </h3>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-black text-[#38BDF8]">
-                    ৳{(currentPkg.price ?? 2500).toLocaleString('bn-BD')}
+                  <div className="text-right">
+                    <div className="text-2xl sm:text-3xl font-black text-[#38BDF8]">
+                      ৳{(currentPkg.price ?? 2500).toLocaleString('bn-BD')}
+                    </div>
+                    {discountPercent ? (
+                      <div className="flex items-center justify-end gap-1.5 mt-0.5">
+                        <span className="text-xs text-slate-400 line-through font-bold">
+                          ৳{calculateOriginalPrice(currentPkg.price ?? 2500, discountPercent).toLocaleString('bn-BD')}
+                        </span>
+                        <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                          {discountPercent.toLocaleString('bn-BD')}% ছাড়
+                        </span>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
 
@@ -1033,9 +1071,16 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                 </span>
               )}
             </div>
-            <span className="text-xl sm:text-2xl font-black text-[#38BDF8]">
-              ৳{(currentPkg.price ?? 2500).toLocaleString('bn-BD')}
-            </span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-xl sm:text-2xl font-black text-[#38BDF8]">
+                ৳{(currentPkg.price ?? 2500).toLocaleString('bn-BD')}
+              </span>
+              {discountPercent ? (
+                <span className="text-xs text-slate-400 line-through font-bold">
+                  ৳{calculateOriginalPrice(currentPkg.price ?? 2500, discountPercent).toLocaleString('bn-BD')}
+                </span>
+              ) : null}
+            </div>
           </div>
 
           <button
@@ -1113,6 +1158,7 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                   onChange={(e) => setEditOfferBadge(e.target.value)}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E] font-bold"
                 >
+                  <option value="">-- অফার ব্যাজ বা কাজের ধরন নির্বাচন করুন --</option>
                   <option value="আগে কাজ শুরু">⚡ আগে কাজ শুরু</option>
                   <option value="প্রিমিয়াম">👑 প্রিমিয়াম</option>
                   <option value="৫% ছাড়">🎁 ৫% ছাড়</option>
@@ -1120,6 +1166,9 @@ export const GigDetailPage: React.FC<GigDetailPageProps> = ({
                   <option value="২০% ছাড়">🎁 ২০% ছাড়</option>
                   <option value="৩০% ছাড়">🎁 ৩০% ছাড়</option>
                   <option value="৫০% ছাড়">🎁 ৫০% ছাড়</option>
+                  <option value="🔥 হট ডিল">🔥 হট ডিল</option>
+                  <option value="⭐ টপ রেটেড">⭐ টপ রেটেড</option>
+                  <option value="রেগুলার">রেগুলার সার্ভিস</option>
                 </select>
               </div>
 

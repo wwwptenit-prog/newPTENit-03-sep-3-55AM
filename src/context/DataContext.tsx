@@ -2248,6 +2248,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setActiveMessengerOrderId(null);
     setIsMessengerInboxOpen(false);
     setIsNotificationCenterOpen(false);
+    setRightColumnView('default');
   };
 
   const [isNotificationCenterOpen, setIsNotificationCenterOpen] = useState(false);
@@ -2259,6 +2260,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const closeNotificationCenter = () => {
     setIsNotificationCenterOpen(false);
     setIsMessengerInboxOpen(false);
+    setRightColumnView('default');
   };
 
   const [marketplaceMode, setMarketplaceModeState] = useState<'buying' | 'selling'>(() => {

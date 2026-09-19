@@ -37,6 +37,7 @@ import {
 import { useData } from '../context/DataContext';
 import { Service, MarketplaceOrder, MarketplaceGigPackage, MarketplaceGig } from '../types';
 import { SinglePromoBadgeView } from '../utils/badgeHelper';
+import { extractDiscountPercent, calculateOriginalPrice } from '../utils/discountHelper';
 
 const WhatsAppIcon: React.FC<{ className?: string }> = ({ className = "w-3.5 h-3.5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -322,6 +323,8 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
       service.offerBadge === 'work_first' ||
       service.offerBadge === 'আগে কাজ শুরু' ||
       service.offerBadge?.includes('আগে কাজ শুরু'));
+
+  const serviceDiscountPercent = !isWorkFirst && !isPremium ? extractDiscountPercent((service as any).offerBadge || service.badge) : null;
 
   // Lightbox keyboard controls
   useEffect(() => {
@@ -838,7 +841,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                   {isWorkFirst ? 'প্রদেয় অগ্রিম' : 'অফার'}
                 </span>
-                {!isWorkFirst && (
+                {!isWorkFirst && serviceDiscountPercent && (
                   <span
                     className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
                       selectedTier === 'basic'
@@ -848,7 +851,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                         : 'text-purple-600 bg-purple-50 dark:bg-purple-950/40 border-purple-300/80 dark:border-purple-700/60'
                     }`}
                   >
-                    ৩০% ছাড়
+                    {serviceDiscountPercent.toLocaleString('bn-BD')}% ছাড়
                   </span>
                 )}
               </div>
@@ -873,14 +876,25 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                 )}
               </div>
             </div>
-            <div className="text-right">
-              <span className="text-xs text-slate-400 dark:text-slate-500 font-medium block">
-                {isWorkFirst ? 'কাজের পর বাজেট' : 'রেগুলার প্রাইস'}
-              </span>
-              <div className={`text-base sm:text-lg font-bold ${isWorkFirst ? 'text-slate-800 dark:text-slate-200' : 'text-slate-400 dark:text-slate-500 line-through'}`}>
-                ৳{(currentPackage.price ?? 2500).toLocaleString('bn-BD')}
+            {serviceDiscountPercent ? (
+              <div className="text-right">
+                <span className="text-xs text-slate-400 dark:text-slate-500 font-medium block">
+                  রেগুলার প্রাইস
+                </span>
+                <div className="text-base sm:text-lg font-bold text-slate-400 dark:text-slate-500 line-through">
+                  ৳{calculateOriginalPrice(currentPackage.price ?? 2500, serviceDiscountPercent).toLocaleString('bn-BD')}
+                </div>
               </div>
-            </div>
+            ) : isWorkFirst ? (
+              <div className="text-right">
+                <span className="text-xs text-slate-400 dark:text-slate-500 font-medium block">
+                  কাজের পর বাজেট
+                </span>
+                <div className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-200">
+                  ৳{(currentPackage.price ?? 2500).toLocaleString('bn-BD')}
+                </div>
+              </div>
+            ) : null}
           </div>
 
           {/* ডেলিভারি সময় ও রিভিশন */}

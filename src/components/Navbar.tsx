@@ -23,6 +23,8 @@ import {
   User,
   LogOut,
   MessageSquare,
+  Mail,
+  Bell,
   Zap,
   PlusCircle,
   Wallet,
@@ -55,9 +57,15 @@ export const Navbar: React.FC<NavbarProps> = ({
     currentUser,
     marketplaceOrders,
     openMessengerInbox,
+    openNotificationCenter,
+    notifications,
+    directMessages,
     logout,
     logoutMarketplace
   } = useData();
+
+  const unreadMsgCount = (directMessages || []).filter(m => !m.read).length;
+  const unreadNotifCount = (notifications || []).filter(n => !n.read).length;
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -444,6 +452,36 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* AUTH CONTROLS: LOGIN WHEN LOGGED OUT, DASHBOARD & LOGOUT WHEN LOGGED IN */}
             {currentUser ? (
               <div className="flex items-center gap-1.5 pl-1">
+                {/* MESSENGER BUTTON */}
+                <button
+                  type="button"
+                  onClick={() => openMessengerInbox ? openMessengerInbox(undefined, 'messages') : null}
+                  className="p-2 rounded-lg bg-white/15 hover:bg-white/25 text-white border border-white/25 transition cursor-pointer relative active:scale-95"
+                  title="মেসেঞ্জার ও চ্যাট"
+                >
+                  <Mail className="w-4 h-4" />
+                  {unreadMsgCount > 0 && (
+                    <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                      {unreadMsgCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* NOTIFICATION BUTTON */}
+                <button
+                  type="button"
+                  onClick={() => openNotificationCenter ? openNotificationCenter() : null}
+                  className="p-2 rounded-lg bg-white/15 hover:bg-white/25 text-white border border-white/25 transition cursor-pointer relative active:scale-95"
+                  title="নোটিফিকেশন সেন্টার"
+                >
+                  <Bell className="w-4 h-4" />
+                  {notifications && notifications.filter(n => !n.read).length > 0 && (
+                    <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                      {notifications.filter(n => !n.read).length}
+                    </span>
+                  )}
+                </button>
+
                 <button
                   type="button"
                   onClick={() => {

@@ -108,6 +108,10 @@ const MainAppContent: React.FC = () => {
     }
 
     if (tab === activeTab && (!category || category === marketplaceCategory)) {
+      if (tab === 'marketplace') {
+        window.dispatchEvent(new CustomEvent('marketplace:reset_home'));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
       return;
     }
 

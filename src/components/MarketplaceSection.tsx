@@ -2570,22 +2570,24 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       openAuthModal();
       return;
     }
-    if (viewMode === 'selling') {
-      if (specialistMainTab !== 'marketplace') setSpecialistMainTab('marketplace');
-      if (sellerSubTab !== 'gigs' && sellerSubTab !== 'overview') setSellerSubTab('gigs');
+    const isCurrentlyOpen = isMessengerInboxOpen && initialMessengerTab === 'messages';
+    if (isCurrentlyOpen) {
+      if (closeMessengerInbox) closeMessengerInbox();
+      setRightColumnView('default');
     } else {
-      if (activeSubTab !== 'gigs') setActiveSubTab('gigs');
-    }
-    setRightColumnView(prev => prev === 'messages' ? 'default' : 'messages');
-    if (closeMessengerInbox) closeMessengerInbox();
-    setTimeout(() => {
-      const col3 = document.getElementById('marketplace-column-3-seller')
-        || document.getElementById('marketplace-column-3-agency')
-        || document.getElementById('marketplace-column-3');
-      if (col3) {
-        col3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (openMessengerInbox) {
+        openMessengerInbox(undefined, 'messages');
       }
-    }, 100);
+      setRightColumnView('messages');
+      setTimeout(() => {
+        const col3 = document.getElementById('marketplace-column-3-seller')
+          || document.getElementById('marketplace-column-3-agency')
+          || document.getElementById('marketplace-column-3');
+        if (col3) {
+          col3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
   };
 
   const handleOpenNotificationsInColumn3 = () => {
@@ -2593,22 +2595,27 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       openAuthModal();
       return;
     }
-    if (viewMode === 'selling') {
-      if (specialistMainTab !== 'marketplace') setSpecialistMainTab('marketplace');
-      if (sellerSubTab !== 'gigs' && sellerSubTab !== 'overview') setSellerSubTab('gigs');
+    const isCurrentlyOpen = (isMessengerInboxOpen && initialMessengerTab === 'notifications') || isNotificationCenterOpen;
+    if (isCurrentlyOpen) {
+      if (closeNotificationCenter) closeNotificationCenter();
+      if (closeMessengerInbox) closeMessengerInbox();
+      setRightColumnView('default');
     } else {
-      if (activeSubTab !== 'gigs') setActiveSubTab('gigs');
-    }
-    setRightColumnView(prev => prev === 'notifications' ? 'default' : 'notifications');
-    if (closeMessengerInbox) closeMessengerInbox();
-    setTimeout(() => {
-      const col3 = document.getElementById('marketplace-column-3-seller')
-        || document.getElementById('marketplace-column-3-agency')
-        || document.getElementById('marketplace-column-3');
-      if (col3) {
-        col3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (openNotificationCenter) {
+        openNotificationCenter();
+      } else if (openMessengerInbox) {
+        openMessengerInbox(undefined, 'notifications');
       }
-    }, 100);
+      setRightColumnView('notifications');
+      setTimeout(() => {
+        const col3 = document.getElementById('marketplace-column-3-seller')
+          || document.getElementById('marketplace-column-3-agency')
+          || document.getElementById('marketplace-column-3');
+        if (col3) {
+          col3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
   };
 
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'All');
@@ -3033,8 +3040,23 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
       setRightColumnView('default');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
+    const handleMarketplaceResetHome = () => {
+      setSelectedGig(null);
+      setSelectedCategory('All');
+      setSearchQuery('');
+      setActiveSubTab('gigs');
+      setSellerSubTab('gigs');
+      setIsInboxModalOpen(false);
+      setIsNotificationsOpen(false);
+      setRightColumnView('default');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
     window.addEventListener('marketplace:navigate', handleMarketplaceNavigate);
-    return () => window.removeEventListener('marketplace:navigate', handleMarketplaceNavigate);
+    window.addEventListener('marketplace:reset_home', handleMarketplaceResetHome);
+    return () => {
+      window.removeEventListener('marketplace:navigate', handleMarketplaceNavigate);
+      window.removeEventListener('marketplace:reset_home', handleMarketplaceResetHome);
+    };
   }, []);
 
   // Automatically reset rightColumnView if notifications or messenger modals are closed in mobile view
@@ -5606,9 +5628,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       type="button"
                       onClick={handleOpenMessagesInColumn3}
                       className={`p-1.5 lg:p-2 rounded-lg relative text-emerald-100 hover:text-white hover:bg-[#00543D] transition cursor-pointer active:scale-95 ${
-                        rightColumnView === 'messages' ? 'text-white bg-[#00543D]' : ''
+                        (isMessengerInboxOpen && initialMessengerTab === 'messages') || rightColumnView === 'messages' ? 'text-white bg-[#00543D]' : ''
                       }`}
-                      title="মেসেঞ্জার ও চ্যাট (৩ নং কলাম)"
+                      title="মেসেঞ্জার ও চ্যাট"
                     >
                       <Mail className="w-4 lg:w-5 h-4 lg:h-5" />
                       {unreadMarketplaceMsgCount > 0 && (
@@ -5623,9 +5645,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       type="button"
                       onClick={handleOpenNotificationsInColumn3}
                       className={`p-1.5 lg:p-2 rounded-lg relative text-emerald-100 hover:text-white hover:bg-[#00543D] transition cursor-pointer active:scale-95 ${
-                        rightColumnView === 'notifications' ? 'text-white bg-[#00543D]' : ''
+                        (isMessengerInboxOpen && initialMessengerTab === 'notifications') || isNotificationCenterOpen || rightColumnView === 'notifications' ? 'text-white bg-[#00543D]' : ''
                       }`}
-                      title="নোটিফিকেশন (৩ নং কলাম)"
+                      title="নোটিফিকেশন"
                     >
                       <Bell className="w-4 lg:w-5 h-4 lg:h-5" />
                       {roleScopedNotifications.filter(n => !n.read).length > 0 && (
@@ -5914,9 +5936,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     type="button"
                     onClick={handleOpenMessagesInColumn3}
                     className={`p-2 rounded-xl relative text-white/90 hover:text-white hover:bg-white/15 transition cursor-pointer active:scale-95 ${
-                      rightColumnView === 'messages' ? 'text-white bg-white/20' : ''
+                      (isMessengerInboxOpen && initialMessengerTab === 'messages') || rightColumnView === 'messages' ? 'text-white bg-white/20' : ''
                     }`}
-                    title="মেসেঞ্জার (৩ নং কলাম)"
+                    title="মেসেঞ্জার ও ইনবক্স"
                   >
                     <Mail className="w-5 h-5 text-white" />
                     {unreadMarketplaceMsgCount > 0 && (
@@ -5931,9 +5953,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     type="button"
                     onClick={handleOpenNotificationsInColumn3}
                     className={`p-2 rounded-xl relative text-white/90 hover:text-white hover:bg-white/15 transition cursor-pointer active:scale-95 ${
-                      rightColumnView === 'notifications' ? 'text-white bg-white/20' : ''
+                      (isMessengerInboxOpen && initialMessengerTab === 'notifications') || isNotificationCenterOpen || rightColumnView === 'notifications' ? 'text-white bg-white/20' : ''
                     }`}
-                    title="নোটিফিকেশন বাটন (৩ নং কলাম)"
+                    title="নোটিফিকেশন সেন্টার"
                   >
                     <Bell className="w-5 h-5 text-white" />
                     {roleScopedNotifications.filter(n => !n.read).length > 0 && (

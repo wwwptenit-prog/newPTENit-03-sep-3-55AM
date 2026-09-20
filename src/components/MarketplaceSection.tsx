@@ -111,6 +111,7 @@ import { CustomerDashboard } from './CustomerDashboard';
 import { TeacherDashboard } from './TeacherDashboard';
 import { MarketplaceMessengerView } from './MarketplaceMessengerView';
 import { MarketplaceLastColumn } from './MarketplaceLastColumn';
+import { getUrlParams } from '../utils/urlRouter';
 
 const CATEGORY_PROJECT_TAGS: Record<string, string[]> = {
   "Web Development": ["React", "WordPress", "Node.js", "Laravel", "Tailwind", "Next.js", "PHP", "HTML/CSS"],
@@ -4031,6 +4032,18 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
   useEffect(() => {
     try {
+      // 1. Check URL search params for direct gig link / deep-linking
+      const urlParams = getUrlParams();
+      if (urlParams.gigId) {
+        const found = gigs.find(g => g.id === urlParams.gigId || g.title === urlParams.gigId);
+        if (found) {
+          setSelectedGig(found);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+      }
+
+      // 2. Check local storage if passed across tabs
       const savedGigData = localStorage.getItem('ptenit_selected_gig_data');
       if (savedGigData) {
         localStorage.removeItem('ptenit_selected_gig_data');

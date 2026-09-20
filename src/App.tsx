@@ -14,6 +14,7 @@ import { AboutSection } from './components/AboutSection';
 import { GallerySection } from './components/GallerySection';
 import { OfficeLocation } from './components/OfficeLocation';
 import { Course } from './types';
+import { getUrlParams, updateUrlState } from './utils/urlRouter';
 
 // Performance optimization: Lazy load heavy sub-systems and dashboards on-demand
 const CourseDetailModal = React.lazy(() => import('./components/CourseDetailModal').then(m => ({ default: m.CourseDetailModal })));
@@ -39,9 +40,19 @@ const LazyFallback: React.FC = () => (
 const MainAppContent: React.FC = () => {
   const { currentUser, courses, siteSettings, closeMessengerInbox, marketplaceMode } = useData();
 
-  const [activeTab, setActiveTab] = useState<string>('home');
-  const [marketplaceCategory, setMarketplaceCategory] = useState<string>('All');
-  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
+  const initialUrlParams = useRef(getUrlParams()).current;
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    if (initialUrlParams.gigId) return 'marketplace';
+    if (initialUrlParams.courseId) return 'courses';
+    if (initialUrlParams.certId) return 'verify-certificate';
+    return initialUrlParams.tab || 'home';
+  });
+  const [marketplaceCategory, setMarketplaceCategory] = useState<string>(() => {
+    return initialUrlParams.category || 'All';
+  });
+  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(() => {
+    return initialUrlParams.courseId || null;
+  });
   const savedCourseScrollRef = useRef<number>(0);
 
   const handleOpenCourseDetail = (id: string) => {
@@ -273,7 +284,16 @@ const MainAppContent: React.FC = () => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [activeTab]);
+    // Keep URL parameter cleanly synced with current tab & category
+    const params = getUrlParams();
+    updateUrlState({
+      tab: activeTab,
+      category: marketplaceCategory,
+      gigId: params.gigId,
+      courseId: selectedCourseId || params.courseId,
+      certId: activeCertificateCode || params.certId,
+    }, false);
+  }, [activeTab, marketplaceCategory, selectedCourseId, activeCertificateCode]);
 
   // Dynamic SEO & Meta Tags Manager Effect
   useEffect(() => {

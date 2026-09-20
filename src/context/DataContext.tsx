@@ -44,6 +44,7 @@ import {
   initialDigitalProducts,
   initialLiveSessions
 } from '../data/initialData';
+import { syncCollectionToFirestore } from '../services/firestoreSync';
 
 interface DataContextType {
   lang: 'bn' | 'en';
@@ -1235,38 +1236,46 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => clearInterval(checkOverdueInterval);
   }, []);
 
-  // Sync Marketplace to localStorage
+  // Sync Marketplace to localStorage and Firestore
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_gigs`, JSON.stringify(gigs));
+    syncCollectionToFirestore('gigs', gigs);
   }, [gigs]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_jobs`, JSON.stringify(jobs));
+    syncCollectionToFirestore('jobs', jobs);
   }, [jobs]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_proposals`, JSON.stringify(proposals));
+    syncCollectionToFirestore('proposals', proposals);
   }, [proposals]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_digital_products`, JSON.stringify(digitalProducts));
+    syncCollectionToFirestore('digital_products', digitalProducts);
   }, [digitalProducts]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_live_sessions`, JSON.stringify(liveSessions));
+    syncCollectionToFirestore('live_sessions', liveSessions);
   }, [liveSessions]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_marketplace_orders`, JSON.stringify(marketplaceOrders));
+    syncCollectionToFirestore('marketplace_orders', marketplaceOrders);
   }, [marketplaceOrders]);
 
-  // Sync to localStorage
+  // Sync to localStorage and Firestore
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_payouts`, JSON.stringify(payouts));
+    syncCollectionToFirestore('payouts', payouts);
   }, [payouts]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_teacher_notices`, JSON.stringify(teacherNotices));
+    syncCollectionToFirestore('teacher_notices', teacherNotices);
   }, [teacherNotices]);
 
   // Sync to localStorage
@@ -1276,26 +1285,32 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_courses`, JSON.stringify(courses));
+    syncCollectionToFirestore('courses', courses);
   }, [courses]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_services`, JSON.stringify(services));
+    syncCollectionToFirestore('services', services);
   }, [services]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_gallery`, JSON.stringify(gallery));
+    syncCollectionToFirestore('gallery', gallery);
   }, [gallery]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_testimonials`, JSON.stringify(testimonials));
+    syncCollectionToFirestore('testimonials', testimonials);
   }, [testimonials]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_offers`, JSON.stringify(offers));
+    syncCollectionToFirestore('offers', offers);
   }, [offers]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_users`, JSON.stringify(users));
+    syncCollectionToFirestore('users', users);
   }, [users]);
 
   useEffect(() => {
@@ -1318,38 +1333,47 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_enrollments`, JSON.stringify(enrollments));
+    syncCollectionToFirestore('enrollments', enrollments);
   }, [enrollments]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_certificates`, JSON.stringify(certificates));
+    syncCollectionToFirestore('certificates', certificates);
   }, [certificates]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_orders`, JSON.stringify(orders));
+    syncCollectionToFirestore('orders', orders);
   }, [orders]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_messages`, JSON.stringify(contactMessages));
+    syncCollectionToFirestore('contact_messages', contactMessages);
   }, [contactMessages]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_notifications`, JSON.stringify(notifications));
+    syncCollectionToFirestore('notifications', notifications);
   }, [notifications]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_direct_messages`, JSON.stringify(directMessages));
+    syncCollectionToFirestore('direct_messages', directMessages);
   }, [directMessages]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_assignments`, JSON.stringify(assignments));
+    syncCollectionToFirestore('assignments', assignments);
   }, [assignments]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_submissions`, JSON.stringify(submissions));
+    syncCollectionToFirestore('submissions', submissions);
   }, [submissions]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_customer_projects`, JSON.stringify(customerProjects));
+    syncCollectionToFirestore('customer_projects', customerProjects);
   }, [customerProjects]);
 
   // Auth Functions
@@ -1390,6 +1414,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           name: 'ফারহানা ইয়াসমিন',
           email: 'farhana.ops@ptenit.com',
           phone: '01711223344',
+          password: '123456',
           designation: 'অপারেশনস ডিরেক্টর ও টিম কো-অর্ডিনেটর',
           department: 'Operations',
           status: 'active',
@@ -1410,6 +1435,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           name: 'শফিকুল ইসলাম চৌধুরী',
           email: 'shafiq.finance@ptenit.com',
           phone: '01912334455',
+          password: '123456',
           designation: 'হেড অব একাউন্টস ও ফাইন্যান্স',
           department: 'Finance',
           status: 'active',
@@ -1430,6 +1456,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           name: 'তানভীর হাসান',
           email: 'tanvir.market@ptenit.com',
           phone: '01688997766',
+          password: '123456',
           designation: 'মার্কেটপ্লেস লিড মডারেটর',
           department: 'Marketplace',
           status: 'active',
@@ -1450,6 +1477,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           name: 'রাফিয়া সুলতানা',
           email: 'rafia.academy@ptenit.com',
           phone: '01555443322',
+          password: '123456',
           designation: 'একাডেমিক কোর্স কো-অর্ডিনেটর',
           department: 'Academy',
           status: 'active',
@@ -1480,6 +1508,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (matchedStaff) {
         if (matchedStaff.status === 'inactive') {
           alert(`দুঃখিত! স্টাফ সদস্য "${matchedStaff.name}"-এর অ্যাকাউন্ট বর্তমানে নিষ্ক্রিয় রয়েছে। অনুগ্রহ করে সুপার এডমিনের সাথে যোগাযোগ করুন।`);
+          return false;
+        }
+
+        const expectedPassword = matchedStaff.password || '123456';
+        if (pass && pass.trim() !== expectedPassword.trim()) {
+          alert(`ভুল পাসওয়ার্ড! সাব-এডমিন "${matchedStaff.name}"-এর জন্য সঠিক পাসওয়ার্ড প্রদান করুন।`);
           return false;
         }
 

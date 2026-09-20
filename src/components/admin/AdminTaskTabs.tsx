@@ -16,7 +16,8 @@ import {
   Zap,
   Percent,
   Layers,
-  GraduationCap
+  GraduationCap,
+  Headphones
 } from 'lucide-react';
 
 export interface TaskTabItem {
@@ -38,6 +39,7 @@ interface AdminTaskTabsProps {
 
 export const AVAILABLE_TASKS: { id: string; label: string; desc: string; category: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'dashboard', label: 'ড্যাশবোর্ড ওভারভিউ', desc: 'সার্বিক প্ল্যাটফর্ম রেভিনিউ, অ্যানালিটিক্স ও মেট্রিক্স', category: 'কোর', icon: LayoutDashboard },
+  { id: 'support', label: 'কাস্টমার কেয়ার হাব', desc: 'স্মার্ট অটো-রাউটিং টিকেট ও সাপোর্ট এজেন্ট দায়িত্ব বণ্টন', category: 'সাপোর্ট', icon: Headphones },
   { id: 'users_teacher_seller', label: 'ইউজার ডিরেক্টরি ও কমপ্লেইন', desc: 'টিচার, সেলার, শিক্ষার্থী, বায়ার মনিটরিং ও রেস্ট্রিক্ট', category: 'ইউজার', icon: Users },
   { id: 'ai_core', label: 'ফাইন্যান্সিয়াল ও বিলিং কোর', desc: 'সকল পেমেন্ট সংক্রান্ত কাজ, বিল ভাউচার, পেআউট অনুরোধ ও অডিট হিসাব', category: 'ফাইন্যান্স', icon: CreditCard },
   { id: 'sub_admins', label: 'সাব-এডমিন রোল ও এক্সেস (RBAC)', desc: 'পদবীভিত্তিক ডিপার্টমেন্ট ম্যানেজার ও পারমিশন কন্ট্রোল', category: 'টিম', icon: ShieldCheck },
@@ -64,6 +66,7 @@ export const AdminTaskTabs: React.FC<AdminTaskTabsProps> = ({
   // Map icon component
   const getTabIcon = (id: string) => {
     if (id === 'dashboard') return LayoutDashboard;
+    if (id === 'support') return Headphones;
     if (id.startsWith('users')) return Users;
     if (id === 'ai_core') return CreditCard;
     if (id === 'sub_admins') return ShieldCheck;

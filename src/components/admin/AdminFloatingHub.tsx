@@ -46,6 +46,13 @@ export const AdminFloatingHub: React.FC<AdminFloatingHubProps> = ({
 
   // Drawers
   const [activeDrawer, setActiveDrawer] = useState<'queue' | 'ai' | 'notes' | null>(null);
+  const [isMinimized, setIsMinimized] = useState(() => {
+    try {
+      return window.innerWidth < 768;
+    } catch {
+      return false;
+    }
+  });
 
   // Safe localStorage helper
   const safeGet = (key: string, fallback: string) => {
@@ -172,68 +179,102 @@ export const AdminFloatingHub: React.FC<AdminFloatingHubProps> = ({
 
   return (
     <>
-      {/* FLOATING ACTION DOCK (BOTTOM CENTER) */}
-      <aside aria-label="Quick action navigation" className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 font-bengali">
-        <div className="bg-slate-900/95 backdrop-blur-md border border-slate-700/80 px-3 py-2 rounded-2xl shadow-2xl flex items-center gap-2 sm:gap-3 ring-1 ring-white/10">
-          
-          {/* Pending Task Queue Button */}
+      {/* FLOATING ACTION DOCK (BOTTOM RESPONSIVE) */}
+      {isMinimized ? (
+        <aside aria-label="Quick action navigation" className="fixed bottom-3 right-3 z-40 font-bengali">
           <button
             type="button"
-            onClick={() => setActiveDrawer(activeDrawer === 'queue' ? null : 'queue')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
-              activeDrawer === 'queue'
-                ? 'bg-amber-500 text-slate-950 shadow-md'
-                : 'bg-slate-800 text-slate-200 hover:text-white hover:bg-slate-750'
-            }`}
-            title="লাইভ টাস্ক কিউ - পেন্ডিং বিল ও আবেদন"
+            onClick={() => setIsMinimized(false)}
+            className="group px-3 py-2 bg-slate-900/95 hover:bg-slate-800 border border-slate-700/80 rounded-2xl shadow-2xl flex items-center gap-2 cursor-pointer backdrop-blur-md ring-1 ring-white/10 transition active:scale-95"
+            title="টাস্ক হাব টুলস বড় করুন"
           >
             <div className="relative">
-              <Zap className="w-4 h-4 text-amber-400" />
+              <Zap className="w-4 h-4 text-amber-400 group-hover:rotate-12 transition-transform" />
               {totalPending > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping" />
               )}
             </div>
-            <span className="hidden sm:inline">টাস্ক কিউ</span>
+            <span className="text-xs font-bold text-slate-200 group-hover:text-white">টাস্ক হাব</span>
             {totalPending > 0 && (
-              <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold ${
-                activeDrawer === 'queue' ? 'bg-slate-950 text-amber-300' : 'bg-rose-600 text-white'
-              }`}>
+              <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-rose-600 text-white">
                 {totalPending}
               </span>
             )}
           </button>
+        </aside>
+      ) : (
+        <aside aria-label="Quick action navigation" className="fixed bottom-3 sm:bottom-4 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto z-40 font-bengali">
+          <div className="bg-slate-900/95 backdrop-blur-md border border-slate-700/80 px-2 sm:px-3 py-1.5 sm:py-2 rounded-2xl shadow-2xl flex items-center gap-1.5 sm:gap-2.5 ring-1 ring-white/10">
+            {/* Pending Task Queue Button */}
+            <button
+              type="button"
+              onClick={() => setActiveDrawer(activeDrawer === 'queue' ? null : 'queue')}
+              className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 sm:gap-2 cursor-pointer ${
+                activeDrawer === 'queue'
+                  ? 'bg-amber-500 text-slate-950 shadow-md'
+                  : 'bg-slate-800 text-slate-200 hover:text-white hover:bg-slate-750'
+              }`}
+              title="লাইভ টাস্ক কিউ - পেন্ডিং বিল ও আবেদন"
+            >
+              <div className="relative">
+                <Zap className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-amber-400" />
+                {totalPending > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping" />
+                )}
+              </div>
+              <span className="text-[11px] sm:text-xs">টাস্ক কিউ</span>
+              {totalPending > 0 && (
+                <span className={`px-1.5 py-0.2 rounded-full text-[9px] sm:text-[10px] font-mono font-bold ${
+                  activeDrawer === 'queue' ? 'bg-slate-950 text-amber-300' : 'bg-rose-600 text-white'
+                }`}>
+                  {totalPending}
+                </span>
+              )}
+            </button>
 
-          {/* Instant AI Copilot Button */}
-          <button
-            type="button"
-            onClick={() => setActiveDrawer(activeDrawer === 'ai' ? null : 'ai')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
-              activeDrawer === 'ai'
-                ? 'bg-amber-500 text-slate-950 shadow-md'
-                : 'bg-slate-800 text-slate-200 hover:text-white hover:bg-slate-750'
-            }`}
-            title="এআই কো-পাইলট ও সহকারী"
-          >
-            <Bot className="w-4 h-4 text-sky-400" />
-            <span className="hidden sm:inline">AI কো-পাইলট</span>
-          </button>
+            {/* Instant AI Copilot Button */}
+            <button
+              type="button"
+              onClick={() => setActiveDrawer(activeDrawer === 'ai' ? null : 'ai')}
+              className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 sm:gap-2 cursor-pointer ${
+                activeDrawer === 'ai'
+                  ? 'bg-amber-500 text-slate-950 shadow-md'
+                  : 'bg-slate-800 text-slate-200 hover:text-white hover:bg-slate-750'
+              }`}
+              title="এআই কো-পাইলট ও সহকারী"
+            >
+              <Bot className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-sky-400" />
+              <span className="text-[11px] sm:text-xs">AI কো-পাইলট</span>
+            </button>
 
-          {/* Admin Scratchpad Notes Button */}
-          <button
-            type="button"
-            onClick={() => setActiveDrawer(activeDrawer === 'notes' ? null : 'notes')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
-              activeDrawer === 'notes'
-                ? 'bg-amber-500 text-slate-950 shadow-md'
-                : 'bg-slate-800 text-slate-200 hover:text-white hover:bg-slate-750'
-            }`}
-            title="এডমিন স্ক্র্যাচপ্যাড ও কুইক নোটস"
-          >
-            <FileText className="w-4 h-4 text-emerald-400" />
-            <span className="hidden sm:inline">নোটস & To-Do</span>
-          </button>
-        </div>
-      </aside>
+            {/* Admin Scratchpad Notes Button */}
+            <button
+              type="button"
+              onClick={() => setActiveDrawer(activeDrawer === 'notes' ? null : 'notes')}
+              className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 sm:gap-2 cursor-pointer ${
+                activeDrawer === 'notes'
+                  ? 'bg-amber-500 text-slate-950 shadow-md'
+                  : 'bg-slate-800 text-slate-200 hover:text-white hover:bg-slate-750'
+              }`}
+              title="এডমিন স্ক্র্যাচপ্যাড ও কুইক নোটস"
+            >
+              <FileText className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-emerald-400" />
+              <span className="hidden sm:inline">নোটস & To-Do</span>
+              <span className="sm:hidden text-[11px]">নোটস</span>
+            </button>
+
+            {/* Minimize Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setIsMinimized(true)}
+              className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition cursor-pointer"
+              title="ডক মিনিমাইজ করুন"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </aside>
+      )}
 
       {/* 1. SLIDE-OVER DRAWER: PENDING TASK QUEUE */}
       {activeDrawer === 'queue' && (

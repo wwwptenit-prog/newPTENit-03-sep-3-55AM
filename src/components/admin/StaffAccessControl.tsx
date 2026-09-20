@@ -24,6 +24,10 @@ import {
   Check,
   X,
   Eye,
+  EyeOff,
+  Copy,
+  MessageCircle,
+  Send,
   Activity
 } from 'lucide-react';
 import { useData } from '../../context/DataContext';
@@ -33,6 +37,7 @@ export interface StaffMember {
   name: string;
   email: string;
   phone: string;
+  password?: string;
   designation: string;
   department: 'Administration' | 'Operations' | 'Finance' | 'Marketplace' | 'Academy' | 'Support' | 'AI & Security';
   avatar?: string;
@@ -59,6 +64,7 @@ const DEFAULT_STAFF_MEMBERS: StaffMember[] = [
     name: 'কাজী মিজানুর রহমান',
     email: 'mdskazi2016@gmail.com',
     phone: '01886221191',
+    password: '123456',
     designation: 'চিফ এক্সিকিউটিভ / সুপার এডমিন',
     department: 'Administration',
     status: 'on_duty',
@@ -82,6 +88,7 @@ const DEFAULT_STAFF_MEMBERS: StaffMember[] = [
     name: 'ফারহানা ইয়াসমিন',
     email: 'farhana.ops@ptenit.com',
     phone: '01711223344',
+    password: '123456',
     designation: 'সিনিয়র অপারেশনস ডিরেক্টর',
     department: 'Operations',
     status: 'active',
@@ -105,6 +112,7 @@ const DEFAULT_STAFF_MEMBERS: StaffMember[] = [
     name: 'শফিকুল ইসলাম চৌধুরী',
     email: 'shafiq.finance@ptenit.com',
     phone: '01912334455',
+    password: '123456',
     designation: 'হেড অব একাউন্টস ও ফাইন্যান্স',
     department: 'Finance',
     status: 'on_duty',
@@ -128,6 +136,7 @@ const DEFAULT_STAFF_MEMBERS: StaffMember[] = [
     name: 'তানভীর হাসান',
     email: 'tanvir.market@ptenit.com',
     phone: '01688997766',
+    password: '123456',
     designation: 'মার্কেটপ্লেস লিড মডারেটর',
     department: 'Marketplace',
     status: 'active',
@@ -151,6 +160,7 @@ const DEFAULT_STAFF_MEMBERS: StaffMember[] = [
     name: 'রাফিয়া সুলতানা',
     email: 'rafia.academy@ptenit.com',
     phone: '01555443322',
+    password: '123456',
     designation: 'একাডেমিক কোর্স কো-অর্ডিনেটর',
     department: 'Academy',
     status: 'active',
@@ -207,6 +217,7 @@ export const StaffAccessControl: React.FC = () => {
     name: '',
     email: '',
     phone: '',
+    password: '123456',
     designation: 'মডারেটর',
     department: 'Marketplace',
     status: 'active',
@@ -222,6 +233,90 @@ export const StaffAccessControl: React.FC = () => {
       canControlAI: false,
     }
   });
+
+  const [visiblePasswords, setVisiblePasswords] = useState<Record<string, boolean>>({});
+
+  const togglePasswordVisibility = (staffId: string) => {
+    setVisiblePasswords(prev => ({ ...prev, [staffId]: !prev[staffId] }));
+  };
+
+  // Dispatch Login link and credentials via WhatsApp
+  const handleSendWhatsApp = (staff: StaffMember) => {
+    const cleanPhone = (staff.phone || '').replace(/[^0-9]/g, '');
+    const activePermNames = PERMISSION_CONFIGS
+      .filter(cfg => staff.permissions[cfg.key as keyof StaffMember['permissions']])
+      .map(cfg => `• ${cfg.label}`)
+      .join('\n');
+
+    const origin = window.location.origin;
+    const loginUrl = `${origin}/?tab=admin`;
+    const message = `আসসালামু আলাইকুম ${staff.name},
+PTENit অ্যাডমিন পোর্টালে আপনার "${staff.designation}" সাব-এডমিন অ্যাকাউন্ট সফলভাবে প্রস্তুত করা হয়েছে।
+
+🔑 আপনার ব্যক্তিগত লগইন লিংক ও পাসওয়ার্ড:
+• সরাসরি লগইন লিংক: ${loginUrl}
+• অফিসিয়াল ইমেইল: ${staff.email}
+• পাসওয়ার্ড: ${staff.password || '123456'}
+• বিভাগ: ${staff.department}
+
+🛡️ আপনার অনুমোদিত কার্যক্ষমতাসমূহ:
+${activePermNames || '• সাধারণ মনিটরিং ও হেল্পডেস্ক'}
+
+লগইন করার পর আপনি শুধুমাত্র আপনার নির্ধারিত দায়িত্বের মডিউলগুলো দেখতে ও পরিচালনা করতে পারবেন।
+— PTENit Technologies Ltd.`;
+
+    const formattedPhone = cleanPhone.startsWith('88') ? cleanPhone : cleanPhone.length === 11 ? `88${cleanPhone}` : cleanPhone;
+    const waUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
+    window.open(waUrl, '_blank');
+    playAppSound('notification');
+  };
+
+  // Dispatch Login link and credentials via Email
+  const handleSendEmail = (staff: StaffMember) => {
+    const activePermNames = PERMISSION_CONFIGS
+      .filter(cfg => staff.permissions[cfg.key as keyof StaffMember['permissions']])
+      .map(cfg => `• ${cfg.label}`)
+      .join('\n');
+
+    const origin = window.location.origin;
+    const loginUrl = `${origin}/?tab=admin`;
+    const subject = `PTENit অ্যাডমিন পোর্টাল: ${staff.designation} লগইন লিংক ও পাসওয়ার্ড`;
+    const body = `আসসালামু আলাইকুম ${staff.name},
+
+PTENit অ্যাডমিন পোর্টালে আপনার "${staff.designation}" সাব-এডমিন অ্যাকাউন্ট সফলভাবে প্রস্তুত করা হয়েছে।
+
+🔑 আপনার ব্যক্তিগত লগইন লিংক ও পাসওয়ার্ড:
+• সরাসরি লগইন লিংক: ${loginUrl}
+• অফিসিয়াল ইমেইল: ${staff.email}
+• পাসওয়ার্ড: ${staff.password || '123456'}
+• বিভাগ: ${staff.department}
+
+🛡️ আপনার অনুমোদিত কার্যক্ষমতাসমূহ:
+${activePermNames || '• সাধারণ মনিটরিং ও হেল্পডেস্ক'}
+
+লগইন করার পর আপনি শুধুমাত্র আপনার নির্ধারিত দায়িত্বের মডিউলগুলো দেখতে ও পরিচালনা করতে পারবেন।
+
+ধন্যবাদান্তে,
+চিফ এক্সিকিউটিভ ও সুপার এডমিন
+PTENit Technologies Ltd.`;
+
+    window.location.href = `mailto:${staff.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  // Copy Login link and credentials to clipboard
+  const handleCopyCredentials = (staff: StaffMember) => {
+    const origin = window.location.origin;
+    const loginUrl = `${origin}/?tab=admin`;
+    const text = `PTENit অ্যাডমিন পোর্টাল লগইন তথ্য:
+লিংক: ${loginUrl}
+ইমেইল: ${staff.email}
+পাসওয়ার্ড: ${staff.password || '123456'}
+পদবী: ${staff.designation} (${staff.department})`;
+
+    navigator.clipboard.writeText(text);
+    playAppSound('success');
+    alert(`লগইন লিংক ও ক্রেডেনশিয়াল কপি করা হয়েছে!\n\nলিংক: ${loginUrl}\nইমেইল: ${staff.email}\nপাসওয়ার্ড: ${staff.password || '123456'}`);
+  };
 
   // Persist
   const saveStaffList = (list: StaffMember[]) => {
@@ -286,12 +381,15 @@ export const StaffAccessControl: React.FC = () => {
       return;
     }
 
+    const assignedPassword = formData.password?.trim() || '123456';
+
     if (editingStaff) {
       const updated = staffList.map(s => {
         if (s.id === editingStaff.id) {
           return {
             ...s,
             ...formData,
+            password: assignedPassword,
             permissions: {
               ...s.permissions,
               ...(formData.permissions || {})
@@ -309,6 +407,7 @@ export const StaffAccessControl: React.FC = () => {
         name: formData.name.trim(),
         email: formData.email.trim(),
         phone: formData.phone?.trim() || '০১৭xxxxxxxx',
+        password: assignedPassword,
         designation: formData.designation || 'কর্মকর্তা',
         department: (formData.department as any) || 'Operations',
         status: 'active',
@@ -335,7 +434,7 @@ export const StaffAccessControl: React.FC = () => {
         type: 'info',
         category: 'system'
       });
-      alert(`সফলভাবে ${newMember.name}-কে পদবী অনুযায়ী এডমিন ক্ষমতা প্রদান করা হয়েছে!`);
+      alert(`সফলভাবে ${newMember.name}-কে পদবী অনুযায়ী এডমিন ক্ষমতা প্রদান করা হয়েছে! পাসওয়ার্ড: ${assignedPassword}`);
     }
 
     setIsAddModalOpen(false);
@@ -607,8 +706,61 @@ export const StaffAccessControl: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Sub-Admin Login Dispatch (WhatsApp & Email) Toolbar */}
+                <div className="mt-3 pt-3 border-t border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-[11px] text-slate-400 font-normal">লগইন পাসওয়ার্ড:</span>
+                    <span className="font-mono text-xs font-bold text-amber-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-700">
+                      {visiblePasswords[staff.id] ? (staff.password || '123456') : '••••••'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => togglePasswordVisibility(staff.id)}
+                      className="text-slate-400 hover:text-white text-[11px] p-1 transition cursor-pointer"
+                      title="পাসওয়ার্ড দেখুন বা লুকান"
+                    >
+                      {visiblePasswords[staff.id] ? <EyeOff className="w-3.5 h-3.5 text-slate-300" /> : <Eye className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {/* WhatsApp button */}
+                    <button
+                      type="button"
+                      onClick={() => handleSendWhatsApp(staff)}
+                      className="px-2.5 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+                      title="WhatsApp-এ সরাসরি লগইন লিংক ও পাসওয়ার্ড পাঠান"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>হোয়াটসঅ্যাপে পাঠান</span>
+                    </button>
+
+                    {/* Email button */}
+                    <button
+                      type="button"
+                      onClick={() => handleSendEmail(staff)}
+                      className="px-2.5 py-1.5 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+                      title="ইমেইলে সরাসরি লগইন লিংক ও পাসওয়ার্ড পাঠান"
+                    >
+                      <Mail className="w-3.5 h-3.5 text-sky-400" />
+                      <span>ইমেইলে পাঠান</span>
+                    </button>
+
+                    {/* Copy button */}
+                    <button
+                      type="button"
+                      onClick={() => handleCopyCredentials(staff)}
+                      className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 flex items-center gap-1.5 transition cursor-pointer"
+                      title="লগইন লিংক ও ক্রেডেনশিয়াল কপি করুন"
+                    >
+                      <Copy className="w-3.5 h-3.5 text-slate-400" />
+                      <span>কপি তথ্য</span>
+                    </button>
+                  </div>
+                </div>
+
                 {/* Granular Permissions Badges / Toggles */}
-                <div className="mt-4 pt-3.5 border-t border-slate-800/80">
+                <div className="mt-3 pt-3 border-t border-slate-800/80">
                   <p className="text-[11px] text-slate-400 font-normal mb-2 flex items-center gap-1.5">
                     <Key className="w-3 h-3 text-amber-400" />
                     <span>প্রদত্ত একসেস পারমিশনসমূহ (ক্লিক করে অন/অফ করতে পারেন):</span>
@@ -731,6 +883,33 @@ export const StaffAccessControl: React.FC = () => {
                     <option value="Support">Support (কাস্টমার সাপোর্ট)</option>
                     <option value="AI & Security">AI & Security (এআই ও সাইবার নিরাপত্তা)</option>
                   </select>
+                </div>
+
+                <div className="space-y-1 sm:col-span-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs text-slate-300 font-normal">লগইন পাসওয়ার্ড *</label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const generated = `pten${Math.floor(1000 + Math.random() * 9000)}`;
+                        setFormData({ ...formData, password: generated });
+                      }}
+                      className="text-[11px] text-amber-400 hover:underline cursor-pointer"
+                    >
+                      ⚡ র‍্যান্ডম পাসওয়ার্ড তৈরি করুন
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    value={formData.password || ''}
+                    onChange={e => setFormData({ ...formData, password: e.target.value })}
+                    placeholder="যেমন: 123456 বা গোপন পাসওয়ার্ড"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-amber-400 font-mono"
+                  />
+                  <p className="text-[10px] text-slate-500 font-normal">
+                    এই পাসওয়ার্ড দিয়ে সাব-এডমিন অ্যাকাউন্টে লগইন করতে পারবেন। এটি সাব-এডমিনের হোয়াটসঅ্যাপ ও ইমেইলে পাঠানো হবে।
+                  </p>
                 </div>
               </div>
 

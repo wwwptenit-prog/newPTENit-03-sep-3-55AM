@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { X, LogIn, UserPlus, Lock, Mail, Phone, Eye, EyeOff, Briefcase, Wrench, Zap, KeyRound, Send, ArrowLeft, CheckCircle2, ShieldCheck, User, Sparkles } from 'lucide-react';
+import { X, LogIn, UserPlus, Lock, Mail, Phone, Eye, EyeOff, Briefcase, Wrench, Zap, KeyRound, Send, ArrowLeft, CheckCircle2, User, Sparkles } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../services/firebase';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -115,29 +117,41 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   };
 
-  const handleForgotPasswordSubmit = (e: React.FormEvent) => {
+  const handleForgotPasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!resetEmailOrPhone.trim()) {
-      setErrorMsg('অনুগ্রহ করে ইমেইল বা মোবাইল নম্বরটি লিখুন।');
+    const target = resetEmailOrPhone.trim();
+    if (!target) {
+      setErrorMsg('অনুগ্রহ করে আপনার জিমেইল বা মোবাইল নম্বরটি লিখুন।');
       return;
     }
     setErrorMsg('');
     setResetLoading(true);
 
-    setTimeout(() => {
-      setResetLoading(false);
+    try {
+      if (target.includes('@') && auth) {
+        try {
+          await sendPasswordResetEmail(auth, target);
+        } catch (firebaseErr: any) {
+          console.warn('[Firebase Auth Password Reset]', firebaseErr?.code, firebaseErr?.message);
+          if (firebaseErr?.code === 'auth/user-not-found') {
+            setErrorMsg('এই জিমেইল আইডিতে কোনো অ্যাকাউন্ট খুঁজে পাওয়া যায়নি।');
+            setResetLoading(false);
+            return;
+          }
+          // If it's another code (e.g. invalid-email), notify user
+          if (firebaseErr?.code === 'auth/invalid-email') {
+            setErrorMsg('অনুগ্রহ করে সঠিক জিমেইল অ্যাড্রেস লিখুন।');
+            setResetLoading(false);
+            return;
+          }
+        }
+      }
       setResetSuccess(true);
-    }, 700);
-  };
-
-  const handleQuickLogin = (email: string, pass: string = '123456') => {
-    setLoginEmailOrPhone(email);
-    setLoginPassword(pass);
-    const ok = login(email, pass);
-    if (ok) {
-      setErrorMsg('');
-      onSuccess();
-      onClose();
+    } catch (err: any) {
+      console.warn('Password reset error:', err);
+      setErrorMsg('রিসেট লিঙ্ক পাঠাতে সমস্যা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।');
+    } finally {
+      setResetLoading(false);
     }
   };
 
@@ -521,22 +535,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               >
                 সাইনআপ করুন
               </button>
-            </div>
-
-            {/* Quick 1-Click Admin Login */}
-            <div className="pt-2.5 border-t border-slate-800">
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('admin@ptenit.com')}
-                className="w-full py-2 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer active:scale-95"
-                title="এডমিন প্যানেল এক্সেস"
-              >
-                <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>🛡️ এডমিন হিসেবে ১-ক্লিকে লগইন করুন</span>
-              </button>
-              <p className="text-[10px] text-slate-500 text-center mt-1">
-                এডমিন ইমেইল: <code className="text-sky-400 font-mono">admin@ptenit.com</code> (পাসওয়ার্ড: <code className="text-sky-400 font-mono">123456</code>)
-              </p>
             </div>
           </form>
         )}

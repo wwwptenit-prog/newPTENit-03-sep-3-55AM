@@ -38,6 +38,7 @@ import { useData } from '../context/DataContext';
 import { Service, MarketplaceOrder, MarketplaceGigPackage, MarketplaceGig } from '../types';
 import { SinglePromoBadgeView } from '../utils/badgeHelper';
 import { extractDiscountPercent, calculateOriginalPrice } from '../utils/discountHelper';
+import { getShareableLink, updateUrlState } from '../utils/urlRouter';
 
 const WhatsAppIcon: React.FC<{ className?: string }> = ({ className = "w-3.5 h-3.5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -478,11 +479,25 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
     return `https://wa.me/${cleanNum}?text=${encodeURIComponent(msg)}`;
   };
 
+  // Sync Gig to browser URL so direct link copy or deep-linking works instantly
+  useEffect(() => {
+    if (service?.id) {
+      updateUrlState({ tab: 'marketplace', gigId: service.id }, false);
+    }
+    return () => {
+      // When closing the modal, remove the gig parameter from URL
+      updateUrlState({ tab: 'marketplace', gigId: undefined }, true);
+    };
+  }, [service?.id]);
+
   // Social Media Share State & Handlers
   const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
   const getShareUrl = () => {
+    if (service?.id) {
+      return getShareableLink({ gigId: service.id, tab: 'marketplace' });
+    }
     return typeof window !== 'undefined' ? window.location.href : '';
   };
 

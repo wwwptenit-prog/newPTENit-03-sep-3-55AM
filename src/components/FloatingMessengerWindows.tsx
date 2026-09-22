@@ -171,24 +171,22 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
     }
   }, [isMessengerInboxOpen, initialMessengerTab]);
 
+  // Keep a stable ref for markDirectMessageRead to prevent re-triggering effects
+  const markDirectMessageReadRef = useRef(markDirectMessageRead);
+  useEffect(() => {
+    markDirectMessageReadRef.current = markDirectMessageRead;
+  }, [markDirectMessageRead]);
+
   // Synchronize selected conversation ID whenever messenger opens or activeMessengerConversationId changes
   useEffect(() => {
     if (activeMessengerConversationId) {
       setSelectedConversationId(activeMessengerConversationId);
-      setReadConvoIds(prev => {
-        if (prev.has(activeMessengerConversationId)) return prev;
-        const next = new Set(prev);
-        next.add(activeMessengerConversationId);
-        return next;
-      });
-      if (markDirectMessageRead) {
-        markDirectMessageRead(activeMessengerConversationId);
-      }
     } else if (!isMessengerInboxOpen) {
       setSelectedConversationId(null);
     }
-  }, [activeMessengerConversationId, isMessengerInboxOpen, markDirectMessageRead]);
+  }, [activeMessengerConversationId, isMessengerInboxOpen]);
 
+  // When selectedConversationId changes, mark it as read safely once
   useEffect(() => {
     if (selectedConversationId) {
       setReadConvoIds(prev => {
@@ -197,11 +195,11 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
         next.add(selectedConversationId);
         return next;
       });
-      if (markDirectMessageRead) {
-        markDirectMessageRead(selectedConversationId);
+      if (markDirectMessageReadRef.current) {
+        markDirectMessageReadRef.current(selectedConversationId);
       }
     }
-  }, [selectedConversationId, markDirectMessageRead]);
+  }, [selectedConversationId]);
 
   // Always reset mobile search and settings modals when switching tabs or closing/opening messenger or changing conversation
   useEffect(() => {
@@ -1136,7 +1134,6 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                     <div>
                       <div className="flex items-center gap-1.5">
                         <h2 className="text-sm font-black text-white tracking-tight leading-none">Academy & Learning</h2>
-                        <span className="w-2 h-2 rounded-full bg-emerald-300" />
                       </div>
                       <p className="text-[10px] font-semibold text-emerald-100 tracking-wide leading-tight mt-0.5 font-sans">
                         PTENit Enrolled Courses & Features
@@ -1197,7 +1194,6 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                       <div>
                         <div className="flex items-center gap-1.5">
                           <h2 className="text-sm font-black text-white tracking-tight leading-none">Notifications</h2>
-                          <span className={`w-2 h-2 rounded-full ${isSellerMode ? 'bg-rose-300' : 'bg-emerald-300'}`} />
                           {roleScopedNotifications.filter(n => !n.read).length > 0 && (
                             <span className="bg-white/20 text-white text-[10px] font-black rounded-full px-1.5 py-0.2 shrink-0">
                               {roleScopedNotifications.filter(n => !n.read).length}
@@ -1246,7 +1242,6 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                     <div>
                       <div className="flex items-center gap-1.5">
                         <h2 className="text-sm font-black text-white tracking-tight leading-none">Messages</h2>
-                        <span className={`w-2 h-2 rounded-full ${isSellerMode ? 'bg-rose-300' : 'bg-emerald-300'}`} />
                       </div>
                       <p className={`text-[10px] font-semibold ${isSellerMode ? 'text-rose-100' : 'text-emerald-100'} tracking-wide leading-tight mt-0.5 font-sans`}>
                         PTENit Marketplace Inbox
@@ -1299,7 +1294,6 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                   <div>
                     <h1 className="text-lg sm:text-xl font-black text-slate-950 dark:text-white tracking-tight flex items-center gap-1.5">
                       <span>{activeTopTab === 'notifications' ? 'Notifications' : 'Messages'}</span>
-                      <span className="w-2 h-2 rounded-full bg-[#006A4E]" />
                     </h1>
                     <p className="text-[10px] font-semibold text-slate-400/90 tracking-wide leading-tight mt-0.5 font-sans">
                       {activeTopTab === 'notifications' ? 'PTENit Marketplace Updates' : 'PTENit Marketplace Inbox'}
@@ -1381,7 +1375,6 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                           : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                       }`}
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                       অনলাইন ({defaultHistory.filter(h => h.isOnline).length})
                     </button>
                     <button
@@ -2435,7 +2428,7 @@ const SingleChatWindow: React.FC<SingleChatWindowProps> = ({
   onCreateMeet,
   onExpandFullScreen
 }) => {
-  const { marketplaceOrders } = useData();
+  const { marketplaceOrders, openInAppMeet } = useData();
   const linkedOrder = marketplaceOrders?.find(o => 
     (win.orderId && (o.id === win.orderId || o.id.endsWith(win.orderId))) ||
     (win.senderName && (o.buyerName === win.senderName || o.sellerName === win.senderName))
@@ -2565,19 +2558,36 @@ const SingleChatWindow: React.FC<SingleChatWindowProps> = ({
                   <p className="whitespace-pre-wrap break-words">{m.text}</p>
 
                   {m.meetLink && (
-                    <div className="mt-2 p-2 bg-slate-900 text-white rounded-xl border border-sky-400/50 space-y-1.5">
-                      <div className="flex items-center gap-1.5 text-[11px] font-bold text-sky-300">
-                        <Video className="w-3.5 h-3.5 animate-pulse text-sky-400" />
-                        <span>Google Meet মিটিং লিংক</span>
+                    <div className="mt-2 p-2.5 bg-slate-900 text-white rounded-xl border border-emerald-500/50 space-y-1.5 shadow-lg">
+                      <div className="flex items-center justify-between text-[11px] font-bold text-emerald-300">
+                        <div className="flex items-center gap-1.5">
+                          <Video className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>ভিডিও মিটিং</span>
+                        </div>
                       </div>
-                      <a
-                        href={m.meetLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block w-full py-1.5 px-2.5 bg-[#0084FF] hover:bg-[#0073e6] text-white text-center font-black text-[11px] rounded-lg transition"
+                      <button
+                        type="button"
+                        onClick={() => openInAppMeet({
+                          windowId: win.id,
+                          targetName: win.senderName,
+                          targetAvatar: win.senderAvatar,
+                          targetRole: win.senderRole,
+                          roomTitle: `${win.senderName} এর সাথে লাইভ মিটিং`
+                        })}
+                        className="w-full py-1.5 px-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-center font-black text-[11px] rounded-lg transition cursor-pointer shadow-md flex items-center justify-center gap-1.5"
                       >
-                        🚀 মিটিংয়ে যুক্ত হন
-                      </a>
+                        <span>🚀 সাইটের নিজস্ব স্টুডিওতে যুক্ত হন</span>
+                      </button>
+                      {m.meetLink.startsWith('http') && (
+                        <a
+                          href={m.meetLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block text-center text-[10px] text-slate-400 hover:text-white underline pt-0.5"
+                        >
+                          বিকল্প: Google Meet ব্রাউজার লিংক
+                        </a>
+                      )}
                     </div>
                   )}
                 </div>
@@ -2718,6 +2728,7 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
   onCreateMeet,
   onStartVoiceCall
 }) => {
+  const { openInAppMeet } = useData();
   const [inputText, setInputText] = useState('');
   const [showEmojis, setShowEmojis] = useState(false);
   const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
@@ -2788,7 +2799,6 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
               <CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
             </h3>
             <p className="text-[10px] font-bold text-[#006A4E] dark:text-sky-400 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shrink-0" />
               <span className="truncate">অনলাইনে আছেন</span>
             </p>
           </div>
@@ -2807,22 +2817,34 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
             <span>অফার পাঠান</span>
           </button>
 
-          {/* Google Meet Video Call */}
+          {/* On-Site Video Call */}
           <button
             type="button"
-            onClick={onCreateMeet}
-            className="p-2 text-[#0084FF] hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-full transition cursor-pointer"
-            title="Google Meet ভিডিও কল"
+            onClick={() => openInAppMeet({
+              windowId: win.id,
+              targetName: win.senderName,
+              targetAvatar: win.senderAvatar,
+              targetRole: win.senderRole,
+              initialType: 'video'
+            })}
+            className="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-full transition cursor-pointer"
+            title="ভিডিও কল"
           >
             <Video className="w-5 h-5" />
           </button>
 
-          {/* Voice Call */}
+          {/* Voice / Audio Call */}
           <button
             type="button"
-            onClick={onStartVoiceCall}
-            className="p-2 text-[#0084FF] hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-full transition cursor-pointer"
-            title="ভয়েস কল"
+            onClick={() => openInAppMeet({
+              windowId: win.id,
+              targetName: win.senderName,
+              targetAvatar: win.senderAvatar,
+              targetRole: win.senderRole,
+              initialType: 'audio'
+            })}
+            className="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-full transition cursor-pointer"
+            title="অডিও কল"
           >
             <Phone className="w-5 h-5" />
           </button>
@@ -2850,7 +2872,6 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
             </span>
           </div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 dark:bg-blue-950/40 border border-sky-300 dark:border-blue-900/60 rounded-full text-blue-700 dark:text-sky-300 text-[11px] font-bold">
-            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
             <span>এন্ড-টু-এন্ড এনক্রিপ্টেড ও ১০০% নিরাপদ পেমেন্ট হিস্ট্রি</span>
           </div>
         </div>
@@ -2925,20 +2946,43 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
                 )}
 
                 {m.meetLink && (
-                  <div className="mt-2.5 p-3 bg-emerald-50 text-slate-900 border border-emerald-200 rounded-2xl space-y-2">
-                    <div className="flex items-center gap-2 text-xs font-bold text-[#006A4E]">
-                      <Video className="w-4 h-4 text-[#006A4E] animate-pulse" />
-                      <span>Google Meet ভিডিও মিটিং রুম তৈরি হয়েছে</span>
+                  <div className="mt-2.5 p-3.5 bg-slate-900 text-white rounded-2xl border border-emerald-500/40 space-y-2.5 shadow-xl">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-xs font-black text-emerald-400">
+                        <Video className="w-4 h-4 text-emerald-400" />
+                        <span>লাইভ ভিডিও মিটিং</span>
+                      </div>
                     </div>
-                    <a
-                      href={m.meetLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full py-2 px-3 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-xs cursor-pointer transition"
-                    >
-                      <span>🚀 মিটিংয়ে যুক্ত হন</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      ভিডিও, অডিও ও স্ক্রিন শেয়ারের মাধ্যমে সরাসরি মিটিংয়ে যুক্ত হয়ে কথা বলুন।
+                    </p>
+                    <div className="flex items-center gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => openInAppMeet({
+                          windowId: win.id,
+                          targetName: win.senderName,
+                          targetAvatar: win.senderAvatar,
+                          targetRole: win.senderRole,
+                          roomTitle: `${win.senderName} এর সাথে লাইভ মিটিং`
+                        })}
+                        className="flex-1 py-2.5 px-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-md cursor-pointer transition active:scale-95"
+                      >
+                        <Video className="w-4 h-4" />
+                        <span>ভিডিও কলে যুক্ত হন</span>
+                      </button>
+                      {m.meetLink.startsWith('http') && (
+                        <a
+                          href={m.meetLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl flex items-center gap-1 transition cursor-pointer"
+                          title="এক্সটার্নাল ব্রাউজারে খুলুন"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>

@@ -34,7 +34,7 @@ interface AdminTaskTabsProps {
   onSelectTab: (tabId: string) => void;
   onCloseTab: (tabId: string) => void;
   onLaunchTask: (tabId: string) => void;
-  onOpenCommandPalette: () => void;
+  onOpenCommandPalette?: () => void;
 }
 
 export const AVAILABLE_TASKS: { id: string; label: string; desc: string; category: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -149,20 +149,12 @@ export const AdminTaskTabs: React.FC<AdminTaskTabsProps> = ({
           </button>
         </div>
 
-        {/* Right: Quick Command Search */}
+        {/* Right: Quick Active Status indicator */}
         <div className="flex items-center gap-2 shrink-0 justify-end">
-          <button
-            type="button"
-            onClick={onOpenCommandPalette}
-            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-300 border border-slate-700 hover:border-slate-600 transition text-xs font-medium flex items-center gap-2 cursor-pointer shadow-xs"
-            title="কমান্ড ও অ্যাকশন সার্চ (Ctrl+K)"
-          >
-            <Search className="w-3.5 h-3.5 text-amber-400" />
-            <span className="hidden xl:inline text-slate-400">কমান্ড বা কাজ খুঁজুন...</span>
-            <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[9px] font-mono bg-slate-900 border border-slate-700 rounded text-slate-400 font-bold">
-              ⌘K
-            </kbd>
-          </button>
+          <div className="px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700/80 text-xs font-medium flex items-center gap-2 shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="text-slate-300 text-xs">ওয়ার্কস্পেস অ্যাক্টিভ</span>
+          </div>
         </div>
       </div>
 

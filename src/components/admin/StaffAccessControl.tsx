@@ -31,6 +31,8 @@ import {
   Activity
 } from 'lucide-react';
 import { useData } from '../../context/DataContext';
+import { computeAdminSpeedBadge, syncAdminSpeedToFirebase } from '../../utils/adminSpeedBadges';
+import { syncDocToFirestore } from '../../services/firestoreSync';
 
 export interface StaffMember {
   id: string;
@@ -608,6 +610,7 @@ PTENit Technologies Ltd.`;
         ) : (
           filteredStaff.map(staff => {
             const isSuperAdmin = staff.id === 'staff-01';
+            const speedBadge = computeAdminSpeedBadge(staff.email, staff.actionsTakenCount);
             return (
               <div
                 key={staff.id}
@@ -621,11 +624,11 @@ PTENit Technologies Ltd.`;
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="text-sm font-bold text-white truncate">{staff.name}</h3>
-                        <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                        <h3 className="text-base font-bold text-white truncate">{staff.name}</h3>
+                        <span className="px-2.5 py-0.5 rounded-lg text-xs font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
                           {staff.designation}
                         </span>
-                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-normal border ${
+                        <span className={`px-2.5 py-0.5 rounded-lg text-xs font-medium border ${
                           staff.status === 'on_duty'
                             ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
                             : staff.status === 'active'
@@ -633,6 +636,15 @@ PTENit Technologies Ltd.`;
                             : 'bg-rose-500/15 text-rose-300 border-rose-500/30'
                         }`}>
                           {staff.status === 'on_duty' ? 'অন-ডিউটি' : staff.status === 'active' ? 'সক্রিয়' : 'স্থগিত'}
+                        </span>
+
+                        {/* Automatic Performance / Speed Badge */}
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold border ${speedBadge.badgeBg} ${speedBadge.badgeBorder} ${speedBadge.badgeTextCol}`}
+                          title={`অ্যাকশন সম্পন্ন: ${staff.actionsTakenCount} • প্রতিক্রিয়া: ${speedBadge.avgResponseTime} • ${speedBadge.description}`}
+                        >
+                          <span>{speedBadge.icon}</span>
+                          <span>{speedBadge.badgeText}</span>
                         </span>
                       </div>
 

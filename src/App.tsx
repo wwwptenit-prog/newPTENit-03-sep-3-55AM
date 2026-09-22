@@ -29,6 +29,8 @@ const CustomerDashboard = React.lazy(() => import('./components/CustomerDashboar
 const MarketplaceSection = React.lazy(() => import('./components/MarketplaceSection').then(m => ({ default: m.MarketplaceSection })));
 const FloatingMessengerWindows = React.lazy(() => import('./components/FloatingMessengerWindows').then(m => ({ default: m.FloatingMessengerWindows })));
 const NotificationCenterModal = React.lazy(() => import('./components/NotificationCenterModal').then(m => ({ default: m.NotificationCenterModal })));
+const GoogleMeetCallModal = React.lazy(() => import('./components/GoogleMeetCallModal').then(m => ({ default: m.GoogleMeetCallModal })));
+const InAppMeetStudioModal = React.lazy(() => import('./components/InAppMeetStudioModal').then(m => ({ default: m.InAppMeetStudioModal })));
 
 const LazyFallback: React.FC = () => (
   <div className="min-h-[50vh] flex flex-col items-center justify-center p-8">
@@ -38,7 +40,17 @@ const LazyFallback: React.FC = () => (
 );
 
 const MainAppContent: React.FC = () => {
-  const { currentUser, courses, siteSettings, closeMessengerInbox, marketplaceMode } = useData();
+  const {
+    currentUser,
+    courses,
+    siteSettings,
+    closeMessengerInbox,
+    marketplaceMode,
+    inAppMeetState,
+    closeInAppMeet,
+    googleMeetModalState,
+    closeGoogleMeetModal
+  } = useData();
 
   const initialUrlParams = useRef(getUrlParams()).current;
   const [activeTab, setActiveTab] = useState<string>(() => {
@@ -386,8 +398,11 @@ const MainAppContent: React.FC = () => {
   return (
     <div
       style={siteSettings?.customScalePercent && siteSettings.customScalePercent !== 100 ? { zoom: `${siteSettings.customScalePercent}%` } : undefined}
-      className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-[#006A4E] selection:text-white max-w-full overflow-x-clip"
+      className="min-h-screen bg-slate-50/90 text-slate-900 flex flex-col font-sans selection:bg-[#006A4E] selection:text-white max-w-full overflow-x-clip relative"
     >
+      {/* Ambient Glass Glow Spheres */}
+      <div className="glass-ambient-sphere-1" />
+      <div className="glass-ambient-sphere-2" />
       
       {/* Top Main Navbar (Only shown on public website pages, not in dashboards or marketplace) */}
       {!isDashboardView && activeTab !== 'marketplace' && (
@@ -599,6 +614,32 @@ const MainAppContent: React.FC = () => {
 
         {/* Central Mobile & Desktop Notification Center Modal */}
         <NotificationCenterModal onNavigateTab={handleSetActiveTab} />
+
+        {/* Real Google Meet Live Call & Meeting Modal */}
+        {googleMeetModalState?.isOpen && (
+          <GoogleMeetCallModal
+            isOpen={googleMeetModalState.isOpen}
+            onClose={closeGoogleMeetModal}
+            windowId={googleMeetModalState.windowId}
+            targetName={googleMeetModalState.targetName}
+            existingLink={googleMeetModalState.existingLink}
+          />
+        )}
+
+        {/* Our Own Site Native Live Video & Audio Meet Studio (No external browser needed!) */}
+        {inAppMeetState?.isOpen && (
+          <InAppMeetStudioModal
+            isOpen={inAppMeetState.isOpen}
+            onClose={closeInAppMeet}
+            roomTitle={inAppMeetState.roomTitle}
+            targetName={inAppMeetState.targetName}
+            targetAvatar={inAppMeetState.targetAvatar}
+            targetRole={inAppMeetState.targetRole}
+            courseTitle={inAppMeetState.courseTitle}
+            windowId={inAppMeetState.windowId}
+            initialType={inAppMeetState.initialType}
+          />
+        )}
       </React.Suspense>
 
     </div>

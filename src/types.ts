@@ -293,6 +293,20 @@ export interface PaymentOrder {
   createdAt: string;
 }
 
+export interface CompanyBillItem {
+  id: string;
+  payerName: string;
+  payerPhone: string;
+  gateway: 'bKash' | 'Nagad' | 'Rocket' | 'Bank' | 'Card';
+  transactionId: string;
+  amount: number;
+  category: string;
+  status: 'pending' | 'verified' | 'rejected';
+  verifiedAt?: string;
+  date: string;
+  note?: string;
+}
+
 export interface SubAdminMember {
   id: string;
   name: string;
@@ -405,6 +419,7 @@ export interface SiteSettings {
   defaultTrainerRevShare?: number;
   defaultClientFee?: number;
   defaultWithdrawalFee?: number;
+  marketplaceCategories?: string[];
   // Sub-Admins & Support Team Access
   subAdminMembers?: SubAdminMember[];
   // Written Content Configuration

@@ -9,6 +9,7 @@ import {
   Trash2,
   CheckCircle2,
   Globe,
+  ShieldCheck,
   Copy,
   Check,
   X,
@@ -144,28 +145,25 @@ export const SellerFeedPostCard: React.FC<SellerFeedPostCardProps> = ({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 min-w-0">
-              <span className="text-xs sm:text-base font-bold text-slate-900 dark:text-white truncate">
+              <span className="text-xs sm:text-lg md:text-xl font-bold text-slate-900 dark:text-white truncate">
                 {sellerName}
               </span>
               <CheckCircle2
-                className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
+                className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
                 title="Verified Profile"
               />
             </div>
-            <div className="flex items-center gap-1 sm:gap-1.5 text-[10.5px] sm:text-[13px] text-slate-500 dark:text-slate-400 font-medium mt-0.5 whitespace-nowrap overflow-hidden">
+            <div className="flex items-center text-[10.5px] sm:text-[13px] text-slate-500 dark:text-slate-400 font-medium mt-0.5 whitespace-nowrap overflow-hidden">
               <span className="shrink-0">{postTime}</span>
-              <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
+              <span className="text-slate-400 dark:text-slate-500 select-none leading-none inline-flex items-center justify-center px-0.5 font-bold">·</span>
               <span className="text-[#006A4E] dark:text-emerald-400 font-semibold shrink-0">
                 {cleanFeedSellerLevel(gig.sellerLevel)}
               </span>
-              <span className="text-slate-400 dark:text-slate-500 shrink-0 font-bold select-none leading-none">·</span>
+              <span className="text-slate-400 dark:text-slate-500 select-none leading-none inline-flex items-center justify-center px-0.5 font-bold">·</span>
               {isAgency ? (
-                <span className="font-medium text-slate-700 dark:text-slate-300 shrink-0">Agency</span>
+                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#006A4E] dark:text-emerald-400 shrink-0" aria-label="Verified Agency" title="১০০% ভেরিফাইড এজেন্সি" />
               ) : (
-                <span className="inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400 shrink-0">
-                  Public
-                  <Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400 shrink-0" aria-label="Public" />
-                </span>
+                <Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400 shrink-0" aria-label="Public" title="Public" />
               )}
             </div>
           </div>
@@ -250,11 +248,11 @@ export const SellerFeedPostCard: React.FC<SellerFeedPostCardProps> = ({
         </div>
       </div>
 
-      {/* 2. Post Caption / Title */}
+      {/* 2. Post Caption / Title (Larger on PC view) */}
       <div className="px-2.5 sm:px-3 pt-0 pb-1.5">
         <p
           onClick={onPreview}
-          className="text-[12.5px] sm:text-[14px] font-normal text-slate-800 dark:text-slate-200 leading-snug line-clamp-2 cursor-pointer hover:text-[#006A4E] dark:hover:text-emerald-400 transition"
+          className="text-[12.5px] sm:text-[16px] md:text-[17px] font-normal text-slate-800 dark:text-slate-200 leading-snug line-clamp-2 cursor-pointer hover:text-[#006A4E] dark:hover:text-emerald-400 transition"
         >
           {gig.title}
         </p>
@@ -336,8 +334,8 @@ export const SellerFeedPostCard: React.FC<SellerFeedPostCardProps> = ({
         </div>
       </div>
 
-      {/* 5. Action Bar (Unified for Both Phone & PC: Up, Down, Details) */}
-      <div className="grid grid-cols-3 gap-1 sm:gap-2 items-center px-2 sm:px-3 py-1 sm:py-1.5 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+      {/* 5. Action Bar (Unified for Both Phone & PC: Up, Down, Details - No middle divider) */}
+      <div className="grid grid-cols-3 gap-1 sm:gap-2 items-center px-2 sm:px-3 pb-1.5 sm:pb-2 pt-0.5 bg-white dark:bg-slate-900">
         {/* 1. আপ বাটন */}
         <button
           type="button"

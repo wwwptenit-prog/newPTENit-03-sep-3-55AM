@@ -1,0 +1,210 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with authentication and role access",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "teacher", "specialist", "customer", "student"] },
+        "avatar": { "type": "string" },
+        "title": { "type": "string" },
+        "bio": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "role"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Academy course offering",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "price": { "type": "number" },
+        "discountPrice": { "type": "number" },
+        "instructor": { "type": "string" },
+        "thumbnail": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "title", "price"]
+    },
+    "Service": {
+      "title": "Service",
+      "description": "Agency IT & creative service",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "price": { "type": "number" },
+        "description": { "type": "string" },
+        "badge": { "type": "string" }
+      },
+      "required": ["id", "title", "price"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Course or platform payment order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "courseId": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "amount": { "type": "number" },
+        "paymentMethod": { "type": "string" },
+        "transactionId": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "amount", "status"]
+    },
+    "MarketplaceOrder": {
+      "title": "MarketplaceOrder",
+      "description": "Freelance marketplace gig or custom job order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "amount": { "type": "number" },
+        "buyerId": { "type": "string" },
+        "buyerName": { "type": "string" },
+        "sellerId": { "type": "string" },
+        "sellerName": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "title", "amount", "status"]
+    },
+    "MarketplaceGig": {
+      "title": "MarketplaceGig",
+      "description": "Specialist service gig listed on the marketplace",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "price": { "type": "number" },
+        "sellerId": { "type": "string" },
+        "sellerName": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "title", "price"]
+    },
+    "MarketplaceJob": {
+      "title": "MarketplaceJob",
+      "description": "Client job post for custom projects",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "budget": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "title", "budget"]
+    },
+    "GalleryItem": {
+      "title": "GalleryItem",
+      "description": "Media portfolio image or project showcase",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "category": { "type": "string" }
+      },
+      "required": ["id", "title", "imageUrl"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "Student or client feedback and review",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "text": { "type": "string" },
+        "rating": { "type": "number" }
+      },
+      "required": ["id", "name", "text", "rating"]
+    },
+    "WrittenContent": {
+      "title": "WrittenContent",
+      "description": "Blog posts, articles, and public notices",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "category": { "type": "string" },
+        "published": { "type": "boolean" }
+      },
+      "required": ["id", "title", "content"]
+    },
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "Global website configuration and settings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "siteName": { "type": "string" },
+        "logoUrl": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "contactPhone": { "type": "string" }
+      },
+      "required": ["id"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and permissions"
+    },
+    "/courses/{courseId}": {
+      "schema": "Course",
+      "description": "Courses offered by the academy"
+    },
+    "/services/{serviceId}": {
+      "schema": "Service",
+      "description": "Agency services"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Platform orders"
+    },
+    "/marketplaceOrders/{orderId}": {
+      "schema": "MarketplaceOrder",
+      "description": "Marketplace project orders"
+    },
+    "/gigs/{gigId}": {
+      "schema": "MarketplaceGig",
+      "description": "Specialist service gigs"
+    },
+    "/jobs/{jobId}": {
+      "schema": "MarketplaceJob",
+      "description": "Customer project jobs"
+    },
+    "/gallery/{galleryId}": {
+      "schema": "GalleryItem",
+      "description": "Portfolio media"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": "Testimonial",
+      "description": "Client reviews"
+    },
+    "/writtenContent/{contentId}": {
+      "schema": "WrittenContent",
+      "description": "Articles, blogs, and posts"
+    },
+    "/siteSettings/{settingId}": {
+      "schema": "SiteSettings",
+      "description": "System site configurations"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   LayoutDashboard,
   Users,
@@ -83,8 +83,9 @@ import { AIMarketplaceCore } from './admin/AIMarketplaceCore';
 import { StaffAccessControl } from './admin/StaffAccessControl';
 import { CustomerCareDispatcher } from './admin/CustomerCareDispatcher';
 import { AdminTaskTabs, TaskTabItem, AVAILABLE_TASKS } from './admin/AdminTaskTabs';
-import { AdminCommandPalette } from './admin/AdminCommandPalette';
 import { AdminFloatingHub } from './admin/AdminFloatingHub';
+import { computeAdminSpeedBadge, syncAdminSpeedToFirebase } from '../utils/adminSpeedBadges';
+import { syncDocToFirestore } from '../services/firestoreSync';
 
 const WhatsAppIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -271,6 +272,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
     dispatchJobToStaff,
     approveMentorApplication,
     rejectMentorApplication,
+    companyBills = [],
+    addCompanyBill,
+    verifyCompanyBill,
+    rejectCompanyBill,
+    deleteCompanyBill,
+    clearSampleVouchers,
     logout,
     login
   } = useData();
@@ -357,21 +364,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
     }
     return tabs;
   });
-
-  // Command Palette State
-  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
-
-  // Global Ctrl+K or Cmd+K listener
-  useEffect(() => {
-    const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        setIsCommandPaletteOpen(prev => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleGlobalKeyDown);
-    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, []);
 
   // Open or switch task seamlessly
   const handleOpenOrSwitchTask = (incomingTabId: string) => {
@@ -978,58 +970,26 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
   const [testimonialText, setTestimonialText] = useState('');
   const [testimonialAvatar, setTestimonialAvatar] = useState('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80');
 
-  // Company Billing & Auto-Read Verification System States
-  const [companyBills, setCompanyBills] = useState<CompanyBillItem[]>([
-    {
-      id: 'BILL-1001',
-      payerName: 'মোঃ শফিকুল ইসলাম',
-      payerPhone: '01712345678',
-      gateway: 'bKash',
-      transactionId: '8N7X9K2P',
-      amount: 4750,
-      category: 'এডভান্স পেমেন্ট - React App',
-      status: 'pending',
-      date: '2026-08-05 10:30 AM',
-      note: '5% ছাড় অফার অর্ডারের বিল'
-    },
-    {
-      id: 'BILL-1002',
-      payerName: 'আরিফ উল্লাহ',
-      payerPhone: '01898765432',
-      gateway: 'Nagad',
-      transactionId: 'NGD982310',
-      amount: 999,
-      category: 'কোর্স পেমেন্ট - Digital Marketing',
-      status: 'verified',
-      verifiedAt: '2026-08-05 09:15 AM',
-      date: '2026-08-05 09:00 AM',
-      note: 'অটো-রিড ও ইনস্ট্যান্ট ভেরিফাইড'
-    },
-    {
-      id: 'BILL-1003',
-      payerName: 'ডায়না ট্রেডিং প্রাঃ লিঃ',
-      payerPhone: '01911223344',
-      gateway: 'Bank',
-      transactionId: 'TRX778899',
-      amount: 15000,
-      category: 'কাস্টম আইটি সার্ভিস - ERP Billing',
-      status: 'pending',
-      date: '2026-08-05 11:00 AM',
-      note: 'কর্পোরেট ইনভয়েস পেমেন্ট'
-    },
-    {
-      id: 'BILL-1004',
-      payerName: 'কামরুল হাসান',
-      payerPhone: '01655443322',
-      gateway: 'Rocket',
-      transactionId: 'RKT445566',
-      amount: 2500,
-      category: 'মার্কেটপ্লেস গিগ - UI/UX Design',
-      status: 'pending',
-      date: '2026-08-05 11:05 AM',
-      note: 'এমএফএস রকেট এডভান্স বিল'
+  // Automatic Admin Work-Speed Performance Badge Calculation
+  const currentAdminBadge = useMemo(() => {
+    const verifiedBills = companyBills.filter(b => b.status === 'verified').length;
+    const resolvedContactMsgs = (contactMessages || []).filter(m => m.read).length;
+    const processedOrders = (marketplaceOrders || []).filter(o => o.status === 'completed' || o.status === 'delivered').length;
+    const rawActions = (currentUser as any)?.staffMember?.actionsTakenCount || 1480;
+
+    return computeAdminSpeedBadge(currentUser?.email || '', rawActions, {
+      verifiedBills,
+      resolvedTickets: resolvedContactMsgs,
+      processedOrders
+    });
+  }, [currentUser?.email, companyBills, contactMessages, marketplaceOrders]);
+
+  // Persist admin speed metrics to Firebase on load or update
+  useEffect(() => {
+    if (currentUser?.email) {
+      syncAdminSpeedToFirebase(currentUser.email, currentAdminBadge, currentAdminBadge.completedActions);
     }
-  ]);
+  }, [currentUser?.email, currentAdminBadge]);
 
   const [billSearchFilter, setBillSearchFilter] = useState('');
   const [billStatusFilter, setBillStatusFilter] = useState<'all' | 'pending' | 'verified' | 'rejected'>('all');
@@ -1062,50 +1022,36 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
       date: new Date().toLocaleString('bn-BD'),
       note: newBillNote || 'ম্যানুয়ালি যুক্ত প্রতিষ্ঠানের বিল'
     };
-    setCompanyBills(prev => [newBill, ...prev]);
+    addCompanyBill(newBill);
     setAddBillModalOpen(false);
     setNewBillPayerName('');
     setNewBillPayerPhone('');
     setNewBillTrxId('');
     setNewBillAmount(2333);
     setNewBillNote('');
-    alert(`প্রতিষ্ঠানের বিল ${newBill.id} সফলভাবে যুক্ত করা হয়েছে!`);
   };
 
   const handleAutoVerifySingleBill = (billId: string) => {
-    const targetBill = companyBills.find(b => b.id === billId);
-    if (!targetBill) return;
-
-    setCompanyBills(prev => prev.map(b => {
-      if (b.id === billId) {
-        return {
-          ...b,
-          status: 'verified',
-          verifiedAt: new Date().toLocaleTimeString('bn-BD')
-        };
-      }
-      return b;
-    }));
+    verifyCompanyBill(billId, currentUser?.email || 'admin');
   };
 
   const handleAutoVerifyAllPendingBills = () => {
     const pendingList = companyBills.filter(b => b.status === 'pending');
     if (pendingList.length === 0) {
-      alert('কোনো পেন্ডিং বিল নেই! সকল বিল ইতোমধ্যে ভেরিফাইড।');
+      alert('কোনো পেন্ডিং বিল বা ভাউচার নেই!');
       return;
     }
+    pendingList.forEach(b => {
+      verifyCompanyBill(b.id, currentUser?.email || 'admin');
+    });
+  };
 
-    const nowTime = new Date().toLocaleTimeString('bn-BD');
-    setCompanyBills(prev => prev.map(b => {
-      if (b.status === 'pending') {
-        return {
-          ...b,
-          status: 'verified',
-          verifiedAt: nowTime
-        };
-      }
-      return b;
-    }));
+  const handleCreateBillFromCore = (newBill: CompanyBillItem) => {
+    addCompanyBill(newBill);
+  };
+
+  const handleRejectBill = (billId: string) => {
+    rejectCompanyBill(billId, 'এডমিন কর্তৃক যাচাইকরণ ব্যর্থ');
   };
 
   // Job Creation Form State
@@ -1177,6 +1123,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
       }
       if (siteSettings.defaultWithdrawalFee !== undefined) {
         setFreelancerWithdrawalFeePercent(siteSettings.defaultWithdrawalFee);
+      }
+      if (siteSettings.marketplaceCategories && siteSettings.marketplaceCategories.length > 0) {
+        setMktCategories(siteSettings.marketplaceCategories);
       }
     }
   }, [siteSettings]);
@@ -1675,27 +1624,27 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
   };
 
   return (
-    <div className="py-2 sm:py-6 bg-slate-950 text-slate-100 min-h-screen transition-colors font-bengali w-full overflow-x-clip pb-12">
-      <div className="max-w-[1600px] mx-auto px-2.5 sm:px-6 lg:px-8 space-y-3 sm:space-y-4">
+    <div className="py-2 sm:py-4 bg-slate-950 text-slate-100 min-h-screen transition-colors font-bengali w-full overflow-x-clip pb-12 admin-surface text-[15px] sm:text-[16px] leading-relaxed">
+      <div className="w-full px-2 sm:px-4 lg:px-6 space-y-3 sm:space-y-4">
         
         {/* DESKTOP TOP NAV HEADER (lg:flex) */}
-        <header className="hidden lg:flex sticky top-0 z-40 bg-slate-900/95 backdrop-blur-xl border border-slate-800 text-white px-4 py-2.5 rounded-2xl shadow-xl justify-between items-center gap-3 ring-1 ring-white/5">
+        <header className="hidden lg:flex sticky top-0 z-40 bg-slate-900/85 backdrop-blur-2xl border border-slate-700/60 text-white px-4 py-3 rounded-2xl shadow-2xl justify-between items-center gap-3 ring-1 ring-white/10">
           <div className="flex items-center gap-3 min-w-0">
             <div className="p-2 bg-emerald-500/15 rounded-xl border border-emerald-500/30 text-emerald-400 shrink-0">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h1 className="text-sm font-black text-white tracking-wide">PTENit এডমিন সেন্টার</h1>
-                <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-sky-400 text-[10px] font-mono font-bold border border-blue-500/20">
+                <h1 className="text-base font-black text-white tracking-wide">PTENit এডমিন সেন্টার</h1>
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 text-sky-400 text-xs font-mono font-bold border border-blue-500/20">
                   {currentUser.email}
                 </span>
-                <span className="hidden 2xl:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 text-[10px] font-bold border border-emerald-500/20">
-                  <Pin className="w-2.5 h-2.5" />
+                <span className="hidden 2xl:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 text-xs font-bold border border-emerald-500/20">
+                  <Pin className="w-3 h-3" />
                   <span>মেনুবার লকড</span>
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 flex items-center gap-1.5 mt-0.5 truncate">
+              <p className="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5 truncate">
                 <span>মডিউল:</span>
                 <span className="text-amber-400 font-bold">
                   {activeMainModule === 'dashboard' ? 'ড্যাশবোর্ড' :
@@ -1725,21 +1674,34 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
             </div>
           </div>
 
-          {/* Center: Global Fast Search / Command Trigger */}
-          <button
-            type="button"
-            onClick={() => setIsCommandPaletteOpen(true)}
-            className="hidden xl:flex items-center gap-2.5 px-4 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-amber-500/40 text-slate-400 hover:text-slate-200 text-xs transition cursor-pointer shadow-inner group"
-            title="সার্চ ও কমান্ড প্যালেট (Ctrl+K)"
-          >
-            <Search className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
-            <span>সার্চ মডিউল, ইউজার বা কমান্ড...</span>
-            <kbd className="px-1.5 py-0.5 text-[9px] font-mono bg-slate-900 border border-slate-700 rounded text-slate-400 font-bold group-hover:border-slate-600">
-              Ctrl+K
-            </kbd>
-          </button>
+          {/* Center: Dynamic Admin Work-Speed Performance Auto-Badge */}
+          <div className="hidden xl:flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-slate-950/90 border border-slate-800 text-xs shadow-inner">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="text-slate-400 text-xs font-medium">কাজের গতি রেটিং:</span>
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border ${currentAdminBadge.badgeBg} ${currentAdminBadge.badgeBorder} ${currentAdminBadge.badgeTextCol}`}>
+              <span>{currentAdminBadge.icon}</span>
+              <span>{currentAdminBadge.badgeText}</span>
+            </span>
+            <span className="text-slate-400 text-xs font-mono">
+              (অ্যাকশন: {currentAdminBadge.completedActions} • রেসপন্স: {currentAdminBadge.avgResponseTime})
+            </span>
+          </div>
 
           <div className="flex items-center gap-2 shrink-0">
+            {/* Direct Link: PTENit.zip Download Button */}
+            <a
+              href="/PTENit.zip"
+              download="PTENit.zip"
+              className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#00543e] text-white rounded-xl border border-emerald-500/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+              title="PTENit.zip ডাউনলোড করুন (Direct Link)"
+            >
+              <Download className="w-3.5 h-3.5 text-emerald-300" />
+              <span>PTENit.zip ডাউনলোড</span>
+            </a>
+
             {/* Sidebar Collapse/Expand Toggle */}
             <button
               onClick={toggleSidebarCollapsed}
@@ -1747,7 +1709,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               title={isSidebarCollapsed ? 'সাইডবার প্রসারিত করুন' : 'সাইডবার মিনিমাইজ করুন'}
             >
               {isSidebarCollapsed ? <PanelLeftOpen className="w-4 h-4 text-amber-400" /> : <PanelLeftClose className="w-4 h-4 text-slate-300" />}
-              <span className="hidden 2xl:inline text-[11px]">{isSidebarCollapsed ? 'মেনু প্রসারিত' : 'মিনিমাইজ'}</span>
+              <span className="hidden 2xl:inline text-xs">{isSidebarCollapsed ? 'মেনু প্রসারিত' : 'মিনিমাইজ'}</span>
             </button>
 
             {/* Language Switcher */}
@@ -1869,9 +1831,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 <ShieldCheck className="w-4 h-4" />
               </div>
               <div className="min-w-0">
-                <div className="flex items-center gap-1">
-                  <h1 className="text-[11px] font-black text-white truncate">PTENit</h1>
-                  <span className="text-[10px] font-bold text-amber-400 px-1 py-0.2 bg-amber-500/10 rounded border border-amber-500/20 truncate">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <h1 className="text-xs font-black text-white truncate">PTENit</h1>
+                  <span className="text-xs font-bold text-amber-400 px-1.5 py-0.5 bg-amber-500/10 rounded border border-amber-500/20 truncate">
                     {activeMainModule === 'dashboard' ? 'ড্যাশবোর্ড' :
                      activeMainModule === 'support' ? 'সাপোর্ট' :
                      activeMainModule === 'academy' ? 'একাডেমি' :
@@ -1879,24 +1841,19 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                      activeMainModule === 'settings' ? 'সেটিংস' :
                      activeMainModule === 'system' ? 'সিস্টেম' : 'ইউজার'}
                   </span>
+                  <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-bold border ${currentAdminBadge.badgeBg} ${currentAdminBadge.badgeBorder} ${currentAdminBadge.badgeTextCol}`}>
+                    <span>{currentAdminBadge.icon}</span>
+                    <span className="hidden sm:inline">{currentAdminBadge.title}</span>
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Quick Actions Row */}
-            <div className="flex items-center gap-1 shrink-0">
-              <button
-                type="button"
-                onClick={() => setIsCommandPaletteOpen(true)}
-                className="p-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-amber-400 border border-slate-700 cursor-pointer"
-                title="সার্চ ও কমান্ড"
-              >
-                <Search className="w-3.5 h-3.5" />
-              </button>
-
+            <div className="flex items-center gap-1.5 shrink-0">
               <button
                 onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')}
-                className="px-1.5 py-1 bg-slate-800 rounded-lg text-[10px] font-bold text-slate-300 border border-slate-700 cursor-pointer"
+                className="px-2 py-1 bg-slate-800 rounded-lg text-xs font-bold text-slate-300 border border-slate-700 cursor-pointer"
               >
                 {lang === 'bn' ? 'ENG' : 'বাং'}
               </button>
@@ -1919,6 +1876,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                   </span>
                 )}
               </button>
+
+              <a
+                href="/PTENit.zip"
+                download="PTENit.zip"
+                className="px-2 py-1 bg-[#006A4E] hover:bg-[#00543e] text-white rounded-lg text-[11px] font-bold transition flex items-center gap-1 cursor-pointer shadow-xs"
+                title="PTENit.zip ডাউনলোড"
+              >
+                <Download className="w-3 h-3 text-emerald-300" />
+                <span>ZIP</span>
+              </a>
 
               <button
                 onClick={() => setMobileMenuOpen(true)}
@@ -2141,6 +2108,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               </div>
 
               <div className="pt-2.5 border-t border-slate-800 space-y-2">
+                <a
+                  href="/PTENit.zip"
+                  download="PTENit.zip"
+                  className="w-full py-2 px-3 rounded-lg bg-[#006A4E] hover:bg-[#00543e] text-white font-bold text-xs border border-emerald-500/30 flex items-center justify-center gap-1.5 transition cursor-pointer shadow-sm"
+                  title="PTENit.zip ডাউনলোড করুন"
+                >
+                  <Download className="w-3.5 h-3.5 text-emerald-300" />
+                  <span>PTENit.zip ডাউনলোড (Direct Link)</span>
+                </a>
                 <div className="text-[10px] text-slate-400 truncate">
                   এডমিন: <span className="text-sky-400 font-mono">{currentUser.email}</span>
                 </div>
@@ -2367,15 +2343,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                             <Icon className="w-4 h-4" />
                           </div>
                           <div className="min-w-0">
-                            <p className="text-xs font-black truncate">{nav.label}</p>
-                            <p className={`text-[10px] truncate ${nav.isActive ? 'text-slate-950 font-semibold' : 'text-slate-400'}`}>
+                            <p className="text-sm font-black truncate">{nav.label}</p>
+                            <p className={`text-xs truncate ${nav.isActive ? 'text-slate-950 font-semibold' : 'text-slate-400'}`}>
                               {nav.subText}
                             </p>
                           </div>
                         </div>
 
                         {!!nav.badge && nav.badge > 0 && (
-                          <span className={`px-1.5 py-0.2 text-[10px] font-black rounded-full shrink-0 ${
+                          <span className={`px-2 py-0.5 text-xs font-black rounded-full shrink-0 ${
                             nav.isActive ? 'bg-slate-950 text-amber-300' : 'bg-rose-600 text-white animate-pulse'
                           }`}>
                             {nav.badge}
@@ -2388,11 +2364,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               </div>
 
               {/* Pinned Sidebar Footer (Never scrolls away) */}
-              <div className="p-2.5 border-t border-slate-800/80 shrink-0 bg-slate-900/90 space-y-2">
+              <div className="p-3 border-t border-slate-800/80 shrink-0 bg-slate-900/90 space-y-2">
                 {isSidebarCollapsed ? (
                   <button
                     onClick={() => setAddPageModalOpen(true)}
-                    className="w-full p-2 rounded-xl border border-dashed border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 flex items-center justify-center cursor-pointer transition"
+                    className="w-full p-2.5 rounded-xl border border-dashed border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 flex items-center justify-center cursor-pointer transition"
                     title="+ নতুন পেজ যোগ করুন"
                   >
                     <Plus className="w-4 h-4" />
@@ -2400,20 +2376,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 ) : (
                   <button
                     onClick={() => setAddPageModalOpen(true)}
-                    className="w-full py-2 px-3 font-bold text-xs flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition cursor-pointer"
+                    className="w-full py-2.5 px-3 font-bold text-xs flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition cursor-pointer"
                   >
-                    <Plus className="w-3.5 h-3.5" />
+                    <Plus className="w-4 h-4" />
                     <span>+ নতুন পেজ যোগ করুন</span>
                   </button>
                 )}
 
                 {!isSidebarCollapsed && (
-                  <div className="px-1 flex items-center justify-between text-[10px] text-slate-400">
-                    <span className="flex items-center gap-1">
+                  <div className="px-1 flex items-center justify-between text-xs text-slate-400">
+                    <span className="flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                       <span>মেনুবার লকড</span>
                     </span>
-                    <span className="font-mono text-[9px] text-slate-400">PTENit Admin</span>
+                    <span className="font-mono text-xs text-slate-400">PTENit Admin</span>
                   </div>
                 )}
               </div>
@@ -2442,7 +2418,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
               onSelectTab={(tabId) => handleOpenOrSwitchTask(tabId)}
               onCloseTab={(tabId) => handleCloseTaskTab(tabId)}
               onLaunchTask={(tabId) => handleOpenOrSwitchTask(tabId)}
-              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
             />
 
             {/* DESKTOP WORKSPACE SUB-TABS BAR (lg:flex) */}
@@ -2621,13 +2596,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
             {activeAdminTab === 'ai_core' && (
               <AIMarketplaceCore
                 companyBills={companyBills}
-                setCompanyBills={setCompanyBills}
                 onVerifySingleBill={handleAutoVerifySingleBill}
                 onVerifyAllBills={handleAutoVerifyAllPendingBills}
-                onCreateBill={(newBill) => setCompanyBills(prev => [newBill, ...prev])}
-                onRejectBill={(billId) => {
-                  setCompanyBills(prev => prev.map(b => b.id === billId ? { ...b, status: 'rejected' } : b));
-                }}
+                onCreateBill={handleCreateBillFromCore}
+                onRejectBill={handleRejectBill}
                 onApproveAllMentors={() => {
                   const pendingUsers = users.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication?.status === 'pending');
                   if (pendingUsers.length === 0) {
@@ -2917,6 +2889,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                       <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
                         {[
                           { id: 'all', label: 'সবগুলো', count: orders.length },
+                          { id: 'Paid', label: 'পরিশোধিত', count: orders.filter(o => o.status === 'Paid').length },
                           { id: 'Pending', label: 'পেন্ডিং', count: orders.filter(o => o.status === 'Pending').length },
                           { id: 'Approved', label: 'অনুমোদিত', count: orders.filter(o => o.status === 'Approved').length },
                           { id: 'Rejected', label: 'বাতিল', count: orders.filter(o => o.status === 'Rejected').length }
@@ -2982,13 +2955,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                                     <p className="text-[10px] text-slate-400">{ord.userMobile}</p>
                                   </div>
                                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                                    ord.status === 'Approved'
+                                    ord.status === 'Approved' || ord.status === 'Paid'
                                       ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
                                       : ord.status === 'Rejected'
                                       ? 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
                                       : 'bg-amber-500/15 text-amber-300 border border-amber-500/30 animate-pulse'
                                   }`}>
-                                    {ord.status === 'Approved' ? '✓ অনুমোদিত' : ord.status === 'Rejected' ? '✕ বাতিল' : 'পেন্ডিং'}
+                                    {ord.status === 'Paid' ? '✓ পেইড (Paid)' : ord.status === 'Approved' ? '✓ অনুমোদিত' : ord.status === 'Rejected' ? '✕ বাতিল' : 'পেন্ডিং'}
                                   </span>
                                 </div>
 
@@ -3058,13 +3031,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                                     </td>
                                     <td className="p-3">
                                       <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold inline-block ${
-                                        ord.status === 'Approved'
+                                        ord.status === 'Approved' || ord.status === 'Paid'
                                           ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
                                           : ord.status === 'Rejected'
                                           ? 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
                                           : 'bg-amber-500/15 text-amber-300 border border-amber-500/30 animate-pulse'
                                       }`}>
-                                        {ord.status === 'Approved' ? '✓ অনুমোদিত' : ord.status === 'Rejected' ? '✕ বাতিল' : 'পেন্ডিং'}
+                                        {ord.status === 'Paid' ? '✓ পেইড (Paid)' : ord.status === 'Approved' ? '✓ অনুমোদিত' : ord.status === 'Rejected' ? '✕ বাতিল' : 'পেন্ডিং'}
                                       </span>
                                     </td>
                                     <td className="p-3 text-right">
@@ -7477,8 +7450,12 @@ PTENit ডিজিটাল টিম`;
                       <select
                         value={mktCommissionRate}
                         onChange={(e) => {
-                          setMktCommissionRate(Number(e.target.value));
-                          alert(`প্লাটফর্ম কমিশন রেট সফলভাবে ${e.target.value}% এ সেট করা হয়েছে!`);
+                          const val = Number(e.target.value);
+                          setMktCommissionRate(val);
+                          updateSiteSettings({
+                            ...settingsForm,
+                            defaultCommissionRate: val
+                          });
                         }}
                         className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs font-black text-white focus:outline-none focus:border-[#006A4E]"
                       >
@@ -7862,9 +7839,10 @@ PTENit ডিজিটাল টিম`;
                                 <div className="flex items-center justify-end gap-1.5">
                                   <button
                                     onClick={() => {
-                                      alert(`অর্ডার ${ord.id} এর এস্ক্রো পেমেন্ট সফলভাবে সেলারের ওয়ালেটে রিলিজ করা হলো!`);
+                                      updateMarketplaceOrder(ord.id, { status: 'completed' });
                                     }}
-                                    className="px-2.5 py-1 bg-[#006A4E] text-white font-black text-[10px] rounded-md shadow hover:bg-blue-500 transition cursor-pointer"
+                                    className="px-2.5 py-1 bg-[#006A4E] text-white font-black text-[10px] rounded-md shadow hover:bg-emerald-600 transition cursor-pointer"
+                                    title="এস্ক্রো পেমেন্ট রিলিজ করুন"
                                   >
                                     রিলিজ এস্ক্রো
                                   </button>
@@ -7908,9 +7886,14 @@ PTENit ডিজিটাল টিম`;
                   <button
                     onClick={() => {
                       if (newCatName.trim()) {
-                        setMktCategories(prev => [...prev, newCatName.trim()]);
+                        const trimmed = newCatName.trim();
+                        const updated = [...mktCategories, trimmed];
+                        setMktCategories(updated);
+                        updateSiteSettings({
+                          ...settingsForm,
+                          marketplaceCategories: updated
+                        });
                         setNewCatName('');
-                        alert(`ক্যাটাগরি "${newCatName.trim()}" সফলভাবে যুক্ত হয়েছে!`);
                       }
                     }}
                     className="px-4 py-2.5 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl cursor-pointer"
@@ -7924,7 +7907,14 @@ PTENit ডিজিটাল টিম`;
                     <span key={idx} className="px-3 py-1.5 bg-slate-950 border border-slate-800 text-slate-200 font-bold text-xs rounded-xl flex items-center gap-2">
                       <span>{cat}</span>
                       <button
-                        onClick={() => setMktCategories(prev => prev.filter(c => c !== cat))}
+                        onClick={() => {
+                          const updated = mktCategories.filter(c => c !== cat);
+                          setMktCategories(updated);
+                          updateSiteSettings({
+                            ...settingsForm,
+                            marketplaceCategories: updated
+                          });
+                        }}
                         className="text-slate-500 hover:text-red-400 cursor-pointer"
                       >
                         ×
@@ -10092,6 +10082,7 @@ PTENit ডিজিটাল টিম`;
                           ];
 
                           setSettingsForm(prev => ({ ...prev, paymentLogos: updated }));
+                          updateSiteSettings({ ...settingsForm, paymentLogos: updated });
                           setNewLogoName('');
                           setNewLogoUrl('');
                           setShowAddLogoForm(false);
@@ -10164,6 +10155,7 @@ PTENit ডিজিটাল টিম`;
                               setLogoFeedback(`"${preset.name}" সফলভাবে যুক্ত করা হয়েছে!`);
                             }
                             setSettingsForm(prev => ({ ...prev, paymentLogos: updatedList }));
+                            updateSiteSettings({ ...settingsForm, paymentLogos: updatedList });
                             setTimeout(() => setLogoFeedback(null), 3000);
                           }}
                           className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition cursor-pointer flex items-center gap-1 ${
@@ -10258,6 +10250,7 @@ PTENit ডিজিটাল টিম`;
                                   p.id === item.id ? { ...p, isActive: e.target.checked } : p
                                 );
                                 setSettingsForm(prev => ({ ...prev, paymentLogos: updated }));
+                                updateSiteSettings({ ...settingsForm, paymentLogos: updated });
                               }}
                               className="accent-[#006A4E] w-3.5 h-3.5"
                             />
@@ -10285,6 +10278,7 @@ PTENit ডিজিটাল টিম`;
 
                               const updated = currentList.filter(p => p.id !== item.id);
                               setSettingsForm(prev => ({ ...prev, paymentLogos: updated }));
+                              updateSiteSettings({ ...settingsForm, paymentLogos: updated });
                               setLogoFeedback(`"${item.name}" সফলভাবে মুছে ফেলা হয়েছে!`);
                               setTimeout(() => setLogoFeedback(null), 3000);
                             }}
@@ -10341,6 +10335,7 @@ PTENit ডিজিটাল টিম`;
                     key={preset.val}
                     onClick={() => {
                       setMktCommissionRate(preset.val);
+                      updateSiteSettings({ ...settingsForm, defaultCommissionRate: preset.val });
                       setFeeSaveSuccess(true);
                       setTimeout(() => setFeeSaveSuccess(false), 3000);
                     }}
@@ -10595,6 +10590,13 @@ PTENit ডিজিটাল টিম`;
                   setTrainerRevShareRate(90);
                   setClientProcessingFeePercent(0);
                   setFreelancerWithdrawalFeePercent(1.5);
+                  updateSiteSettings({
+                    ...settingsForm,
+                    defaultCommissionRate: 10,
+                    defaultTrainerRevShare: 90,
+                    defaultClientFee: 0,
+                    defaultWithdrawalFee: 1.5
+                  });
                   setFeeSaveSuccess(true);
                   setTimeout(() => setFeeSaveSuccess(false), 3000);
                 }}
@@ -10604,9 +10606,15 @@ PTENit ডিজিটাল টিম`;
               </button>
               <button
                 onClick={() => {
+                  updateSiteSettings({
+                    ...settingsForm,
+                    defaultCommissionRate: mktCommissionRate,
+                    defaultTrainerRevShare: trainerRevShareRate,
+                    defaultClientFee: clientProcessingFeePercent,
+                    defaultWithdrawalFee: freelancerWithdrawalFeePercent
+                  });
                   setFeeSaveSuccess(true);
                   setTimeout(() => setFeeSaveSuccess(false), 3000);
-                  alert(`ফি ও কমিশন সেটিংস সফলভাবে সেভ হয়েছে!\n• মার্কেটপ্লেস কমিশন: ${mktCommissionRate}%\n• ট্রেইনার শেয়ার: ${trainerRevShareRate}%\n• ক্লায়েন্ট ফি: ${clientProcessingFeePercent}%\n• উইথড্রয়াল চার্জ: ${freelancerWithdrawalFeePercent}%`);
                 }}
                 className="px-7 py-3 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-2xl flex items-center gap-2 cursor-pointer shadow-xl transition-all"
               >
@@ -10942,19 +10950,12 @@ PTENit ডিজিটাল টিম`;
         </div>
       </div>
 
-      {/* GLOBAL COMMAND PALETTE */}
-      <AdminCommandPalette
-        isOpen={isCommandPaletteOpen}
-        onClose={() => setIsCommandPaletteOpen(false)}
-        onNavigate={(tabId) => handleOpenOrSwitchTask(tabId)}
-      />
-
       {/* BOTTOM FLOATING SMART MULTI-TASK DOCK */}
       <AdminFloatingHub
         onNavigate={(tabId) => handleOpenOrSwitchTask(tabId)}
         companyBills={companyBills}
         onVerifyBill={(id) => handleAutoVerifySingleBill(id)}
-        onRejectBill={(id) => setCompanyBills(prev => prev.map(b => b.id === id ? { ...b, status: 'rejected' } : b))}
+        onRejectBill={(id) => handleRejectBill(id)}
       />
     </div>
   );

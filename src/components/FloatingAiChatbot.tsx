@@ -92,6 +92,12 @@ const TypewriterText: React.FC<{
 }> = ({ text, speed = 5, onComplete }) => {
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
+  const onCompleteRef = useRef(onComplete);
+  const hasCompletedRef = useRef(false);
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     if (currentIndex < text.length) {
@@ -101,10 +107,13 @@ const TypewriterText: React.FC<{
         setCurrentIndex((prev) => prev + step);
       }, speed);
       return () => clearTimeout(timeout);
-    } else if (onComplete) {
-      onComplete();
+    } else if (!hasCompletedRef.current) {
+      hasCompletedRef.current = true;
+      if (onCompleteRef.current) {
+        onCompleteRef.current();
+      }
     }
-  }, [currentIndex, text, speed, onComplete]);
+  }, [currentIndex, text, speed]);
 
   return (
     <span>

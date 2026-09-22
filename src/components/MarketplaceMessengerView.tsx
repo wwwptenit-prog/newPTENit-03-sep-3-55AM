@@ -347,7 +347,6 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
               <div>
                 <h1 className="text-lg sm:text-xl font-black text-slate-950 dark:text-white tracking-tight flex items-center gap-1.5">
                   <span>Messages</span>
-                  <span className="w-2 h-2 rounded-full bg-[#006A4E]" />
                 </h1>
                 <p className="text-[10px] font-semibold text-slate-400/90 tracking-wide leading-tight mt-0.5 font-sans">
                   PTENit Marketplace Inbox
@@ -1014,7 +1013,6 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
               <CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
             </h3>
             <p className="text-[10px] font-bold text-[#006A4E] dark:text-sky-400 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shrink-0" />
               <span className="truncate">অনলাইনে আছেন</span>
             </p>
           </div>

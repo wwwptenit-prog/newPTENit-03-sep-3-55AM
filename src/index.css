@@ -1,1 +1,130 @@
 @import "tailwindcss";
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: 'Noto Sans Bengali', 'Plus Jakarta Sans', 'Hind Siliguri', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+.font-bengali {
+  font-family: 'Noto Sans Bengali', 'Hind Siliguri', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+}
+
+/* ========================================================================= */
+/* LUXURY GLASSMORPHISM & FROSTED GLASS EFFECTS                             */
+/* ========================================================================= */
+.glass-surface {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+}
+
+.dark .glass-surface,
+.glass-surface-dark {
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(0, 106, 78, 0.4);
+  box-shadow: 0 12px 30px -4px rgba(0, 106, 78, 0.12);
+  transform: translateY(-2px);
+}
+
+.dark .glass-card {
+  background: rgba(15, 23, 42, 0.85);
+  border-color: rgba(51, 65, 85, 0.6);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25);
+}
+
+.dark .glass-card:hover {
+  background: rgba(15, 23, 42, 0.95);
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.45);
+}
+
+.glass-header {
+  background: rgba(0, 106, 78, 0.92);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Ambient glow accents behind glass elements */
+.glass-ambient-sphere-1 {
+  position: fixed;
+  top: -8%;
+  left: 15%;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(0, 106, 78, 0.07) 0%, rgba(59, 130, 246, 0.03) 50%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(70px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glass-ambient-sphere-2 {
+  position: fixed;
+  top: 45%;
+  right: 5%;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, rgba(99, 102, 241, 0.03) 50%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Admin Panel Typography & Glass Enhancements */
+.admin-surface {
+  font-size: 15.5px;
+}
+
+.admin-surface table th {
+  font-size: 13.5px;
+  letter-spacing: 0.02em;
+  padding: 10px 14px;
+}
+
+.admin-surface table td {
+  font-size: 14.5px;
+  padding: 10px 14px;
+}
+
+.admin-surface button,
+.admin-surface input,
+.admin-surface select,
+.admin-surface textarea {
+  font-size: 14.5px;
+}
+
+/* Text Size Clarity Booster for all Bengali text */
+p, span, li, a, button, label {
+  text-rendering: optimizeLegibility;
+}

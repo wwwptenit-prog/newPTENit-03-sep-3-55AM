@@ -121,7 +121,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-50 w-full transition-all duration-300">
       {/* Top Slim Header Bar - Hidden on mobile/phone screens */}
-      <div className="hidden md:block bg-slate-50 text-slate-700 text-[11px] sm:text-xs py-1 sm:py-1.5 px-3 sm:px-4 border-b border-slate-200">
+      <div className="hidden md:block bg-slate-50/85 backdrop-blur-md text-slate-700 text-[11px] sm:text-xs py-1 sm:py-1.5 px-3 sm:px-4 border-b border-slate-200/80">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 flex justify-between items-center gap-2">
           <div className="flex items-center gap-2 sm:gap-4 text-slate-600 font-medium text-[11px] sm:text-xs">
             <span className="flex items-center gap-1">
@@ -156,8 +156,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Main Navigation - Forest Green Brand Bar (Matches "সার্ভিস দেখুন" button) */}
-      <nav className="bg-[#006A4E] border-b border-[#00543e] text-white shadow-md relative">
+      {/* Main Navigation - Forest Green Glass Brand Bar */}
+      <nav className="bg-[#006A4E]/92 backdrop-blur-xl border-b border-[#00543e]/70 text-white shadow-lg relative">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
           <div className="flex items-center justify-between h-14 sm:h-16 gap-2 sm:gap-3">
             

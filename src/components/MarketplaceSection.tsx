@@ -97,6 +97,8 @@ import {
   Volume2,
   VolumeX,
   Menu,
+  LayoutList,
+  LayoutGrid,
 } from 'lucide-react';
 import { useData, checkAndAutoCancelOverdueOrders } from '../context/DataContext';
 import { getLiveSessionDynamicStatus, formatBanglaLiveSchedule } from '../services/liveClassService';
@@ -106,6 +108,7 @@ import { ServiceDetailModal } from './ServiceDetailModal';
 import { DigitalProductDetailModal } from './DigitalProductDetailModal';
 import { GigCard } from './GigCard';
 import { SellerFeedPostCard } from './SellerFeedPostCard';
+import { DigitalProductFeedCard, CourseFeedCard } from './MarketplaceFeedShowcaseCards';
 import { StudentDashboard } from './StudentDashboard';
 import { CustomerDashboard } from './CustomerDashboard';
 import { TeacherDashboard } from './TeacherDashboard';
@@ -767,243 +770,238 @@ const PtenFeaturedShowcase: React.FC<PtenFeaturedShowcaseProps> = ({
 // ২ নং কলামে সকল ডিজিটাল প্রোডাক্ট প্রদর্শনের জন্য ডেডিকেটেড ভিউ
 interface MarketplaceCenterDigitalProductsProps {
   products: any[];
-  onBack: () => void;
+  onBack?: () => void;
   onSelectProduct: (product: any) => void;
   setActiveTab?: (tab: string, category?: string, pushHistory?: boolean) => void;
 }
 
 const MarketplaceCenterDigitalProducts: React.FC<MarketplaceCenterDigitalProductsProps> = ({
   products,
-  onBack,
   onSelectProduct
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [priceRange, setPriceRange] = useState<'all' | 'under500' | '500-1000' | 'over1000'>('all');
+  const [sortBy, setSortBy] = useState<'popular' | 'price-asc' | 'price-desc' | 'rating'>('popular');
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
+  // Derive available categories
   const categories = useMemo(() => {
-    const cats = new Set<string>();
-    products.forEach(p => {
-      if (p.category) cats.add(p.category);
+    const set = new Set<string>();
+    products.forEach((p) => {
+      if (p.category) set.add(p.category);
     });
-    return ['all', ...Array.from(cats)];
+    return Array.from(set);
   }, [products]);
 
+  const isAnyFilterActive = selectedCategory !== 'All' || priceRange !== 'all' || sortBy !== 'popular';
+
+  const handleResetFilters = () => {
+    setSelectedCategory('All');
+    setPriceRange('all');
+    setSortBy('popular');
+    setIsFilterOpen(false);
+  };
+
   const filteredProducts = useMemo(() => {
-    return products.filter(p => {
-      const matchCat = selectedCategory === 'all' || p.category === selectedCategory;
-      const matchSearch = !searchQuery.trim() || 
-        p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        (p.shortDescription && p.shortDescription.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (p.category && p.category.toLowerCase().includes(searchQuery.toLowerCase()));
-      return matchCat && matchSearch;
-    });
-  }, [products, selectedCategory, searchQuery]);
+    let list = [...products];
+
+    if (selectedCategory !== 'All') {
+      list = list.filter((p) => p.category === selectedCategory);
+    }
+
+    if (priceRange === 'under500') {
+      list = list.filter((p) => (typeof p.price === 'number' ? p.price : 0) < 500);
+    } else if (priceRange === '500-1000') {
+      list = list.filter((p) => {
+        const price = typeof p.price === 'number' ? p.price : 0;
+        return price >= 500 && price <= 1000;
+      });
+    } else if (priceRange === 'over1000') {
+      list = list.filter((p) => (typeof p.price === 'number' ? p.price : 0) > 1000);
+    }
+
+    if (sortBy === 'price-asc') {
+      list.sort((a, b) => (a.price || 0) - (b.price || 0));
+    } else if (sortBy === 'price-desc') {
+      list.sort((a, b) => (b.price || 0) - (a.price || 0));
+    } else if (sortBy === 'rating') {
+      list.sort((a, b) => (b.rating || 5) - (a.rating || 5));
+    }
+
+    return list;
+  }, [products, selectedCategory, priceRange, sortBy]);
 
   return (
     <div className="space-y-4 w-full font-bengali animate-fadeIn">
-      {/* Top Header Card */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-3.5 sm:p-4 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 text-[#006A4E] dark:text-emerald-400 flex items-center justify-center shrink-0">
-              <Package className="w-5 h-5" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white truncate">
-                  ডিজিটাল প্রোডাক্ট ও রিসোর্স
-                </h3>
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-[#006A4E] dark:text-emerald-400 shrink-0">
-                  {filteredProducts.length}টি
-                </span>
-              </div>
-              <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">
-                লাইফটাইম এক্সেস ও ইনস্ট্যান্ট ডাউনলোডেবল রিসোর্স
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={onBack}
-            className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0"
-            title="সেলারদের অফারে ফিরে যান"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">অফারে ফিরুন</span>
-            <span className="sm:hidden">ফিরুন</span>
-          </button>
+      {/* Top Header: Unboxed row without card box and without back button */}
+      <div className="flex items-center justify-between w-full px-2 sm:px-1 py-1 font-bengali">
+        <div className="flex items-center gap-2 min-w-0">
+          <h3 className="text-sm sm:text-base font-normal text-slate-800 dark:text-slate-200 tracking-tight">
+            ডিজিটাল প্রোডাক্টসমূহ
+          </h3>
+          <span className={`text-xs sm:text-sm font-semibold shrink-0 ${
+            isAnyFilterActive
+              ? 'text-[#006A4E] dark:text-emerald-400 font-bold'
+              : 'text-slate-500 dark:text-slate-400'
+          }`}>
+            {filteredProducts.length}টি
+          </span>
         </div>
 
-        {/* Search & Category Filter */}
-        <div className="space-y-2 pt-1 border-t border-slate-100 dark:border-slate-800/80">
-          <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="প্রোডাক্ট খুঁজুন (ক্যানভা, সোর্স কোড, থিম...)"
-              className="w-full pl-9 pr-8 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-hidden focus:border-[#006A4E]"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
+        {/* Filter button with dropdown */}
+        <div className="relative">
+          {isAnyFilterActive ? (
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className="flex items-center gap-1.5 text-xs font-bold text-[#006A4E] dark:text-emerald-400 hover:text-[#00543D] dark:hover:text-emerald-300 transition-colors py-1 px-1.5 active:scale-95 cursor-pointer shrink-0 group"
+              title="ফিল্টার রিসেট করুন"
+            >
+              <RotateCcw className="w-3.5 h-3.5 stroke-[2.4] text-[#006A4E] dark:text-emerald-400 group-hover:-rotate-90 group-active:scale-90 transition-transform duration-300" />
+              <span>রিসেট</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setIsFilterOpen((prev) => !prev)}
+              className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-[#006A4E] dark:hover:text-emerald-400 transition-colors py-1 px-1.5 active:scale-95 cursor-pointer shrink-0 group"
+              title="ডিজিটাল প্রোডাক্ট ফিল্টার ও সর্ট করুন"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-[#006A4E] dark:text-emerald-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
+              <span>ফিল্টার</span>
+            </button>
+          )}
 
-          {categories.length > 1 && (
-            <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1 text-[11px]">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-2.5 py-1 rounded-lg font-bold whitespace-nowrap transition cursor-pointer ${
-                    selectedCategory === cat
-                      ? 'bg-[#006A4E] text-white shadow-2xs'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  {cat === 'all' ? 'সব ক্যাটাগরি' : cat}
-                </button>
-              ))}
-            </div>
+          {/* Filter Popover */}
+          {isFilterOpen && (
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setIsFilterOpen(false)}
+              />
+              <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-3.5 sm:p-4 z-50 space-y-3.5 animate-in fade-in zoom-in-95 duration-150">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-1.5 text-[#006A4E] dark:text-emerald-400 font-bold text-xs">
+                    <SlidersHorizontal className="w-3.5 h-3.5" />
+                    <span>প্রোডাক্ট ফিল্টার ও সর্ট</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsFilterOpen(false)}
+                    className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                {/* Categories */}
+                {categories.length > 0 && (
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                      ক্যাটাগরি
+                    </label>
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="w-full text-xs p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-hidden focus:border-[#006A4E]"
+                    >
+                      <option value="All">সকল ক্যাটাগরি</option>
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {/* Price Range */}
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                    মূল্য সীমা
+                  </label>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {[
+                      { id: 'all', label: 'সব মূল্য' },
+                      { id: 'under500', label: '৳৫০০ এর নিচে' },
+                      { id: '500-1000', label: '৳৫০০ - ৳১,০০০' },
+                      { id: 'over1000', label: '৳১,০০০+' },
+                    ].map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => setPriceRange(p.id as any)}
+                        className={`text-[11px] py-1.5 px-2 rounded-lg font-medium transition cursor-pointer border ${
+                          priceRange === p.id
+                            ? 'bg-[#006A4E]/10 border-[#006A4E] text-[#006A4E] dark:text-emerald-400 font-bold'
+                            : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
+                        }`}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Sort Order */}
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                    সর্টিং
+                  </label>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as any)}
+                    className="w-full text-xs p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-hidden focus:border-[#006A4E]"
+                  >
+                    <option value="popular">সর্বাধিক জনপ্রিয়</option>
+                    <option value="price-asc">মূল্য (কম থেকে বেশি)</option>
+                    <option value="price-desc">মূল্য (বেশি থেকে কম)</option>
+                    <option value="rating">সর্বোচ্চ রেটিং</option>
+                  </select>
+                </div>
+
+                {/* Bottom buttons */}
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <button
+                    type="button"
+                    onClick={handleResetFilters}
+                    className="text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-medium cursor-pointer"
+                  >
+                    রিসেট
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsFilterOpen(false)}
+                    className="px-3 py-1.5 rounded-lg bg-[#006A4E] hover:bg-[#047857] text-white text-xs font-bold transition cursor-pointer shadow-2xs"
+                  >
+                    প্রয়োগ করুন
+                  </button>
+                </div>
+              </div>
+            </>
           )}
         </div>
       </div>
 
-      {/* Responsive 2-Column Grid of Products */}
-      <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
-        {filteredProducts.map((product) => {
-          const discountPct = product.originalPrice && product.originalPrice > product.price
-            ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-            : 0;
-
-          return (
-            <div
-              key={product.id}
-              onClick={() => onSelectProduct(product.rawProduct || product)}
-              className="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-md hover:border-[#006A4E]/60 transition-all duration-200 flex flex-col justify-between overflow-hidden cursor-pointer min-w-0"
+      {/* Feed Post View */}
+      <div className="space-y-4 sm:space-y-5 w-full">
+        {filteredProducts.map((product) => (
+          <DigitalProductFeedCard
+            key={product.id}
+            product={product}
+            onSelectProduct={onSelectProduct}
+          />
+        ))}
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-10 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-2">
+            <p className="text-xs font-bold text-slate-700 dark:text-slate-300">কোন প্রোডাক্ট পাওয়া যায়নি</p>
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className="text-xs text-[#006A4E] dark:text-emerald-400 font-bold underline cursor-pointer"
             >
-              <div>
-                {/* Thumbnail with overlay badges */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-slate-950">
-                  <img
-                    src={product.thumbnail}
-                    alt={product.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
-                  />
-                  {product.category && (
-                    <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 text-[9px] font-extrabold rounded-md bg-black/60 text-white backdrop-blur-xs">
-                      {product.category}
-                    </span>
-                  )}
-                  {discountPct > 0 && (
-                    <span className="absolute top-1.5 right-1.5 px-1.5 py-0.5 text-[9px] font-black rounded-md bg-rose-600 text-white shadow-2xs">
-                      {discountPct}% ছাড়
-                    </span>
-                  )}
-                </div>
-
-                {/* Card Content */}
-                <div className="p-2 sm:p-2.5 space-y-1.5">
-                  <h4
-                    className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#006A4E] dark:group-hover:text-emerald-400 transition-colors min-h-[2rem]"
-                    title={product.title}
-                  >
-                    {product.title}
-                  </h4>
-
-                  {product.shortDescription && (
-                    <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                      {product.shortDescription}
-                    </p>
-                  )}
-
-                  {/* Micro Specs & Stats */}
-                  <div className="flex items-center justify-between text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 pt-1.5 border-t border-slate-100 dark:border-slate-800">
-                    <div className="flex items-center gap-1 text-amber-500 font-bold">
-                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                      <span>{product.rating}</span>
-                      <span className="text-slate-400 font-normal">({product.reviewsCount})</span>
-                    </div>
-                    <span className="flex items-center gap-1 text-slate-500">
-                      <Download className="w-3 h-3" />
-                      <span>{product.salesCount}+ বিক্রি</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom Buy Bar */}
-              <div className="p-2 sm:p-2.5 bg-slate-50/95 dark:bg-slate-950/70 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-1.5 rounded-b-2xl">
-                <div className="min-w-0">
-                  <div className="text-xs sm:text-sm font-black text-[#006A4E] dark:text-emerald-400 leading-none">
-                    ৳{typeof product.price === 'number' ? product.price.toLocaleString('bn-BD') : product.price}
-                  </div>
-                  {product.originalPrice && product.originalPrice > product.price && (
-                    <div className="text-[9.5px] text-slate-400 line-through leading-tight">
-                      ৳{product.originalPrice.toLocaleString('bn-BD')}
-                    </div>
-                  )}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelectProduct(product.rawProduct || product);
-                  }}
-                  className="py-1.5 px-2.5 rounded-lg text-[10px] sm:text-xs font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-2xs transition-all active:scale-95 cursor-pointer flex items-center gap-1 shrink-0"
-                >
-                  <ShoppingBag className="w-3 h-3" />
-                  <span>কিনুন</span>
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {filteredProducts.length === 0 && (
-        <div className="text-center py-10 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-2">
-          <Package className="w-8 h-8 text-slate-400 mx-auto" />
-          <p className="text-xs font-bold text-slate-700 dark:text-slate-300">কোন প্রোডাক্ট পাওয়া যায়নি</p>
-          <button
-            type="button"
-            onClick={() => { setSelectedCategory('all'); setSearchQuery(''); }}
-            className="text-xs text-[#006A4E] dark:text-emerald-400 font-bold underline cursor-pointer"
-          >
-            সব প্রোডাক্ট দেখুন
-          </button>
-        </div>
-      )}
-
-      {/* Return to Services Footer Banner */}
-      <div className="p-3 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-2xl border border-emerald-500/20 flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <h5 className="text-xs font-bold text-slate-900 dark:text-white truncate">
-            সেলারদের কাস্টম সার্ভিস অর্ডার করতে চান?
-          </h5>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-            পাবলিক মার্কেটপ্লেসে সেলারদের গিগ ও অফার ব্রাউজ করুন
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={onBack}
-          className="px-3 py-1.5 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shrink-0 whitespace-nowrap shadow-xs"
-        >
-          <span>অফারে ফিরুন</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
+              সব প্রোডাক্ট দেখুন
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1022,195 +1020,45 @@ const MarketplaceCenterCourses: React.FC<MarketplaceCenterCoursesProps> = ({
   onBack,
   onSelectCourse
 }) => {
-  const [searchQuery, setSearchQuery] = useState<string>('');
-
-  const filteredCourses = useMemo(() => {
-    return courses.filter(c => {
-      return !searchQuery.trim() ||
-        c.title.toLowerCase().includes(searchQuery.toLowerCase());
-    });
-  }, [courses, searchQuery]);
-
   return (
     <div className="space-y-4 w-full font-bengali animate-fadeIn">
-      {/* Top Header Card */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-3.5 sm:p-4 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-sky-500/10 dark:bg-sky-500/20 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
-              <GraduationCap className="w-5 h-5" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white truncate">
-                  পিটেন একাডেমি কোর্সসমূহ
-                </h3>
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 shrink-0">
-                  {filteredCourses.length}টি
-                </span>
-              </div>
-              <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">
-                ইন্ডাস্ট্রি-লেভেল স্কিল ও প্রফেশনাল ক্যারিয়ার মাস্টারক্লাস
-              </p>
-            </div>
+      {/* Top Header Card: Title, Count & Back to Offers */}
+      <div className="bg-white dark:bg-slate-900 rounded-2xl p-3 sm:p-4 border border-slate-200/90 dark:border-slate-800 shadow-xs flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-sky-500/10 dark:bg-sky-500/20 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
+            <GraduationCap className="w-4.5 h-4.5" />
           </div>
-
-          <button
-            type="button"
-            onClick={onBack}
-            className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0"
-            title="সেলারদের অফারে ফিরে যান"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">অফারে ফিরুন</span>
-            <span className="sm:hidden">ফিরুন</span>
-          </button>
-        </div>
-
-        {/* Search */}
-        <div className="pt-1 border-t border-slate-100 dark:border-slate-800/80">
-          <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="কোর্স খুঁজুন (ক্যানভা, এসইও, ওয়ার্ডপ্রেস...)"
-              className="w-full pl-9 pr-8 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-hidden focus:border-[#006A4E]"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
+          <div className="flex items-center gap-2 min-w-0">
+            <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white truncate">
+              পিটেন একাডেমি কোর্সসমূহ
+            </h3>
+            <span className="text-[11px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 shrink-0">
+              {courses.length}টি
+            </span>
           </div>
         </div>
-      </div>
 
-      {/* Responsive 2-Column Grid of Courses */}
-      <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
-        {filteredCourses.map((course) => {
-          const discountPct = course.originalPrice && course.originalPrice > course.price
-            ? Math.round(((course.originalPrice - course.price) / course.originalPrice) * 100)
-            : 0;
-
-          return (
-            <div
-              key={course.id}
-              onClick={() => onSelectCourse(course.id)}
-              className="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-md hover:border-[#006A4E]/60 transition-all duration-200 flex flex-col justify-between overflow-hidden cursor-pointer min-w-0"
-            >
-              <div>
-                {/* Thumbnail with overlay duration badge */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-slate-950">
-                  <img
-                    src={course.thumbnail}
-                    alt={course.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-out"
-                  />
-                  {course.duration && (
-                    <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 text-[9px] font-extrabold rounded-md bg-black/60 text-white backdrop-blur-xs flex items-center gap-1">
-                      <Clock className="w-2.5 h-2.5" />
-                      <span>{course.duration}</span>
-                    </span>
-                  )}
-                  {discountPct > 0 && (
-                    <span className="absolute top-1.5 right-1.5 px-1.5 py-0.5 text-[9px] font-black rounded-md bg-rose-600 text-white shadow-2xs">
-                      {discountPct}% ছাড়
-                    </span>
-                  )}
-                </div>
-
-                {/* Card Content */}
-                <div className="p-2 sm:p-2.5 space-y-1.5">
-                  <h4
-                    className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#006A4E] dark:group-hover:text-emerald-400 transition-colors min-h-[2rem]"
-                    title={course.title}
-                  >
-                    {course.title}
-                  </h4>
-
-                  {/* Micro Specs */}
-                  <div className="flex items-center justify-between text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 pt-1.5 border-t border-slate-100 dark:border-slate-800">
-                    <span className="flex items-center gap-1 text-slate-600 dark:text-slate-300 font-bold">
-                      <BookOpen className="w-3 h-3 text-[#006A4E]" />
-                      <span>{course.lessonsCount} ক্লাস</span>
-                    </span>
-                    <span className="flex items-center gap-1 text-slate-500">
-                      <UserCheck className="w-3 h-3" />
-                      <span>{course.enrolledCount}+ শিক্ষার্থী</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom Action Bar */}
-              <div className="p-2 sm:p-2.5 bg-slate-50/95 dark:bg-slate-950/70 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-1.5 rounded-b-2xl">
-                <div className="min-w-0">
-                  <div className="text-xs sm:text-sm font-black text-[#006A4E] dark:text-emerald-400 leading-none">
-                    ৳{typeof course.price === 'number' ? course.price.toLocaleString('bn-BD') : course.price}
-                  </div>
-                  {course.originalPrice && course.originalPrice > course.price && (
-                    <div className="text-[9.5px] text-slate-400 line-through leading-tight">
-                      ৳{course.originalPrice.toLocaleString('bn-BD')}
-                    </div>
-                  )}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelectCourse(course.id);
-                  }}
-                  className="py-1.5 px-2.5 rounded-lg text-[10px] sm:text-xs font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-2xs transition-all active:scale-95 cursor-pointer flex items-center gap-1 shrink-0"
-                >
-                  <GraduationCap className="w-3 h-3" />
-                  <span>বিস্তারিত</span>
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {filteredCourses.length === 0 && (
-        <div className="text-center py-10 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-2">
-          <BookOpen className="w-8 h-8 text-slate-400 mx-auto" />
-          <p className="text-xs font-bold text-slate-700 dark:text-slate-300">কোন কোর্স পাওয়া যায়নি</p>
-          <button
-            type="button"
-            onClick={() => setSearchQuery('')}
-            className="text-xs text-[#006A4E] dark:text-emerald-400 font-bold underline cursor-pointer"
-          >
-            সব কোর্স দেখুন
-          </button>
-        </div>
-      )}
-
-      {/* Return Banner */}
-      <div className="p-3 bg-sky-500/5 dark:bg-sky-500/10 rounded-2xl border border-sky-500/20 flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <h5 className="text-xs font-bold text-slate-900 dark:text-white truncate">
-            সেলারদের কাস্টম সার্ভিস অফার দেখতে চান?
-          </h5>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-            মার্কেটপ্লেসে ভেরিফাইড সেলারদের কাজ ও সার্ভিস বুক করুন
-          </p>
-        </div>
         <button
           type="button"
           onClick={onBack}
-          className="px-3 py-1.5 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shrink-0 whitespace-nowrap shadow-xs"
+          className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0"
+          title="অফারে ফিরে যান"
         >
-          <span>অফারে ফিরুন</span>
-          <ArrowRight className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">অফারে ফিরুন</span>
+          <span className="sm:hidden">ফিরুন</span>
         </button>
+      </div>
+
+      {/* Courses Feed List */}
+      <div className="space-y-4 sm:space-y-5 w-full">
+        {courses.map((course) => (
+          <CourseFeedCard
+            key={course.id}
+            course={course}
+            onSelectCourse={onSelectCourse}
+          />
+        ))}
       </div>
     </div>
   );
@@ -1291,6 +1139,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     acceptCourseOffer,
     declineCourseOffer,
     createGoogleMeetCall,
+    openInAppMeet,
     liveSessions = [],
     submissions = [],
     isOfferSoundEnabled,
@@ -1536,7 +1385,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
         const liveSerialNo = matchedLiveSession?.serialNo || matchedLiveSession?.classSerialNo || c.liveClassSerialNo || '০১';
         const liveDate = matchedLiveSession?.date || c.liveClassDate || '';
         const liveTime = matchedLiveSession?.time || c.liveClassTime || '';
-        const liveLink = matchedLiveSession?.meetLink || matchedLiveSession?.meetingLink || c.liveClassLink || 'https://meet.google.com/ptenit-live';
+        const liveLink = matchedLiveSession?.meetLink || matchedLiveSession?.meetingLink || c.liveClassLink || 'https://meet.google.com/new';
         const durationMinutes = matchedLiveSession?.durationMinutes || 90;
 
         let computedLiveStatus: 'scheduled' | 'live_now' | 'completed' | 'cancelled' = 'scheduled';
@@ -1608,7 +1457,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
         liveClassSerialNo: '০৫',
         liveClassDate: '2026-02-28',
         liveClassTime: '21:00',
-        liveClassLink: 'https://meet.google.com/canva-live-pro',
+        liveClassLink: 'https://meet.google.com/new',
         durationMinutes: 90
       },
       {
@@ -1634,7 +1483,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
         liveClassSerialNo: '০৮',
         liveClassDate: new Date().toISOString().split('T')[0],
         liveClassTime: '21:00',
-        liveClassLink: 'https://meet.google.com/yt-seo-live',
+        liveClassLink: 'https://meet.google.com/new',
         durationMinutes: 90
       },
       {
@@ -1660,7 +1509,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
         liveClassSerialNo: '১২',
         liveClassDate: new Date(Date.now() + 86400000).toISOString().split('T')[0],
         liveClassTime: '21:30',
-        liveClassLink: 'https://meet.google.com/mern-pro-live',
+        liveClassLink: 'https://meet.google.com/new',
         durationMinutes: 90
       }
     ];
@@ -1880,7 +1729,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
   const handleJoinGoogleMeet = (course: any, isStartingSoon = false) => {
     const meetUrl = course.liveClassLink && course.liveClassLink.startsWith('http')
       ? course.liveClassLink
-      : `https://${course.liveClassLink || 'meet.google.com/ptenit-live'}`;
+      : `https://${course.liveClassLink || 'meet.google.com/new'}`;
     setLiveMeetModalData({
       isOpen: true,
       courseTitle: course.title,
@@ -2448,31 +2297,37 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
         return;
       }
     }
-    setViewModeState(mode);
-    if (setMarketplaceMode) setMarketplaceMode(mode);
+    setViewModeState(prev => prev === mode ? prev : mode);
+    if (setMarketplaceMode && marketplaceMode !== mode) {
+      setMarketplaceMode(mode);
+    }
   };
 
   // Keep viewMode state synchronized with global marketplaceMode (with seller authorization check)
   useEffect(() => {
     if (marketplaceMode === 'selling') {
       if (currentUser && hasSellerAccount) {
-        setViewModeState('selling');
+        setViewModeState(prev => prev === 'selling' ? prev : 'selling');
       } else {
-        setViewModeState('buying');
-        if (setMarketplaceMode) setMarketplaceMode('buying');
+        setViewModeState(prev => prev === 'buying' ? prev : 'buying');
+        if (marketplaceMode !== 'buying' && setMarketplaceMode) {
+          setMarketplaceMode('buying');
+        }
       }
     } else if (marketplaceMode === 'buying') {
-      setViewModeState('buying');
+      setViewModeState(prev => prev === 'buying' ? prev : 'buying');
     }
-  }, [marketplaceMode, currentUser, hasSellerAccount, setMarketplaceMode]);
+  }, [marketplaceMode, currentUser?.id, hasSellerAccount]);
 
   // Guard: If user logs out or does not have a seller account, ensure viewMode is never 'selling'
   useEffect(() => {
     if ((!currentUser || !hasSellerAccount) && viewMode === 'selling') {
       setViewModeState('buying');
-      if (setMarketplaceMode) setMarketplaceMode('buying');
+      if (marketplaceMode !== 'buying' && setMarketplaceMode) {
+        setMarketplaceMode('buying');
+      }
     }
-  }, [currentUser, hasSellerAccount, viewMode, setMarketplaceMode]);
+  }, [currentUser?.id, hasSellerAccount, viewMode, marketplaceMode]);
 
   const isSellerMode = (viewMode === 'selling' || marketplaceMode === 'selling');
 
@@ -5278,7 +5133,6 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <div>
                         <div className="flex items-center gap-1.5">
                           <h2 className="text-sm font-black text-white tracking-tight leading-none">Messages</h2>
-                          <span className={`w-2 h-2 rounded-full ${viewMode === 'selling' ? 'bg-rose-300' : 'bg-emerald-300'}`} />
                         </div>
                         <p className={`text-[10px] font-semibold ${viewMode === 'selling' ? 'text-rose-100' : 'text-emerald-100'} tracking-wide leading-tight mt-0.5 font-sans`}>PTENit Marketplace Inbox</p>
                       </div>
@@ -5357,7 +5211,6 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <div>
                         <div className="flex items-center gap-1.5">
                           <h2 className="text-sm font-black text-white tracking-tight leading-none font-english">Saved Gigs</h2>
-                          <span className={`w-2 h-2 rounded-full ${viewMode === 'selling' ? 'bg-rose-300' : 'bg-emerald-300'}`} />
                           {savedGigIds && savedGigIds.length > 0 && (
                             <span className="min-w-4 h-4 px-1 bg-white text-[#E11D48] text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-xs">
                               {savedGigIds.length}
@@ -8134,7 +7987,6 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         {currentUser?.name || 'Mds Kazi Sohag'}
                       </h3>
                       <p className="text-xs text-[#38BDF8] font-semibold flex items-center gap-1 mt-0.5">
-                        <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
                         <span>ভেরিফায়েড সেলার (Level 2)</span>
                       </p>
                     </div>
@@ -8369,7 +8221,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
               </div>
 
               {/* 2. CENTER CONTENT (PC & MOBILE WORKSPACE) */}
-              <div className={`w-full ${specialistMainTab === 'marketplace' && (sellerSubTab === 'gigs' || sellerSubTab === 'overview' || sellerSubTab === 'my_gigs') ? 'lg:col-span-6 max-w-[650px] mx-auto lg:px-8 xl:px-14 2xl:px-20' : 'lg:col-span-9'} space-y-4 min-w-0 px-1 sm:px-2 lg:px-4 xl:px-6`} id="marketplace-column-2-seller">
+              <div className={`w-full ${specialistMainTab === 'marketplace' && (sellerSubTab === 'gigs' || sellerSubTab === 'overview' || sellerSubTab === 'my_gigs') ? 'lg:col-span-6 max-w-[780px] mx-auto lg:px-4 xl:px-6' : 'lg:col-span-9'} space-y-4 min-w-0 px-1 sm:px-2 lg:px-4 xl:px-6`} id="marketplace-column-2-seller">
                 {marketplaceCenterView === 'all-digital-products' ? (
                   <MarketplaceCenterDigitalProducts
                     products={allDigitalProductItems}
@@ -10885,10 +10737,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     {/* জনপ্রিয় ক্যাটাগরি */}
                     <div>
                       <div className="flex items-center justify-between mb-2.5">
-                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                        <h4 className="text-[13.5px] sm:text-[14.5px] font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                           জনপ্রিয় ক্যাটাগরি
                         </h4>
-                        <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                        <span className="text-xs font-semibold text-slate-400 dark:text-slate-500">
                           {gigs.length} টি সার্ভিস
                         </span>
                       </div>
@@ -10900,9 +10752,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           { id: 'Graphics & Design', label: 'Graphics & Design' },
                           { id: 'Digital Marketing', label: 'Digital Marketing' },
                           { id: 'Video & Animation', label: 'Video & Animation' },
-                          { id: 'AI & Automation', label: 'AI & Automation' }
+                          { id: 'AI & Automation', label: 'AI & Automation' },
+                          { id: 'digital-products', label: 'ডিজিটাল প্রোডাক্ট (Digital Products)' }
                         ].map(cat => {
-                          const count = cat.id === 'All' 
+                          const count = cat.id === 'digital-products'
+                            ? allDigitalProductItems.length
+                            : cat.id === 'All' 
                             ? gigs.length 
                             : gigs.filter(g => {
                                 const allowed = categoryAliases[cat.id] || [cat.id];
@@ -10912,21 +10767,32 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                 );
                               }).length;
 
+                          const isCatActive = cat.id === 'digital-products'
+                            ? marketplaceCenterView === 'all-digital-products'
+                            : marketplaceCenterView !== 'all-digital-products' && selectedCategory === cat.id;
+
                           return (
                             <button
                               key={cat.id}
                               type="button"
-                              onClick={() => setSelectedCategory(cat.id)}
-                              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-[13.5px] font-medium transition cursor-pointer text-left ${
-                                selectedCategory === cat.id
+                              onClick={() => {
+                                if (cat.id === 'digital-products') {
+                                  setMarketplaceCenterView('all-digital-products');
+                                } else {
+                                  setMarketplaceCenterView('gigs');
+                                  setSelectedCategory(cat.id);
+                                }
+                              }}
+                              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-[14px] sm:text-[14.5px] font-medium transition cursor-pointer text-left ${
+                                isCatActive
                                   ? 'bg-[#006A4E]/10 text-[#006A4E] dark:text-emerald-400 font-bold'
                                   : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                               }`}
                             >
                               <span className="truncate">{cat.label}</span>
                               <div className="flex items-center gap-1.5 shrink-0 ml-1">
-                                <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold ${
-                                  selectedCategory === cat.id
+                                <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
+                                  isCatActive
                                     ? 'bg-[#006A4E] text-white dark:bg-emerald-500'
                                     : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
                                 }`}>
@@ -10941,11 +10807,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                     {/* এসক্রো ট্রাস্ট গ্যারান্টি (রেখা / ডিভাইডার সহ) */}
                     <div className="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800">
-                      <div className="flex items-center gap-2 text-[#006A4E] dark:text-emerald-400 font-bold text-xs sm:text-sm">
+                      <div className="flex items-center gap-2 text-[#006A4E] dark:text-emerald-400 font-bold text-[13.5px] sm:text-[14px]">
                         <ShieldCheck className="w-4.5 h-4.5 shrink-0" />
                         <span>১০০% নিরাপদ এসক্রো গ্যারান্টি</span>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                      <p className="text-[12.5px] sm:text-[13px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                         কাজ পছন্দ না হওয়া পর্যন্ত আপনার পেমেন্ট সম্পূর্ণরূপে সুরক্ষিত।
                       </p>
                     </div>
@@ -10953,7 +10819,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 </div>
 
                 {/* 2. CENTER FEED (FACEBOOK POST STREAM ON BOTH PC & PHONE) */}
-                <div className="w-full lg:col-span-6 space-y-4 sm:space-y-5 min-w-0 px-1 sm:px-2 lg:px-8 xl:px-14 2xl:px-20 max-w-[650px] mx-auto" id="marketplace-column-2">
+                <div className="w-full lg:col-span-6 space-y-4 sm:space-y-6 min-w-0 px-1 sm:px-2 lg:px-4 xl:px-6 max-w-[780px] mx-auto" id="marketplace-column-2">
                   {/* WELCOME BACK HERO + ACTION CARDS (EXACTLY LIKE SELLER - NO CARD WRAPPER, WITH FILTER BUTTON) */}
                   <div className="hidden md:block space-y-2 sm:space-y-3 font-bengali pt-0.5">
                     <div className="flex items-center justify-between gap-2 w-full py-0.5">
@@ -11079,20 +10945,34 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       {/* GIG POSTS STREAM */}
                       {mobileGigLayout === 'feed' ? (
                         <div className="space-y-4 sm:space-y-5 w-full">
-                          {filteredGigs.map(gig => (
-                            <GigCard
-                              key={gig.id}
-                              gig={gig}
-                              onClick={() => openMarketplaceGigDetail(gig, 'standard')}
-                              currentUser={currentUser}
-                              savedGigIds={savedGigIds}
-                              toggleFavorite={toggleFavorite}
-                              deleteGig={deleteGig}
-                              onEdit={(g) => handleOpenEditGig(g)}
-                              layoutMode="feed"
-                              openAuthModal={openAuthModal}
-                              className="w-full"
-                            />
+                          {filteredGigs.map((gig, gIdx) => (
+                            <React.Fragment key={gig.id}>
+                              <GigCard
+                                gig={gig}
+                                onClick={() => openMarketplaceGigDetail(gig, 'standard')}
+                                currentUser={currentUser}
+                                savedGigIds={savedGigIds}
+                                toggleFavorite={toggleFavorite}
+                                deleteGig={deleteGig}
+                                onEdit={(g) => handleOpenEditGig(g)}
+                                layoutMode="feed"
+                                openAuthModal={openAuthModal}
+                                className="w-full"
+                              />
+                              {/* Occasionally interleave a Digital Product post into the Home feed */}
+                              {gIdx === 2 && allDigitalProductItems.length > 0 && (
+                                <DigitalProductFeedCard
+                                  product={allDigitalProductItems[0]}
+                                  onSelectProduct={(prod) => setSelectedDigitalProduct(prod)}
+                                />
+                              )}
+                              {gIdx === 5 && allDigitalProductItems.length > 1 && (
+                                <DigitalProductFeedCard
+                                  product={allDigitalProductItems[1]}
+                                  onSelectProduct={(prod) => setSelectedDigitalProduct(prod)}
+                                />
+                              )}
+                            </React.Fragment>
                           ))}
                         </div>
                       ) : (
@@ -11205,17 +11085,17 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           <>
                             {/* হেডার: বর্ডার ছাড়া ইংরেজিতে সংখ্যা সহ যেমন '1টি' */}
                             <div className="flex items-center justify-between mb-3">
-                              <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                              <h4 className="text-[13.5px] sm:text-[14.5px] font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                                 চলমান সার্ভিস অর্ডার
                               </h4>
-                              <span className="text-xs font-bold text-[#006A4E] dark:text-emerald-400 font-mono">
+                              <span className="text-xs sm:text-[13px] font-bold text-[#006A4E] dark:text-emerald-400 font-mono">
                                 {totalCount}টি
                               </span>
                             </div>
 
                             {/* চলমান অর্ডারের তালিকা */}
                             {displayList.length === 0 ? (
-                              <div className="p-3 text-center rounded-xl bg-slate-50 dark:bg-slate-800/40 text-xs text-slate-500 dark:text-slate-400">
+                              <div className="p-3 text-center rounded-xl bg-slate-50 dark:bg-slate-800/40 text-[13px] text-slate-500 dark:text-slate-400">
                                 বর্তমানে কোনো চলমান সার্ভিস অর্ডার নেই
                               </div>
                             ) : (
@@ -11254,10 +11134,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                           <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-1 ring-white dark:ring-slate-900" />
                                         </div>
                                         <div className="min-w-0">
-                                          <p className="text-[13px] font-bold text-slate-900 dark:text-white truncate group-hover:text-[#006A4E] dark:group-hover:text-emerald-400 transition-colors" title={title}>
+                                          <p className="text-[13.5px] sm:text-[14px] font-semibold text-slate-900 dark:text-white truncate group-hover:text-[#006A4E] dark:group-hover:text-emerald-400 transition-colors" title={title}>
                                             {title}
                                           </p>
-                                          <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                                          <p className="text-[12px] sm:text-[12.5px] text-slate-500 dark:text-slate-400 truncate">
                                             <span className="text-emerald-600 dark:text-emerald-400 font-bold">⏳ {timeLeft}</span> | {formattedBudget}
                                           </p>
                                         </div>
@@ -12623,7 +12503,6 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           {currentUser?.name || 'Mds Kazi Sohag'}
                         </h3>
                         <p className="text-xs text-[#006A4E] dark:text-emerald-400 font-semibold flex items-center gap-1.5 mt-0.5">
-                          <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
                           <span>ভেরিফায়েড বায়ার</span>
                         </p>
                       </div>
@@ -14442,17 +14321,36 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                                   {/* Actions */}
                                   <div className="space-y-2 pt-0.5">
-                                    <a
-                                      href={liveMeetModalData.meetLink}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      onClick={() => setLiveMeetModalData(null)}
-                                      className="w-full py-2.5 bg-[#006A4E] hover:bg-[#19a34a] text-white font-black rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-md shadow-blue-500/20 active:scale-[0.98]"
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        openInAppMeet({
+                                          roomTitle: liveMeetModalData.topic || liveMeetModalData.courseTitle || 'লাইভ ক্লাস',
+                                          courseTitle: liveMeetModalData.courseTitle,
+                                          targetName: liveMeetModalData.instructor || 'কোর্স শিক্ষক ও ট্রেইনার',
+                                          targetRole: 'PTENit ইন্সট্রাক্টর',
+                                          initialType: 'video'
+                                        });
+                                        setLiveMeetModalData(null);
+                                      }}
+                                      className="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-md shadow-emerald-600/20 active:scale-[0.98]"
                                     >
                                       <Video className="w-4 h-4" />
-                                      <span>Google Meet-এ সরাসরি যুক্ত হন</span>
-                                      <ExternalLink className="w-3.5 h-3.5 opacity-80" />
-                                    </a>
+                                      <span>লাইভ ক্লাসে যুক্ত হন</span>
+                                    </button>
+
+                                    {liveMeetModalData.meetLink && (
+                                      <a
+                                        href={liveMeetModalData.meetLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={() => setLiveMeetModalData(null)}
+                                        className="w-full py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl text-[11px] flex items-center justify-center gap-1.5 transition cursor-pointer border border-slate-200 dark:border-slate-700"
+                                      >
+                                        <span>Google Meet</span>
+                                        <ExternalLink className="w-3 h-3 opacity-70" />
+                                      </a>
+                                    )}
 
                                     <div className="flex items-center gap-2">
                                       <button

@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import compression from 'compression';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
@@ -477,6 +478,24 @@ app.post('/api/payment/verify-gateway', async (req, res) => {
   } catch (err: any) {
     return res.status(500).json({ success: false, message: 'Verification failed' });
   }
+});
+
+// Direct Download Routes for PTENit.zip & cPanel zip archives
+app.get(['/PTENit.zip', '/ptenit.zip', '/ptenit_cpanel_upload.zip', '/api/download/PTENit.zip'], (req, res) => {
+  const publicPath = path.join(process.cwd(), 'public', 'PTENit.zip');
+  const rootPath = path.join(process.cwd(), 'PTENit.zip');
+  const distPath = path.join(process.cwd(), 'dist', 'PTENit.zip');
+  const cpanelPath = path.join(process.cwd(), 'ptenit_cpanel_upload.zip');
+
+  const fileToServe = [publicPath, rootPath, distPath, cpanelPath].find(p => fs.existsSync(p));
+  if (fileToServe) {
+    return res.download(fileToServe, 'PTENit.zip', (err) => {
+      if (err && !res.headersSent) {
+        res.status(500).send('Error downloading file');
+      }
+    });
+  }
+  return res.status(404).send('ZIP file is generating. Please wait a moment and refresh.');
 });
 
 // Vite middleware or production static files

@@ -32,7 +32,8 @@ import {
   BookOpen,
   ShoppingBag,
   Sliders,
-  ChevronDown
+  ChevronDown,
+  Trash2
 } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 
@@ -1126,6 +1127,24 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
             </div>
 
             <div className="flex items-center flex-wrap gap-2 w-full md:w-auto justify-start md:justify-end">
+              {effectiveBills.some(b => b.id.startsWith('BILL-100')) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (data?.clearSampleVouchers) {
+                      data.clearSampleVouchers();
+                    }
+                    setLocalBills(prev => prev.filter(b => !b.id.startsWith('BILL-100')));
+                    showToast('নমুনা বাউচার মুছে ফেলা হয়েছে! এখন শুধু লাইভ ডাটা প্রদর্শিত হচ্ছে।');
+                  }}
+                  className="px-3 py-2 bg-slate-800 hover:bg-rose-900/40 text-slate-300 hover:text-rose-300 border border-slate-700 hover:border-rose-500/40 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5 active:scale-95"
+                  title="ডেমো বাউচার ডাটা মুছে ফেলে শুধু রিয়েল ওয়েবসাইট ডাটা দেখুন"
+                >
+                  <Trash2 className="w-3.5 h-3.5 text-rose-400" />
+                  <span>নমুনা বাউচার মুছুন</span>
+                </button>
+              )}
+
               {pendingBillsCount > 0 && (
                 <button
                   onClick={handleVerifyAllBillsAction}

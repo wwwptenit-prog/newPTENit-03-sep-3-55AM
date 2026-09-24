@@ -143,7 +143,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
   // Ref for Smooth Scrolling to Order Form
   const orderFormRef = useRef<HTMLDivElement>(null);
   const scrollToOrderForm = () => {
-    if (checkoutStep === 0) setCheckoutStep(1);
+    if ((checkoutStep as number) === 0) setCheckoutStep(1);
     if (orderFormRef.current) {
       orderFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }

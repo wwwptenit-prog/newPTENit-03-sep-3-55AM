@@ -37,13 +37,30 @@ export const storage: FirebaseStorage = getStorage(app);
 async function testConnection() {
   try {
     await getDocFromServer(doc(db, 'test', 'connection'));
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('the client is offline')) {
-      console.warn("[Firebase] Client is offline or initializing.");
+  } catch (error: any) {
+    const msg = error instanceof Error ? error.message : String(error);
+    if (
+      error?.code === 'unavailable' ||
+      msg.includes('the client is offline') ||
+      msg.includes('unavailable') ||
+      msg.includes('could not be completed') ||
+      msg.includes('Could not reach Cloud Firestore')
+    ) {
+      console.warn("[Firebase] Client is operating in offline/cached mode until backend is connected.");
+    } else {
+      console.warn("[Firebase] Connection check status:", msg);
     }
   }
 }
-testConnection();
+
+if (typeof window !== 'undefined') {
+  // Give the browser network stack a brief moment to connect before checking
+  setTimeout(() => {
+    testConnection();
+  }, 1200);
+} else {
+  testConnection();
+}
 
 /**
  * Upload a file/image to Firebase Storage with automatic fallback

@@ -1383,7 +1383,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                 )}
 
                 {/* 2. FILE DOWNLOAD FLOW (Only when approved or free) */}
-                {isOrderApproved && ((completedOrder?.deliveryType === 'file_download' || completedOrder?.deliveryType === 'auto') && (completedOrder?.deliveryType !== 'canva_auto') && (product.deliveryType !== 'canva_auto')) && (
+                {isOrderApproved && ((completedOrder?.deliveryType === 'file_download' || completedOrder?.deliveryType === 'auto') && (product.deliveryType !== 'canva_auto')) && (
                   <div className="space-y-4">
                     <div className="p-4 bg-blue-500/10 border border-blue-600/50/30 rounded-2xl text-center space-y-1.5">
                       <div className="w-10 h-10 rounded-full bg-[#006A4E] text-white flex items-center justify-center mx-auto shadow-md">
@@ -1442,7 +1442,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                 )}
 
                 {/* 3. EMAIL / WHATSAPP DELIVERY FLOW (Only when approved or free) */}
-                {isOrderApproved && ((completedOrder?.deliveryType === 'email_whatsapp' || completedOrder?.deliveryType === 'manual') && (completedOrder?.deliveryType !== 'canva_auto') && (product.deliveryType !== 'canva_auto')) && (
+                {isOrderApproved && ((completedOrder?.deliveryType === 'email_whatsapp' || completedOrder?.deliveryType === 'manual') && (product.deliveryType !== 'canva_auto')) && (
                   <div className="space-y-4">
                     <div className="p-4 bg-purple-500/10 border border-purple-500/30 rounded-2xl text-center space-y-1.5">
                       <div className="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center mx-auto shadow-md">

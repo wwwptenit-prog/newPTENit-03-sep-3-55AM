@@ -223,24 +223,13 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                 </button>
 
                 <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-xl bg-emerald-100 border border-emerald-200 text-[#006A4E]">
-                    <Bell className="w-5 h-5" />
+                  <div className="p-1.5 rounded-xl bg-emerald-100 border border-emerald-200 text-[#006A4E]">
+                    <Bell className="w-4 h-4" />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <h2 className="text-sm sm:text-base font-black text-slate-900 tracking-tight leading-none flex items-center gap-1.5">
-                        <span>নোটিফিকেশন সেন্টার</span>
-                        <span className="w-2 h-2 rounded-full bg-[#006A4E]" />
-                        {notifications.length > 0 && (
-                          <span className="min-w-5 h-5 px-1.5 bg-[#E11D48] text-white text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-xs">
-                            {unreadCount > 0 ? unreadCount : notifications.length}
-                          </span>
-                        )}
-                      </h2>
-                    </div>
-                    <p className="text-[10px] font-semibold text-slate-500 tracking-wide leading-tight mt-0.5 font-sans">
-                      PTENit Notifications & Updates
-                    </p>
+                  <div className="flex items-center gap-1.5">
+                    <h2 className="text-sm font-black text-slate-900 tracking-tight leading-none font-english">
+                      Notifications
+                    </h2>
                   </div>
                 </div>
               </div>
@@ -321,8 +310,8 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
             </div>
           </div>
 
-          {/* Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[11px] font-bold pb-0.5 justify-start sm:justify-center">
+          {/* Filter Pills (Hidden on Phone View for clean layout) */}
+          <div className="hidden sm:flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[11px] font-bold pb-0.5 justify-center">
             <button
               type="button"
               onClick={() => setActiveFilter("all")}

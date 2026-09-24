@@ -519,7 +519,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
   const agencyStaff: AgencyStaffMember[] = [
     ...detailedStaffList,
     ...users
-      .filter(u => (u.role === 'teacher' || u.role === 'admin') && !detailedStaffList.some(s => s.id === u.id))
+      .filter(u => ((u.role as any) === 'teacher' || u.role === 'instructor' || u.role === 'admin') && !detailedStaffList.some(s => s.id === u.id))
       .map(u => ({
         id: u.id,
         name: u.name,
@@ -1579,7 +1579,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
       name: teacherName.trim(),
       email: teacherEmail.trim(),
       mobile: teacherMobile.trim() || '01700000000',
-      role: 'teacher',
+      role: 'instructor',
       title: teacherTitle || 'ইনস্ট্রাক্টর ও কোর্স এক্সপার্ট',
       institution: teacherInstitution || 'PTENit IT Training Academy',
       bio: teacherBio.trim() || 'PTENit একাডেমির সম্মানিত ইনস্ট্রাক্টর ও ট্রেইনার।',
@@ -1606,7 +1606,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
     e.preventDefault();
     if (!noticeSubject.trim() || !noticeMessage.trim()) return;
 
-    const allTeachersList = users.filter(u => u.role === 'teacher' || u.role === 'admin');
+    const allTeachersList = users.filter(u => (u.role as any) === 'teacher' || u.role === 'instructor' || u.role === 'admin');
     const recipientObj = allTeachersList.find(t => t.id === noticeRecipient);
 
     sendTeacherNotice({
@@ -3213,7 +3213,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 }`}
               >
                 <Users className="w-3.5 h-3.5" />
-                <span>টিচার তালিকা ({users.filter(u => u.role === 'teacher' || u.role === 'instructor' || u.role === 'admin').length})</span>
+                <span>টিচার তালিকা ({users.filter(u => (u.role as any) === 'teacher' || u.role === 'instructor' || u.role === 'admin').length})</span>
               </button>
 
               <button
@@ -3246,7 +3246,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
             {teacherSubTab === 'list' && (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {users.filter(u => u.role === 'teacher' || u.role === 'instructor' || u.role === 'admin').map(teacher => {
+                  {users.filter(u => (u.role as any) === 'teacher' || u.role === 'instructor' || u.role === 'admin').map(teacher => {
                     const assignedCourses = courses.filter(c =>
                       c.assignedInstructorId === teacher.id ||
                       c.instructor === teacher.name ||
@@ -3484,7 +3484,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                         className="w-full p-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-[#006A4E]"
                       >
                         <option value="all">📢 সকল টিচার ও ইনস্ট্রাক্টরবৃন্দ (All Teachers)</option>
-                        {users.filter(u => u.role === 'teacher' || u.role === 'instructor' || u.role === 'admin').map(t => (
+                        {users.filter(u => (u.role as any) === 'teacher' || u.role === 'instructor' || u.role === 'admin').map(t => (
                           <option key={t.id} value={t.id}>{t.name} ({t.email})</option>
                         ))}
                       </select>
@@ -5768,7 +5768,7 @@ PTENit ডিজিটাল টিম`;
                         onClick={() => {
                           setEditingDpId(product.id);
                           setDpTitle(product.title);
-                          setDpCategory(product.category);
+                          setDpCategory(product.category as any);
                           setDpPrice(product.price);
                           setDpOriginalPrice(product.originalPrice || product.price * 2);
                           setDpIsFree(product.price === 0);
@@ -5782,9 +5782,9 @@ PTENit ডিজিটাল টিম`;
                           setDpLicenseKey(product.licenseKey || '');
                           setDpDeliveryType(product.deliveryType || 'canva_auto');
                           setDpCanvaInviteLink(product.canvaInviteLink || 'https://www.canva.com/brand/join?token=vip-ptenit-lifetime');
-                          setDpCanvaRules(product.canvaRules || '১. আপনার ক্যানভা অ্যাকাউন্টে লগইন অবস্থায় Access Now বাটনে ক্লিক করুন।\n২. এই এক্সেস শুধুমাত্র আপনার ব্যবহারের জন্য বরাদ্দ।');
+                          setDpCanvaRules(Array.isArray(product.canvaRules) ? product.canvaRules.join('\n') : (product.canvaRules || ''));
                           setDpFeaturesText(product.features ? product.features.join(', ') : '');
-                          setDpRequirementsText(product.requirements ? product.requirements.join(', ') : '');
+                          setDpRequirementsText(Array.isArray(product.requirements) ? product.requirements.join(', ') : (product.requirements || ''));
                           setDpDemoImagesText(product.demoImages ? product.demoImages.join(', ') : '');
                           setDpDemoUrl(product.demoUrl || '');
                           setDpModalOpen(true);

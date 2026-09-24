@@ -472,13 +472,13 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
                 <div className="bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-700/60">
                   <span className="text-slate-500 dark:text-slate-400 text-[10px] font-semibold block truncate">চলমান কাজ</span>
                   <span className="text-lg font-black text-amber-500 mt-0.5 block">
-                    {myProjects.filter(p => p.status === 'in_progress').length} টি
+                    {myProjects.filter(p => (p.status as any) === 'in_progress' || p.status === 'In Progress').length} টি
                   </span>
                 </div>
                 <div className="bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-700/60">
                   <span className="text-slate-500 dark:text-slate-400 text-[10px] font-semibold block truncate">সম্পন্ন কাজ</span>
                   <span className="text-lg font-black text-[#38BDF8] mt-0.5 block">
-                    {myProjects.filter(p => p.status === 'completed').length} টি
+                    {myProjects.filter(p => (p.status as any) === 'completed' || p.status === 'Completed').length} টি
                   </span>
                 </div>
                 <div className="bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-700/60">

@@ -183,21 +183,27 @@ const MainAppContent: React.FC = () => {
     } else if (tab === 'customer-dashboard') {
       setMarketplaceCategory('buying');
     } else if (tab === 'marketplace') {
-      const isSeller = Boolean(
-        currentUser && (
-          currentUser.role === 'instructor' ||
-          currentUser.role === 'specialist' ||
-          currentUser.role === 'admin' ||
-          (currentUser as any).isSpecialist ||
-          (currentUser as any).isSeller ||
-          (currentUser as any).isMentor ||
-          (currentUser as any).mentorStatus === 'approved' ||
-          (currentUser as any).specialistStatus === 'approved' ||
-          currentUser.roles?.includes('instructor') ||
-          currentUser.roles?.includes('specialist')
-        )
-      );
-      setMarketplaceCategory((marketplaceMode === 'selling' && isSeller) ? 'selling' : 'All');
+      if (category) {
+        setMarketplaceCategory(category);
+      } else if (marketplaceMode === 'selling') {
+        const isSeller = Boolean(
+          currentUser && (
+            currentUser.role === 'instructor' ||
+            currentUser.role === 'specialist' ||
+            currentUser.role === 'admin' ||
+            (currentUser as any).isSpecialist ||
+            (currentUser as any).isSeller ||
+            (currentUser as any).isMentor ||
+            (currentUser as any).mentorStatus === 'approved' ||
+            (currentUser as any).specialistStatus === 'approved' ||
+            currentUser.roles?.includes('instructor') ||
+            currentUser.roles?.includes('specialist')
+          )
+        );
+        setMarketplaceCategory(isSeller ? 'selling' : 'All');
+      } else {
+        setMarketplaceCategory('All');
+      }
     }
     setActiveTab(tab);
   };

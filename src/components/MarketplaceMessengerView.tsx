@@ -23,6 +23,7 @@ import {
   Mic,
   MicOff,
   Volume2,
+  VolumeX,
   PhoneOff,
   Briefcase,
   Clock,
@@ -73,11 +74,13 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
     directMessages,
     openChatWindow,
     activeMessengerConversationId,
-    setActiveMessengerConversationId
+    setActiveMessengerConversationId,
+    openInAppMeet
   } = useData();
 
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [searchQueryInternal, setSearchQueryInternal] = useState('');
+  const [isSpeakerActive, setIsSpeakerActive] = useState(true);
   
   const searchQuery = externalSearchQuery !== undefined ? externalSearchQuery : searchQueryInternal;
   const setSearchQuery = (val: string) => {
@@ -333,24 +336,21 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
   );
 
   return (
-    <div className={`w-full flex flex-col font-bengali ${isEmbedded ? 'h-[calc(100dvh-100px)] h-[calc(100vh-100px)] sm:h-[80vh] min-h-[400px]' : 'h-full'}`}>
-      <div className="flex-1 flex flex-col md:flex-row h-full overflow-hidden bg-white dark:bg-[#18222D]">
+    <div className={`w-full flex flex-col font-bengali ${isEmbedded ? 'h-[calc(100dvh-100px)] sm:h-[80vh] min-h-[360px]' : 'h-full'}`}>
+      <div className="flex-1 min-h-0 flex flex-col md:flex-row h-full overflow-hidden bg-white dark:bg-[#18222D]">
         
         {/* LEFT PANE: MESSAGES HISTORY & STORIES */}
-        <div className={`w-full md:w-80 lg:w-96 border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#18222D] flex flex-col h-full shrink-0 relative ${
+        <div className={`w-full md:w-80 lg:w-96 border-r-0 md:border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#18222D] flex flex-col h-full min-h-0 shrink-0 relative ${
           selectedConversationId ? 'hidden md:flex' : 'flex'
         }`}>
           
-          {/* MESSAGES HEADER: Clean & Professional, Search + Settings set together on the right */}
+          {/* MESSAGES HEADER: Clean & Professional, Search + Settings set together on the right (hidden on embedded mobile as header is provided by MarketplaceSection) */}
           <div className={`px-4 py-3 items-center justify-between border-b border-slate-100 dark:border-slate-800/80 shrink-0 ${isEmbedded ? 'hidden sm:flex' : 'flex'}`}>
             <div className="flex items-center gap-2">
               <div>
                 <h1 className="text-lg sm:text-xl font-black text-slate-950 dark:text-white tracking-tight flex items-center gap-1.5">
                   <span>Messages</span>
                 </h1>
-                <p className="text-[10px] font-semibold text-slate-400/90 tracking-wide leading-tight mt-0.5 font-sans">
-                  PTENit Marketplace Inbox
-                </p>
               </div>
             </div>
 
@@ -392,174 +392,178 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
             </div>
           </div>
 
-          {/* ACTIVE STORIES / CONTACTS ROW */}
-          <div className="px-3.5 py-2.5 border-b border-slate-100 dark:border-slate-800/80 shrink-0">
-            <div className="flex items-center gap-3 overflow-x-auto no-scrollbar py-0.5">
-              {/* User Note Pill */}
-              <div
-                onClick={() => setIsNoteModalOpen(true)}
-                className="flex flex-col items-center gap-1 shrink-0 cursor-pointer group"
-              >
-                <div className="relative">
-                  <img
-                    src={currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
-                    alt="You"
-                    className="w-11 h-11 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700 group-hover:border-blue-600/50 transition"
-                  />
-                  <div className="absolute -top-1 -right-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] rounded-full p-0.5 shadow-xs">
-                    💬
-                  </div>
-                </div>
-                <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 truncate max-w-[50px] text-center">
-                  Your note
-                </span>
-              </div>
-
-              {/* Active Sellers Stories */}
-              {topActiveStories.map(story => (
+          {/* UNIFIED SCROLLABLE FEED: Active Contacts + Conversations All Scroll Together */}
+          <div 
+            className="flex-1 min-h-0 overflow-y-auto no-scrollbar pb-24 overscroll-contain touch-pan-y"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            {/* ACTIVE STORIES / CONTACTS ROW - Scrolls together with conversation feed without extra margin */}
+            <div className="px-1.5 sm:px-3.5 py-1 sm:py-2 border-b border-slate-100 dark:border-slate-800/80 bg-white dark:bg-[#18222D] m-0">
+              <div className="flex items-center gap-1.5 sm:gap-3 overflow-x-auto no-scrollbar py-0.5 m-0 px-1 sm:px-0">
+                {/* User Note Pill */}
                 <div
-                  key={story.id}
-                  onClick={() => {
-                    setSelectedConversationId(story.convoId);
-                    if (setActiveMessengerConversationId) setActiveMessengerConversationId(story.convoId);
-                  }}
-                  className="flex flex-col items-center gap-1 shrink-0 cursor-pointer group"
+                  onClick={() => setIsNoteModalOpen(true)}
+                  className="flex flex-col items-center gap-0.5 sm:gap-1 shrink-0 cursor-pointer group m-0 p-0"
                 >
-                  <div className="relative p-0.5 rounded-full border-2 border-blue-600/50">
+                  <div className="relative">
                     <img
-                      src={story.avatar}
-                      alt={story.name}
-                      className="w-10 h-10 rounded-full object-cover group-hover:scale-105 transition"
+                      src={currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
+                      alt="You"
+                      className="w-9 h-9 sm:w-11 sm:h-11 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700 group-hover:border-blue-600/50 transition"
                     />
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-blue-500 rounded-full border-2 border-white dark:border-[#18222D]" />
+                    <div className="absolute -top-1 -right-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] rounded-full p-0.5 shadow-xs">
+                      💬
+                    </div>
                   </div>
-                  <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 truncate max-w-[54px] text-center">
-                    {story.name}
+                  <span className="text-[9px] sm:text-[10px] font-bold text-slate-600 dark:text-slate-300 truncate max-w-[48px] sm:max-w-[50px] text-center">
+                    Your note
                   </span>
                 </div>
+
+                {/* Active Sellers Stories */}
+                {topActiveStories.map(story => (
+                  <div
+                    key={story.id}
+                    onClick={() => {
+                      setSelectedConversationId(story.convoId);
+                      if (setActiveMessengerConversationId) setActiveMessengerConversationId(story.convoId);
+                    }}
+                    className="flex flex-col items-center gap-0.5 sm:gap-1 shrink-0 cursor-pointer group m-0 p-0"
+                  >
+                    <div className="relative p-0.5 rounded-full border-2 border-blue-600/50">
+                      <img
+                        src={story.avatar}
+                        alt={story.name}
+                        className="w-8.5 h-8.5 sm:w-10 sm:h-10 rounded-full object-cover group-hover:scale-105 transition"
+                      />
+                      <span className="absolute bottom-0 right-0 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-blue-500 rounded-full border-2 border-white dark:border-[#18222D]" />
+                    </div>
+                    <span className="text-[9px] sm:text-[10px] font-bold text-slate-700 dark:text-slate-300 truncate max-w-[50px] sm:max-w-[54px] text-center">
+                      {story.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CATEGORY FILTER TABS (HIDDEN ON PHONE VIEW FOR MAXIMUM VERTICAL SPACE) */}
+            <div className="hidden sm:flex px-3.5 py-2 items-center gap-1.5 border-b border-slate-100 dark:border-slate-800/80 bg-white dark:bg-[#18222D] overflow-x-auto no-scrollbar">
+              {[
+                { id: 'all', label: 'সব ইনবক্স' },
+                { id: 'sellers', label: 'সেলার্স' },
+                { id: 'orders', label: 'অর্ডার চ্যাট' },
+                { id: 'online', label: 'অনলাইন' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveCategoryFilter(tab.id as any)}
+                  className={`px-3 py-1 rounded-full text-xs font-bold transition whitespace-nowrap cursor-pointer ${
+                    activeCategoryFilter === tab.id
+                      ? 'bg-[#006A4E] text-white font-black shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                  }`}
+                >
+                  {tab.label}
+                </button>
               ))}
             </div>
-          </div>
 
-          {/* CATEGORY FILTER TABS (HIDDEN ON PHONE VIEW FOR MAXIMUM VERTICAL SPACE) */}
-          <div className="hidden sm:flex px-3.5 py-2 items-center gap-1.5 border-b border-slate-100 dark:border-slate-800/80 shrink-0 overflow-x-auto no-scrollbar">
-            {[
-              { id: 'all', label: 'সব ইনবক্স' },
-              { id: 'sellers', label: 'সেলার্স' },
-              { id: 'orders', label: 'অর্ডার চ্যাট' },
-              { id: 'online', label: 'অনলাইন' }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveCategoryFilter(tab.id as any)}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition whitespace-nowrap cursor-pointer ${
-                  activeCategoryFilter === tab.id
-                    ? 'bg-[#006A4E] text-white font-black shadow-xs'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          {/* CONVERSATION LIST FEED */}
-          <div className="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/50 no-scrollbar pb-20">
-            {conversationList.length === 0 ? (
-              <div className="p-8 text-center text-slate-400 space-y-2">
-                <MessageCircle className="w-10 h-10 mx-auto text-slate-300 dark:text-slate-600" />
-                <p className="text-xs font-bold">কোনো চ্যাট বা সেলার পাওয়া যায়নি</p>
-              </div>
-            ) : (
-              conversationList.map(c => {
-                const isSelected = selectedConversationId === c.id;
-                return (
-                  <div
-                    key={c.id}
-                    onClick={() => {
-                      setSelectedConversationId(c.id);
-                      if (setActiveMessengerConversationId) setActiveMessengerConversationId(c.id);
-                    }}
-                    className={`p-3 sm:px-4 sm:py-3.5 flex items-center gap-3 cursor-pointer transition-colors ${
-                      isSelected
-                        ? 'bg-blue-50/80 dark:bg-slate-950/20 border-l-4 border-blue-600/50'
-                        : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
-                    }`}
-                  >
-                    {/* Avatar with Online Indicator */}
-                    <div className="relative shrink-0">
-                      <img
-                        src={c.avatar}
-                        alt={c.name}
-                        className="w-12 h-12 rounded-full object-cover border border-slate-200 dark:border-slate-700"
-                      />
-                      {c.isOnline ? (
-                        <span className="absolute bottom-0 right-0 w-3 h-3 bg-blue-500 rounded-full border-2 border-white dark:border-[#18222D]" />
-                      ) : (
-                        c.onlineTimeAgo && (
-                          <span className="absolute -bottom-1 -right-1 bg-slate-900 text-white text-[8px] font-bold px-1 rounded-full border border-slate-700">
-                            {c.onlineTimeAgo}
-                          </span>
-                        )
-                      )}
-                    </div>
-
-                    {/* Name, Badge, Rating & Last Message */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-1">
-                        <div className="flex items-center gap-1.5 min-w-0">
-                          <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate flex items-center gap-1">
-                            <span className="truncate">{c.name}</span>
-                            <CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
-                          </h4>
-                          {c.badge && (
-                            <span className="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[9px] font-bold border border-slate-200 dark:border-slate-700 shrink-0">
-                              {c.badge}
+            {/* CONVERSATION LIST FEED */}
+            <div className="divide-y divide-slate-100 dark:divide-slate-800/50">
+              {conversationList.length === 0 ? (
+                <div className="p-8 text-center text-slate-400 space-y-2">
+                  <MessageCircle className="w-10 h-10 mx-auto text-slate-300 dark:text-slate-600" />
+                  <p className="text-xs font-bold">কোনো চ্যাট বা সেলার পাওয়া যায়নি</p>
+                </div>
+              ) : (
+                conversationList.map(c => {
+                  const isSelected = selectedConversationId === c.id;
+                  return (
+                    <div
+                      key={c.id}
+                      onClick={() => {
+                        setSelectedConversationId(c.id);
+                        if (setActiveMessengerConversationId) setActiveMessengerConversationId(c.id);
+                      }}
+                      className={`p-3 sm:px-4 sm:py-3.5 flex items-center gap-3 cursor-pointer transition-colors ${
+                        isSelected
+                          ? 'bg-blue-50/80 dark:bg-slate-950/20 border-l-4 border-blue-600/50'
+                          : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                      }`}
+                    >
+                      {/* Avatar with Online Indicator */}
+                      <div className="relative shrink-0">
+                        <img
+                          src={c.avatar}
+                          alt={c.name}
+                          className="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border border-slate-200 dark:border-slate-700"
+                        />
+                        {c.isOnline ? (
+                          <span className="absolute bottom-0 right-0 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-blue-500 rounded-full border-2 border-white dark:border-[#18222D]" />
+                        ) : (
+                          c.onlineTimeAgo && (
+                            <span className="absolute -bottom-1 -right-1 bg-slate-900 text-white text-[8px] font-bold px-1 rounded-full border border-slate-700">
+                              {c.onlineTimeAgo}
                             </span>
-                          )}
-                        </div>
-                        <span className="text-[10px] text-slate-400 font-bold shrink-0 ml-1">
-                          {c.time}
-                        </span>
-                      </div>
-
-                      {/* Role & Rating */}
-                      <div className="flex items-center justify-between gap-2 mt-0.5 text-[10px] text-slate-500 dark:text-slate-400 font-semibold">
-                        <span className="truncate flex-1">{c.role}</span>
-                        {c.rating && (
-                          <span className="hidden sm:flex items-center gap-1 text-slate-700 dark:text-slate-200 shrink-0 font-extrabold text-[10px] bg-slate-100 dark:bg-slate-800/80 px-1.5 py-0.5 rounded-md">
-                            <Star className="w-3 h-3 fill-amber-400 text-amber-400 shrink-0" />
-                            <span>{c.rating.toFixed(1)}</span>
-                          </span>
+                          )
                         )}
                       </div>
 
-                      {/* Message snippet */}
-                      <div className="flex items-center justify-between mt-1">
-                        <p className="text-xs text-slate-600 dark:text-slate-300 truncate font-medium flex-1 mr-2">
-                          {c.lastMessage}
-                        </p>
-                        {c.unreadCount ? (
-                          <span className="min-w-5 h-5 px-1.5 bg-[#006A4E] text-white text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-sm ring-2 ring-white dark:ring-slate-900">
-                            {c.unreadCount}
+                      {/* Name, Badge, Rating & Last Message */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate flex items-center gap-1">
+                              <span className="truncate">{c.name}</span>
+                              <span title="ভেরিফাইড প্রোফাইল"><CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" /></span>
+                            </h4>
+                            {c.badge && (
+                              <span className="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[9px] font-bold border border-slate-200 dark:border-slate-700 shrink-0">
+                                {c.badge}
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[10px] text-slate-400 font-bold shrink-0 ml-1">
+                            {c.time}
                           </span>
-                        ) : null}
+                        </div>
+
+                        {/* Role & Rating */}
+                        <div className="flex items-center justify-between gap-2 mt-0.5 text-[10px] text-slate-500 dark:text-slate-400 font-semibold">
+                          <span className="truncate flex-1">{c.role}</span>
+                          {c.rating && (
+                            <span className="hidden sm:flex items-center gap-1 text-slate-700 dark:text-slate-200 shrink-0 font-extrabold text-[10px] bg-slate-100 dark:bg-slate-800/80 px-1.5 py-0.5 rounded-md">
+                              <Star className="w-3 h-3 fill-amber-400 text-amber-400 shrink-0" />
+                              <span>{c.rating.toFixed(1)}</span>
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Message snippet */}
+                        <div className="flex items-center justify-between mt-0.5">
+                          <p className="text-xs text-slate-600 dark:text-slate-300 truncate font-medium flex-1 mr-2">
+                            {c.lastMessage}
+                          </p>
+                          {c.unreadCount ? (
+                            <span className="min-w-5 h-5 px-1.5 bg-[#006A4E] text-white text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-xs ring-2 ring-white dark:ring-slate-900">
+                              {c.unreadCount}
+                            </span>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })
-            )}
+                  );
+                })
+              )}
+            </div>
           </div>
-
-
 
         </div>
 
-        {/* RIGHT PANE: CHAT CONVERSATION VIEW */}
-        <div className={`flex-1 flex flex-col h-full bg-white dark:bg-[#18222D] ${
-          selectedConversationId ? 'flex' : 'hidden md:flex'
+        {/* RIGHT PANE: CHAT CONVERSATION VIEW (FIXED ON PHONE VIEW) */}
+        <div className={`flex-1 min-h-0 flex flex-col h-full bg-white dark:bg-[#18222D] ${
+          selectedConversationId ? 'fixed inset-0 z-[70] md:static md:z-auto flex' : 'hidden md:flex'
         }`}>
           {currentActiveWin ? (
             <EmbeddedChatThread
@@ -571,13 +575,23 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
               onSend={(text) => sendChatMessage(currentActiveWin.id, text)}
               onCreateMeet={() => createGoogleMeetCall(currentActiveWin.id)}
               onStartVoiceCall={() => {
-                setActiveCallState({
-                  active: true,
-                  callerName: currentActiveWin.senderName,
-                  callerAvatar: currentActiveWin.senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80',
-                  muted: false,
-                  duration: 0
-                });
+                if (openInAppMeet) {
+                  openInAppMeet({
+                    windowId: currentActiveWin.id,
+                    targetName: currentActiveWin.senderName,
+                    targetAvatar: currentActiveWin.senderAvatar,
+                    targetRole: currentActiveWin.senderRole,
+                    initialType: 'audio'
+                  });
+                } else {
+                  setActiveCallState({
+                    active: true,
+                    callerName: currentActiveWin.senderName,
+                    callerAvatar: currentActiveWin.senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80',
+                    muted: false,
+                    duration: 0
+                  });
+                }
               }}
               currentUserName={currentUser?.name || 'আমি'}
             />
@@ -862,46 +876,97 @@ export const MarketplaceMessengerView: React.FC<MarketplaceMessengerViewProps> =
         </div>
       )}
 
-      {/* ACTIVE VOICE CALL MODAL */}
+      {/* ACTIVE VOICE CALL MODAL (Clean, Professional, 100% Responsive on Phone & Desktop) */}
       {activeCallState?.active && (
-        <div className="fixed inset-0 z-[100000] pointer-events-auto bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 font-bengali animate-in fade-in duration-200">
-          <div className="bg-slate-900 border border-slate-700/80 rounded-3xl w-full max-w-sm p-6 text-center space-y-6 shadow-2xl">
-            <div className="space-y-2">
-              <div className="relative inline-block">
-                <img
-                  src={activeCallState.callerAvatar}
-                  alt={activeCallState.callerName}
-                  className="w-24 h-24 rounded-full object-cover mx-auto border-4 border-blue-600/50 shadow-xl animate-pulse"
-                />
-                <span className="w-4 h-4 bg-blue-500 rounded-full border-2 border-slate-900 absolute bottom-1 right-1" />
+        <div className="fixed inset-0 z-[100000] pointer-events-auto bg-slate-950/95 backdrop-blur-md flex flex-col justify-between p-4 sm:p-8 font-bengali text-white animate-in fade-in duration-200 select-none pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
+          {/* Top Info Bar */}
+          <div className="flex items-center justify-between max-w-md w-full mx-auto px-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-emerald-400 bg-slate-900/80 border border-slate-800 px-3 py-1.5 rounded-full">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span>নিরাপদ এনক্রিপ্টেড কল</span>
+            </div>
+            <span className="text-xs font-mono font-bold text-slate-400 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
+              HD অডিও
+            </span>
+          </div>
+
+          {/* Center: Caller Avatar with Acoustic Waves & Info */}
+          <div className="text-center space-y-4 max-w-sm w-full mx-auto my-auto">
+            <div className="relative inline-block">
+              {/* Acoustic Wave Rings */}
+              <div className="absolute inset-0 rounded-full bg-[#38BDF8]/20 animate-ping scale-150" />
+              <div className="absolute inset-0 rounded-full bg-emerald-500/15 animate-pulse scale-175" />
+              <img
+                src={activeCallState.callerAvatar}
+                alt={activeCallState.callerName}
+                className="w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover mx-auto border-4 border-[#38BDF8] shadow-2xl relative z-10 ring-4 ring-[#38BDF8]/30"
+              />
+              <span className="w-5 h-5 bg-emerald-500 rounded-full border-2 border-slate-950 absolute bottom-1 right-1 z-20 shadow-md" />
+            </div>
+
+            <div className="space-y-1">
+              <h3 className="text-xl sm:text-2xl font-black text-white">{activeCallState.callerName}</h3>
+              <p className="text-xs text-slate-400 font-bold">মার্কেটপ্লেস ভেরিফাইড ইউজার</p>
+              <div className="text-sm font-mono text-emerald-400 font-black tracking-wider pt-1 flex items-center justify-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>
+                  {Math.floor(activeCallState.duration / 60).toString().padStart(2, '0')}:
+                  {(activeCallState.duration % 60).toString().padStart(2, '0')}
+                </span>
               </div>
-              <h3 className="text-lg font-black text-white">{activeCallState.callerName}</h3>
-              <p className="text-xs text-sky-400 font-bold">
-                ভয়েস কল চলমান • {Math.floor(activeCallState.duration / 60)}:{(activeCallState.duration % 60).toString().padStart(2, '0')}
-              </p>
             </div>
 
-            <div className="flex items-center justify-center gap-4">
-              <button
-                type="button"
-                onClick={() => setActiveCallState(prev => prev ? { ...prev, muted: !prev.muted } : null)}
-                className={`p-3.5 rounded-full text-white cursor-pointer transition ${
-                  activeCallState.muted ? 'bg-rose-600' : 'bg-slate-800 hover:bg-slate-700'
-                }`}
-                title={activeCallState.muted ? 'আনমিউট করুন' : 'মিউট করুন'}
-              >
-                {activeCallState.muted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveCallState(null)}
-                className="p-4 rounded-full bg-rose-600 hover:bg-rose-700 text-white cursor-pointer shadow-lg hover:scale-105 transition"
-                title="কল কেটে দিন"
-              >
-                <PhoneOff className="w-6 h-6" />
-              </button>
+            {/* Dynamic Soundwave Equalizer */}
+            <div className="flex items-center justify-center gap-1 py-1 h-8">
+              <span className="w-1 bg-[#38BDF8] rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-3" />
+              <span className="w-1 bg-emerald-400 rounded-full animate-[pulse_0.8s_ease-in-out_infinite] h-6" />
+              <span className="w-1 bg-cyan-400 rounded-full animate-[pulse_0.5s_ease-in-out_infinite] h-8" />
+              <span className="w-1 bg-[#38BDF8] rounded-full animate-[pulse_0.7s_ease-in-out_infinite] h-5" />
+              <span className="w-1 bg-sky-400 rounded-full animate-[pulse_0.9s_ease-in-out_infinite] h-7" />
+              <span className="w-1 bg-emerald-400 rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-4" />
+              <span className="w-1 bg-[#38BDF8] rounded-full animate-[pulse_0.8s_ease-in-out_infinite] h-2" />
             </div>
+
+            <p className="text-[11px] text-slate-400">
+              {activeCallState.muted ? '🔇 আপনার মাইক্রোফোন মিউট করা আছে' : '🎙️ কথা স্পষ্ট শোনা যাচ্ছে'}
+            </p>
+          </div>
+
+          {/* Bottom Call Controls (Responsive, Touch-Friendly) */}
+          <div className="flex items-center justify-center gap-5 sm:gap-6 max-w-sm w-full mx-auto">
+            {/* Mic Toggle */}
+            <button
+              type="button"
+              onClick={() => setActiveCallState(prev => prev ? { ...prev, muted: !prev.muted } : null)}
+              className={`w-13 h-13 rounded-full flex flex-col items-center justify-center transition cursor-pointer active:scale-95 shadow-lg ${
+                activeCallState.muted ? 'bg-rose-600 text-white shadow-rose-950/60' : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700'
+              }`}
+              title={activeCallState.muted ? 'আনমিউট করুন' : 'মিউট করুন'}
+            >
+              {activeCallState.muted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+            </button>
+
+            {/* Speaker Toggle */}
+            <button
+              type="button"
+              onClick={() => setIsSpeakerActive(prev => !prev)}
+              className={`w-13 h-13 rounded-full flex flex-col items-center justify-center transition cursor-pointer active:scale-95 shadow-lg ${
+                isSpeakerActive ? 'bg-slate-800 text-emerald-400 border border-slate-700' : 'bg-slate-800 text-slate-400 border border-slate-700'
+              }`}
+              title={isSpeakerActive ? 'স্পিকার বন্ধ করুন' : 'স্পিকার চালু করুন'}
+            >
+              {isSpeakerActive ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+            </button>
+
+            {/* End Call Button */}
+            <button
+              type="button"
+              onClick={() => setActiveCallState(null)}
+              className="w-15 h-15 rounded-full bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center shadow-xl shadow-rose-950/80 cursor-pointer hover:scale-105 active:scale-95 transition"
+              title="কল কেটে দিন"
+            >
+              <PhoneOff className="w-7 h-7" />
+            </button>
           </div>
         </div>
       )}
@@ -979,7 +1044,7 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-white dark:bg-[#18222D]">
+    <div className="flex-1 min-h-0 flex flex-col h-full bg-white dark:bg-[#18222D] overflow-hidden">
       {/* TOP HEADER BAR (VISIBLE ON ALL SCREENS INCLUDING PHONE VIEW) */}
       <div className="flex px-2.5 sm:px-4 py-2 bg-white dark:bg-[#1C2733] border-b border-slate-200/80 dark:border-slate-800 items-center justify-between shrink-0 shadow-2xs">
         <div className="flex items-center gap-2 min-w-0">
@@ -1010,7 +1075,7 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
           <div className="min-w-0">
             <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate flex items-center gap-1">
               <span className="truncate">{win.senderName}</span>
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
+              <span title="ভেরিফাইড প্রোফাইল"><CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" /></span>
             </h3>
             <p className="text-[10px] font-bold text-[#006A4E] dark:text-sky-400 flex items-center gap-1">
               <span className="truncate">অনলাইনে আছেন</span>
@@ -1056,9 +1121,12 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
       </div>
 
       {/* MESSAGES FEED */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50/60 dark:bg-[#101923] no-scrollbar">
-        {/* Profile Intro Banner */}
-        <div className="py-5 text-center space-y-2 border-b border-slate-200/50 dark:border-slate-800/60 max-w-sm mx-auto">
+      <div 
+        className="flex-1 min-h-0 p-3 sm:p-4 overflow-y-auto space-y-3 bg-slate-50/60 dark:bg-[#101923] overscroll-contain touch-pan-y"
+        style={{ WebkitOverflowScrolling: 'touch' }}
+      >
+        {/* Profile Intro Banner - hidden on phone view so profile is only shown once in the header! */}
+        <div className="hidden md:block py-5 text-center space-y-2 border-b border-slate-200/50 dark:border-slate-800/60 max-w-sm mx-auto">
           <img
             src={win.senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'}
             alt={win.senderName}
@@ -1066,7 +1134,7 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
           />
           <h4 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center justify-center gap-1">
             <span>{win.senderName}</span>
-            <CheckCircle2 className="w-4 h-4 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="Verified Profile" />
+            <span title="Verified Profile"><CheckCircle2 className="w-4 h-4 text-[#0084FF] fill-[#0084FF] text-white shrink-0" /></span>
           </h4>
           <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300">
             <span className="truncate">{win.senderRole || 'Pro Seller • React & Node Specialist'}</span>
@@ -1160,8 +1228,8 @@ const EmbeddedChatThread: React.FC<EmbeddedChatThreadProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* BOTTOM INPUT BAR */}
-      <div className="p-3 bg-white dark:bg-[#1C2733] border-t border-slate-200/80 dark:border-slate-800 shrink-0 relative">
+      {/* BOTTOM INPUT BAR - FIXED AT BOTTOM */}
+      <div className="p-2 sm:p-3 bg-white dark:bg-[#1C2733] border-t border-slate-200/80 dark:border-slate-800 shrink-0 relative pb-[max(0.6rem,env(safe-area-inset-bottom))]">
         {/* Emoji Selector Popup */}
         {showEmojis && (
           <div className="absolute bottom-16 left-4 bg-white dark:bg-[#243447] border border-slate-200 dark:border-slate-700 rounded-2xl p-2.5 shadow-2xl flex items-center gap-2 z-30 animate-in fade-in duration-100">

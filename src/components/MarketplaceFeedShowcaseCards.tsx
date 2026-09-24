@@ -15,7 +15,9 @@ import {
   Clock,
   BookOpen,
   UserCheck,
-  MoreHorizontal
+  MoreHorizontal,
+  Tag,
+  Gift
 } from 'lucide-react';
 
 export interface DigitalProductFeedCardProps {
@@ -34,13 +36,20 @@ export const DigitalProductFeedCard: React.FC<DigitalProductFeedCardProps> = ({
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
 
-  const price = typeof product.price === 'number' ? product.price : 450;
+  const isFree = Boolean(
+    product.isFree ||
+    product.price === 0 ||
+    product.offerBadge === "সম্পূর্ণ ফ্রি" ||
+    product.offerBadge === "ফ্রি" ||
+    (typeof product.price === 'string' && (product.price.includes('ফ্রি') || product.price.toLowerCase().includes('free')))
+  );
+  const price = typeof product.price === 'number' ? product.price : (isFree ? 0 : 450);
   const originalPrice = product.originalPrice && product.originalPrice > price
     ? product.originalPrice
     : Math.round(price * 1.5);
-  const discountPct = originalPrice > price
+  const discountPct = isFree ? 0 : (originalPrice > price
     ? Math.round(((originalPrice - price) / originalPrice) * 100)
-    : 0;
+    : 0);
 
   const viewsCount = product.salesCount ? (product.salesCount * 14 + 320) : 1850;
   const viewsFormatted = viewsCount >= 1000 ? `${(viewsCount / 1000).toFixed(1)}k` : `${viewsCount}`;
@@ -107,10 +116,11 @@ export const DigitalProductFeedCard: React.FC<DigitalProductFeedCardProps> = ({
               <span className="text-[14px] sm:text-[17px] md:text-[18px] font-semibold text-slate-900 dark:text-white truncate">
                 PTENit Digital Studio
               </span>
-              <CheckCircle2
-                className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
-                title="Verified Studio"
-              />
+              <span title="Verified Studio">
+                <CheckCircle2
+                  className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
+                />
+              </span>
             </div>
 
             {/* Line 2: Meta Info (Middle-aligned dots: 1 Mar · Verified · Escrow Shield) */}
@@ -119,7 +129,7 @@ export const DigitalProductFeedCard: React.FC<DigitalProductFeedCardProps> = ({
               <span className="text-slate-400 dark:text-slate-500 select-none leading-none inline-flex items-center justify-center px-0.5 font-bold">·</span>
               <span className="text-[#006A4E] dark:text-emerald-400 font-medium shrink-0">Verified</span>
               <span className="text-slate-400 dark:text-slate-500 select-none leading-none inline-flex items-center justify-center px-0.5 font-bold">·</span>
-              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#006A4E] dark:text-emerald-400 shrink-0" aria-label="১০০% নিরাপদ এসক্রো গ্যারান্টি" title="১০০% নিরাপদ এসক্রো গ্যারান্টি" />
+              <span title="১০০% নিরাপদ এসক্রো গ্যারান্টি"><ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#006A4E] dark:text-emerald-400 shrink-0" aria-label="১০০% নিরাপদ এসক্রো গ্যারান্টি" /></span>
             </div>
           </div>
         </div>
@@ -158,14 +168,9 @@ export const DigitalProductFeedCard: React.FC<DigitalProductFeedCardProps> = ({
         <p className="text-[14px] sm:text-[17px] md:text-[18px] font-normal text-slate-900 dark:text-slate-100 leading-[1.5] line-clamp-3">
           {product.title}
         </p>
-        {product.shortDescription && (
-          <p className="text-[12px] sm:text-[13.5px] text-slate-500 dark:text-slate-400 font-normal mt-1 line-clamp-2 leading-relaxed">
-            {product.shortDescription}
-          </p>
-        )}
       </div>
 
-      {/* 3. Media Image Frame */}
+      {/* 3. Media Image Frame - ছবির উপর কোন টেক্সট থাকবে না */}
       <div className="relative w-full select-none bg-slate-950 overflow-hidden group/media">
         <div className="aspect-[16/10] sm:aspect-[16/9] min-h-[230px] sm:min-h-[290px] md:min-h-[330px] max-h-[320px] sm:max-h-[380px] md:max-h-[440px] w-full overflow-hidden relative cursor-pointer">
           <img
@@ -173,41 +178,48 @@ export const DigitalProductFeedCard: React.FC<DigitalProductFeedCardProps> = ({
             alt={product.title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover/media:scale-102"
           />
-
-          {/* Overlays */}
-          {product.category && (
-            <span className="absolute top-2.5 left-2.5 px-2 py-0.5 text-[10px] sm:text-[11px] font-bold rounded-md bg-black/70 text-white backdrop-blur-xs">
-              {product.category}
-            </span>
-          )}
-
-          {discountPct > 0 && (
-            <span className="absolute top-2.5 right-2.5 px-2 py-0.5 text-[10px] sm:text-[11px] font-black rounded-md bg-rose-600 text-white shadow-md">
-              {discountPct}% ছাড়
-            </span>
-          )}
         </div>
 
-        {/* Strip: Resource status & Price */}
+        {/* Strip: এক পাশে ছাড় বা সম্পূর্ন ফ্রি - অপর পাশে প্রাইজ */}
         <div className="px-3 sm:px-4.5 py-2 sm:py-2.5 bg-slate-50/95 dark:bg-slate-850/95 backdrop-blur-xs border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
-          <span className="text-xs sm:text-sm md:text-[14px] font-semibold text-[#006A4E] dark:text-emerald-400 flex items-center gap-1.5">
-            <span>⚡ ডিজিটাল রিসোর্স</span>
-            <span className="text-slate-300 dark:text-slate-600">|</span>
-            <span className="text-slate-500 dark:text-slate-400 font-normal">লাইফটাইম এক্সেস</span>
-          </span>
-
-          <div className="flex items-center gap-1.5 text-xs sm:text-sm md:text-base">
-            <span className="text-slate-500 dark:text-slate-400 font-normal">মূল্য:</span>
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-black text-sm sm:text-base md:text-lg text-[#006A4E] dark:text-emerald-400">
-                ৳{price.toLocaleString('bn-BD')}
+          {/* Left: ছাড় বা সম্পূর্ণ ফ্রি (বিস্তারিত বাটনের মতো সবুজ কালার, কোনো বর্ডার ছাড়া) */}
+          <div className="flex items-center gap-1.5">
+            {isFree ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#006A4E] text-white text-xs sm:text-sm font-bold shadow-xs">
+                <Gift className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
+                <span>সম্পূর্ণ ফ্রি</span>
               </span>
-              {originalPrice > price && (
-                <span className="text-xs text-slate-400 line-through font-bold">
-                  ৳{originalPrice.toLocaleString('bn-BD')}
+            ) : discountPct > 0 ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#006A4E] text-white text-xs sm:text-sm font-bold shadow-xs">
+                <Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
+                <span>{discountPct}% ছাড়</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#006A4E] text-white text-xs sm:text-sm font-bold shadow-xs">
+                <ShoppingBag className="w-3.5 h-3.5 text-white shrink-0" />
+                <span>ডিজিটাল প্রোডাক্ট</span>
+              </span>
+            )}
+          </div>
+
+          {/* Right: প্রাইজ */}
+          <div className="flex items-baseline gap-1.5 text-xs sm:text-sm md:text-base">
+            {isFree ? (
+              <span className="font-black text-sm sm:text-base md:text-lg text-[#006A4E] dark:text-emerald-400">
+                ফ্রি
+              </span>
+            ) : (
+              <>
+                <span className="font-black text-sm sm:text-base md:text-lg text-[#006A4E] dark:text-emerald-400">
+                  ৳{price.toLocaleString('bn-BD')}
                 </span>
-              )}
-            </div>
+                {originalPrice > price && (
+                  <span className="text-xs text-slate-400 line-through font-bold">
+                    ৳{originalPrice.toLocaleString('bn-BD')}
+                  </span>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -299,13 +311,20 @@ export const CourseFeedCard: React.FC<CourseFeedCardProps> = ({
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
 
-  const price = typeof course.price === 'number' ? course.price : 1999;
+  const isFree = Boolean(
+    course.isFree ||
+    course.price === 0 ||
+    course.offerBadge === "সম্পূর্ণ ফ্রি" ||
+    course.offerBadge === "ফ্রি" ||
+    (typeof course.price === 'string' && (course.price.includes('ফ্রি') || course.price.toLowerCase().includes('free')))
+  );
+  const price = typeof course.price === 'number' ? course.price : (isFree ? 0 : 1999);
   const originalPrice = course.originalPrice && course.originalPrice > price
     ? course.originalPrice
     : Math.round(price * 1.8);
-  const discountPct = originalPrice > price
+  const discountPct = isFree ? 0 : (originalPrice > price
     ? Math.round(((originalPrice - price) / originalPrice) * 100)
-    : 0;
+    : 0);
 
   const viewsCount = course.enrolledCount ? (course.enrolledCount * 8 + 450) : 2300;
   const viewsFormatted = viewsCount >= 1000 ? `${(viewsCount / 1000).toFixed(1)}k` : `${viewsCount}`;
@@ -372,10 +391,11 @@ export const CourseFeedCard: React.FC<CourseFeedCardProps> = ({
               <span className="text-[14px] sm:text-[17px] md:text-[18px] font-semibold text-slate-900 dark:text-white truncate">
                 PTENit Academy
               </span>
-              <CheckCircle2
-                className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
-                title="Verified Academy"
-              />
+              <span title="Verified Academy">
+                <CheckCircle2
+                  className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
+                />
+              </span>
             </div>
 
             {/* Line 2: Meta Info (Middle-aligned dots: 1 Mar · Masterclass · Escrow Shield) */}
@@ -384,7 +404,7 @@ export const CourseFeedCard: React.FC<CourseFeedCardProps> = ({
               <span className="text-slate-400 dark:text-slate-500 select-none leading-none inline-flex items-center justify-center px-0.5 font-bold">·</span>
               <span className="text-[#006A4E] dark:text-emerald-400 font-medium shrink-0">Masterclass</span>
               <span className="text-slate-400 dark:text-slate-500 select-none leading-none inline-flex items-center justify-center px-0.5 font-bold">·</span>
-              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#006A4E] dark:text-emerald-400 shrink-0" aria-label="১০০% নিরাপদ এসক্রো গ্যারান্টি" title="১০০% নিরাপদ এসক্রো গ্যারান্টি" />
+              <span title="১০০% নিরাপদ এসক্রো গ্যারান্টি"><ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#006A4E] dark:text-emerald-400 shrink-0" aria-label="১০০% নিরাপদ এসক্রো গ্যারান্টি" /></span>
             </div>
           </div>
         </div>
@@ -423,29 +443,9 @@ export const CourseFeedCard: React.FC<CourseFeedCardProps> = ({
         <p className="text-[14px] sm:text-[17px] md:text-[18px] font-normal text-slate-900 dark:text-slate-100 leading-[1.5] line-clamp-3">
           {course.title}
         </p>
-        <div className="flex items-center gap-3 text-[11.5px] sm:text-[13px] text-slate-500 dark:text-slate-400 mt-1 font-medium">
-          {course.duration && (
-            <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-sky-500" />
-              <span>{course.duration}</span>
-            </span>
-          )}
-          {course.lessonsCount && (
-            <span className="flex items-center gap-1">
-              <BookOpen className="w-3.5 h-3.5 text-emerald-500" />
-              <span>{course.lessonsCount}টি লেসন</span>
-            </span>
-          )}
-          {course.enrolledCount && (
-            <span className="flex items-center gap-1">
-              <UserCheck className="w-3.5 h-3.5 text-purple-500" />
-              <span>{course.enrolledCount}+ এনরোল্ড</span>
-            </span>
-          )}
-        </div>
       </div>
 
-      {/* 3. Media Image Frame */}
+      {/* 3. Media Image Frame - ছবির উপর কোন টেক্সট থাকবে না */}
       <div className="relative w-full select-none bg-slate-950 overflow-hidden group/media">
         <div className="aspect-[16/10] sm:aspect-[16/9] min-h-[230px] sm:min-h-[290px] md:min-h-[330px] max-h-[320px] sm:max-h-[380px] md:max-h-[440px] w-full overflow-hidden relative cursor-pointer">
           <img
@@ -453,42 +453,48 @@ export const CourseFeedCard: React.FC<CourseFeedCardProps> = ({
             alt={course.title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover/media:scale-102"
           />
-
-          {/* Overlays */}
-          {course.duration && (
-            <span className="absolute top-2.5 left-2.5 px-2 py-0.5 text-[10px] sm:text-[11px] font-bold rounded-md bg-black/70 text-white backdrop-blur-xs flex items-center gap-1">
-              <Clock className="w-3 h-3 text-sky-400" />
-              <span>{course.duration}</span>
-            </span>
-          )}
-
-          {discountPct > 0 && (
-            <span className="absolute top-2.5 right-2.5 px-2 py-0.5 text-[10px] sm:text-[11px] font-black rounded-md bg-rose-600 text-white shadow-md">
-              {discountPct}% ছাড়
-            </span>
-          )}
         </div>
 
-        {/* Strip: Course status & Price */}
+        {/* Strip: এক পাশে ছাড় বা সম্পূর্ন ফ্রি - অপর পাশে প্রাইজ */}
         <div className="px-3 sm:px-4.5 py-2 sm:py-2.5 bg-slate-50/95 dark:bg-slate-850/95 backdrop-blur-xs border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
-          <span className="text-xs sm:text-sm md:text-[14px] font-semibold text-[#006A4E] dark:text-emerald-400 flex items-center gap-1.5">
-            <span>🎓 একাডেমি কোর্স</span>
-            <span className="text-slate-300 dark:text-slate-600">|</span>
-            <span className="text-slate-500 dark:text-slate-400 font-normal">সার্টিফিকেট অন্তর্ভুক্ত</span>
-          </span>
-
-          <div className="flex items-center gap-1.5 text-xs sm:text-sm md:text-base">
-            <span className="text-slate-500 dark:text-slate-400 font-normal">ফি:</span>
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-black text-sm sm:text-base md:text-lg text-[#006A4E] dark:text-emerald-400">
-                ৳{price.toLocaleString('bn-BD')}
+          {/* Left: ছাড় বা সম্পূর্ণ ফ্রি (বিস্তারিত বাটনের মতো সবুজ কালার, কোনো বর্ডার ছাড়া) */}
+          <div className="flex items-center gap-1.5">
+            {isFree ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#006A4E] text-white text-xs sm:text-sm font-bold shadow-xs">
+                <Gift className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
+                <span>সম্পূর্ণ ফ্রি</span>
               </span>
-              {originalPrice > price && (
-                <span className="text-xs text-slate-400 line-through font-bold">
-                  ৳{originalPrice.toLocaleString('bn-BD')}
+            ) : discountPct > 0 ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#006A4E] text-white text-xs sm:text-sm font-bold shadow-xs">
+                <Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
+                <span>{discountPct}% ছাড়</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#006A4E] text-white text-xs sm:text-sm font-bold shadow-xs">
+                <GraduationCap className="w-3.5 h-3.5 text-white shrink-0" />
+                <span>একাডেমি কোর্স</span>
+              </span>
+            )}
+          </div>
+
+          {/* Right: প্রাইজ */}
+          <div className="flex items-baseline gap-1.5 text-xs sm:text-sm md:text-base">
+            {isFree ? (
+              <span className="font-black text-sm sm:text-base md:text-lg text-[#006A4E] dark:text-emerald-400">
+                ফ্রি
+              </span>
+            ) : (
+              <>
+                <span className="font-black text-sm sm:text-base md:text-lg text-[#006A4E] dark:text-emerald-400">
+                  ৳{price.toLocaleString('bn-BD')}
                 </span>
-              )}
-            </div>
+                {originalPrice > price && (
+                  <span className="text-xs text-slate-400 line-through font-bold">
+                    ৳{originalPrice.toLocaleString('bn-BD')}
+                  </span>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>

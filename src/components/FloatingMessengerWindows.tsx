@@ -52,7 +52,8 @@ import {
   HelpCircle,
   CheckCircle,
   MessageSquare,
-  Package
+  Package,
+  Users
 } from 'lucide-react';
 
 interface ConversationItem {
@@ -105,7 +106,8 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
     closeNotificationCenter,
     isOfferSoundEnabled,
     toggleOfferSound,
-    marketplaceMode
+    marketplaceMode,
+    openInAppMeet
   } = useData();
 
   const isSellerMode = marketplaceMode === 'selling' || Boolean(
@@ -121,7 +123,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
       currentUser.roles?.includes('instructor') ||
       currentUser.roles?.includes('specialist')
     ) && (
-      marketplaceMode === 'selling' ||
+      (marketplaceMode as string) === 'selling' ||
       localStorage.getItem('marketplace_mode') === 'selling'
     )
   );
@@ -140,6 +142,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileSearchActive, setIsMobileSearchActive] = useState(false);
   const [activeCategoryFilter, setActiveCategoryFilter] = useState<'all' | 'sellers' | 'online' | 'orders'>('all');
+  const [activeNotifFilter, setActiveNotifFilter] = useState<'all' | 'unread' | 'orders' | 'updates'>('all');
   
   // Interactive Modals
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
@@ -807,9 +810,9 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
 
   return (
     <>
-      {/* 1. FLOATING MINI CHAT POPUP WINDOWS (VISIBLE ON BOTH DESKTOP & MOBILE OVER ORDERS) */}
+      {/* 1. FLOATING MINI CHAT POPUP WINDOWS (DESKTOP ONLY - NEVER ON PHONE VIEW) */}
       {!isOpen && activeChatWindows && activeChatWindows.length > 0 && (
-        <div className="fixed bottom-0 sm:bottom-0 right-0 sm:right-6 left-0 sm:left-auto z-[9990] flex items-end justify-center sm:justify-end gap-3 p-2 sm:p-0 pointer-events-none font-bengali">
+        <div className="hidden sm:flex fixed bottom-0 right-6 z-[9990] items-end justify-end gap-3 p-0 pointer-events-none font-bengali">
           {activeChatWindows.map(win => (
             <SingleChatWindow
               key={win.id}
@@ -931,6 +934,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                 onClick={() => {
                   setIsSettingsModalOpen(false);
                   setIsMobileSearchActive(false);
+                  setActiveNotifFilter('all');
                   setActiveTopTab('notifications');
                   setSelectedNotification(null);
                 }}
@@ -1024,14 +1028,14 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
             </div>
 
             {/* Sub-Header Attached Below 6 Icons */}
-            <div className={`px-3 py-2 border-b shadow-xs transition-colors ${
+            <div className={`px-3 pt-2 pb-0 border-b shadow-xs transition-colors font-bengali ${
               isSellerMode
-                ? 'bg-[#BE123C] border-[#9F1239] text-white'
-                : 'bg-[#00543D] border-emerald-600/40 text-white'
+                ? 'bg-[#E11D48] border-white/10 text-white'
+                : 'bg-[#006A4E] border-white/10 text-white'
             }`}>
               {selectedConversationId && currentActiveWin ? (
                 /* Active Chat Sub-Header: < [Avatar] Name Active now 📹 📞 */
-                <div className="flex items-center justify-between w-full animate-in fade-in duration-150 py-0.5">
+                <div className="flex items-center justify-between w-full animate-in fade-in duration-150 py-0.5 pb-2">
                   <div className="flex items-center gap-2 min-w-0">
                     <button
                       type="button"
@@ -1066,7 +1070,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                         <h2 className="text-xs sm:text-sm font-black text-white tracking-tight leading-tight truncate">
                           {currentActiveWin.senderName}
                         </h2>
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300 fill-emerald-300 text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
+                        <span title="ভেরিফাইড প্রোফাইল"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-300 fill-emerald-300 text-white shrink-0" /></span>
                       </div>
                       <p className="text-[10px] text-emerald-200 font-bold leading-none mt-0.5 truncate">
                         Active now
@@ -1095,7 +1099,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                 </div>
               ) : isMobileSearchActive ? (
                 /* Inline Search Input inside Top Sub-Header */
-                <div className="w-full max-w-md mx-auto flex items-center animate-in fade-in duration-150 py-0.5">
+                <div className="w-full max-w-md mx-auto flex items-center animate-in fade-in duration-150 py-0.5 pb-2">
                   <div className="relative w-full flex items-center">
                     <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
@@ -1121,7 +1125,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                 </div>
               ) : activeTopTab === 'courses' ? (
                 /* List View Sub-Header for Courses */
-                <div className="flex items-center justify-between py-0.5 font-bengali">
+                <div className="flex items-center justify-between py-0.5 pb-2 font-bengali">
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -1155,7 +1159,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
               ) : activeTopTab === 'notifications' ? (
                 selectedNotification ? (
                   /* Notification Detail View Header */
-                  <div className="flex items-center justify-between py-0.5">
+                  <div className="flex items-center justify-between py-0.5 pb-2">
                     <button
                       type="button"
                       onClick={() => setSelectedNotification(null)}
@@ -1180,29 +1184,60 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                     </div>
                   </div>
                 ) : (
-                  /* List View Sub-Header for Notifications */
-                  <div className="flex items-center justify-between py-0.5">
+                  /* List View Sub-Header for Notifications (Single line, equal size, no extra subtitle) */
+                  <div className="pb-1 pt-0.5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={handleCloseAll}
+                          className="p-1 -ml-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-95"
+                          title="বন্ধ করে পেজে ফিরে যান"
+                        >
+                          <ChevronLeft className="w-5 h-5 text-white stroke-[2.5]" />
+                        </button>
+                        <div className="flex items-center gap-1.5">
+                          <h2 className="text-sm font-black text-white tracking-tight leading-none font-english">Notifications</h2>
+                        </div>
+                      </div>
+
+                      {/* Right: Search + Settings */}
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => setIsMobileSearchActive(true)}
+                          className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-95"
+                          title="সার্চ করুন"
+                        >
+                          <Search className="w-4.5 h-4.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsSettingsModalOpen(true)}
+                          className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-95"
+                          title="সেটিংস"
+                        >
+                          <Settings className="w-4.5 h-4.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )
+              ) : (
+                /* List View Sub-Header: Messages (Single line, equal size, no extra subtitle) */
+                <div className="pb-1 pt-0.5">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={handleCloseAll}
-                        className="p-1 -ml-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                        className="p-1 -ml-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-95"
                         title="বন্ধ করে পেজে ফিরে যান"
                       >
-                        <ChevronLeft className="w-5 h-5 text-white" />
+                        <ChevronLeft className="w-5 h-5 text-white stroke-[2.5]" />
                       </button>
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <h2 className="text-sm font-black text-white tracking-tight leading-none">Notifications</h2>
-                          {roleScopedNotifications.filter(n => !n.read).length > 0 && (
-                            <span className="bg-white/20 text-white text-[10px] font-black rounded-full px-1.5 py-0.2 shrink-0">
-                              {roleScopedNotifications.filter(n => !n.read).length}
-                            </span>
-                          )}
-                        </div>
-                        <p className={`text-[10px] font-semibold ${isSellerMode ? 'text-rose-100' : 'text-emerald-100'} tracking-wide leading-tight mt-0.5 font-sans`}>
-                          PTENit Marketplace Updates
-                        </p>
+                      <div className="flex items-center gap-1.5">
+                        <h2 className="text-sm font-black text-white tracking-tight leading-none font-english">Messages</h2>
                       </div>
                     </div>
 
@@ -1211,72 +1246,30 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                       <button
                         type="button"
                         onClick={() => setIsMobileSearchActive(true)}
-                        className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                        className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-95"
                         title="সার্চ করুন"
                       >
-                        <Search className="w-4 h-4" />
+                        <Search className="w-4.5 h-4.5" />
                       </button>
                       <button
                         type="button"
                         onClick={() => setIsSettingsModalOpen(true)}
-                        className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                        className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-95"
                         title="সেটিংস"
                       >
-                        <Settings className="w-4 h-4" />
+                        <Settings className="w-4.5 h-4.5" />
                       </button>
                     </div>
-                  </div>
-                )
-              ) : (
-                /* List View Sub-Header: Messages • PTENit Marketplace Inbox */
-                <div className="flex items-center justify-between py-0.5">
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={handleCloseAll}
-                      className="p-1 -ml-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
-                      title="বন্ধ করে পেজে ফিরে যান"
-                    >
-                      <ChevronLeft className="w-5 h-5 text-white" />
-                    </button>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <h2 className="text-sm font-black text-white tracking-tight leading-none">Messages</h2>
-                      </div>
-                      <p className={`text-[10px] font-semibold ${isSellerMode ? 'text-rose-100' : 'text-emerald-100'} tracking-wide leading-tight mt-0.5 font-sans`}>
-                        PTENit Marketplace Inbox
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Right: Search + Settings */}
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => setIsMobileSearchActive(true)}
-                      className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
-                      title="সার্চ করুন"
-                    >
-                      <Search className="w-4 h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setIsSettingsModalOpen(true)}
-                      className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
-                      title="সেটিংস"
-                    >
-                      <Settings className="w-4 h-4" />
-                    </button>
                   </div>
                 </div>
               )}
             </div>
           </div>
           
-          <div className="flex-1 flex flex-col md:flex-row h-full overflow-hidden">
+          <div className="flex-1 min-h-0 flex flex-col md:flex-row h-full overflow-hidden">
             
             {/* LEFT PANE: MESSAGES HISTORY & STORIES (VISIBLE ON DESKTOP OR WHEN NO CONVO SELECTED ON PHONE) */}
-            <div className={`w-full md:w-88 lg:w-96 border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#18222D] flex flex-col h-full shrink-0 relative ${
+            <div className={`w-full md:w-88 lg:w-96 border-r border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#18222D] flex flex-col h-full min-h-0 shrink-0 relative ${
               selectedConversationId ? 'hidden md:flex' : 'flex'
             }`}>
               
@@ -1295,9 +1288,6 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                     <h1 className="text-lg sm:text-xl font-black text-slate-950 dark:text-white tracking-tight flex items-center gap-1.5">
                       <span>{activeTopTab === 'notifications' ? 'Notifications' : 'Messages'}</span>
                     </h1>
-                    <p className="text-[10px] font-semibold text-slate-400/90 tracking-wide leading-tight mt-0.5 font-sans">
-                      {activeTopTab === 'notifications' ? 'PTENit Marketplace Updates' : 'PTENit Marketplace Inbox'}
-                    </p>
                   </div>
                 </div>
 
@@ -1328,7 +1318,10 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
               </div>
 
               {/* SCROLLABLE BODY: SEARCH BAR, FILTER TABS, SELLERS CAROUSEL & CONVERSATION LIST ALL SCROLL TOGETHER */}
-              <div className="flex-1 overflow-y-auto no-scrollbar divide-y divide-slate-100/80 dark:divide-slate-800/40">
+              <div 
+                className="flex-1 min-h-0 overflow-y-auto no-scrollbar divide-y divide-slate-100/80 dark:divide-slate-800/40 overscroll-contain touch-pan-y"
+                style={{ WebkitOverflowScrolling: 'touch' }}
+              >
                 
                 {/* SEARCH BAR & FILTER TABS (HIDDEN ON PHONE VIEW) */}
                 <div className="hidden md:block p-3 space-y-2.5">
@@ -1809,26 +1802,40 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                                   return;
                                 }
 
-                                if (targetTab === 'financials' || selectedNotification.category === 'payout' || notifTitle.includes('ওয়ালেট') || notifTitle.includes('পেমেন্ট') || notifTitle.includes('বোনাস') || notifTitle.includes('ক্যাশআউট')) {
-                                  if (onNavigateTab) onNavigateTab('marketplace', 'seller-payout', true);
-                                  return;
-                                }
+                                const isSeller = marketplaceMode === 'selling';
 
-                                const isSellerOrder = selectedNotification.category === 'seller' || notifTitle.includes('ক্লাইন্ট') || notifTitle.includes('ক্লায়েন্ট') || notifTitle.includes('প্রস্তাবনা') || notifTitle.includes('ord-8821') || notifTitle.includes('সেলিং');
-                                if (isSellerOrder) {
-                                  if (onNavigateTab) onNavigateTab('marketplace', 'seller-orders', true);
-                                  return;
-                                }
+                                if (isSeller) {
+                                  if (targetTab === 'financials' || selectedNotification.category === 'payout' || notifTitle.includes('ওয়ালেট') || notifTitle.includes('বোনাস') || notifTitle.includes('ক্যাশআউট')) {
+                                    if (onNavigateTab) onNavigateTab('marketplace', 'seller-payout', true);
+                                    return;
+                                  }
 
-                                if (targetTab === 'marketplace' || notifTitle.includes('অর্ডার') || notifTitle.includes('ord-') || notifTitle.includes('এস্ক্রো') || notifTitle.includes('গিগ')) {
-                                  if (onNavigateTab) onNavigateTab('marketplace', 'my-orders', true);
-                                  return;
+                                  const isSellerOrder = selectedNotification.category === 'seller' || notifTitle.includes('ক্লাইন্ট') || notifTitle.includes('ক্লায়েন্ট') || notifTitle.includes('প্রস্তাবনা') || notifTitle.includes('ord-8821') || notifTitle.includes('সেলিং');
+                                  if (isSellerOrder) {
+                                    if (onNavigateTab) onNavigateTab('marketplace', 'seller-orders', true);
+                                    return;
+                                  }
+
+                                  if (targetTab === 'marketplace' || notifTitle.includes('অর্ডার') || notifTitle.includes('ord-') || notifTitle.includes('এস্ক্রো') || notifTitle.includes('গিগ')) {
+                                    if (onNavigateTab) onNavigateTab('marketplace', 'seller-orders', true);
+                                    return;
+                                  }
+                                } else {
+                                  // BUYER MODE: STRICTLY KEEP IN BUYER MODE!
+                                  if (targetTab === 'courses' || notifTitle.includes('কোর্স') || notifTitle.includes('মডিউল') || notifTitle.includes('ক্লাস')) {
+                                    if (onNavigateTab) onNavigateTab('marketplace', 'courses', true);
+                                    return;
+                                  }
+                                  if (targetTab === 'marketplace' || notifTitle.includes('অর্ডার') || notifTitle.includes('ord-') || notifTitle.includes('এস্ক্রো') || notifTitle.includes('গিগ')) {
+                                    if (onNavigateTab) onNavigateTab('marketplace', 'my-orders', true);
+                                    return;
+                                  }
                                 }
 
                                 if (targetTab && onNavigateTab) {
                                   onNavigateTab(targetTab, undefined, true);
                                 } else if (onNavigateTab) {
-                                  onNavigateTab('marketplace', 'All', true);
+                                  onNavigateTab('marketplace', isSeller ? 'gigs' : 'All', true);
                                 }
                               }}
                               className="flex-1 py-2.5 bg-[#0084FF] hover:bg-blue-600 text-white font-black text-xs rounded-xl flex items-center justify-center gap-2 transition shadow-xs cursor-pointer active:scale-95"
@@ -1861,6 +1868,12 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                         </div>
                       ) : (
                         roleScopedNotifications
+                          .filter(n => {
+                            if (activeNotifFilter === 'unread') return !n.read;
+                            if (activeNotifFilter === 'orders') return n.type === 'success' || n.category === 'payout' || n.targetTab === 'marketplace';
+                            if (activeNotifFilter === 'updates') return n.type === 'info' || n.type === 'warning' || n.category === 'system';
+                            return true;
+                          })
                           .filter(n => {
                             if (!searchQuery) return true;
                             return n.title.toLowerCase().includes(searchQuery.toLowerCase()) || n.message.toLowerCase().includes(searchQuery.toLowerCase());
@@ -1962,7 +1975,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                               <div className="flex items-center gap-1.5 min-w-0">
                                 <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate flex items-center gap-1">
                                   <span className="truncate">{c.name}</span>
-                                  <CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
+                                  <span title="ভেরিফাইড প্রোফাইল"><CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" /></span>
                                 </h4>
                                 {c.badge && (
                                   <span className="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[9px] font-bold border border-slate-200 dark:border-slate-700 shrink-0">
@@ -2012,7 +2025,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
             </div>
 
             {/* RIGHT PANE: FULL SCREEN CHAT CONVERSATION VIEW */}
-            <div className={`flex-1 flex flex-col h-full bg-white dark:bg-[#18222D] ${
+            <div className={`flex-1 min-h-0 flex flex-col h-full bg-white dark:bg-[#18222D] ${
               selectedConversationId ? 'flex' : 'hidden md:flex'
             }`}>
               {currentActiveWin ? (
@@ -2026,13 +2039,23 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                   onSend={(text) => sendChatMessage(currentActiveWin.id, text)}
                   onCreateMeet={() => createGoogleMeetCall(currentActiveWin.id)}
                   onStartVoiceCall={() => {
-                    setActiveCallState({
-                      active: true,
-                      callerName: currentActiveWin.senderName,
-                      callerAvatar: currentActiveWin.senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80',
-                      muted: false,
-                      duration: 0
-                    });
+                    if (openInAppMeet) {
+                      openInAppMeet({
+                        windowId: currentActiveWin.id,
+                        targetName: currentActiveWin.senderName,
+                        targetAvatar: currentActiveWin.senderAvatar,
+                        targetRole: currentActiveWin.senderRole,
+                        initialType: 'audio'
+                      });
+                    } else {
+                      setActiveCallState({
+                        active: true,
+                        callerName: currentActiveWin.senderName,
+                        callerAvatar: currentActiveWin.senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80',
+                        muted: false,
+                        duration: 0
+                      });
+                    }
                   }}
                   currentUserName={currentUser?.name || 'আমি'}
                 />
@@ -2338,49 +2361,82 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
         </div>
       )}
 
-      {/* 7. LIVE VOICE CALL OVERLAY */}
+      {/* 7. LIVE VOICE CALL OVERLAY (100% Responsive, Clean & Professional Phone/Desktop Call Screen) */}
       {activeCallState?.active && (
-        <div className="fixed inset-0 z-[100000] pointer-events-auto bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-white font-bengali animate-in zoom-in-95 duration-200">
-          <div className="text-center space-y-4 max-w-sm w-full">
+        <div className="fixed inset-0 z-[100000] pointer-events-auto bg-slate-950/95 backdrop-blur-md flex flex-col justify-between p-4 sm:p-8 text-white font-bengali animate-in fade-in duration-200 select-none pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
+          {/* Top Info Bar */}
+          <div className="flex items-center justify-between max-w-md w-full mx-auto px-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-emerald-400 bg-slate-900/80 border border-slate-800 px-3 py-1.5 rounded-full">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span>নিরাপদ এনক্রিপ্টেড কল</span>
+            </div>
+            <span className="text-xs font-mono font-bold text-slate-400 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
+              HD অডিও
+            </span>
+          </div>
+
+          {/* Center: Caller Avatar with Acoustic Waves & Info */}
+          <div className="text-center space-y-4 max-w-sm w-full mx-auto my-auto">
             <div className="relative inline-block">
+              <div className="absolute inset-0 rounded-full bg-[#0084FF]/25 animate-ping scale-150" />
+              <div className="absolute inset-0 rounded-full bg-emerald-500/15 animate-pulse scale-175" />
               <img
                 src={activeCallState.callerAvatar}
                 alt={activeCallState.callerName}
-                className="w-24 h-24 rounded-full object-cover border-4 border-[#0084FF] shadow-2xl mx-auto animate-pulse"
+                className="w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover border-4 border-[#0084FF] shadow-2xl mx-auto relative z-10 ring-4 ring-[#0084FF]/30"
               />
-              <span className="absolute bottom-1 right-1 w-5 h-5 bg-blue-500 rounded-full border-2 border-slate-950" />
+              <span className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-slate-950 z-20 shadow-md" />
             </div>
 
-            <div>
-              <h3 className="text-xl font-black">{activeCallState.callerName}</h3>
-              <p className="text-xs text-sky-400 font-bold mt-0.5">PiTen ভয়েস কল চলছে (HD অডিও)</p>
-              <div className="text-sm font-mono text-slate-300 mt-2 font-bold">
-                {Math.floor(activeCallState.duration / 60).toString().padStart(2, '0')}:
-                {(activeCallState.duration % 60).toString().padStart(2, '0')}
+            <div className="space-y-1">
+              <h3 className="text-xl sm:text-2xl font-black">{activeCallState.callerName}</h3>
+              <p className="text-xs text-sky-400 font-bold">PiTen ভয়েস কল চলছে (HD অডিও)</p>
+              <div className="text-sm font-mono text-emerald-400 font-bold tracking-wider pt-1 flex items-center justify-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>
+                  {Math.floor(activeCallState.duration / 60).toString().padStart(2, '0')}:
+                  {(activeCallState.duration % 60).toString().padStart(2, '0')}
+                </span>
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-6 pt-6">
-              <button
-                type="button"
-                onClick={() => setActiveCallState(prev => prev ? { ...prev, muted: !prev.muted } : null)}
-                className={`p-4 rounded-full transition cursor-pointer ${
-                  activeCallState.muted ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-white hover:bg-slate-700'
-                }`}
-                title={activeCallState.muted ? 'আনমিউট করুন' : 'মিউট করুন'}
-              >
-                {activeCallState.muted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveCallState(null)}
-                className="p-4 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-xl transition cursor-pointer active:scale-95"
-                title="কল শেষ করুন"
-              >
-                <PhoneOff className="w-6 h-6" />
-              </button>
+            {/* Dynamic Soundwave Equalizer */}
+            <div className="flex items-center justify-center gap-1 py-1 h-8">
+              <span className="w-1 bg-[#0084FF] rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-3" />
+              <span className="w-1 bg-emerald-400 rounded-full animate-[pulse_0.8s_ease-in-out_infinite] h-6" />
+              <span className="w-1 bg-cyan-400 rounded-full animate-[pulse_0.5s_ease-in-out_infinite] h-8" />
+              <span className="w-1 bg-[#0084FF] rounded-full animate-[pulse_0.7s_ease-in-out_infinite] h-5" />
+              <span className="w-1 bg-sky-400 rounded-full animate-[pulse_0.9s_ease-in-out_infinite] h-7" />
+              <span className="w-1 bg-emerald-400 rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-4" />
+              <span className="w-1 bg-[#0084FF] rounded-full animate-[pulse_0.8s_ease-in-out_infinite] h-2" />
             </div>
+
+            <p className="text-[11px] text-slate-400">
+              {activeCallState.muted ? '🔇 আপনার মাইক্রোফোন মিউট করা আছে' : '🎙️ কথা স্পষ্ট শোনা যাচ্ছে'}
+            </p>
+          </div>
+
+          {/* Bottom Call Controls (Responsive, Touch-Friendly) */}
+          <div className="flex items-center justify-center gap-6 max-w-sm w-full mx-auto">
+            <button
+              type="button"
+              onClick={() => setActiveCallState(prev => prev ? { ...prev, muted: !prev.muted } : null)}
+              className={`w-13 h-13 rounded-full flex items-center justify-center transition cursor-pointer active:scale-95 shadow-lg ${
+                activeCallState.muted ? 'bg-rose-600 text-white shadow-rose-950/60' : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700'
+              }`}
+              title={activeCallState.muted ? 'আনমিউট করুন' : 'মিউট করুন'}
+            >
+              {activeCallState.muted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveCallState(null)}
+              className="w-15 h-15 rounded-full bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center shadow-xl shadow-rose-950/80 cursor-pointer hover:scale-105 active:scale-95 transition"
+              title="কল শেষ করুন"
+            >
+              <PhoneOff className="w-7 h-7" />
+            </button>
           </div>
         </div>
       )}
@@ -2765,7 +2821,7 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-white dark:bg-[#18222D]">
+    <div className="flex-1 min-h-0 flex flex-col h-full bg-white dark:bg-[#18222D] overflow-hidden">
       {/* TOP HEADER BAR (HIDDEN ON PHONE VIEW AS ATTACHED DARK BAR HANDLES IT) */}
       <div className="hidden md:flex px-3 sm:px-4 py-2.5 bg-white dark:bg-[#1C2733] border-b border-slate-200/80 dark:border-slate-800 items-center justify-between shrink-0 shadow-xs">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -2796,7 +2852,7 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
           <div className="min-w-0">
             <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate flex items-center gap-1">
               <span className="truncate">{win.senderName}</span>
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
+              <span title="ভেরিফাইড প্রোফাইল"><CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" /></span>
             </h3>
             <p className="text-[10px] font-bold text-[#006A4E] dark:text-sky-400 flex items-center gap-1">
               <span className="truncate">অনলাইনে আছেন</span>
@@ -2852,7 +2908,10 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
       </div>
 
       {/* MESSAGES FEED */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50/60 dark:bg-[#101923] no-scrollbar">
+      <div 
+        className="flex-1 min-h-0 p-3 sm:p-4 overflow-y-auto space-y-3 bg-slate-50/60 dark:bg-[#101923] overscroll-contain touch-pan-y"
+        style={{ WebkitOverflowScrolling: 'touch' }}
+      >
         {/* Profile Intro Banner */}
         <div className="py-6 text-center space-y-2 border-b border-slate-200/50 dark:border-slate-800/60 max-w-sm mx-auto">
           <img
@@ -2862,7 +2921,7 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
           />
           <h4 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center justify-center gap-1">
             <span>{win.senderName}</span>
-            <CheckCircle2 className="w-4 h-4 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="Verified Profile" />
+            <span title="Verified Profile"><CheckCircle2 className="w-4 h-4 text-[#0084FF] fill-[#0084FF] text-white shrink-0" /></span>
           </h4>
           <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300">
             <span className="truncate">{win.senderRole || 'Pro Seller • React & Node Specialist'}</span>

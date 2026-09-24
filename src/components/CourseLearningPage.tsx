@@ -19,7 +19,8 @@ import {
   Play,
   Share2,
   Check,
-  MessageSquare
+  MessageSquare,
+  Lock
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { Lesson, CourseModule } from '../types';

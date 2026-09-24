@@ -17,6 +17,7 @@ import {
   ShoppingBag,
   Sparkles,
   Crown,
+  Tag,
   Flag,
   Ban,
   Eye,
@@ -441,10 +442,11 @@ export const GigCard: React.FC<GigCardProps> = ({
                 <span className="text-[14px] sm:text-[17px] md:text-[18px] font-semibold text-slate-900 dark:text-white truncate">
                   {gig.sellerName}
                 </span>
-                <CheckCircle2
-                  className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
-                  title="Verified Profile"
-                />
+                <span title="Verified Profile">
+                  <CheckCircle2
+                    className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
+                  />
+                </span>
               </div>
 
               {/* Line 2: Meta Info (Middle-aligned dots: 1 Mar · Top Rated · Globe/Agency) */}
@@ -456,9 +458,9 @@ export const GigCard: React.FC<GigCardProps> = ({
                 </span>
                 <span className="text-slate-400 dark:text-slate-500 select-none leading-none inline-flex items-center justify-center px-0.5 font-bold">·</span>
                 {isAgency ? (
-                  <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#006A4E] dark:text-emerald-400 shrink-0" aria-label="Verified Agency" title="১০০% ভেরিফাইড এজেন্সি" />
+                  <span title="১০০% ভেরিফাইড এজেন্সি"><ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#006A4E] dark:text-emerald-400 shrink-0" aria-label="Verified Agency" /></span>
                 ) : (
-                  <Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400 shrink-0" aria-label="Public" title="Public" />
+                  <span title="Public"><Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400 shrink-0" aria-label="Public" /></span>
                 )}
               </div>
             </div>
@@ -714,20 +716,30 @@ export const GigCard: React.FC<GigCardProps> = ({
 
           {/* Card Bottom: Start Work First / Premium / Public Offer + Price */}
           <div className="px-3 sm:px-4.5 py-2 sm:py-2.5 bg-slate-50/95 dark:bg-slate-850/95 backdrop-blur-xs border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
-            <span className={`text-xs sm:text-sm md:text-[14px] ${isBuyerPost ? 'font-normal text-slate-600 dark:text-slate-400' : 'font-semibold'} flex items-center gap-1.5 ${isWorkFirst ? 'text-[#E31E24]' : isPremium ? 'text-amber-600 dark:text-amber-400' : 'text-[#006A4E] dark:text-emerald-400'}`}>
+            <span className="flex items-center gap-1.5">
               {isBuyerPost ? (
-                "পাবলিক অফার"
+                <span className="text-xs sm:text-sm font-bold text-[#006A4E] dark:text-emerald-400 flex items-center gap-1">
+                  পাবলিক অফার
+                </span>
               ) : isWorkFirst ? (
-                "⚡ আগে কাজ শুরু"
+                <span className="text-xs sm:text-sm font-bold text-[#E31E24] flex items-center gap-1">
+                  <span>⚡ আগে কাজ শুরু</span>
+                </span>
               ) : isPremium ? (
-                <span className="inline-flex items-center gap-1.5 text-amber-700 dark:text-amber-300 font-bold">
-                  <Crown className="w-4 h-4 fill-amber-500 text-amber-500 shrink-0" />
-                  <span>প্রিমিয়াম</span>
+                <span className="text-xs sm:text-sm font-bold text-[#006A4E] dark:text-emerald-400 flex items-center gap-1.5">
+                  <Crown className="w-3.5 h-3.5 fill-[#006A4E] text-[#006A4E] dark:fill-emerald-400 dark:text-emerald-400 shrink-0" />
+                  <span>প্রিমিয়াম গিগ</span>
                 </span>
               ) : discountPercent ? (
-                <span>🎁 {discountPercent.toLocaleString('bn-BD')}% ছাড়</span>
+                <span className="text-xs sm:text-sm font-bold text-[#006A4E] dark:text-emerald-400 flex items-center gap-1">
+                  <Tag className="w-3.5 h-3.5 shrink-0" />
+                  <span>{discountPercent.toLocaleString('bn-BD')}% ছাড়</span>
+                </span>
               ) : (
-                gig.offerBadge && gig.offerBadge !== 'রেগুলার' && gig.offerBadge !== 'রেগুলার সার্ভিস' ? gig.offerBadge : "স্পেশাল গিগ"
+                <span className="text-xs sm:text-sm font-bold text-[#006A4E] dark:text-emerald-400 flex items-center gap-1">
+                  <Tag className="w-3.5 h-3.5 shrink-0" />
+                  <span>{gig.offerBadge && gig.offerBadge !== 'রেগুলার' && gig.offerBadge !== 'রেগুলার সার্ভিস' ? gig.offerBadge : "স্পেশাল গিগ"}</span>
+                </span>
               )}
             </span>
             <div className="flex items-center gap-1.5 text-xs sm:text-sm md:text-base">
@@ -866,7 +878,7 @@ export const GigCard: React.FC<GigCardProps> = ({
                   <span>⚡ আগে কাজ শুরু</span>
                 </span>
               ) : isPremium ? (
-                <span className="bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 text-white text-[10px] sm:text-xs font-bold px-2 py-0.5 sm:px-2.5 rounded shadow-xs flex items-center gap-1 border border-amber-300/30">
+                <span className="bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 text-white text-[10px] sm:text-xs font-bold px-2 py-0.5 sm:px-2.5 rounded shadow-xs flex items-center gap-1">
                   <Crown className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-white text-white shrink-0" />
                   <span>প্রিমিয়াম</span>
                 </span>
@@ -963,10 +975,11 @@ export const GigCard: React.FC<GigCardProps> = ({
                     <span className="text-xs sm:text-base md:text-lg font-bold text-slate-900 dark:text-white truncate hover:text-[#006A4E] transition-colors">
                       {gig.sellerName}
                     </span>
-                    <CheckCircle2
-                      className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
-                      title="Verified Profile"
-                    />
+                    <span title="Verified Profile">
+                      <CheckCircle2
+                        className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
+                      />
+                    </span>
                   </div>
                   <span className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 block truncate font-medium">
                     {isBuyerPost ? "ভেরিফায়েড বায়ার" : (gig.sellerLevel || "টপ রেটেড")}

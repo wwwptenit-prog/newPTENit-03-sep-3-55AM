@@ -1,0 +1,22 @@
+[
+  {
+    "id": "test-1",
+    "rating": 5,
+    "_lastSynced": "2026-09-21T13:23:33.941Z",
+    "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+    "name": "মেহেদী হাসান",
+    "role": "ই-কমার্স উদ্যোক্তা",
+    "courseOrService": "Web Design & Development",
+    "text": "PTENit টিমের সার্ভিস সত্যিই প্রশংসনীয়। ৫ দিনে আমাদের অনলাইন কাপড়ের সাইট বানিয়ে দিয়েছেন এবং পেমেন্ট গেটওয়ে খুব সহজে কাজ করছে।"
+  },
+  {
+    "id": "test-2",
+    "courseOrService": "PTE Academic - Basic Level",
+    "name": "সাবরিনা সুলতানা",
+    "rating": 5,
+    "role": "ফ্রিল্যান্সার & ডিজিটাল মার্কেটার",
+    "_lastSynced": "2026-09-21T13:23:33.941Z",
+    "text": "তানভীর স্যারের PTE ক্লাসের টেকনিকগুলো অসাধারন। প্র্যাকটিস করে আমি একবারে পয়েন্ট ৭৯ পেয়েছি!",
+    "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80"
+  }
+]

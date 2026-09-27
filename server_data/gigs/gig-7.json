@@ -1,0 +1,53 @@
+{
+  "id": "gig-7",
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "reviewsCount": 28,
+  "sellerId": "teacher-1",
+  "_lastSynced": "2026-09-21T13:23:34.271Z",
+  "rating": 5,
+  "createdAt": "2026-01-28",
+  "title": "আমি ওয়ার্ডপ্রেস ওয়েবসাইটের স্পিড এবং সিকিউরিটি অপটিমাইজেশন ৯০+ স্কোরে নিয়ে যাবো",
+  "sellerTitle": "WordPress & Performance Specialist",
+  "thumbnail": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
+  "isAgencyStaff": true,
+  "status": "active",
+  "packages": {
+    "premium": {
+      "revisions": "Unlimited",
+      "name": "Full Security & Cloudflare Pro",
+      "features": [
+        "Full Hardening",
+        "Cloudflare CDN Pro",
+        "1 Month Monitoring"
+      ],
+      "deliveryDays": 4,
+      "price": 14000
+    },
+    "standard": {
+      "features": [
+        "90+ PageSpeed",
+        "Malware Removal",
+        "SSL & Firewall"
+      ],
+      "revisions": 4,
+      "price": 7000,
+      "deliveryDays": 2,
+      "name": "Pro Speed & Malware Clean"
+    },
+    "basic": {
+      "features": [
+        "Mobile 80+ Speed",
+        "Cache Setup"
+      ],
+      "name": "Basic Speed Boost",
+      "price": 3000,
+      "deliveryDays": 1,
+      "revisions": 2
+    }
+  },
+  "sellerRating": 5,
+  "description": "গুগল পেজস্পিড ইনসাইটসে 90+ স্কোর এচিভ করতে ডাটাবেস ক্লিনআপ, ইমেজ কম্প্রেশন এবং সিকিউরিটি ওয়াল সেটআপ।",
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "salesCount": 35,
+  "category": "Web Development"
+}

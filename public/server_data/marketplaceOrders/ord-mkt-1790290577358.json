@@ -1,0 +1,35 @@
+{
+  "id": "ord-mkt-1790290577358",
+  "type": "custom_agency_order",
+  "deliveryFileUrl": "https://github.com/example/project-ord-mkt-1790290577358.zip",
+  "transactionId": "TRX-90577358",
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "deadlineDate": "2026-09-29",
+  "buyerPhone": "01812345678",
+  "buyerName": "ফারহানা চৌধুরী (NexGen Agency)",
+  "paymentMethod": "bKash Escrow Security",
+  "sellerPayout": 7650,
+  "deliveredAt": "2026-09-24",
+  "buyerEmail": "client@ptenit.com",
+  "category": "UI/UX Design",
+  "buyerId": "ফারহানা-চৌধুরী-(nexgen-agency)",
+  "_lastUpdated": "2026-09-24T22:57:30.002Z",
+  "createdAt": "2026-09-24T22:56:17.358Z",
+  "status": "in_review",
+  "adminCommission": 850,
+  "packageType": "Standard",
+  "sellerName": "Mds Kazi Sohag (Admin)",
+  "deliveryFileName": "project-release-ord-mkt-1790290577358.zip",
+  "updates": [
+    {
+      "id": "upd-1790290636191",
+      "sender": "Mds Kazi Sohag (Admin)",
+      "date": "২৫/৯/২০২৬, ৪:৫৭:১৬ AM",
+      "note": "কাজ শুরু করা হয়েছে।"
+    }
+  ],
+  "title": "মোবাইল অ্যাপ স্ক্রিন প্রোটোটাইপিং (Figma to Flutter/React Native)",
+  "deliveryNote": "প্রিয় ফারহানা চৌধুরী (NexGen Agency), আপনার প্রজেক্টটি সম্পূর্ণ করেছি। অনুগ্রহ করে ফাইল রিভিও করুন।",
+  "sellerId": "admin-1",
+  "amount": 8500
+}

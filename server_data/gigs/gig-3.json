@@ -1,0 +1,52 @@
+{
+  "id": "gig-3",
+  "status": "active",
+  "title": "আমি আকর্ষণীয় সোশ্যাল মিডিয়া ব্যানার, লোগো এবং থাম্বনেইল ডিজাইন করবো",
+  "sellerName": "সাব্বির রহমান",
+  "salesCount": 29,
+  "reviewsCount": 22,
+  "sellerAvatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+  "sellerId": "student-1",
+  "isAgencyStaff": false,
+  "description": "আপনার ব্র্যান্ডিং বাড়াতে প্রফেশনাল লোগো, ফেসবুক কভার, ইউটিউব থাম্বনেইল ও এড কভার ডিজাইন।",
+  "packages": {
+    "standard": {
+      "features": [
+        "১টি লোগো",
+        "৫টি ব্যানার",
+        "Print Ready File"
+      ],
+      "deliveryDays": 2,
+      "name": "Brand Starter Pack",
+      "price": 3500,
+      "revisions": 5
+    },
+    "premium": {
+      "revisions": "Unlimited",
+      "price": 7500,
+      "features": [
+        "১৫টি কভার/পোস্ট",
+        "সোর্স ফাইল (PSD/Canva)"
+      ],
+      "deliveryDays": 4,
+      "name": "Full Social Branding"
+    },
+    "basic": {
+      "revisions": 3,
+      "deliveryDays": 1,
+      "features": [
+        "২টি সোশ্যাল ব্যানার",
+        "HD PNG/JPG"
+      ],
+      "name": "Single Creative",
+      "price": 1200
+    }
+  },
+  "rating": 4.9,
+  "_lastSynced": "2026-09-21T13:23:34.270Z",
+  "thumbnail": "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=800&q=80",
+  "category": "Graphic Design",
+  "sellerTitle": "Professional Canva & Graphic Designer",
+  "createdAt": "2026-01-20",
+  "sellerRating": 4.9
+}

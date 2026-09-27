@@ -1,0 +1,51 @@
+{
+  "id": "course-cybersecurity",
+  "duration": "7 Weeks (25 Hours)",
+  "liveClassDate": "2026-09-08",
+  "createdAt": "2026-02-25",
+  "whatYouWillLearn": [
+    "Network Scanning & Nmap",
+    "OWASP Web Vulnerabilities Testing",
+    "Security Auditing & Defensive Hardening"
+  ],
+  "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+  "level": "professional",
+  "enrolledCount": 88,
+  "discountPrice": 6999,
+  "liveClassLessonNo": "০৩",
+  "liveClassStatus": "scheduled",
+  "isPublicOffer": true,
+  "assignedInstructorId": "teacher-1",
+  "rating": 5,
+  "published": true,
+  "liveClassModuleNo": "০২",
+  "lessonsCount": 18,
+  "liveClassTime": "21:30",
+  "requirements": [
+    "বেসিক নেটওয়ার্কিং ও লিনাক্স ধারণা"
+  ],
+  "targetModules": 5,
+  "liveSchedule": "০৮ সেপ্টেম্বর ২০২৬, রাত ০৯:৩০ টা",
+  "liveClassTopic": "OWASP Top 10 Web Vulnerability Assessment & Defense",
+  "instructorRole": "Certified Ethical Hacker & InfoSec Specialist",
+  "thumbnail": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+  "liveClassLink": "https://meet.google.com/cybersecurity-live",
+  "modules": [],
+  "title": "Cybersecurity Fundamentals & Ethical Hacking Defense",
+  "teacherCommissionRate": 50,
+  "targetLessons": 18,
+  "_lastSynced": "2026-09-21T13:23:32.010Z",
+  "price": 9500,
+  "liveClassSerialNo": "০৫",
+  "category": "Web Development",
+  "reviewsCount": 19,
+  "description": "নেটওয়ার্ক সিকিউরিটি, ওয়েব ভালনারেবিলিটি অ্যাসেসমেন্ট (OWASP Top 10), পেনিট্রেশন টেস্টিং এবং সাইবার ডিফেন্স।",
+  "offerStatus": "accepted",
+  "isFree": false,
+  "tags": [
+    "#Cybersecurity",
+    "#EthicalHacking",
+    "#InfoSec"
+  ],
+  "targetAssignments": 18
+}

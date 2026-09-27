@@ -1,0 +1,32 @@
+{
+  "id": "ord-mkt-7",
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "paymentMethod": "Nagad Escrow",
+  "buyerName": "তানিয়া সুলতানা (বায়ার)",
+  "updates": [
+    {
+      "note": "অর্ডার রিসিভ করা হয়েছে এবং কাজ শুরু করা হয়েছে।",
+      "id": "upd-1790290638188",
+      "date": "২৫/৯/২০২৬, ৪:৫৭:১৮ AM",
+      "sender": "Mds Kazi Sohag (Admin)"
+    }
+  ],
+  "buyerEmail": "tania@example.com",
+  "unreadMessageCount": 3,
+  "_lastUpdated": "2026-09-24T22:57:18.194Z",
+  "amount": 35000,
+  "sellerId": "teacher-1",
+  "transactionId": "TRX-NG-991144",
+  "category": "Mobile App",
+  "packageType": "Custom",
+  "sellerPayout": 31500,
+  "buyerId": "customer-1",
+  "buyerPhone": "01799887766",
+  "createdAt": "2026-09-24T10:30:21.696Z",
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "adminCommission": 3500,
+  "title": "পিটিইএন আইটি কাস্টম ই-লার্নিং মোবাইল অ্যাপ প্রজেক্ট",
+  "deadlineDate": "2026-09-29",
+  "type": "custom_agency_order",
+  "status": "in_progress"
+}

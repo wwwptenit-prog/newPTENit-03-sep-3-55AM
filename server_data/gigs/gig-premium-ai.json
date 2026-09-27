@@ -1,0 +1,69 @@
+{
+  "id": "gig-premium-ai",
+  "reviewsCount": 27,
+  "galleryImages": [
+    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1676299081847-824916de030a?auto=format&fit=crop&w=800&q=80"
+  ],
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "tags": [
+    "Gemini AI",
+    "AI Chatbot",
+    "Automation",
+    "প্রিমিয়াম"
+  ],
+  "createdAt": "2026-03-03",
+  "sellerLevel": "Level 2 Seller",
+  "salesCount": 39,
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "category": "AI Services",
+  "title": "প্রিমিয়াম জেমিনি AI চ্যাটবট, বিজনেস অটোমেশন ও স্মার্ট CRM ইন্টিগ্রেশন সার্ভিস",
+  "description": "প্রিমিয়াম এআই সলিউশন: আপনার ব্যবসা ও গ্রাহক সেবাকে অটোমেট করতে Google Gemini AI ও ChatGPT চালিত ইন্টেলিজেন্ট চ্যাটবট। ফেসবুক মেসেঞ্জার, হোয়াটসঅ্যাপ ও ওয়েবসাইটে ২৪/৭ সেলস ও লিড জেনারেশন এজেন্ট সেটআপ।",
+  "rating": 5,
+  "thumbnail": "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80",
+  "packages": {
+    "premium": {
+      "features": [
+        "সম্পূর্ণ কাস্টম বিজনেস নলেজবেস",
+        "ভয়েস ও টেক্সট AI অ্যাসিস্ট্যান্ট",
+        "এপিআই ও ব্যাকএন্ড কানেক্টিভিটি",
+        "১ বছর প্রায়োরিটি সাপোর্ট"
+      ],
+      "price": 35000,
+      "name": "এন্টারপ্রাইজ ফুল AI এজেন্ট",
+      "deliveryDays": 10,
+      "revisions": "Unlimited"
+    },
+    "standard": {
+      "name": "মাল্টি-চ্যানেল AI বোট",
+      "price": 15000,
+      "deliveryDays": 5,
+      "revisions": 5,
+      "features": [
+        "ওয়েবসাইট + ফেসবুক পেজ",
+        "প্রোডাক্ট ক্যাটালগ রিকমেন্ডেশন",
+        "অটোমেটেড লিড ক্যাপচার",
+        "CRM ডাটাবেস সেভ"
+      ]
+    },
+    "basic": {
+      "price": 6000,
+      "deliveryDays": 2,
+      "revisions": 3,
+      "name": "AI চ্যাটবট ইন্টিগ্রেশন",
+      "features": [
+        "ওয়েবসাইটে AI চ্যাট উইজেট",
+        "কাস্টম প্রম্পট টিউনিং",
+        "প্রিমিয়াম রেসপন্স কোয়ালিটি",
+        "সার্ভিস গ্যারান্টি"
+      ]
+    }
+  },
+  "_lastSynced": "2026-09-21T13:23:34.270Z",
+  "sellerId": "teacher-1",
+  "isAgencyStaff": true,
+  "sellerTitle": "AI Specialist & Enterprise Architect",
+  "sellerRating": 5,
+  "offerBadge": "প্রিমিয়াম",
+  "status": "active"
+}

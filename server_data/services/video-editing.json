@@ -1,0 +1,58 @@
+{
+  "id": "video-editing",
+  "published": true,
+  "category": "Multimedia",
+  "iconName": "Video",
+  "fullDescription": "আপনার প্রোডাক্ট বা ইউটিউব চ্যানেলের জন্য হাই-কোয়ালিটি ভিডিও এডিটিং। সাউন্ড ডিজাইন, মোশন গ্রাফিক্স, কালার গ্রেডিং এবং ক্যাচি সাবটাইটেল যোগ করে দর্শকনন্দিত ভিডিও তৈরি।",
+  "badge": "আগে কাজ শুরু",
+  "order": 4,
+  "rating": 4.9,
+  "priceText": "৳1,500 / ভিডিও",
+  "shortDescription": "Professional social media videos, promotional videos, reels, YouTube videos and motion graphics.",
+  "thumbnail": "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80",
+  "_lastSynced": "2026-09-21T13:23:33.288Z",
+  "packages": {
+    "premium": {
+      "revisions": "Unlimited",
+      "name": "Commercial Promo & Motion Video",
+      "deliveryDays": 5,
+      "features": [
+        "Voiceover Sync",
+        "Motion Graphics",
+        "3D Title Animations"
+      ],
+      "price": 15000
+    },
+    "standard": {
+      "deliveryDays": 3,
+      "features": [
+        "4K Output",
+        "Color Grading",
+        "Custom Lower Thirds"
+      ],
+      "revisions": 4,
+      "name": "YouTube Long Video (10m)",
+      "price": 4500
+    },
+    "basic": {
+      "revisions": 2,
+      "price": 1500,
+      "name": "Reels / Shorts Video (60s)",
+      "deliveryDays": 1,
+      "features": [
+        "Catchy Subtitles",
+        "Sound Effects",
+        "Trend Editing"
+      ]
+    }
+  },
+  "features": [
+    "4K & Full HD Video Output",
+    "Professional Sound Mixing & SFX",
+    "Custom Motion Graphics & Lower Thirds",
+    "Engaging Subtitles & Transitions",
+    "Fast Turnaround Time"
+  ],
+  "reviewsCount": 29,
+  "title": "Video Editing"
+}

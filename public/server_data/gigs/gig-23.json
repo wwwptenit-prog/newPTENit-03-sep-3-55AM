@@ -1,0 +1,54 @@
+{
+  "id": "gig-23",
+  "category": "AI Services",
+  "_lastSynced": "2026-09-21T13:23:34.273Z",
+  "packages": {
+    "basic": {
+      "name": "Basic Web Chatbot",
+      "revisions": 3,
+      "features": [
+        "OpenAI/Gemini Setup",
+        "Custom Prompt",
+        "Embed Script"
+      ],
+      "price": 4000,
+      "deliveryDays": 2
+    },
+    "premium": {
+      "features": [
+        "Full AI App",
+        "Stripe/bKash Payment",
+        "Admin Dashboard"
+      ],
+      "name": "Enterprise AI SaaS Portal",
+      "deliveryDays": 10,
+      "price": 35000,
+      "revisions": "Unlimited"
+    },
+    "standard": {
+      "features": [
+        "PDF/Doc Knowledge Base",
+        "Lead Capture",
+        "WhatsApp/Web Widget"
+      ],
+      "price": 12000,
+      "deliveryDays": 4,
+      "name": "RAG Smart AI Bot (Custom Data)",
+      "revisions": 5
+    }
+  },
+  "reviewsCount": 32,
+  "title": "আমি রিয়েলটাইম চ্যাটজিপিটি / জেমিনি এআই চ্যাটবট ও এআই সফটওয়্যার তৈরি করবো",
+  "sellerTitle": "Senior Full-Stack & AI Engineer",
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "salesCount": 45,
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "status": "active",
+  "isAgencyStaff": true,
+  "sellerRating": 5,
+  "createdAt": "2026-02-16",
+  "thumbnail": "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
+  "description": "আপনার ব্যবসার ওয়েবসাইট বা অ্যাপের জন্য কাস্টম ডাটা ও ডকুমেন্ট ট্রেইন্ড চ্যাট জিপিটি ও জেমিনি এআই বোট সিস্টেম।",
+  "rating": 5,
+  "sellerId": "teacher-1"
+}

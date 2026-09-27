@@ -1,0 +1,54 @@
+{
+  "id": "gig-25",
+  "status": "active",
+  "title": "আমি সম্পূর্ণ অন-পেজ ও টেকনিক্যাল এসইও (SEO) দিয়ে গুগল ১ নম্বর র‍্যাঙ্কিং এ আনবো",
+  "sellerName": "রাফসান সানি",
+  "salesCount": 29,
+  "reviewsCount": 21,
+  "sellerAvatar": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80",
+  "sellerId": "student-2",
+  "isAgencyStaff": false,
+  "description": "কীওয়ার্ড রিসার্চ, টেকনিক্যাল অডিট, গুগল সার্চ কনসোল সেটআপ, পেজ স্পিড অপটিমাইজেশন এবং হাই অথোরিটি ব্যাকলিংক তৈরি।",
+  "packages": {
+    "basic": {
+      "features": [
+        "15 Pages Audit",
+        "Meta Tags Fix",
+        "Sitemap & Robots.txt"
+      ],
+      "deliveryDays": 2,
+      "name": "Technical SEO Audit & Fix",
+      "price": 2500,
+      "revisions": 3
+    },
+    "standard": {
+      "features": [
+        "Full On-Page Optimization",
+        "Competitor Research",
+        "Rank Tracking"
+      ],
+      "name": "Full On-Page + Keyword Plan",
+      "price": 7500,
+      "deliveryDays": 5,
+      "revisions": 5
+    },
+    "premium": {
+      "name": "Monthly Organic Ranking Growth",
+      "deliveryDays": 30,
+      "revisions": "Unlimited",
+      "price": 22000,
+      "features": [
+        "Complete SEO Strategy",
+        "High DA Backlinks",
+        "Monthly Report"
+      ]
+    }
+  },
+  "rating": 5,
+  "thumbnail": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+  "_lastSynced": "2026-09-21T13:23:34.273Z",
+  "category": "SEO & Growth",
+  "createdAt": "2026-02-18",
+  "sellerTitle": "SEO & Content Marketing Lead",
+  "sellerRating": 5
+}

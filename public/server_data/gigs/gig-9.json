@@ -1,0 +1,53 @@
+{
+  "id": "gig-9",
+  "sellerTitle": "Laravel Backend Engineer (PTENit Core Team)",
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "reviewsCount": 12,
+  "salesCount": 15,
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "_lastSynced": "2026-09-21T13:23:34.271Z",
+  "sellerId": "teacher-1",
+  "rating": 5,
+  "category": "Web Development",
+  "createdAt": "2026-02-02",
+  "description": "নিরাপদ পিএইচপি লারাভেল আর্কিটেকচার, কাস্টম সিআরএম, ই-কমার্স বা স্কুলের ম্যানেজমেন্ট পোর্টাল ডেভেলপমেন্ট।",
+  "isAgencyStaff": true,
+  "packages": {
+    "basic": {
+      "revisions": 2,
+      "deliveryDays": 3,
+      "price": 6000,
+      "features": [
+        "REST API Endpoints",
+        "JWT Auth"
+      ],
+      "name": "API Module"
+    },
+    "standard": {
+      "features": [
+        "Full CRUD System",
+        "Admin Dashboard",
+        "bKash Integration"
+      ],
+      "deliveryDays": 8,
+      "price": 25000,
+      "revisions": 5,
+      "name": "Custom Laravel Web App"
+    },
+    "premium": {
+      "revisions": "Unlimited",
+      "features": [
+        "Complex CRM/ERP",
+        "Payment Gateway",
+        "Deployment & Support"
+      ],
+      "name": "Enterprise Portal & API",
+      "price": 55000,
+      "deliveryDays": 18
+    }
+  },
+  "thumbnail": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+  "sellerRating": 5,
+  "title": "আমি লারাভেল (Laravel) পিএইচপি দিয়ে এন্টারপ্রাইজ ওয়েব পোর্টাল ও রেস্ট এপিআই তৈরি করবো",
+  "status": "active"
+}

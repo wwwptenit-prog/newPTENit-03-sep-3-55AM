@@ -1,0 +1,30 @@
+{
+  "id": "teacher-applicant-1",
+  "role": "instructor",
+  "title": "Senior Software Engineer & Python Instructor Applicant",
+  "_lastSynced": "2026-09-21T13:23:36.685Z",
+  "roles": [
+    "instructor"
+  ],
+  "createdAt": "2026-03-01",
+  "mentorApplication": {
+    "bio": "আমি বিগত ৪ বছর ধরে পাইথন ব্যাকএন্ড এবং রিয়েল-ওয়ার্ল্ড এন্টারপ্রাইজ প্রজেক্টে কর্মরত। পিটেন আইটি-তে প্রফেশনাল পাইথন কোর্স পরিচালনা করতে আগ্রহী।",
+    "expertise": [
+      "Python & Django",
+      "Machine Learning",
+      "Full-Stack Web"
+    ],
+    "portfolioUrl": "https://github.com/mahmudul-python-pro",
+    "appliedAt": "১ মার্চ ২০২৬",
+    "proposedCourseTopic": "Python Django & FastAPI Full Stack Masterclass",
+    "experienceYears": "4+ বছর",
+    "status": "pending",
+    "phone": "01788990011"
+  },
+  "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80",
+  "email": "mahmudul.mentor@ptenit.com",
+  "isMentor": false,
+  "name": "প্রকৌশলী মাহমুদুল হাসান",
+  "mobile": "01788990011",
+  "mentorStatus": "pending"
+}

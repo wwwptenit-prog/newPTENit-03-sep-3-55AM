@@ -1,0 +1,58 @@
+{
+  "id": "social-media",
+  "priceText": "৳7,000 / মাস",
+  "thumbnail": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
+  "packages": {
+    "standard": {
+      "price": 16000,
+      "features": [
+        "20 Posts + 4 Reels",
+        "Comment Inbox Mgmt",
+        "Ad Campaign Setup"
+      ],
+      "deliveryDays": 30,
+      "name": "Full Monthly Page Mgmt",
+      "revisions": 4
+    },
+    "premium": {
+      "features": [
+        "FB, IG, LinkedIn & TikTok",
+        "Video Reels Production",
+        "Growth Analytics"
+      ],
+      "deliveryDays": 30,
+      "price": 35000,
+      "name": "Cross-Platform Growth Pack",
+      "revisions": "Unlimited"
+    },
+    "basic": {
+      "price": 7000,
+      "name": "Weekly Content Mgmt",
+      "features": [
+        "8 Custom Posts",
+        "Captions",
+        "Hashtag Plan"
+      ],
+      "deliveryDays": 7,
+      "revisions": 2
+    }
+  },
+  "features": [
+    "Content Calendar Creation",
+    "Custom Post Designs & Captions",
+    "Community Engagement & Reply Mgmt",
+    "Competitor Analysis",
+    "Growth Analytics"
+  ],
+  "published": true,
+  "category": "Marketing",
+  "_lastSynced": "2026-09-21T13:23:33.289Z",
+  "rating": 4.8,
+  "shortDescription": "Facebook, Instagram, LinkedIn and other platform marketing.",
+  "title": "Social Media Marketing",
+  "iconName": "Share2",
+  "badge": "আগে কাজ শুরু",
+  "order": 6,
+  "reviewsCount": 31,
+  "fullDescription": "সোশ্যাল মিডিয়ায় অর্গানিক কন্টেন্ট পোস্টিং, অডিয়েন্স এনগেজমেন্ট এবং পেইড প্রমোশন পরিচালনা। নিয়মিত শিডিউলড পোস্ট ও গ্রাফিক্স কভার সার্ভিস।"
+}

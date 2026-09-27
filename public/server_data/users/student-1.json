@@ -1,0 +1,13 @@
+{
+  "id": "student-1",
+  "isSeller": false,
+  "sellerStatus": "not_applied",
+  "name": "সাব্বির রহমান",
+  "createdAt": "2026-01-10",
+  "role": "student",
+  "title": "Web Developer & Student",
+  "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+  "_lastSynced": "2026-09-21T13:23:36.684Z",
+  "mobile": "01822334455",
+  "email": "student@ptenit.com"
+}

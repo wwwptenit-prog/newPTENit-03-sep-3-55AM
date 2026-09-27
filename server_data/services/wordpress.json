@@ -1,0 +1,58 @@
+{
+  "id": "wordpress",
+  "order": 7,
+  "badge": "আগে কাজ শুরু",
+  "thumbnail": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
+  "packages": {
+    "standard": {
+      "features": [
+        "Up to 8 Pages",
+        "Blog & Gallery",
+        "Security Hardening"
+      ],
+      "name": "Complete Business Site",
+      "deliveryDays": 5,
+      "price": 25000,
+      "revisions": 5
+    },
+    "basic": {
+      "name": "WordPress Landing Page",
+      "deliveryDays": 2,
+      "features": [
+        "Elementor Pro Design",
+        "Contact Form",
+        "Mobile Friendly"
+      ],
+      "revisions": 3,
+      "price": 12000
+    },
+    "premium": {
+      "revisions": "Unlimited",
+      "price": 45000,
+      "deliveryDays": 8,
+      "name": "WooCommerce E-Commerce Store",
+      "features": [
+        "bKash/Nagad Integration",
+        "Inventory Mgmt",
+        "Automated Invoice"
+      ]
+    }
+  },
+  "features": [
+    "Elementor Pro Setup",
+    "WooCommerce Payment Gateway Setup",
+    "Fast Loading Speed Optimization",
+    "Security & Malware Protection",
+    "Video Tutorial for Admin"
+  ],
+  "reviewsCount": 63,
+  "_lastSynced": "2026-09-21T13:23:33.289Z",
+  "priceText": "৳12,000 থেকে শুরু",
+  "title": "WordPress Development",
+  "iconName": "Globe",
+  "category": "Development",
+  "rating": 5,
+  "shortDescription": "Business website, landing page, WooCommerce and Elementor solutions.",
+  "fullDescription": "সহজে পরিচালনাযোগ্য ওয়ার্ডপ্রেস ওয়েবসাইট। এলিমেন্টর প্রক্সি এবং প্রিমিয়াম থিম ব্যবহার করে দ্রুত ডেলিভারি ও কাস্টমাইজেশন।",
+  "published": true
+}

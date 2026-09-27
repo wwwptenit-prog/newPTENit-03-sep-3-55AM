@@ -1,0 +1,54 @@
+{
+  "id": "gig-24",
+  "status": "active",
+  "description": "৪কে ক্লিয়ার অডিও, কালার গ্রেডিং, এটেনশন গ্রেবিং ক্যাপশন, সাউন্ড ইফেক্টস এবং মোশন গ্রাফিক্স ওভারলে সহ ভিডিও এডিটিং।",
+  "category": "Video & Animation",
+  "packages": {
+    "basic": {
+      "features": [
+        "৩০-৬০ সে. এডিটিং",
+        "Trendy Captions",
+        "Sound FX"
+      ],
+      "revisions": 2,
+      "price": 2000,
+      "deliveryDays": 1,
+      "name": "3 Short Videos / Reels (60s)"
+    },
+    "standard": {
+      "revisions": 4,
+      "name": "1 YouTube Long Video (10 Min)",
+      "features": [
+        "১০ মিনিট ভিডিও এডিটিং",
+        "Color Grading",
+        "Thumbnail Free"
+      ],
+      "price": 5000,
+      "deliveryDays": 3
+    },
+    "premium": {
+      "revisions": "Unlimited",
+      "name": "4 Long + 10 Short Videos Package",
+      "features": [
+        "Monthly Content Pack",
+        "Custom Motion Graphics",
+        "SEO Titles"
+      ],
+      "price": 18000,
+      "deliveryDays": 7
+    }
+  },
+  "reviewsCount": 28,
+  "sellerAvatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+  "title": "আমি প্রফেশনাল ইউটিউব ভিডিও, রিলস ও শর্টস ভিডিও এডিটিং করবো",
+  "rating": 4.9,
+  "createdAt": "2026-02-17",
+  "sellerTitle": "YouTube & Video Editing Specialist",
+  "sellerId": "teacher-2",
+  "isAgencyStaff": true,
+  "sellerRating": 4.9,
+  "thumbnail": "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80",
+  "_lastSynced": "2026-09-21T13:23:34.273Z",
+  "salesCount": 36,
+  "sellerName": "আরিফ হোসেন"
+}

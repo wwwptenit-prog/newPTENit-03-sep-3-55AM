@@ -1,0 +1,53 @@
+{
+  "id": "gig-16",
+  "title": "আমি আপনার ওয়েবসাইটের সাইবার সিকিউরিটি অডিট ও পেনিট্রেশন টেস্টিং করবো",
+  "status": "active",
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "category": "Cyber Security & Server",
+  "description": "SQL Injection, XSS, CSRF এবং ব্যাকডোর দুর্বলতা খুঁজে প্যাচ করার জন্য প্রফেশনাল সিকিউরিটি অডিট।",
+  "reviewsCount": 8,
+  "packages": {
+    "premium": {
+      "revisions": "Unlimited",
+      "price": 45000,
+      "deliveryDays": 12,
+      "name": "Enterprise Security Certification",
+      "features": [
+        "Deep Source Code Audit",
+        "Full Patching",
+        "Certificate of Audit"
+      ]
+    },
+    "basic": {
+      "name": "Basic Vulnerability Scan",
+      "price": 5000,
+      "features": [
+        "Automated Pentest",
+        "Vulnerability Report"
+      ],
+      "revisions": 2,
+      "deliveryDays": 2
+    },
+    "standard": {
+      "deliveryDays": 5,
+      "features": [
+        "Manual Penetration Test",
+        "Patch Assistance",
+        "WAF Configuration"
+      ],
+      "name": "Manual PenTest & Patching",
+      "price": 18000,
+      "revisions": 4
+    }
+  },
+  "isAgencyStaff": true,
+  "sellerRating": 5,
+  "sellerId": "teacher-1",
+  "_lastSynced": "2026-09-21T13:23:34.272Z",
+  "createdAt": "2026-02-09",
+  "rating": 5,
+  "salesCount": 10,
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "thumbnail": "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80",
+  "sellerTitle": "Certified Ethical Hacker & Security Engineer"
+}

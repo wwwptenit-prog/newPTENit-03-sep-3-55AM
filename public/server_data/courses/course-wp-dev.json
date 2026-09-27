@@ -1,0 +1,67 @@
+{
+  "id": "course-wp-dev",
+  "liveSchedule": "০২ সেপ্টেম্বর ২০২৬, রাত ০৮:৩০ টা",
+  "liveClassLink": "https://meet.google.com/wp-live-ecommerce",
+  "rating": 4.9,
+  "instructor": "শাহরিয়ার হাসান",
+  "liveClassSerialNo": "০২",
+  "requirements": [
+    "ল্যাপটপ বা কম্পিউটার (কমপক্ষে ৪জিবি র‍্যাম)",
+    "কম্পিউটার চালানোর প্রাথমিক ধারণা"
+  ],
+  "liveClassTime": "20:30",
+  "reviewsCount": 42,
+  "instructorRole": "Full Stack Developer",
+  "liveClassTopic": "উ-কমার্স স্টোর সেটআপ ও বিকাশ/নগদ গেটওয়ে ইন্টিগ্রেশন",
+  "thumbnail": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
+  "modules": [
+    {
+      "order": 1,
+      "lessons": [
+        {
+          "courseId": "course-wp-dev",
+          "isFreePreview": true,
+          "duration": "৩০ মিনিট",
+          "order": 1,
+          "moduleId": "m-wp-1",
+          "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          "content": "XAMPP এবং লাইভ সিপ্যানেলে ওয়ার্ডপ্রেস ইনস্টলেশন।",
+          "id": "l-wp-1",
+          "title": "লেসন ০১: লোকালহোস্ট ও লাইভ সিপ্যানেলে ওয়ার্ডপ্রেস ইনস্টল"
+        }
+      ],
+      "id": "m-wp-1",
+      "courseId": "course-wp-dev",
+      "title": "ওয়ার্ডপ্রেস ইনস্টলেশন ও থিম কাস্টমাইজেশন"
+    }
+  ],
+  "category": "Web Development",
+  "published": true,
+  "price": 4500,
+  "title": "Complete WordPress & E-Commerce Development",
+  "tags": [
+    "#WordPress",
+    "#WooCommerce",
+    "#WebDevelopment",
+    "#Elementor"
+  ],
+  "enrolledCount": 180,
+  "_lastSynced": "2026-09-21T13:23:32.009Z",
+  "discountPrice": 2999,
+  "duration": "8 Weeks (28 Hours)",
+  "liveClassModuleNo": "০১",
+  "liveClassDate": "2026-09-02",
+  "isFree": false,
+  "description": "কোডিং ছাড়া প্রফেশনাল ই-কমার্স ওয়েবসাইট, ল্যান্ডিং পেজ, ব্লগ ও কর্পোরেট ওয়েবসাইট তৈরি শিখুন। bKash/Nagad পেমেন্ট গেটওয়ে সেটআপ সহ ক্লায়েন্ট হ্যান্ডলিং।",
+  "lessonsCount": 32,
+  "createdAt": "2026-02-10",
+  "liveClassLessonNo": "০২",
+  "whatYouWillLearn": [
+    "Domain & Hosting Setup Masterclass",
+    "Elementor Pro Page Builder Mastery",
+    "WooCommerce Online Shop Development",
+    "bKash & Nagad Payment Gateway Setup",
+    "Website Security & Backup Systems"
+  ],
+  "liveClassStatus": "scheduled"
+}

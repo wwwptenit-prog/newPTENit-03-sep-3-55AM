@@ -1,0 +1,53 @@
+{
+  "id": "gig-4",
+  "sellerTitle": "Mobile App Architect (PTENit Core Team)",
+  "reviewsCount": 19,
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "_lastSynced": "2026-09-21T13:23:34.270Z",
+  "salesCount": 24,
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "packages": {
+    "basic": {
+      "revisions": 3,
+      "deliveryDays": 5,
+      "features": [
+        "৩টি রেসপন্সিভ স্ক্রিন",
+        "Firebase Setup"
+      ],
+      "name": "Basic Flutter UI",
+      "price": 15000
+    },
+    "standard": {
+      "name": "Standard App with Backend",
+      "price": 35000,
+      "deliveryDays": 12,
+      "revisions": 5,
+      "features": [
+        "৮টি স্ক্রিন",
+        "REST API",
+        "Auth & DB"
+      ]
+    },
+    "premium": {
+      "features": [
+        "Full App",
+        "Play Store & App Store Publish",
+        "1 Year Maintenance"
+      ],
+      "deliveryDays": 25,
+      "price": 75000,
+      "name": "Complete Enterprise App",
+      "revisions": "Unlimited"
+    }
+  },
+  "category": "Mobile App Development",
+  "rating": 5,
+  "isAgencyStaff": true,
+  "sellerId": "teacher-1",
+  "description": "সিঙ্গেল কোডবেসে অ্যান্ড্রয়েড ও আইওএস অ্যাপ। রেসপন্সিভ ইউআই, ফায়ারবেস পুশ নোটিফিকেশন ও দ্রুত পারফরম্যান্স।",
+  "createdAt": "2026-01-18",
+  "thumbnail": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80",
+  "title": "আমি এন্ড্রয়েড ও আইওএস এর জন্য ক্রস-প্ল্যাটফর্ম ফ্ল্যাটার মোবাইল অ্যাপ তৈরি করবো",
+  "status": "active",
+  "sellerRating": 5
+}

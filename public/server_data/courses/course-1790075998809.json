@@ -1,0 +1,51 @@
+{
+  "id": "course-1790075998809",
+  "modules": [
+    {
+      "lessons": [
+        {
+          "title": "ক্লাস ১: পরিচিতি ও কোর্স ওভারভিউ",
+          "duration": "৪৫ মিনিট",
+          "isFree": true,
+          "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          "id": "l-1-1790075998809"
+        }
+      ],
+      "title": "মডিউল ১: ওরিয়েন্টেশন ও মূল বিষয়বস্তু",
+      "id": "m-1-1790075998809"
+    }
+  ],
+  "rating": 5,
+  "offerStatus": "accepted",
+  "targetModules": 4,
+  "description": "PTENit একাডেমি কর্তৃক নির্ধারিত প্রফেশনাল লাইভ ব্যাচ। ইন্সট্রাক্টর হিসেবে রিসিভ করে সরাসরি ক্লাস ও অ্যাসাইনমেন্ট পরিচালনা করতে পারবেন। ৩৫% কমিশন সম্মানিয়াম ইনস্ট্যান্ট জমা হবে।",
+  "lessonsCount": 16,
+  "teacherCommissionRate": 35,
+  "tags": [
+    "#PTENit",
+    "#LiveCourse"
+  ],
+  "assignedInstructorId": "admin-1",
+  "category": "Full-Stack Development",
+  "whatYouWillLearn": [
+    "২৪টি প্রফেশনাল লাইভ ক্লাস লেকচার",
+    "৪টি রিয়েল-টাইম অ্যাসাইনমেন্ট ও কোড রিভিউ",
+    "প্রজেক্ট ফিডব্যাক ও সার্টিফিকেট প্রদান"
+  ],
+  "thumbnail": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=200&q=80",
+  "title": "প্রফেশনাল ফুল-স্ট্যাক ওয়েব ডেভেলপমেন্ট (Next.js, Node.js & AI Masterclass)",
+  "price": 12500,
+  "_lastUpdated": "2026-09-22T11:19:58.809Z",
+  "instructor": "Mds Kazi Sohag (Admin)",
+  "targetLessons": 16,
+  "enrolledCount": 0,
+  "published": true,
+  "level": "professional",
+  "isFree": false,
+  "duration": "২৪টি লাইভ ক্লাস • ৪টি মডিউল",
+  "requirements": [
+    "কম্পিউটার বা ইন্টারনেট সংযোজন"
+  ],
+  "isPublicOffer": false,
+  "createdAt": "2026-09-22"
+}

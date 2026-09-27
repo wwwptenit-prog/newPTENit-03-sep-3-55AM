@@ -1,0 +1,53 @@
+{
+  "id": "gig-17",
+  "_lastSynced": "2026-09-21T13:23:34.272Z",
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "salesCount": 22,
+  "reviewsCount": 17,
+  "createdAt": "2026-02-10",
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "category": "AI & Automation",
+  "sellerTitle": "Python Developer & Automation Expert",
+  "rating": 5,
+  "thumbnail": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80",
+  "packages": {
+    "premium": {
+      "price": 22000,
+      "name": "Enterprise Scraping Pipeline",
+      "revisions": "Unlimited",
+      "features": [
+        "Scheduled Scraping",
+        "Database Integration",
+        "Proxy Rotation"
+      ],
+      "deliveryDays": 7
+    },
+    "standard": {
+      "name": "Automated Bot with GUI",
+      "deliveryDays": 3,
+      "price": 9000,
+      "revisions": 4,
+      "features": [
+        "Complex Scraping",
+        "Desktop Interface",
+        "Anti-Bot Bypass"
+      ]
+    },
+    "basic": {
+      "name": "Simple Scraper Script",
+      "deliveryDays": 1,
+      "revisions": 2,
+      "price": 3000,
+      "features": [
+        "1 Site Scraper",
+        "Excel Output"
+      ]
+    }
+  },
+  "isAgencyStaff": true,
+  "sellerId": "teacher-1",
+  "title": "আমি পাইথন দিয়ে অটোমেশন স্ক্রিপ্ট, ওয়েব স্ক্র্যাপিং ও ডাটা এক্সট্র্যাকশন করবো",
+  "status": "active",
+  "description": "যেকোনো ওয়েবসাইট থেকে ডাটা স্ক্র্যাপ করে Excel/CSV বা ডাটাবেসে সেভ করার কাস্টম পাইথন অটোমেশন বোট।",
+  "sellerRating": 5
+}

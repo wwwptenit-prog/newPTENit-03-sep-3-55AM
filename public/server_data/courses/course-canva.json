@@ -1,0 +1,106 @@
+{
+  "id": "course-canva",
+  "modules": [
+    {
+      "lessons": [
+        {
+          "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          "order": 1,
+          "moduleId": "m1",
+          "pdfResourceUrl": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+          "courseId": "course-canva",
+          "isFreePreview": true,
+          "duration": "২৫ মিনিট",
+          "content": "ক্যানভা ইন্টারফেস পরিচিতি এবং প্রফেশনাল ক্যানভা একাউন্ট কনফিগারেশন।",
+          "title": "লেসন ০১: ক্যানভা ইন্টারফেস পরিচিতি ও অ্যাকাউন্ট সেটআপ",
+          "id": "l1"
+        },
+        {
+          "duration": "৩০ মিনিট",
+          "content": "ডিজাইনে সঠিক ফন্ট ও কালার নির্বাচন করার নিয়মাবলী।",
+          "isFreePreview": false,
+          "courseId": "course-canva",
+          "title": "লেসন ০২: টাইপোগ্রাফি ও কালার সায়েন্স",
+          "moduleId": "m1",
+          "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          "id": "l2",
+          "order": 2
+        }
+      ],
+      "title": "ক্যানভা ফান্ডামেন্টালস ও প্রো টুলস",
+      "courseId": "course-canva",
+      "id": "m1",
+      "order": 1
+    },
+    {
+      "lessons": [
+        {
+          "id": "l3",
+          "title": "লেসন ০৩: ভাইরাল ইউটিউব থাম্বনেইল ডিজাইন",
+          "content": "উচ্চ সিটিআর (CTR) ইউটিউব থাম্বনেইল তৈরির গোপন টেকনিক।",
+          "isFreePreview": false,
+          "courseId": "course-canva",
+          "duration": "৪০ মিনিট",
+          "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          "moduleId": "m2",
+          "order": 3
+        }
+      ],
+      "id": "m2",
+      "order": 2,
+      "courseId": "course-canva",
+      "title": "প্র্যাক্টিক্যাল প্রজেক্টস ও ফ্রিল্যান্সিং গাইড"
+    }
+  ],
+  "assignedInstructorId": "teacher-1",
+  "published": true,
+  "liveClassStatus": "live_now",
+  "lessonsCount": 16,
+  "createdAt": "2026-01-10",
+  "_lastUpdated": "2026-09-27T16:41:31.034Z",
+  "price": 1200,
+  "instructor": "তানভীর আহমেদ",
+  "title": "Canva Design & Freelancing Masterclass",
+  "category": "Graphic Design",
+  "discountPrice": 850,
+  "description": "ক্যানভা (Canva Pro) দিয়ে কোনো কোডিং বা কঠিন সফটওয়্যার ছাড়া প্রফেশনাল সোশ্যাল মিডিয়া গ্রাফিক্স, ইউটিউব থাম্বনেইল, ব্যানার, লোগো এবং প্রেসেন্টেশন তৈরি শিখুন। মার্কেটপ্লেসে ইনকাম শুরু করার সম্পূর্ণ ফ্রিল্যান্সিং গাইডলাইন।",
+  "isFree": false,
+  "liveClassSerialNo": "০৫",
+  "offerStatus": "accepted",
+  "enrolledCount": 343,
+  "instructorRole": "Senior Graphic Designer & Freelancer",
+  "whatYouWillLearn": [
+    "Canva Pro-এর সকল প্রিমিয়াম ফিচারের ব্যবহার",
+    "সোশ্যাল মিডিয়া পোস্ট ও কাভার ব্যানার ডিজাইন",
+    "হাই-কনভার্টিং ইউটিউব থাম্বনেইল তৈরি",
+    "ব্র্যান্ড লোগো, ভিজিটিং কার্ড ও লেটারহেড ডিজাইন",
+    "Fiverr ও Upwork-এ ক্যানভা সার্ভিস বিক্রি করার ট্রিকস"
+  ],
+  "liveClassTopic": "ক্যানভা প্রো দিয়ে ইনস্টাগ্রাম ও ফেসবুক রিলস/পোস্ট ডিজাইন",
+  "acceptedAt": "2026-01-20",
+  "_lastSynced": "2026-09-21T13:23:32.008Z",
+  "liveClassDate": "2026-09-01",
+  "duration": "4 Weeks (12 Hours)",
+  "targetLessons": 16,
+  "liveClassLessonNo": "০৩",
+  "reviewsCount": 88,
+  "liveClassLink": "https://meet.google.com/canva-live-pro",
+  "requirements": [
+    "একটি স্মার্টফোন বা ল্যাপটপ/কম্পিউটার",
+    "ইন্টারনেট কানেকশন",
+    "ডিজাইনের প্রতি আগ্রহ"
+  ],
+  "tags": [
+    "#CanvaDesign",
+    "#GraphicDesign",
+    "#Freelancing",
+    "#Fiverr"
+  ],
+  "liveClassModuleNo": "০২",
+  "targetModules": 4,
+  "teacherCommissionRate": 35,
+  "liveClassTime": "21:00",
+  "liveSchedule": "আজ রাত ৯:০০ টা (🔴 এখন লাইভ চলছে)",
+  "rating": 4.9,
+  "thumbnail": "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=800&q=80"
+}

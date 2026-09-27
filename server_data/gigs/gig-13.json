@@ -1,0 +1,52 @@
+{
+  "id": "gig-13",
+  "category": "Content Writing",
+  "sellerRating": 4.9,
+  "packages": {
+    "premium": {
+      "revisions": "Unlimited",
+      "deliveryDays": 6,
+      "price": 7500,
+      "features": [
+        "৫টি পেজের ফুল কন্টেন্ট",
+        "High Converting Headlines"
+      ],
+      "name": "Full Website Copywriting"
+    },
+    "standard": {
+      "features": [
+        "৩০০০ শব্দ",
+        "Meta Description",
+        "Royalty Free Images"
+      ],
+      "deliveryDays": 3,
+      "name": "3000 Words Package",
+      "revisions": 5,
+      "price": 2800
+    },
+    "basic": {
+      "price": 1000,
+      "features": [
+        "১০০০ শব্দ কন্টেন্ট",
+        "SEO Keyword Placement"
+      ],
+      "name": "1000 Words Article",
+      "deliveryDays": 1,
+      "revisions": 3
+    }
+  },
+  "sellerName": "ফারহানা ইয়াসমিন",
+  "salesCount": 23,
+  "rating": 4.9,
+  "description": "প্ল্যাজিয়ারিজম-ফ্রি, গ্রামারটিক্যালি নির্ভুল ও সুন্দর উপস্থাপনায় টেক, বিজনেস, লাইফস্টাইল আর্টিকেল রাইটিং।",
+  "isAgencyStaff": false,
+  "_lastSynced": "2026-09-21T13:23:34.271Z",
+  "createdAt": "2026-02-06",
+  "title": "আমি এসইও ফ্রেন্ডলি বাংলা ও ইংরেজি ব্লগ পোস্ট, আর্টিকেল এবং ওয়েবসাইট কন্টেন্ট লিখবো",
+  "reviewsCount": 18,
+  "status": "active",
+  "sellerAvatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80",
+  "sellerTitle": "Content Writer & Translator",
+  "sellerId": "student-4",
+  "thumbnail": "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80"
+}

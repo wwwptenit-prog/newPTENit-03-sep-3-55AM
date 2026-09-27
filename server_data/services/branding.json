@@ -1,0 +1,58 @@
+{
+  "id": "branding",
+  "thumbnail": "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&w=800&q=80",
+  "reviewsCount": 22,
+  "iconName": "Award",
+  "shortDescription": "Complete digital branding and visual identity solutions.",
+  "rating": 4.9,
+  "_lastSynced": "2026-09-21T13:23:33.289Z",
+  "category": "Design",
+  "priceText": "৳20,000 প্যাকেজ",
+  "fullDescription": "আপনার স্টার্টআপ বা রিননড ব্যবসার জন্য থ্রি-সিক্সটি ডিগ্রি ব্র্যান্ডিং সলিউশন। কনসেপ্ট আর্ট থেকে শুরু করে মার্কেটিং ম্যাটেরিয়াল তৈরি।",
+  "title": "Branding",
+  "packages": {
+    "premium": {
+      "price": 90000,
+      "name": "360 Growth & Brand Takeover",
+      "revisions": "Unlimited",
+      "features": [
+        "Design + Video + Web",
+        "Trademark Prep",
+        "National PR Kit"
+      ],
+      "deliveryDays": 20
+    },
+    "basic": {
+      "features": [
+        "Brand Style Guide",
+        "Stationery Kit",
+        "Social Media Cover"
+      ],
+      "name": "Corporate Identity Pack",
+      "revisions": 3,
+      "deliveryDays": 5,
+      "price": 20000
+    },
+    "standard": {
+      "deliveryDays": 10,
+      "revisions": 5,
+      "name": "Complete Brand Ecosystem",
+      "price": 45000,
+      "features": [
+        "Full Visual Identity",
+        "Packaging Design",
+        "Company Profile PDF"
+      ]
+    }
+  },
+  "features": [
+    "Full Brand Guidelines Manual",
+    "Stationery & Uniform Mockups",
+    "Packaging Design",
+    "Digital Presence Strategy",
+    "Brand Storytelling"
+  ],
+  "published": true,
+  "badge": "প্রিমিয়াম",
+  "order": 8
+}

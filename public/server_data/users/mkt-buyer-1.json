@@ -1,0 +1,13 @@
+{
+  "id": "mkt-buyer-1",
+  "mobile": "01811223344",
+  "email": "buyer@marketplace.com",
+  "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
+  "sellerStatus": "not_applied",
+  "title": "Marketplace Business Buyer & Client",
+  "isSeller": false,
+  "role": "customer",
+  "createdAt": "2026-01-22",
+  "_lastSynced": "2026-09-21T13:23:36.684Z",
+  "name": "তানজিল তানভীর (মার্কেটপ্লেস বায়ার)"
+}

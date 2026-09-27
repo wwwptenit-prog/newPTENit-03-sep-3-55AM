@@ -1,0 +1,25 @@
+{
+  "id": "dp-3",
+  "downloadUrl": "https://drive.google.com/file/d/ptenit-erp-school-hospital/view?usp=sharing",
+  "reviewsCount": 29,
+  "category": "ERP Software",
+  "_lastSynced": "2026-09-21T13:23:36.323Z",
+  "fullDescription": "স্কুল, কলেজ বা হসপিটাল অটোমেশনের জন্য অল-ইন-ওয়ান ক্লাউড ইআরপি সিস্টেম। পেমেন্ট শেষে অ্যাডমিন প্যানেল থেকে কাস্টমারের হোয়াটসঅ্যাপ ও ইমেইলে সরাসরি কাস্টমাইজড মেসেজ সহ এক্সেস লিঙ্ক ও ফাইল ডেলিভারি প্রদান করা হবে।",
+  "deliveryType": "email_whatsapp",
+  "fileSize": "140 MB",
+  "thumbnail": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
+  "rating": 5,
+  "originalPrice": 15000,
+  "shortDescription": "স্টুডেন্ট/পেশেন্ট ফি, অনলাইন টিচার ড্যাশবোর্ড, রসিদ ও অটো এসএমএস অ্যালার্ট সহ ফুল সফটওয়্যার।",
+  "title": "স্কুল, কলেজ ও হসপিটাল ইআরপি ম্যানেজমেন্ট সফটওয়্যার সোর্স কোড",
+  "price": 7500,
+  "salesCount": 88,
+  "licenseKey": "PTENIT-ERP-OFFICIAL-LICENSE",
+  "features": [
+    "স্টুডেন্ট ও পেশেন্ট রেকর্ড",
+    "বিকাশ অ্যাকাউন্ট ফি পেমেন্ট",
+    "এসএমএস নোটিফিকেশন গেটওয়ে",
+    "অ্যাডমিন হোয়াটসঅ্যাপ ও ইমেইল ডেলিভারি"
+  ],
+  "fileFormat": "ZIP & MySQL"
+}

@@ -1,0 +1,52 @@
+{
+  "id": "gig-20",
+  "thumbnail": "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=800&q=80",
+  "rating": 5,
+  "sellerRating": 5,
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "salesCount": 13,
+  "sellerId": "teacher-1",
+  "description": "বিদ্যমান React Native অ্যাপের পারফরম্যান্স ইস্যু, ক্যাশ ক্র্যাশ, থার্ড পার্টি এসডিকে বা ব্যাকএন্ড এপিআই ইস্যু সলভ।",
+  "createdAt": "2026-02-13",
+  "category": "Mobile App Development",
+  "reviewsCount": 10,
+  "_lastSynced": "2026-09-21T13:23:34.272Z",
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "title": "আমি রিয়েক্ট নেটিভ (React Native) মোবাইল অ্যাপের বাগ ফিক্সিং ও নতুন ফিচার যোগ করবো",
+  "isAgencyStaff": true,
+  "packages": {
+    "premium": {
+      "deliveryDays": 7,
+      "features": [
+        "Full Refactoring",
+        "SDK Updates",
+        "Play/App Store Update"
+      ],
+      "name": "App Refactoring & Upgrade",
+      "revisions": "Unlimited",
+      "price": 20000
+    },
+    "standard": {
+      "deliveryDays": 3,
+      "revisions": 4,
+      "features": [
+        "নতুন ফিচার/স্ক্রিন",
+        "API Connection"
+      ],
+      "name": "Feature Integration",
+      "price": 8000
+    },
+    "basic": {
+      "price": 2500,
+      "revisions": 2,
+      "deliveryDays": 1,
+      "name": "Single Bug Fix",
+      "features": [
+        "১টি বাগ ফিক্স",
+        "Performance Check"
+      ]
+    }
+  },
+  "status": "active",
+  "sellerTitle": "Senior Cross Platform Engineer"
+}

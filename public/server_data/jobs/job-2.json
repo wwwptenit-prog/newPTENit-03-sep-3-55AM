@@ -1,0 +1,19 @@
+{
+  "id": "job-2",
+  "visibility": "custom_assigned",
+  "_lastSynced": "2026-09-21T13:23:35.954Z",
+  "buyerName": "মেহেদী হাসান (কাস্টমার)",
+  "budget": 45000,
+  "assignedStaffName": "প্রকৌশলী আল-আমিন",
+  "proposalsCount": 1,
+  "title": "PTENit কাস্টম এজেন্সির মাধ্যমে অ্যান্ড্রয়েড অ্যাপ তৈরি",
+  "buyerPhone": "01988776655",
+  "category": "Mobile App",
+  "createdAt": "2026-02-14",
+  "status": "in_progress",
+  "deadlineDays": 15,
+  "buyerId": "customer-1",
+  "assignedStaffId": "teacher-1",
+  "buyerEmail": "customer@ptenit.com",
+  "description": "আমাদের প্রতিষ্ঠানের জন্য কাস্টম মোবাইল অ্যাপ তৈরি করা প্রয়োজন। এটি সরাসরি আমাদের অফিসিয়াল টিমে ডেসপ্যাচ করা হয়েছে।"
+}

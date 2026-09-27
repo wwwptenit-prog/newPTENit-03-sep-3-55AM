@@ -1,0 +1,51 @@
+{
+  "id": "course-1790075992589",
+  "duration": "১৮টি লাইভ ক্লাস • ৩টি মডিউল",
+  "modules": [
+    {
+      "lessons": [
+        {
+          "isFree": true,
+          "duration": "৪৫ মিনিট",
+          "id": "l-1-1790075992589",
+          "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          "title": "ক্লাস ১: পরিচিতি ও কোর্স ওভারভিউ"
+        }
+      ],
+      "title": "মডিউল ১: ওরিয়েন্টেশন ও মূল বিষয়বস্তু",
+      "id": "m-1-1790075992589"
+    }
+  ],
+  "teacherCommissionRate": 35,
+  "_lastUpdated": "2026-09-22T11:19:52.599Z",
+  "isPublicOffer": false,
+  "level": "professional",
+  "thumbnail": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "enrolledCount": 0,
+  "instructor": "Mds Kazi Sohag (Admin)",
+  "lessonsCount": 16,
+  "whatYouWillLearn": [
+    "১৮টি লাইভ প্র্যাকটিক্যাল ক্লাস",
+    "মেটা ও গুগল এডস ফানেল প্রজেক্ট",
+    "স্টুডেন্ট প্রফেশনাল ফিডব্যাক"
+  ],
+  "assignedInstructorId": "admin-1",
+  "isFree": false,
+  "description": "ডিজিটাল মার্কেটিং ও মেটা এডস ক্যাম্পেইনের ওপর লাইভ সেশন পরিচালনা করতে হবে। স্টুডেন্টদের কাস্টম এডস সাপোর্ট প্রদান আবশ্যক।",
+  "offerStatus": "accepted",
+  "createdAt": "2026-09-22",
+  "requirements": [
+    "কম্পিউটার বা ইন্টারনেট সংযোজন"
+  ],
+  "targetLessons": 16,
+  "targetModules": 4,
+  "price": 8500,
+  "title": "প্রফেশনাল ডিজিটাল মার্কেটিং & মেটা এডস ফানেল (লাইভ ব্যাচ ২০২৬)",
+  "category": "Digital Marketing",
+  "published": true,
+  "rating": 5,
+  "tags": [
+    "#PTENit",
+    "#LiveCourse"
+  ]
+}

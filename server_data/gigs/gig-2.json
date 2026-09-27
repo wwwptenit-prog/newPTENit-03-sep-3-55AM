@@ -1,0 +1,53 @@
+{
+  "id": "gig-2",
+  "salesCount": 48,
+  "sellerName": "আরিফ হোসেন",
+  "sellerRating": 4.8,
+  "isAgencyStaff": true,
+  "rating": 4.8,
+  "sellerId": "teacher-2",
+  "description": "পিক্সেল সেটআপ, কনভার্সন ট্র্যাকিং, কাস্টম অডিয়েন্স এবং রিটার্গেটিং অ্যাডসের মাধ্যমে সেলস ৫ গুণ বৃদ্ধি করুন।",
+  "_lastSynced": "2026-09-21T13:23:34.270Z",
+  "category": "Digital Marketing",
+  "thumbnail": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+  "packages": {
+    "basic": {
+      "price": 3500,
+      "name": "Ad Setup Starter",
+      "features": [
+        "১টি ক্যাম্পেইন",
+        "অডিয়েন্স রিসার্চ"
+      ],
+      "deliveryDays": 2,
+      "revisions": 2
+    },
+    "standard": {
+      "revisions": 3,
+      "deliveryDays": 5,
+      "price": 8000,
+      "features": [
+        "৩টি ক্যাম্পেইন",
+        "Pixel Setup",
+        "A/B Test"
+      ],
+      "name": "Growth Funnel"
+    },
+    "premium": {
+      "revisions": "Unlimited",
+      "deliveryDays": 30,
+      "features": [
+        "৩০ দিন ফুল এড ম্যানেজমেন্ট",
+        "আনলিমিটেড ক্যাম্পেইন"
+      ],
+      "name": "Monthly Growth Partner",
+      "price": 18000
+    }
+  },
+  "offerBadge": "৩০% ছাড়",
+  "title": "আমি সেলস বাড়াতে টার্গেটেড ফেসবুক, ইন্সটাগ্রাম ও গুগল অ্যাডস ক্যাম্পেইন সেটআপ করবো",
+  "sellerTitle": "Digital Marketing Specialist & Media Buyer",
+  "status": "active",
+  "reviewsCount": 35,
+  "createdAt": "2026-01-12",
+  "sellerAvatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"
+}

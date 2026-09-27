@@ -1,0 +1,50 @@
+{
+  "id": "course-web-pro-2026",
+  "liveClassLessonNo": "০২",
+  "isFree": false,
+  "teacherCommissionRate": 50,
+  "published": true,
+  "title": "Full Stack Web Development - Professional (Enterprise Microservices & Cloud)",
+  "price": 12000,
+  "tags": [
+    "#WebDevPro",
+    "#FullStack",
+    "#Cloud"
+  ],
+  "duration": "10 Weeks (40 Hours)",
+  "isPublicOffer": true,
+  "lessonsCount": 30,
+  "assignedInstructorId": "teacher-1",
+  "enrolledCount": 0,
+  "discountPrice": 8500,
+  "liveClassModuleNo": "০৪",
+  "liveClassDate": "2026-09-05",
+  "createdAt": "2026-02-20",
+  "whatYouWillLearn": [
+    "Microservices Architecture",
+    "Docker & Kubernetes Deployment",
+    "Advanced Node.js & Cloud Scaling"
+  ],
+  "liveSchedule": "০৫ সেপ্টেম্বর ২০২৬, রাত ০৯:০০ টা",
+  "_lastSynced": "2026-09-21T13:23:32.009Z",
+  "rating": 5,
+  "offerStatus": "offered",
+  "description": "প্রফেশনাল লেভেল ওয়েব ডেভেলপমেন্ট কোর্স। React, Node.js, Docker, Kubernetes এবং ক্লাউড মাইক্রোসার্ভিসেস আর্কিটেকচার।",
+  "requirements": [
+    "React & Node.js অভিজ্ঞতা"
+  ],
+  "liveClassStatus": "scheduled",
+  "modules": [],
+  "targetLessons": 30,
+  "reviewsCount": 0,
+  "thumbnail": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+  "level": "professional",
+  "liveClassLink": "https://meet.google.com/web-pro-cloud",
+  "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+  "targetModules": 8,
+  "instructorRole": "Senior Software Engineer",
+  "liveClassTopic": "Docker কন্টেইনারাইজেশন ও মাইক্রোসার্ভিসেস আর্কিটেকচার",
+  "liveClassSerialNo": "০৮",
+  "category": "Web Development",
+  "liveClassTime": "21:00"
+}

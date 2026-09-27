@@ -1,0 +1,33 @@
+{
+  "id": "prod-1790002431326",
+  "version": "v1.0.0",
+  "fullDescription": "",
+  "thumbnail": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+  "features": [
+    "রেসপন্সিভ ডিজাইন",
+    "লাইফটাইম আপডেট",
+    "ডকুমেন্টেশন অন্তর্ভুক্ত"
+  ],
+  "canvaInviteLink": "https://www.canva.com/brand/join?token=vip-ptenit-lifetime",
+  "_lastUpdated": "2026-09-21T14:53:51.327Z",
+  "createdAt": "2026-09-21",
+  "requirements": [
+    "Node.js 18+ অথবা PHP 8.0+",
+    "cPanel হোস্টিং"
+  ],
+  "price": 450,
+  "rating": 5,
+  "salesCount": 0,
+  "canvaRules": "১. আপনার ক্যানভা অ্যাকাউন্টে লগইন অবস্থায় Access Now বাটনে ক্লিক করুন।\n২. এই এক্সেস শুধুমাত্র আপনার ব্যবহারের জন্য বরাদ্দ।",
+  "licenseKey": "PTEN-PRO-2026-KEY",
+  "title": "Google Gemeni AI",
+  "fileFormat": "ZIP / Source Code",
+  "demoImages": [],
+  "shortDescription": "",
+  "fileSize": "24 MB",
+  "downloadUrl": "https://drive.google.com",
+  "reviewsCount": 12,
+  "category": "Plugins",
+  "deliveryType": "canva_auto",
+  "originalPrice": 1500
+}

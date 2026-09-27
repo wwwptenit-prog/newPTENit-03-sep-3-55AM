@@ -1,0 +1,60 @@
+{
+  "id": "web-dev",
+  "order": 1,
+  "badge": "প্রিমিয়াম",
+  "fullDescription": "আমরা আধুনিক React, Next.js, WordPress এবং E-Commerce ফ্রেমওয়ার্ক ব্যবহার করে হাই-স্পিড ও রেসপন্সিভ ওয়েবসাইট তৈরি করি। আপনার ব্র্যান্ডের জন্য উপযোগী কাস্টম UI/UX ডিজাইন এবং সিকিউর ব্যাকএন্ড সাপোর্ট অন্তর্ভুক্ত।",
+  "published": true,
+  "packages": {
+    "standard": {
+      "features": [
+        "Up to 10 Pages",
+        "Admin CMS Panel",
+        "SEO Structure",
+        "bKash/SSL Integration"
+      ],
+      "revisions": 5,
+      "deliveryDays": 7,
+      "name": "Dynamic Business Website",
+      "price": 35000
+    },
+    "basic": {
+      "revisions": 3,
+      "price": 15000,
+      "deliveryDays": 4,
+      "features": [
+        "Mobile Responsive Layout",
+        "Speed Optimization",
+        "Free Hosting Setup"
+      ],
+      "name": "Landing Page / Single Page"
+    },
+    "premium": {
+      "price": 75000,
+      "features": [
+        "Full Custom Tech Stack",
+        "Payment Gateways",
+        "1 Year Support",
+        "Source Code Included"
+      ],
+      "name": "Custom E-Commerce & Web App",
+      "revisions": "Unlimited",
+      "deliveryDays": 15
+    }
+  },
+  "features": [
+    "100% Mobile Responsive Layout",
+    "SEO Friendly Code Structure",
+    "Free Domain & Hosting Setup",
+    "Admin Panel & Content Management",
+    "1 Year Technical Support"
+  ],
+  "title": "Web Design & Development",
+  "category": "Development",
+  "thumbnail": "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80",
+  "reviewsCount": 48,
+  "_lastSynced": "2026-09-21T13:23:33.288Z",
+  "iconName": "Code",
+  "rating": 5,
+  "priceText": "৳15,000 থেকে শুরু",
+  "shortDescription": "Professional responsive websites, landing pages, business websites, e-commerce websites and CMS solutions."
+}

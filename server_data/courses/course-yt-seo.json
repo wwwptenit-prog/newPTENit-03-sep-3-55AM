@@ -1,0 +1,71 @@
+{
+  "id": "course-yt-seo",
+  "liveSchedule": "০২ সেপ্টেম্বর ২০২৬, রাত ০৯:০০ টা",
+  "liveClassLink": "https://meet.google.com/yt-seo-live",
+  "targetModules": 5,
+  "rating": 4.8,
+  "teacherCommissionRate": 30,
+  "instructor": "কাজী সোহাগ",
+  "liveClassSerialNo": "০৮",
+  "requirements": [
+    "কম্পিউটার/ল্যাপটপ বা অ্যান্ড্রয়েড ফোন",
+    "বেসিক কম্পিউটার জানা থাকা ভালো"
+  ],
+  "liveClassTime": "21:00",
+  "reviewsCount": 54,
+  "instructorRole": "Digital Marketing Specialist",
+  "liveClassTopic": "TubeBuddy ও VidIQ দিয়ে হাই-র‍্যাংক কিওয়ার্ড সিলেকশন",
+  "thumbnail": "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=800&q=80",
+  "modules": [
+    {
+      "order": 1,
+      "id": "m-yt-1",
+      "courseId": "course-yt-seo",
+      "lessons": [
+        {
+          "moduleId": "m-yt-1",
+          "isFreePreview": true,
+          "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          "courseId": "course-yt-seo",
+          "duration": "৩৫ মিনিট",
+          "title": "লেসন ০১: ২০২৬ সালে ইউটিউব অ্যালগরিদম যেভাবে কাজ করে",
+          "order": 1,
+          "id": "l-yt-1",
+          "pdfResourceUrl": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+          "content": "ইউটিউব এলগরিদম কিভাবে ভিডিও প্রমোট করে তা বিস্তারিত আলোচনা।"
+        }
+      ],
+      "title": "ইউটিউব অ্যালগরিদম ও চ্যানেল সেটআপ"
+    }
+  ],
+  "category": "SEO",
+  "targetLessons": 22,
+  "published": true,
+  "price": 5999,
+  "title": "YouTube SEO & Channel Growth Blueprint",
+  "tags": [
+    "#SEOExpert",
+    "#YouTubeSEO",
+    "#SearchEngineOptimization",
+    "#Monetization"
+  ],
+  "enrolledCount": 215,
+  "_lastSynced": "2026-09-21T13:23:32.009Z",
+  "discountPrice": 3499,
+  "liveClassModuleNo": "০৩",
+  "duration": "6 Weeks (20 Hours)",
+  "liveClassDate": "2026-09-02",
+  "isFree": false,
+  "description": "আপনার ইউটিউব চ্যানেলের ভিডিও গুগলে ও ইউটিউব সার্চের ১ম স্থানে র‍্যাংক করানোর কমপ্লিট এসইও মাস্টারক্লাস। টাইটেল, ট্যাগ, ডেসক্রিপশন, হ্যাশট্যাগ ও TubeBuddy/vidiQ টুলস ব্যবহার শিখুন।",
+  "lessonsCount": 22,
+  "createdAt": "2026-01-15",
+  "liveClassLessonNo": "০১",
+  "whatYouWillLearn": [
+    "YouTube Algorithm & Ranking Factors",
+    "High Search Volume Keyword Research",
+    "TubeBuddy & VidIQ Keyword Masterclass",
+    "Click-Through-Rate (CTR) & Audience Retention Optimization",
+    "Channel Monetization & Sponsor Management"
+  ],
+  "liveClassStatus": "scheduled"
+}

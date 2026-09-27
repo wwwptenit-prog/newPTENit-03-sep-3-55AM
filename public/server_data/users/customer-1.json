@@ -1,0 +1,13 @@
+{
+  "id": "customer-1",
+  "email": "customer@ptenit.com",
+  "isSeller": false,
+  "_lastSynced": "2026-09-21T13:23:36.684Z",
+  "name": "মেহেদী হাসান (PTENit ক্লায়েন্ট)",
+  "mobile": "01988776655",
+  "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+  "sellerStatus": "not_applied",
+  "title": "Business Owner & IT Client",
+  "createdAt": "2026-01-15",
+  "role": "customer"
+}

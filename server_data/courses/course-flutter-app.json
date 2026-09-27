@@ -1,0 +1,51 @@
+{
+  "id": "course-flutter-app",
+  "isFree": false,
+  "liveSchedule": "০৭ সেপ্টেম্বর ২০২৬, রাত ০৯:০০ টা",
+  "liveClassLessonNo": "০১",
+  "isPublicOffer": true,
+  "requirements": [
+    "বেসিক প্রোগ্রামিং নলেজ"
+  ],
+  "liveClassStatus": "scheduled",
+  "teacherCommissionRate": 45,
+  "level": "advanced",
+  "createdAt": "2026-02-22",
+  "discountPrice": 6500,
+  "enrolledCount": 95,
+  "reviewsCount": 21,
+  "liveClassTopic": "Flutter State Management ও Firebase Cloud Firestore সংযোগ",
+  "assignedInstructorId": "teacher-1",
+  "duration": "8 Weeks (32 Hours)",
+  "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+  "published": true,
+  "liveClassDate": "2026-09-07",
+  "instructorRole": "Senior Mobile Application Engineer",
+  "liveClassModuleNo": "০৩",
+  "whatYouWillLearn": [
+    "Dart Fundamentals",
+    "Flutter Widgets & State Management",
+    "Firebase Backend & App Store Deploy"
+  ],
+  "thumbnail": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80",
+  "offerStatus": "accepted",
+  "description": "একটি কোডবেস দিয়ে Android ও iOS উভয় প্ল্যাটফর্মের জন্য আকর্ষণীয় নেটিভ পারফর্মেন্সের মোবাইল অ্যাপ তৈরি শিখুন।",
+  "targetLessons": 20,
+  "category": "Web Development",
+  "_lastSynced": "2026-09-21T13:23:32.010Z",
+  "rating": 4.9,
+  "tags": [
+    "#Flutter",
+    "#Dart",
+    "#MobileApp"
+  ],
+  "price": 9000,
+  "targetModules": 6,
+  "modules": [],
+  "liveClassLink": "https://meet.google.com/flutter-app-live",
+  "title": "Flutter & Dart Cross-Platform Mobile App Development",
+  "lessonsCount": 20,
+  "targetAssignments": 20,
+  "liveClassTime": "21:00",
+  "liveClassSerialNo": "০৪"
+}

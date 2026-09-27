@@ -1,0 +1,51 @@
+{
+  "id": "course-1790075995106",
+  "modules": [
+    {
+      "title": "মডিউল ১: ওরিয়েন্টেশন ও মূল বিষয়বস্তু",
+      "lessons": [
+        {
+          "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          "title": "ক্লাস ১: পরিচিতি ও কোর্স ওভারভিউ",
+          "isFree": true,
+          "id": "l-1-1790075995106",
+          "duration": "৪৫ মিনিট"
+        }
+      ],
+      "id": "m-1-1790075995106"
+    }
+  ],
+  "rating": 5,
+  "offerStatus": "accepted",
+  "targetModules": 4,
+  "description": "Figma প্রফেশনাল ডিজাইন সিস্টেম, অটো-লেআউট এবং মোবাইল/ওয়েব অ্যাপ ডিজাইন শেখাতে হবে।",
+  "lessonsCount": 16,
+  "teacherCommissionRate": 35,
+  "tags": [
+    "#PTENit",
+    "#LiveCourse"
+  ],
+  "assignedInstructorId": "admin-1",
+  "category": "UI/UX Design",
+  "whatYouWillLearn": [
+    "২০টি লাইভ ডিজাইন সেশন",
+    "২টি রিয়েল প্রোডাক্ট কেস স্টাডি",
+    "পোর্টফোলিও বিল্ডিং রিভিউ"
+  ],
+  "thumbnail": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+  "title": "UI/UX ও প্রোডাক্ট ডিজাইন মাস্টারক্লাস (Figma, Design System & Portfolio)",
+  "price": 9500,
+  "_lastUpdated": "2026-09-22T11:19:55.107Z",
+  "instructor": "Mds Kazi Sohag (Admin)",
+  "targetLessons": 16,
+  "enrolledCount": 0,
+  "published": true,
+  "level": "professional",
+  "isFree": false,
+  "duration": "২০টি লাইভ ক্লাস • ৪টি মডিউল",
+  "requirements": [
+    "কম্পিউটার বা ইন্টারনেট সংযোজন"
+  ],
+  "isPublicOffer": false,
+  "createdAt": "2026-09-22"
+}

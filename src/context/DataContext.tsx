@@ -61,7 +61,8 @@ import {
   syncDocToFirestore, 
   deleteDocFromFirestore, 
   subscribeToCollection, 
-  syncCollectionToFirestore 
+  syncCollectionToFirestore,
+  fetchServerCollection
 } from '../services/firestoreSync';
 
 interface DataContextType {
@@ -1211,31 +1212,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
-          const officialIds = [
-            'gig-workfirst-web',
-            'gig-premium-erp',
-            'gig-workfirst-marketing',
-            'gig-premium-mobile',
-            'gig-workfirst-design',
-            'gig-premium-ai',
-            'web-dev',
-            'digital-marketing',
-            'graphics-design',
-            'app-development',
-            'seo-optimization',
-            'video-editing',
-            'cyber-security',
-            'software-dev'
-          ];
-          const missingOfficial = initialGigs.filter(g => officialIds.includes(g.id) && !parsed.some(p => p.id === g.id));
-          if (missingOfficial.length > 0) {
-            return [...missingOfficial, ...parsed];
-          }
           return parsed;
         }
       } catch {}
     }
-    return initialGigs;
+    return [];
   });
 
   const [jobs, setJobs] = useState<MarketplaceJob[]>(() => {
@@ -1550,6 +1531,20 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }));
 
+    unsubs.push(subscribeToCollection<Enrollment>('enrollments', (items) => {
+      if (items && items.length > 0) {
+        setEnrollments(items);
+        localStorage.setItem(`${STORAGE_KEY}_enrollments`, JSON.stringify(items));
+      }
+    }));
+
+    unsubs.push(subscribeToCollection<LiveClassSession>('liveSessions', (items) => {
+      if (items && items.length > 0) {
+        setLiveSessions(items);
+        localStorage.setItem(`${STORAGE_KEY}_live_sessions`, JSON.stringify(items));
+      }
+    }));
+
     // Site settings real-time listener
     try {
       const settingsDocRef = doc(db, 'siteSettings', 'default');
@@ -1563,7 +1558,60 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       unsubs.push(unsubSettings);
     } catch {}
 
-    // First-run database initialization (seeds Firestore if newly created)
+    // Immediate Server Storage fetch (instant load for mobile & cPanel environments)
+    const loadServerBackups = async () => {
+      try {
+        const [srvSettings, srvOrders, srvUsers, srvMktOrders, srvCourses] = await Promise.all([
+          fetchServerCollection<SiteSettings>('siteSettings'),
+          fetchServerCollection<PaymentOrder>('orders'),
+          fetchServerCollection<User>('users'),
+          fetchServerCollection<MarketplaceOrder>('marketplaceOrders'),
+          fetchServerCollection<Course>('courses'),
+        ]);
+
+        if (srvSettings && srvSettings.length > 0) {
+          const defaultSettings = (srvSettings as any).find((s: any) => s.id === 'default') || srvSettings[0];
+          if (defaultSettings) setSiteSettings(prev => ({ ...prev, ...defaultSettings }));
+        }
+        if (srvOrders && srvOrders.length > 0) {
+          setOrders(prev => {
+            const map = new Map<string, PaymentOrder>();
+            prev.forEach(p => map.set(p.id, p));
+            srvOrders.forEach(o => map.set(o.id, o));
+            return Array.from(map.values());
+          });
+        }
+        if (srvUsers && srvUsers.length > 0) {
+          setUsers(prev => {
+            const map = new Map<string, User>();
+            prev.forEach(u => map.set(u.id, u));
+            srvUsers.forEach(u => map.set(u.id, u));
+            return Array.from(map.values());
+          });
+        }
+        if (srvMktOrders && srvMktOrders.length > 0) {
+          setMarketplaceOrders(prev => {
+            const map = new Map<string, MarketplaceOrder>();
+            prev.forEach(m => map.set(m.id, m));
+            srvMktOrders.forEach(m => map.set(m.id, m));
+            return Array.from(map.values());
+          });
+        }
+        if (srvCourses && srvCourses.length > 0) {
+          setCourses(prev => {
+            const map = new Map<string, Course>();
+            prev.forEach(c => map.set(c.id, c));
+            srvCourses.forEach(c => map.set(c.id, c));
+            return Array.from(map.values());
+          });
+        }
+      } catch (e) {
+        // Non-blocking fallback
+      }
+    };
+    loadServerBackups();
+
+    // First-run database initialization (seeds Firestore & server storage if empty)
     const seedDatabaseIfNeeded = async () => {
       try {
         const settingsSnap = await getDoc(doc(db, 'siteSettings', 'default'));

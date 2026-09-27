@@ -1,0 +1,53 @@
+{
+  "id": "gig-8",
+  "sellerTitle": "Video Editor & Motion Artist",
+  "sellerAvatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80",
+  "reviewsCount": 14,
+  "salesCount": 18,
+  "sellerName": "তামিম ইকবাল",
+  "_lastSynced": "2026-09-21T13:23:34.271Z",
+  "sellerId": "student-3",
+  "rating": 4.7,
+  "category": "Video Editing",
+  "description": "এলেক্স হরমোজি স্টাইলের ট্রেন্ডি ক্যাপশন, কালার গ্রেডিং, সাউন্ড ইফেক্ট এবং বি-রোল ফুটেজ এড করে ভিডিও এডিট।",
+  "createdAt": "2026-02-01",
+  "isAgencyStaff": false,
+  "packages": {
+    "premium": {
+      "deliveryDays": 10,
+      "price": 16000,
+      "features": [
+        "১৫টি ভিডিও",
+        "Hook Generation",
+        "Background Music"
+      ],
+      "revisions": "Unlimited",
+      "name": "15 Shorts Monthly Pack"
+    },
+    "standard": {
+      "name": "5 Shorts Pack",
+      "features": [
+        "৫টি রিল/শর্টস",
+        "Color Grading",
+        "Motion Graphics"
+      ],
+      "price": 6000,
+      "deliveryDays": 3,
+      "revisions": 4
+    },
+    "basic": {
+      "price": 1500,
+      "revisions": 2,
+      "name": "1 Short Video (60s)",
+      "deliveryDays": 1,
+      "features": [
+        "১টি রিল/শর্টস",
+        "Captions & SFX"
+      ]
+    }
+  },
+  "sellerRating": 4.7,
+  "thumbnail": "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80",
+  "title": "আমি ফেসবুক রিলস, টিকটক এবং ইউটিউব শর্টসের জন্য হাই-এনগেজিং ভিডিও এডিটিং করবো",
+  "status": "active"
+}

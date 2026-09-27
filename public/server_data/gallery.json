@@ -1,0 +1,26 @@
+[
+  {
+    "id": "gal-1",
+    "imageUrl": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
+    "_lastSynced": "2026-09-21T13:23:33.635Z",
+    "caption": "উত্তরায় আমাদের আধুনিক অফিস ও প্র্যাকটিক্যাল কম্পিউটার ল্যাব",
+    "title": "PTENit HQ Office & Lab",
+    "category": "Office"
+  },
+  {
+    "id": "gal-2",
+    "_lastSynced": "2026-09-21T13:23:33.635Z",
+    "imageUrl": "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80",
+    "category": "Training",
+    "caption": "লাইভ ব্যাচ শিক্ষার্থীদের সাথে হ্যাকথন ও প্র্যাকটিক্যাল সেশন",
+    "title": "Live Student Workshop"
+  },
+  {
+    "id": "gal-3",
+    "imageUrl": "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=800&q=80",
+    "title": "Certificate Distribution Ceremony",
+    "_lastSynced": "2026-09-21T13:23:33.635Z",
+    "category": "Events",
+    "caption": "সফলভাবে কোর্স সম্পন্নকারীদের সার্টিফিকেট প্রদান অনুষ্ঠান"
+  }
+]

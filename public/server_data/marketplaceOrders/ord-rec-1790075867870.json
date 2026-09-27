@@ -1,0 +1,33 @@
+{
+  "id": "ord-rec-1790075867870",
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "paymentMethod": "Escrow Secured",
+  "buyerName": "PTENit Official Agency",
+  "updates": [
+    {
+      "sender": "Mds Kazi Sohag (Admin)",
+      "date": "২৫/৯/২০২৬, ৪:৫৭:০৭ AM",
+      "id": "upd-1790290627050",
+      "note": "কাজ শুরু করা হয়েছে।"
+    }
+  ],
+  "buyerEmail": "client@ptenit.com",
+  "gigId": "gig-premium-erp",
+  "_lastUpdated": "2026-09-24T22:57:07.051Z",
+  "amount": 20000,
+  "sellerId": "admin-1",
+  "category": "Software Development",
+  "transactionId": "REC-75867870",
+  "deliveryNote": "সেলার কর্তৃক অর্ডার রিসিভ করা হয়েছে।",
+  "buyerPhone": "01812345678",
+  "sellerPayout": 18000,
+  "buyerId": "ptenit-agency",
+  "packageType": "BASIC",
+  "createdAt": "2026-09-22T11:17:47.870Z",
+  "sellerName": "Mds Kazi Sohag (Admin)",
+  "adminCommission": 2000,
+  "title": "PTENit অফিশিয়াল প্রিমিয়াম এন্টারপ্রাইজ ইআরপি, কাস্টম সফটওয়্যার ও ক্লাউড পজ সিস্টেম",
+  "status": "in_progress",
+  "deadlineDate": "2026-09-27",
+  "type": "custom_agency_order"
+}

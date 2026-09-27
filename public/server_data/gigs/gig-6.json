@@ -1,0 +1,54 @@
+{
+  "id": "gig-6",
+  "sellerAvatar": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80",
+  "sellerId": "student-2",
+  "reviewsCount": 16,
+  "_lastSynced": "2026-09-21T13:23:34.271Z",
+  "createdAt": "2026-01-25",
+  "rating": 4.9,
+  "title": "আমি ফিগমাতে ওয়েবসাইট ও মোবাইল অ্যাপের জন্য মডার্ন ইউআই/ইউএক্স ডিজাইন করবো",
+  "thumbnail": "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&w=800&q=80",
+  "sellerTitle": "UI/UX & Product Designer",
+  "status": "active",
+  "isAgencyStaff": false,
+  "packages": {
+    "standard": {
+      "price": 12000,
+      "name": "Full Website UI (5 Pages)",
+      "revisions": 5,
+      "features": [
+        "৫টি পেজ ইউআই",
+        "Design System",
+        "Interactive Prototype"
+      ],
+      "deliveryDays": 5
+    },
+    "basic": {
+      "deliveryDays": 2,
+      "features": [
+        "১টি ল্যান্ডিং পেজ",
+        "Figma File",
+        "Mobile Version"
+      ],
+      "name": "Landing Page Figma",
+      "price": 4000,
+      "revisions": 3
+    },
+    "premium": {
+      "price": 25000,
+      "name": "Full Mobile App UX (15 Screens)",
+      "features": [
+        "১৫টি স্ক্রিন UX",
+        "User Flow Chart",
+        "Developer Handoff"
+      ],
+      "revisions": "Unlimited",
+      "deliveryDays": 10
+    }
+  },
+  "sellerRating": 4.9,
+  "description": "ইউজার ফ্রেন্ডলি এবং নান্দনিক মোবাইল বা ওয়েব ইন্টারফেস ডিজাইন। ফিগমা প্রোটোটাইপ এবং ইউআই কিট হ্যান্ডঅফ।",
+  "salesCount": 20,
+  "sellerName": "রাফসান সানি",
+  "category": "Graphic Design"
+}

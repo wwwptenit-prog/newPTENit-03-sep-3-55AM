@@ -1,0 +1,51 @@
+{
+  "id": "course-python-django",
+  "targetModules": 6,
+  "price": 8500,
+  "title": "Python & Django Full Stack Web Engineering",
+  "isFree": false,
+  "liveClassLink": "https://meet.google.com/python-django-live",
+  "createdAt": "2026-02-16",
+  "liveClassTime": "21:30",
+  "lessonsCount": 24,
+  "assignedInstructorId": "teacher-1",
+  "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+  "liveClassSerialNo": "০৫",
+  "duration": "8 Weeks (30 Hours)",
+  "targetLessons": 24,
+  "targetAssignments": 24,
+  "published": true,
+  "teacherCommissionRate": 45,
+  "category": "Web Development",
+  "enrolledCount": 120,
+  "discountPrice": 5900,
+  "thumbnail": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+  "_lastSynced": "2026-09-21T13:23:32.009Z",
+  "tags": [
+    "#Python",
+    "#Django",
+    "#Backend"
+  ],
+  "whatYouWillLearn": [
+    "Python 3 Core & OOP",
+    "Django Framework & ORM",
+    "RESTful APIs & JWT Authentication"
+  ],
+  "liveClassDate": "2026-09-06",
+  "liveClassLessonNo": "০২",
+  "reviewsCount": 29,
+  "liveClassStatus": "scheduled",
+  "modules": [],
+  "description": "পাইথন প্রোগ্রামিং দিয়ে রিয়েল-ওয়ার্ল্ড ব্যাকএন্ড অ্যাপ্লিকেশন, Django REST Framework এবং PostgreSQL ইন্টিগ্রেশন।",
+  "offerStatus": "accepted",
+  "rating": 5,
+  "liveClassModuleNo": "০৩",
+  "liveClassTopic": "Django REST Framework দিয়ে API তৈরি ও PostgreSQL কানেকশন",
+  "requirements": [
+    "প্রোগ্রামিংয়ের মৌলিক ধারণা"
+  ],
+  "instructorRole": "Backend Engineer & Data Scientist",
+  "liveSchedule": "০৬ সেপ্টেম্বর ২০২৬, রাত ০৯:৩০ টা",
+  "isPublicOffer": true,
+  "level": "professional"
+}

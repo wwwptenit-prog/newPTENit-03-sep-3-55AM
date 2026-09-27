@@ -1,0 +1,69 @@
+{
+  "id": "gig-premium-mobile",
+  "sellerRating": 5,
+  "sellerId": "teacher-1",
+  "_lastSynced": "2026-09-21T13:23:34.270Z",
+  "isAgencyStaff": true,
+  "tags": [
+    "Flutter",
+    "React Native",
+    "Mobile App",
+    "প্রিমিয়াম"
+  ],
+  "salesCount": 51,
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "sellerTitle": "Senior Mobile & Full Stack Architect",
+  "status": "active",
+  "galleryImages": [
+    "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1526498460520-4c246339dccb?auto=format&fit=crop&w=800&q=80"
+  ],
+  "sellerLevel": "Level 2 Seller",
+  "createdAt": "2026-03-02",
+  "description": "প্রিমিয়াম মোবাইল সলিউশন: এক কোডবেসেই অ্যান্ড্রয়েড এবং আইওএস অ্যাপ। পুশ নোটিফিকেশন, লোকাল পেমেন্ট গেটওয়ে (bKash/Nagad), রিয়েলটাইম ফায়ারবেস ব্যাকএন্ড এবং প্লে-স্টোর পাবলিশিং গাইডেন্স অন্তর্ভুক্ত।",
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "packages": {
+    "standard": {
+      "deliveryDays": 12,
+      "revisions": 5,
+      "name": "কমপ্লিট ডায়নামিক মোবাইল অ্যাপ",
+      "price": 35000,
+      "features": [
+        "৮টি স্ক্রিন + API কানেকশন",
+        "ইউজার লগইন ও পুশ নোটিফিকেশন",
+        "Android + iOS বিল্ড",
+        "প্লে-স্টোর রেডি"
+      ]
+    },
+    "basic": {
+      "deliveryDays": 5,
+      "revisions": 3,
+      "features": [
+        "৩টি মেইন স্ক্রিন",
+        "মডার্ন UI কম্পোনেন্ট",
+        "Android APK বিল্ড",
+        "প্রিমিয়াম কোয়ালিটি কোড"
+      ],
+      "name": "হাইব্রিড প্রোটোটাইপ অ্যাপ",
+      "price": 15000
+    },
+    "premium": {
+      "price": 75000,
+      "features": [
+        "কমপ্লিট অনলাইন পেমেন্ট ইন্টিগ্রেশন",
+        "রিয়েলটাইম ট্র্যাকিং & চ্যাট",
+        "অ্যাডমিন ড্যাশবোর্ড প্যানেল",
+        "৬ মাস ফ্রি মেইনটেন্যান্স"
+      ],
+      "deliveryDays": 20,
+      "revisions": "Unlimited",
+      "name": "ফুল ই-কমার্স / অন-ডিমান্ড অ্যাপ"
+    }
+  },
+  "reviewsCount": 33,
+  "category": "Mobile App",
+  "thumbnail": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80",
+  "title": "প্রিমিয়াম ফ্লাটার ও রিয়্যাক্ট নেটিভ দিয়ে গুগল প্লে-স্টোর ও অ্যাপল অ্যাপ তৈরি করব",
+  "rating": 5,
+  "offerBadge": "প্রিমিয়াম"
+}

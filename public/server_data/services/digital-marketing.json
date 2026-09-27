@@ -1,0 +1,58 @@
+{
+  "id": "digital-marketing",
+  "priceText": "৳8,000 / মাস",
+  "iconName": "TrendingUp",
+  "reviewsCount": 37,
+  "rating": 4.9,
+  "fullDescription": "আপনার ব্যবসার সেলস ও ব্র্যান্ড ভ্যালু বহুগুণ বাড়াতে টার্গেটেড ডিজিটাল মার্কেটিং সেবা। ফেসবুক এডস ক্যাম্পেইন, গুগল পিসি এডস, ডিসপ্লে এডস এবং লিড জেনারেশনের মাধ্যমে সর্বোচ্চ ROI নিশ্চিত করা হয়।",
+  "shortDescription": "Facebook, Google, YouTube and other social media marketing solutions.",
+  "thumbnail": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+  "category": "Marketing",
+  "_lastSynced": "2026-09-21T13:23:33.288Z",
+  "packages": {
+    "premium": {
+      "features": [
+        "Full Funnel Strategy",
+        "Lead Gen & Remarketing",
+        "Dedicated Account Manager"
+      ],
+      "deliveryDays": 30,
+      "revisions": "Unlimited",
+      "price": 40000,
+      "name": "Enterprise Brand Growth"
+    },
+    "basic": {
+      "price": 8000,
+      "name": "Starter Ad Campaign",
+      "features": [
+        "Audience Targeting",
+        "Pixel & Event Setup",
+        "Ad Copywriting"
+      ],
+      "revisions": 2,
+      "deliveryDays": 7
+    },
+    "standard": {
+      "features": [
+        "Facebook + Google Ads",
+        "Custom Visual Creatives",
+        "Weekly Performance Report"
+      ],
+      "price": 18000,
+      "name": "Growth Sales Funnel",
+      "deliveryDays": 15,
+      "revisions": 4
+    }
+  },
+  "features": [
+    "Targeted Audience Research",
+    "Custom Ad Creatives & Copywriting",
+    "Conversion Tracking & Pixel Setup",
+    "Weekly Performance Reporting",
+    "Sales Funnel Optimization"
+  ],
+  "published": true,
+  "order": 2,
+  "badge": "আগে কাজ শুরু",
+  "title": "Digital Marketing"
+}

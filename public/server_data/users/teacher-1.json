@@ -1,0 +1,14 @@
+{
+  "id": "teacher-1",
+  "title": "Senior Full Stack Architect & Lead Instructor",
+  "_lastSynced": "2026-09-21T13:23:36.684Z",
+  "mobile": "01711112233",
+  "createdAt": "2026-01-05",
+  "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "role": "instructor",
+  "email": "alamin@ptenit.com",
+  "sellerStatus": "approved",
+  "isSeller": true,
+  "name": "প্রকৌশলী আল-আমিন",
+  "bio": "১০ বছরের অভিজ্ঞতা সম্পন্ন ফুল-স্ট্যাক ও ক্লাউড ইঞ্জিনিয়ার।"
+}

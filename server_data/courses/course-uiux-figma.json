@@ -1,0 +1,71 @@
+{
+  "id": "course-uiux-figma",
+  "offerStatus": "accepted",
+  "description": "ফিগমা ব্যবহার করে আধুনিক মোবাইল অ্যাপ এবং ওয়েব অ্যাপ্লিকেশন UI/UX ডিজাইন, ওয়্যারফ্রেম, ইন্টারেক্টিভ প্রোটোটাইপিং ও ডিজাইন সিস্টেম তৈরি।",
+  "rating": 4.9,
+  "lessonsCount": 16,
+  "tags": [
+    "#UIUX",
+    "#Figma",
+    "#ProductDesign"
+  ],
+  "targetLessons": 16,
+  "liveClassTopic": "Figma Auto-layout, Components ও Design System",
+  "liveClassLessonNo": "০১",
+  "_lastSynced": "2026-09-21T13:23:32.009Z",
+  "instructorRole": "Lead Product Designer & UX Researcher",
+  "duration": "6 Weeks (20 Hours)",
+  "liveClassModuleNo": "০২",
+  "thumbnail": "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80",
+  "targetModules": 4,
+  "level": "advanced",
+  "liveClassLink": "https://meet.google.com/figma-uiux-live",
+  "liveClassTime": "20:00",
+  "modules": [
+    {
+      "lessons": [
+        {
+          "courseId": "course-uiux-figma",
+          "isFreePreview": true,
+          "duration": "২৫ মিনিট",
+          "order": 1,
+          "moduleId": "m-figma-1",
+          "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          "content": "ফাইল সেটআপ ও বেসিক শেপ আর্কিটেকচার।",
+          "id": "l-figma-1",
+          "title": "লেসন ০১: ফিগমা ইন্টারফেস ও ভেক্টর টুলস পরিচিতি"
+        }
+      ],
+      "order": 1,
+      "courseId": "course-uiux-figma",
+      "title": "ফিগমা ফান্ডামেন্টালস ও অটো লেআউট",
+      "id": "m-figma-1"
+    }
+  ],
+  "reviewsCount": 42,
+  "whatYouWillLearn": [
+    "Figma Auto-layout & Components",
+    "Design System & Variables",
+    "Interactive Micro-interactions & Prototyping"
+  ],
+  "published": true,
+  "isPublicOffer": true,
+  "isFree": false,
+  "teacherCommissionRate": 40,
+  "price": 5500,
+  "title": "UI/UX Design & Figma Prototyping Masterclass 2026",
+  "discountPrice": 3800,
+  "liveClassStatus": "scheduled",
+  "liveClassSerialNo": "০৩",
+  "enrolledCount": 185,
+  "liveSchedule": "০৬ সেপ্টেম্বর ২০২৬, রাত ০৮:০০ টা",
+  "targetAssignments": 16,
+  "requirements": [
+    "কম্পিউটার ও ইন্টারনেট কানেকশন"
+  ],
+  "liveClassDate": "2026-09-06",
+  "category": "Graphic Design",
+  "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+  "createdAt": "2026-02-15",
+  "assignedInstructorId": "teacher-1"
+}

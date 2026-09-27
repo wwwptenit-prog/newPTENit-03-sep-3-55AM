@@ -1,0 +1,1145 @@
+[
+  {
+    "id": "course-1790075992589",
+    "duration": "১৮টি লাইভ ক্লাস • ৩টি মডিউল",
+    "modules": [
+      {
+        "lessons": [
+          {
+            "isFree": true,
+            "duration": "৪৫ মিনিট",
+            "id": "l-1-1790075992589",
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "title": "ক্লাস ১: পরিচিতি ও কোর্স ওভারভিউ"
+          }
+        ],
+        "title": "মডিউল ১: ওরিয়েন্টেশন ও মূল বিষয়বস্তু",
+        "id": "m-1-1790075992589"
+      }
+    ],
+    "teacherCommissionRate": 35,
+    "_lastUpdated": "2026-09-22T11:19:52.599Z",
+    "isPublicOffer": false,
+    "level": "professional",
+    "thumbnail": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+    "enrolledCount": 0,
+    "instructor": "Mds Kazi Sohag (Admin)",
+    "lessonsCount": 16,
+    "whatYouWillLearn": [
+      "১৮টি লাইভ প্র্যাকটিক্যাল ক্লাস",
+      "মেটা ও গুগল এডস ফানেল প্রজেক্ট",
+      "স্টুডেন্ট প্রফেশনাল ফিডব্যাক"
+    ],
+    "assignedInstructorId": "admin-1",
+    "isFree": false,
+    "description": "ডিজিটাল মার্কেটিং ও মেটা এডস ক্যাম্পেইনের ওপর লাইভ সেশন পরিচালনা করতে হবে। স্টুডেন্টদের কাস্টম এডস সাপোর্ট প্রদান আবশ্যক।",
+    "offerStatus": "accepted",
+    "createdAt": "2026-09-22",
+    "requirements": [
+      "কম্পিউটার বা ইন্টারনেট সংযোজন"
+    ],
+    "targetLessons": 16,
+    "targetModules": 4,
+    "price": 8500,
+    "title": "প্রফেশনাল ডিজিটাল মার্কেটিং & মেটা এডস ফানেল (লাইভ ব্যাচ ২০২৬)",
+    "category": "Digital Marketing",
+    "published": true,
+    "rating": 5,
+    "tags": [
+      "#PTENit",
+      "#LiveCourse"
+    ]
+  },
+  {
+    "id": "course-1790075995106",
+    "modules": [
+      {
+        "title": "মডিউল ১: ওরিয়েন্টেশন ও মূল বিষয়বস্তু",
+        "lessons": [
+          {
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "title": "ক্লাস ১: পরিচিতি ও কোর্স ওভারভিউ",
+            "isFree": true,
+            "id": "l-1-1790075995106",
+            "duration": "৪৫ মিনিট"
+          }
+        ],
+        "id": "m-1-1790075995106"
+      }
+    ],
+    "rating": 5,
+    "offerStatus": "accepted",
+    "targetModules": 4,
+    "description": "Figma প্রফেশনাল ডিজাইন সিস্টেম, অটো-লেআউট এবং মোবাইল/ওয়েব অ্যাপ ডিজাইন শেখাতে হবে।",
+    "lessonsCount": 16,
+    "teacherCommissionRate": 35,
+    "tags": [
+      "#PTENit",
+      "#LiveCourse"
+    ],
+    "assignedInstructorId": "admin-1",
+    "category": "UI/UX Design",
+    "whatYouWillLearn": [
+      "২০টি লাইভ ডিজাইন সেশন",
+      "২টি রিয়েল প্রোডাক্ট কেস স্টাডি",
+      "পোর্টফোলিও বিল্ডিং রিভিউ"
+    ],
+    "thumbnail": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+    "title": "UI/UX ও প্রোডাক্ট ডিজাইন মাস্টারক্লাস (Figma, Design System & Portfolio)",
+    "price": 9500,
+    "_lastUpdated": "2026-09-22T11:19:55.107Z",
+    "instructor": "Mds Kazi Sohag (Admin)",
+    "targetLessons": 16,
+    "enrolledCount": 0,
+    "published": true,
+    "level": "professional",
+    "isFree": false,
+    "duration": "২০টি লাইভ ক্লাস • ৪টি মডিউল",
+    "requirements": [
+      "কম্পিউটার বা ইন্টারনেট সংযোজন"
+    ],
+    "isPublicOffer": false,
+    "createdAt": "2026-09-22"
+  },
+  {
+    "id": "course-1790075998809",
+    "modules": [
+      {
+        "lessons": [
+          {
+            "title": "ক্লাস ১: পরিচিতি ও কোর্স ওভারভিউ",
+            "duration": "৪৫ মিনিট",
+            "isFree": true,
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "id": "l-1-1790075998809"
+          }
+        ],
+        "title": "মডিউল ১: ওরিয়েন্টেশন ও মূল বিষয়বস্তু",
+        "id": "m-1-1790075998809"
+      }
+    ],
+    "rating": 5,
+    "offerStatus": "accepted",
+    "targetModules": 4,
+    "description": "PTENit একাডেমি কর্তৃক নির্ধারিত প্রফেশনাল লাইভ ব্যাচ। ইন্সট্রাক্টর হিসেবে রিসিভ করে সরাসরি ক্লাস ও অ্যাসাইনমেন্ট পরিচালনা করতে পারবেন। ৩৫% কমিশন সম্মানিয়াম ইনস্ট্যান্ট জমা হবে।",
+    "lessonsCount": 16,
+    "teacherCommissionRate": 35,
+    "tags": [
+      "#PTENit",
+      "#LiveCourse"
+    ],
+    "assignedInstructorId": "admin-1",
+    "category": "Full-Stack Development",
+    "whatYouWillLearn": [
+      "২৪টি প্রফেশনাল লাইভ ক্লাস লেকচার",
+      "৪টি রিয়েল-টাইম অ্যাসাইনমেন্ট ও কোড রিভিউ",
+      "প্রজেক্ট ফিডব্যাক ও সার্টিফিকেট প্রদান"
+    ],
+    "thumbnail": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=200&q=80",
+    "title": "প্রফেশনাল ফুল-স্ট্যাক ওয়েব ডেভেলপমেন্ট (Next.js, Node.js & AI Masterclass)",
+    "price": 12500,
+    "_lastUpdated": "2026-09-22T11:19:58.809Z",
+    "instructor": "Mds Kazi Sohag (Admin)",
+    "targetLessons": 16,
+    "enrolledCount": 0,
+    "published": true,
+    "level": "professional",
+    "isFree": false,
+    "duration": "২৪টি লাইভ ক্লাস • ৪টি মডিউল",
+    "requirements": [
+      "কম্পিউটার বা ইন্টারনেট সংযোজন"
+    ],
+    "isPublicOffer": false,
+    "createdAt": "2026-09-22"
+  },
+  {
+    "id": "course-1790290573472",
+    "thumbnail": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+    "rating": 5,
+    "enrolledCount": 0,
+    "requirements": [
+      "কম্পিউটার বা ইন্টারনেট সংযোজন"
+    ],
+    "price": 8500,
+    "modules": [
+      {
+        "id": "m-1-1790290573472",
+        "lessons": [
+          {
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "title": "ক্লাস ১: পরিচিতি ও কোর্স ওভারভিউ",
+            "isFree": true,
+            "id": "l-1-1790290573472",
+            "duration": "৪৫ মিনিট"
+          }
+        ],
+        "title": "মডিউল ১: ওরিয়েন্টেশন ও মূল বিষয়বস্তু"
+      }
+    ],
+    "category": "Digital Marketing",
+    "isPublicOffer": false,
+    "title": "প্রফেশনাল ডিজিটাল মার্কেটিং & মেটা এডস ফানেল (লাইভ ব্যাচ ২০২৬)",
+    "description": "ডিজিটাল মার্কেটিং ও মেটা এডস ক্যাম্পেইনের ওপর লাইভ সেশন পরিচালনা করতে হবে। স্টুডেন্টদের কাস্টম এডস সাপোর্ট প্রদান আবশ্যক।",
+    "level": "professional",
+    "assignedInstructorId": "admin-1",
+    "offerStatus": "accepted",
+    "targetModules": 4,
+    "tags": [
+      "#PTENit",
+      "#LiveCourse"
+    ],
+    "_lastUpdated": "2026-09-24T22:56:13.473Z",
+    "instructor": "Mds Kazi Sohag (Admin)",
+    "isFree": false,
+    "createdAt": "2026-09-24",
+    "duration": "১৮টি লাইভ ক্লাস • ৩টি মডিউল",
+    "whatYouWillLearn": [
+      "১৮টি লাইভ প্র্যাকটিক্যাল ক্লাস",
+      "মেটা ও গুগল এডস ফানেল প্রজেক্ট",
+      "স্টুডেন্ট প্রফেশনাল ফিডব্যাক"
+    ],
+    "teacherCommissionRate": 35,
+    "lessonsCount": 16,
+    "published": true,
+    "targetLessons": 16
+  },
+  {
+    "id": "course-1790290575294",
+    "thumbnail": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+    "title": "UI/UX ও প্রোডাক্ট ডিজাইন মাস্টারক্লাস (Figma, Design System & Portfolio)",
+    "enrolledCount": 0,
+    "price": 9500,
+    "modules": [
+      {
+        "id": "m-1-1790290575294",
+        "lessons": [
+          {
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "isFree": true,
+            "id": "l-1-1790290575294",
+            "title": "ক্লাস ১: পরিচিতি ও কোর্স ওভারভিউ",
+            "duration": "৪৫ মিনিট"
+          }
+        ],
+        "title": "মডিউল ১: ওরিয়েন্টেশন ও মূল বিষয়বস্তু"
+      }
+    ],
+    "requirements": [
+      "কম্পিউটার বা ইন্টারনেট সংযোজন"
+    ],
+    "rating": 5,
+    "duration": "২০টি লাইভ ক্লাস • ৪টি মডিউল",
+    "whatYouWillLearn": [
+      "২০টি লাইভ ডিজাইন সেশন",
+      "২টি রিয়েল প্রোডাক্ট কেস স্টাডি",
+      "পোর্টফোলিও বিল্ডিং রিভিউ"
+    ],
+    "isPublicOffer": false,
+    "targetModules": 4,
+    "teacherCommissionRate": 35,
+    "assignedInstructorId": "admin-1",
+    "tags": [
+      "#PTENit",
+      "#LiveCourse"
+    ],
+    "offerStatus": "accepted",
+    "description": "Figma প্রফেশনাল ডিজাইন সিস্টেম, অটো-লেআউট এবং মোবাইল/ওয়েব অ্যাপ ডিজাইন শেখাতে হবে।",
+    "category": "UI/UX Design",
+    "_lastUpdated": "2026-09-24T22:56:15.297Z",
+    "createdAt": "2026-09-24",
+    "lessonsCount": 16,
+    "instructor": "Mds Kazi Sohag (Admin)",
+    "published": true,
+    "level": "professional",
+    "isFree": false,
+    "targetLessons": 16
+  },
+  {
+    "id": "course-1790290578637",
+    "thumbnail": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=200&q=80",
+    "title": "প্রফেশনাল ফুল-স্ট্যাক ওয়েব ডেভেলপমেন্ট (Next.js, Node.js & AI Masterclass)",
+    "enrolledCount": 0,
+    "price": 12500,
+    "modules": [
+      {
+        "id": "m-1-1790290578637",
+        "title": "মডিউল ১: ওরিয়েন্টেশন ও মূল বিষয়বস্তু",
+        "lessons": [
+          {
+            "title": "ক্লাস ১: পরিচিতি ও কোর্স ওভারভিউ",
+            "duration": "৪৫ মিনিট",
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "isFree": true,
+            "id": "l-1-1790290578637"
+          }
+        ]
+      }
+    ],
+    "requirements": [
+      "কম্পিউটার বা ইন্টারনেট সংযোজন"
+    ],
+    "rating": 5,
+    "duration": "২৪টি লাইভ ক্লাস • ৪টি মডিউল",
+    "whatYouWillLearn": [
+      "২৪টি প্রফেশনাল লাইভ ক্লাস লেকচার",
+      "৪টি রিয়েল-টাইম অ্যাসাইনমেন্ট ও কোড রিভিউ",
+      "প্রজেক্ট ফিডব্যাক ও সার্টিফিকেট প্রদান"
+    ],
+    "isPublicOffer": false,
+    "targetModules": 4,
+    "teacherCommissionRate": 35,
+    "assignedInstructorId": "admin-1",
+    "tags": [
+      "#PTENit",
+      "#LiveCourse"
+    ],
+    "offerStatus": "accepted",
+    "category": "Full-Stack Development",
+    "description": "PTENit একাডেমি কর্তৃক নির্ধারিত প্রফেশনাল লাইভ ব্যাচ। ইন্সট্রাক্টর হিসেবে রিসিভ করে সরাসরি ক্লাস ও অ্যাসাইনমেন্ট পরিচালনা করতে পারবেন। ৩৫% কমিশন সম্মানিয়াম ইনস্ট্যান্ট জমা হবে।",
+    "_lastUpdated": "2026-09-24T22:56:18.638Z",
+    "createdAt": "2026-09-24",
+    "lessonsCount": 16,
+    "instructor": "Mds Kazi Sohag (Admin)",
+    "published": true,
+    "level": "professional",
+    "targetLessons": 16,
+    "isFree": false
+  },
+  {
+    "id": "course-canva",
+    "modules": [
+      {
+        "lessons": [
+          {
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "order": 1,
+            "moduleId": "m1",
+            "pdfResourceUrl": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+            "courseId": "course-canva",
+            "isFreePreview": true,
+            "duration": "২৫ মিনিট",
+            "content": "ক্যানভা ইন্টারফেস পরিচিতি এবং প্রফেশনাল ক্যানভা একাউন্ট কনফিগারেশন।",
+            "title": "লেসন ০১: ক্যানভা ইন্টারফেস পরিচিতি ও অ্যাকাউন্ট সেটআপ",
+            "id": "l1"
+          },
+          {
+            "duration": "৩০ মিনিট",
+            "content": "ডিজাইনে সঠিক ফন্ট ও কালার নির্বাচন করার নিয়মাবলী।",
+            "isFreePreview": false,
+            "courseId": "course-canva",
+            "title": "লেসন ০২: টাইপোগ্রাফি ও কালার সায়েন্স",
+            "moduleId": "m1",
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "id": "l2",
+            "order": 2
+          }
+        ],
+        "title": "ক্যানভা ফান্ডামেন্টালস ও প্রো টুলস",
+        "courseId": "course-canva",
+        "id": "m1",
+        "order": 1
+      },
+      {
+        "lessons": [
+          {
+            "id": "l3",
+            "title": "লেসন ০৩: ভাইরাল ইউটিউব থাম্বনেইল ডিজাইন",
+            "content": "উচ্চ সিটিআর (CTR) ইউটিউব থাম্বনেইল তৈরির গোপন টেকনিক।",
+            "isFreePreview": false,
+            "courseId": "course-canva",
+            "duration": "৪০ মিনিট",
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "moduleId": "m2",
+            "order": 3
+          }
+        ],
+        "id": "m2",
+        "order": 2,
+        "courseId": "course-canva",
+        "title": "প্র্যাক্টিক্যাল প্রজেক্টস ও ফ্রিল্যান্সিং গাইড"
+      }
+    ],
+    "assignedInstructorId": "teacher-1",
+    "published": true,
+    "liveClassStatus": "live_now",
+    "lessonsCount": 16,
+    "createdAt": "2026-01-10",
+    "_lastUpdated": "2026-09-27T16:41:31.034Z",
+    "price": 1200,
+    "instructor": "তানভীর আহমেদ",
+    "title": "Canva Design & Freelancing Masterclass",
+    "category": "Graphic Design",
+    "discountPrice": 850,
+    "description": "ক্যানভা (Canva Pro) দিয়ে কোনো কোডিং বা কঠিন সফটওয়্যার ছাড়া প্রফেশনাল সোশ্যাল মিডিয়া গ্রাফিক্স, ইউটিউব থাম্বনেইল, ব্যানার, লোগো এবং প্রেসেন্টেশন তৈরি শিখুন। মার্কেটপ্লেসে ইনকাম শুরু করার সম্পূর্ণ ফ্রিল্যান্সিং গাইডলাইন।",
+    "isFree": false,
+    "liveClassSerialNo": "০৫",
+    "offerStatus": "accepted",
+    "enrolledCount": 343,
+    "instructorRole": "Senior Graphic Designer & Freelancer",
+    "whatYouWillLearn": [
+      "Canva Pro-এর সকল প্রিমিয়াম ফিচারের ব্যবহার",
+      "সোশ্যাল মিডিয়া পোস্ট ও কাভার ব্যানার ডিজাইন",
+      "হাই-কনভার্টিং ইউটিউব থাম্বনেইল তৈরি",
+      "ব্র্যান্ড লোগো, ভিজিটিং কার্ড ও লেটারহেড ডিজাইন",
+      "Fiverr ও Upwork-এ ক্যানভা সার্ভিস বিক্রি করার ট্রিকস"
+    ],
+    "liveClassTopic": "ক্যানভা প্রো দিয়ে ইনস্টাগ্রাম ও ফেসবুক রিলস/পোস্ট ডিজাইন",
+    "acceptedAt": "2026-01-20",
+    "_lastSynced": "2026-09-21T13:23:32.008Z",
+    "liveClassDate": "2026-09-01",
+    "duration": "4 Weeks (12 Hours)",
+    "targetLessons": 16,
+    "liveClassLessonNo": "০৩",
+    "reviewsCount": 88,
+    "liveClassLink": "https://meet.google.com/canva-live-pro",
+    "requirements": [
+      "একটি স্মার্টফোন বা ল্যাপটপ/কম্পিউটার",
+      "ইন্টারনেট কানেকশন",
+      "ডিজাইনের প্রতি আগ্রহ"
+    ],
+    "tags": [
+      "#CanvaDesign",
+      "#GraphicDesign",
+      "#Freelancing",
+      "#Fiverr"
+    ],
+    "liveClassModuleNo": "০২",
+    "targetModules": 4,
+    "teacherCommissionRate": 35,
+    "liveClassTime": "21:00",
+    "liveSchedule": "আজ রাত ৯:০০ টা (🔴 এখন লাইভ চলছে)",
+    "rating": 4.9,
+    "thumbnail": "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "course-cybersecurity",
+    "duration": "7 Weeks (25 Hours)",
+    "liveClassDate": "2026-09-08",
+    "createdAt": "2026-02-25",
+    "whatYouWillLearn": [
+      "Network Scanning & Nmap",
+      "OWASP Web Vulnerabilities Testing",
+      "Security Auditing & Defensive Hardening"
+    ],
+    "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+    "level": "professional",
+    "enrolledCount": 88,
+    "discountPrice": 6999,
+    "liveClassLessonNo": "০৩",
+    "liveClassStatus": "scheduled",
+    "isPublicOffer": true,
+    "assignedInstructorId": "teacher-1",
+    "rating": 5,
+    "published": true,
+    "liveClassModuleNo": "০২",
+    "lessonsCount": 18,
+    "liveClassTime": "21:30",
+    "requirements": [
+      "বেসিক নেটওয়ার্কিং ও লিনাক্স ধারণা"
+    ],
+    "targetModules": 5,
+    "liveSchedule": "০৮ সেপ্টেম্বর ২০২৬, রাত ০৯:৩০ টা",
+    "liveClassTopic": "OWASP Top 10 Web Vulnerability Assessment & Defense",
+    "instructorRole": "Certified Ethical Hacker & InfoSec Specialist",
+    "thumbnail": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+    "liveClassLink": "https://meet.google.com/cybersecurity-live",
+    "modules": [],
+    "title": "Cybersecurity Fundamentals & Ethical Hacking Defense",
+    "teacherCommissionRate": 50,
+    "targetLessons": 18,
+    "_lastSynced": "2026-09-21T13:23:32.010Z",
+    "price": 9500,
+    "liveClassSerialNo": "০৫",
+    "category": "Web Development",
+    "reviewsCount": 19,
+    "description": "নেটওয়ার্ক সিকিউরিটি, ওয়েব ভালনারেবিলিটি অ্যাসেসমেন্ট (OWASP Top 10), পেনিট্রেশন টেস্টিং এবং সাইবার ডিফেন্স।",
+    "offerStatus": "accepted",
+    "isFree": false,
+    "tags": [
+      "#Cybersecurity",
+      "#EthicalHacking",
+      "#InfoSec"
+    ],
+    "targetAssignments": 18
+  },
+  {
+    "id": "course-fb-marketing",
+    "title": "Facebook Marketing & Paid Ads Mastery",
+    "createdAt": "2026-02-01",
+    "price": 0,
+    "isFree": true,
+    "whatYouWillLearn": [
+      "Facebook Business Page Professional Setup",
+      "Meta Business Suite & Ads Manager Setup",
+      "Targeted Audience Custom & Lookalike Audiences",
+      "Budgeting & Campaign Bidding Strategies",
+      "Ad Creative Writing & High Conversion Tips"
+    ],
+    "liveClassModuleNo": "০২",
+    "duration": "3 Weeks (10 Hours)",
+    "published": true,
+    "liveClassLessonNo": "০২",
+    "liveClassTime": "20:00",
+    "liveClassLink": "https://meet.google.com/fb-marketing-live",
+    "instructorRole": "FB Ads Strategist",
+    "liveClassTopic": "টার্গেটেড অডিয়েন্স রিসার্চ ও ফেসবুক পিক্সেল সিটআপ",
+    "lessonsCount": 14,
+    "tags": [
+      "#Facebook",
+      "#DigitalMarketing",
+      "#Ads",
+      "#Freelancing",
+      "#FreeCourse"
+    ],
+    "requirements": [
+      "ইন্টারনেট কানেকশন সহ মোবাইল বা কম্পিউটার",
+      "একটি ফেসবুক অ্যাকাউন্ট"
+    ],
+    "liveSchedule": "০৩ সেপ্টেম্বর ২০২৬, রাত ০৮:০০ টা",
+    "thumbnail": "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80",
+    "liveClassSerialNo": "০৪",
+    "modules": [
+      {
+        "courseId": "course-fb-marketing",
+        "id": "m-fb-1",
+        "order": 1,
+        "lessons": [
+          {
+            "content": "পেজের ইউজারনেম, কভার আর্ট ও সিটিএ বাটন সেটআপ।",
+            "order": 1,
+            "isFreePreview": true,
+            "duration": "২০ মিনিট",
+            "title": "লেসন ০১: পেজ অপ্টিমাইজেশন ও ব্র্যান্ডিং রুলস",
+            "courseId": "course-fb-marketing",
+            "id": "l-fb-1",
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "moduleId": "m-fb-1"
+          }
+        ],
+        "title": "ফেসবুক পেজ সেটআপ ও মেটা বিজনেস সুইট"
+      }
+    ],
+    "rating": 4.9,
+    "instructor": "রেজওয়ান করিম",
+    "liveClassDate": "2026-09-03",
+    "_lastSynced": "2026-09-21T13:23:32.009Z",
+    "liveClassStatus": "scheduled",
+    "category": "Digital Marketing",
+    "reviewsCount": 310,
+    "discountPrice": 0,
+    "enrolledCount": 1250,
+    "description": "সম্পূর্ণ বিনামূল্যে ফেসবুক পেজ সেটআপ, অর্গানিক গ্রোথ, বিজনেস ম্যানেজার, মেটা পিক্সেল এবং প্রফেশনাল এডস রান করা শিখুন। সকল ছোট-বড় ব্যবসায়ীদের জন্য অত্যন্ত দরকারি কোর্স।"
+  },
+  {
+    "id": "course-flutter-app",
+    "isFree": false,
+    "liveSchedule": "০৭ সেপ্টেম্বর ২০২৬, রাত ০৯:০০ টা",
+    "liveClassLessonNo": "০১",
+    "isPublicOffer": true,
+    "requirements": [
+      "বেসিক প্রোগ্রামিং নলেজ"
+    ],
+    "liveClassStatus": "scheduled",
+    "teacherCommissionRate": 45,
+    "level": "advanced",
+    "createdAt": "2026-02-22",
+    "discountPrice": 6500,
+    "enrolledCount": 95,
+    "reviewsCount": 21,
+    "liveClassTopic": "Flutter State Management ও Firebase Cloud Firestore সংযোগ",
+    "assignedInstructorId": "teacher-1",
+    "duration": "8 Weeks (32 Hours)",
+    "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+    "published": true,
+    "liveClassDate": "2026-09-07",
+    "instructorRole": "Senior Mobile Application Engineer",
+    "liveClassModuleNo": "০৩",
+    "whatYouWillLearn": [
+      "Dart Fundamentals",
+      "Flutter Widgets & State Management",
+      "Firebase Backend & App Store Deploy"
+    ],
+    "thumbnail": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80",
+    "offerStatus": "accepted",
+    "description": "একটি কোডবেস দিয়ে Android ও iOS উভয় প্ল্যাটফর্মের জন্য আকর্ষণীয় নেটিভ পারফর্মেন্সের মোবাইল অ্যাপ তৈরি শিখুন।",
+    "targetLessons": 20,
+    "category": "Web Development",
+    "_lastSynced": "2026-09-21T13:23:32.010Z",
+    "rating": 4.9,
+    "tags": [
+      "#Flutter",
+      "#Dart",
+      "#MobileApp"
+    ],
+    "price": 9000,
+    "targetModules": 6,
+    "modules": [],
+    "liveClassLink": "https://meet.google.com/flutter-app-live",
+    "title": "Flutter & Dart Cross-Platform Mobile App Development",
+    "lessonsCount": 20,
+    "targetAssignments": 20,
+    "liveClassTime": "21:00",
+    "liveClassSerialNo": "০৪"
+  },
+  {
+    "id": "course-pte-basic-2026",
+    "isPublicOffer": true,
+    "requirements": [
+      "বেসিক ইংরেজি জানা আবশ্যক"
+    ],
+    "liveClassModuleNo": "০১",
+    "published": true,
+    "assignedInstructorId": "teacher-1",
+    "isFree": false,
+    "liveSchedule": "০৩ সেপ্টেম্বর ২০২৬, সন্ধ্যা ০৭:০০ টা",
+    "level": "basic",
+    "liveClassStatus": "scheduled",
+    "liveClassDate": "2026-09-03",
+    "modules": [],
+    "_lastSynced": "2026-09-21T13:23:32.009Z",
+    "createdAt": "2026-02-10",
+    "discountPrice": 2200,
+    "whatYouWillLearn": [
+      "PTE 4 Sections Basic Structure & Scoring Rules",
+      "Pronunciation & Fluency Foundation",
+      "Basic Essay Template & Summarize Text Rules"
+    ],
+    "enrolledCount": 0,
+    "liveClassLessonNo": "০১",
+    "category": "PTE Academic",
+    "description": "মেইন এডমিন কর্তৃক অফারকৃত বেসিক কোর্স। PTE Speaking, Writing, Reading & Listening সেকশনের বেসিক ফরম্যাট, টেমপ্লেট ও ফাউন্ডেশন প্র্যাকটিস।",
+    "offerStatus": "offered",
+    "reviewsCount": 0,
+    "targetLessons": 12,
+    "teacherCommissionRate": 35,
+    "liveClassSerialNo": "০১",
+    "duration": "4 Weeks (15 Hours)",
+    "rating": 5,
+    "tags": [
+      "#PTEBasic",
+      "#StudyAbroad"
+    ],
+    "price": 3500,
+    "liveClassTime": "19:00",
+    "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+    "title": "PTE Academic - Basic Level (Foundation & Fundamentals 2026)",
+    "targetModules": 4,
+    "thumbnail": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80",
+    "liveClassTopic": "PTE Speaking Read Aloud & Repeat Sentence Masterclass",
+    "liveClassLink": "https://meet.google.com/pte-basic-live",
+    "instructorRole": "PTE Certified Trainer",
+    "lessonsCount": 12
+  },
+  {
+    "id": "course-pte-masterclass-2026",
+    "discountPrice": 4200,
+    "enrolledCount": 0,
+    "instructorRole": "PTE Certified Trainer",
+    "rating": 5,
+    "requirements": [
+      "হেডফোন সহ ল্যাপটপ বা কম্পিউটার",
+      "ইংরেজি ইন্টারমিডিয়েট লেভেল"
+    ],
+    "createdAt": "2026-02-15",
+    "liveClassTopic": "PTE 79+ Speaking Describe Image & AI Scoring Live Mock",
+    "duration": "5 Weeks (20 Hours)",
+    "teacherCommissionRate": 40,
+    "liveClassDate": "2026-09-03",
+    "liveSchedule": "০৩ সেপ্টেম্বর ২০২৬, রাত ০৯:০০ টা",
+    "tags": [
+      "#PTEAcademic",
+      "#PTEPreparation",
+      "#StudyAbroad"
+    ],
+    "liveClassSerialNo": "০৪",
+    "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+    "assignedInstructorId": "teacher-1",
+    "published": true,
+    "title": "PTE Academic - Advanced Level (79+ Target Masterclass 2026)",
+    "price": 6500,
+    "liveClassStatus": "scheduled",
+    "reviewsCount": 0,
+    "isPublicOffer": true,
+    "modules": [],
+    "targetModules": 5,
+    "whatYouWillLearn": [
+      "PTE Speaking Describe Image & Read Aloud Standard",
+      "PTE Writing Essay Template & Grammar Rules",
+      "PTE Listening Summarize Spoken Text Mastery",
+      "Real AI Evaluation & Live Mock Test Practice"
+    ],
+    "liveClassLink": "https://meet.google.com/pte-79-masterclass",
+    "liveClassTime": "21:00",
+    "thumbnail": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80",
+    "level": "advanced",
+    "liveClassModuleNo": "০২",
+    "isFree": false,
+    "liveClassLessonNo": "০২",
+    "_lastSynced": "2026-09-21T13:23:32.009Z",
+    "lessonsCount": 16,
+    "targetLessons": 16,
+    "offerStatus": "offered",
+    "description": "মেইন এডমিন কর্তৃক অফারকৃত এডভান্সড কোর্স। PTE Speaking, Writing, Reading & Listening সেকশনে 79+ স্কোর তোলার কৌশল ও AI মডেল মক টেস্ট প্র্যাকটিস।",
+    "category": "PTE Academic"
+  },
+  {
+    "id": "course-pte-pro-2026",
+    "liveClassLessonNo": "০১",
+    "duration": "8 Weeks (32 Hours)",
+    "instructorRole": "PTE Master Trainer",
+    "liveClassTopic": "PTE AI Band Breakdown & 1-on-1 Accent Evaluation",
+    "whatYouWillLearn": [
+      "Full Mock Test with AI Band Breakdown",
+      "1-on-1 Trainer Evaluation & Accent Training",
+      "Advanced Fast Scoring Hacks"
+    ],
+    "teacherCommissionRate": 50,
+    "isFree": false,
+    "isPublicOffer": true,
+    "published": true,
+    "level": "professional",
+    "discountPrice": 6800,
+    "lessonsCount": 24,
+    "enrolledCount": 0,
+    "liveClassModuleNo": "০৩",
+    "createdAt": "2026-02-18",
+    "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+    "liveClassDate": "2026-09-04",
+    "rating": 5,
+    "assignedInstructorId": "teacher-1",
+    "liveSchedule": "০৪ সেপ্টেম্বর ২০২৬, রাত ০৮:০০ টা",
+    "title": "PTE Academic - Professional Level (Trainer Certification & AI Scoring)",
+    "requirements": [
+      "PTE Advanced level experience"
+    ],
+    "price": 9500,
+    "targetLessons": 24,
+    "liveClassStatus": "scheduled",
+    "liveClassLink": "https://meet.google.com/pte-pro-mock",
+    "modules": [],
+    "_lastSynced": "2026-09-21T13:23:32.009Z",
+    "thumbnail": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
+    "targetModules": 8,
+    "category": "PTE Academic",
+    "reviewsCount": 0,
+    "liveClassSerialNo": "০৬",
+    "tags": [
+      "#PTEPro",
+      "#PTEMastery"
+    ],
+    "liveClassTime": "20:00",
+    "description": "মেইন এডমিন কর্তৃক অফারকৃত প্রফেশনাল কোর্স। PTE ফুল মক টেস্ট, স্পেশাল এআই স্কোরিং এনালাইসিস এবং ট্রেইনার লেভেল মাস্টারি।",
+    "offerStatus": "offered"
+  },
+  {
+    "id": "course-python-django",
+    "targetModules": 6,
+    "price": 8500,
+    "title": "Python & Django Full Stack Web Engineering",
+    "isFree": false,
+    "liveClassLink": "https://meet.google.com/python-django-live",
+    "createdAt": "2026-02-16",
+    "liveClassTime": "21:30",
+    "lessonsCount": 24,
+    "assignedInstructorId": "teacher-1",
+    "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+    "liveClassSerialNo": "০৫",
+    "duration": "8 Weeks (30 Hours)",
+    "targetLessons": 24,
+    "targetAssignments": 24,
+    "published": true,
+    "teacherCommissionRate": 45,
+    "category": "Web Development",
+    "enrolledCount": 120,
+    "discountPrice": 5900,
+    "thumbnail": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+    "_lastSynced": "2026-09-21T13:23:32.009Z",
+    "tags": [
+      "#Python",
+      "#Django",
+      "#Backend"
+    ],
+    "whatYouWillLearn": [
+      "Python 3 Core & OOP",
+      "Django Framework & ORM",
+      "RESTful APIs & JWT Authentication"
+    ],
+    "liveClassDate": "2026-09-06",
+    "liveClassLessonNo": "০২",
+    "reviewsCount": 29,
+    "liveClassStatus": "scheduled",
+    "modules": [],
+    "description": "পাইথন প্রোগ্রামিং দিয়ে রিয়েল-ওয়ার্ল্ড ব্যাকএন্ড অ্যাপ্লিকেশন, Django REST Framework এবং PostgreSQL ইন্টিগ্রেশন।",
+    "offerStatus": "accepted",
+    "rating": 5,
+    "liveClassModuleNo": "০৩",
+    "liveClassTopic": "Django REST Framework দিয়ে API তৈরি ও PostgreSQL কানেকশন",
+    "requirements": [
+      "প্রোগ্রামিংয়ের মৌলিক ধারণা"
+    ],
+    "instructorRole": "Backend Engineer & Data Scientist",
+    "liveSchedule": "০৬ সেপ্টেম্বর ২০২৬, রাত ০৯:৩০ টা",
+    "isPublicOffer": true,
+    "level": "professional"
+  },
+  {
+    "id": "course-seo-content",
+    "instructorRole": "SEO Specialist & Growth Marketer",
+    "liveClassTopic": "Technical SEO Audit, Schema Markup ও Google Search Console",
+    "liveClassLink": "https://meet.google.com/seo-live-mastery",
+    "targetModules": 4,
+    "tags": [
+      "#SEO",
+      "#ContentMarketing",
+      "#GoogleRanking"
+    ],
+    "liveClassLessonNo": "০২",
+    "published": true,
+    "level": "advanced",
+    "category": "Digital Marketing",
+    "liveClassTime": "20:00",
+    "liveClassModuleNo": "০২",
+    "rating": 4.9,
+    "lessonsCount": 14,
+    "assignedInstructorId": "teacher-1",
+    "createdAt": "2026-02-24",
+    "targetLessons": 14,
+    "enrolledCount": 140,
+    "whatYouWillLearn": [
+      "Keyword Research & Competitor Gap Analysis",
+      "Technical On-Page & Schema Markup",
+      "Backlinks & Topical Authority"
+    ],
+    "discountPrice": 2900,
+    "requirements": [
+      "কম্পিউটার ও ব্রাউজার"
+    ],
+    "liveSchedule": "০৮ সেপ্টেম্বর ২০২৬, রাত ০৮:০০ টা",
+    "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+    "liveClassDate": "2026-09-08",
+    "liveClassSerialNo": "০৩",
+    "modules": [],
+    "thumbnail": "https://images.unsplash.com/photo-1571786256017-aee7a0c009b6?auto=format&fit=crop&w=800&q=80",
+    "price": 4500,
+    "liveClassStatus": "scheduled",
+    "title": "Advanced Technical SEO & AI Content Strategy Masterclass",
+    "_lastSynced": "2026-09-21T13:23:32.010Z",
+    "duration": "5 Weeks (18 Hours)",
+    "teacherCommissionRate": 40,
+    "targetAssignments": 14,
+    "reviewsCount": 38,
+    "offerStatus": "accepted",
+    "isFree": false,
+    "description": "গুগল র‍্যাংকিং ফ্যাক্টর, টেকনিক্যাল এসইও অডিট, কিওয়ার্ড রিসার্চ এবং এআই দিয়ে হাই-কনভার্টিং কন্টেন্ট স্ট্র্যাটেজি।",
+    "isPublicOffer": true
+  },
+  {
+    "id": "course-uiux-figma",
+    "offerStatus": "accepted",
+    "description": "ফিগমা ব্যবহার করে আধুনিক মোবাইল অ্যাপ এবং ওয়েব অ্যাপ্লিকেশন UI/UX ডিজাইন, ওয়্যারফ্রেম, ইন্টারেক্টিভ প্রোটোটাইপিং ও ডিজাইন সিস্টেম তৈরি।",
+    "rating": 4.9,
+    "lessonsCount": 16,
+    "tags": [
+      "#UIUX",
+      "#Figma",
+      "#ProductDesign"
+    ],
+    "targetLessons": 16,
+    "liveClassTopic": "Figma Auto-layout, Components ও Design System",
+    "liveClassLessonNo": "০১",
+    "_lastSynced": "2026-09-21T13:23:32.009Z",
+    "instructorRole": "Lead Product Designer & UX Researcher",
+    "duration": "6 Weeks (20 Hours)",
+    "liveClassModuleNo": "০২",
+    "thumbnail": "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80",
+    "targetModules": 4,
+    "level": "advanced",
+    "liveClassLink": "https://meet.google.com/figma-uiux-live",
+    "liveClassTime": "20:00",
+    "modules": [
+      {
+        "lessons": [
+          {
+            "courseId": "course-uiux-figma",
+            "isFreePreview": true,
+            "duration": "২৫ মিনিট",
+            "order": 1,
+            "moduleId": "m-figma-1",
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "content": "ফাইল সেটআপ ও বেসিক শেপ আর্কিটেকচার।",
+            "id": "l-figma-1",
+            "title": "লেসন ০১: ফিগমা ইন্টারফেস ও ভেক্টর টুলস পরিচিতি"
+          }
+        ],
+        "order": 1,
+        "courseId": "course-uiux-figma",
+        "title": "ফিগমা ফান্ডামেন্টালস ও অটো লেআউট",
+        "id": "m-figma-1"
+      }
+    ],
+    "reviewsCount": 42,
+    "whatYouWillLearn": [
+      "Figma Auto-layout & Components",
+      "Design System & Variables",
+      "Interactive Micro-interactions & Prototyping"
+    ],
+    "published": true,
+    "isPublicOffer": true,
+    "isFree": false,
+    "teacherCommissionRate": 40,
+    "price": 5500,
+    "title": "UI/UX Design & Figma Prototyping Masterclass 2026",
+    "discountPrice": 3800,
+    "liveClassStatus": "scheduled",
+    "liveClassSerialNo": "০৩",
+    "enrolledCount": 185,
+    "liveSchedule": "০৬ সেপ্টেম্বর ২০২৬, রাত ০৮:০০ টা",
+    "targetAssignments": 16,
+    "requirements": [
+      "কম্পিউটার ও ইন্টারনেট কানেকশন"
+    ],
+    "liveClassDate": "2026-09-06",
+    "category": "Graphic Design",
+    "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+    "createdAt": "2026-02-15",
+    "assignedInstructorId": "teacher-1"
+  },
+  {
+    "id": "course-web-basic-2026",
+    "isPublicOffer": true,
+    "published": true,
+    "liveClassModuleNo": "০১",
+    "requirements": [
+      "কম্পিউটার বা ল্যাপটপ"
+    ],
+    "liveClassStatus": "scheduled",
+    "isFree": false,
+    "liveSchedule": "০৪ সেপ্টেম্বর ২০২৬, রাত ০৯:৩০ টা",
+    "whatYouWillLearn": [
+      "HTML5 & Responsive CSS3",
+      "Tailwind CSS Layouts",
+      "JavaScript Essentials & DOM manipulation"
+    ],
+    "liveClassDate": "2026-09-04",
+    "createdAt": "2026-02-12",
+    "duration": "6 Weeks (24 Hours)",
+    "enrolledCount": 0,
+    "reviewsCount": 0,
+    "price": 4500,
+    "discountPrice": 2800,
+    "liveClassLessonNo": "০৩",
+    "title": "Full Stack Web Development - Basic (HTML, CSS & JS Fundamentals)",
+    "targetLessons": 18,
+    "rating": 5,
+    "category": "Web Development",
+    "level": "basic",
+    "liveClassSerialNo": "০৩",
+    "tags": [
+      "#WebDevBasic",
+      "#HTML",
+      "#CSS"
+    ],
+    "modules": [],
+    "_lastSynced": "2026-09-21T13:23:32.009Z",
+    "liveClassTime": "21:30",
+    "lessonsCount": 18,
+    "targetModules": 4,
+    "offerStatus": "offered",
+    "description": "ওয়েব ডেভেলপমেন্টের বেসিক ফাউন্ডেশন কোর্স। শূন্য থেকে HTML5, CSS3, Tailwind এবং JavaScript শিখে ওয়েবসাইট তৈরি করুন।",
+    "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+    "thumbnail": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=800&q=80",
+    "liveClassTopic": "Tailwind CSS রেসপনসিভ লেআউট ও ফ্লেক্সবক্স হ্যান্ডস-অন",
+    "assignedInstructorId": "teacher-1",
+    "liveClassLink": "https://meet.google.com/web-basic-live",
+    "instructorRole": "Senior Software Engineer",
+    "teacherCommissionRate": 35
+  },
+  {
+    "id": "course-web-pro-2026",
+    "liveClassLessonNo": "০২",
+    "isFree": false,
+    "teacherCommissionRate": 50,
+    "published": true,
+    "title": "Full Stack Web Development - Professional (Enterprise Microservices & Cloud)",
+    "price": 12000,
+    "tags": [
+      "#WebDevPro",
+      "#FullStack",
+      "#Cloud"
+    ],
+    "duration": "10 Weeks (40 Hours)",
+    "isPublicOffer": true,
+    "lessonsCount": 30,
+    "assignedInstructorId": "teacher-1",
+    "enrolledCount": 0,
+    "discountPrice": 8500,
+    "liveClassModuleNo": "০৪",
+    "liveClassDate": "2026-09-05",
+    "createdAt": "2026-02-20",
+    "whatYouWillLearn": [
+      "Microservices Architecture",
+      "Docker & Kubernetes Deployment",
+      "Advanced Node.js & Cloud Scaling"
+    ],
+    "liveSchedule": "০৫ সেপ্টেম্বর ২০২৬, রাত ০৯:০০ টা",
+    "_lastSynced": "2026-09-21T13:23:32.009Z",
+    "rating": 5,
+    "offerStatus": "offered",
+    "description": "প্রফেশনাল লেভেল ওয়েব ডেভেলপমেন্ট কোর্স। React, Node.js, Docker, Kubernetes এবং ক্লাউড মাইক্রোসার্ভিসেস আর্কিটেকচার।",
+    "requirements": [
+      "React & Node.js অভিজ্ঞতা"
+    ],
+    "liveClassStatus": "scheduled",
+    "modules": [],
+    "targetLessons": 30,
+    "reviewsCount": 0,
+    "thumbnail": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+    "level": "professional",
+    "liveClassLink": "https://meet.google.com/web-pro-cloud",
+    "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+    "targetModules": 8,
+    "instructorRole": "Senior Software Engineer",
+    "liveClassTopic": "Docker কন্টেইনারাইজেশন ও মাইক্রোসার্ভিসেস আর্কিটেকচার",
+    "liveClassSerialNo": "০৮",
+    "category": "Web Development",
+    "liveClassTime": "21:00"
+  },
+  {
+    "id": "course-wp-dev",
+    "liveSchedule": "০২ সেপ্টেম্বর ২০২৬, রাত ০৮:৩০ টা",
+    "liveClassLink": "https://meet.google.com/wp-live-ecommerce",
+    "rating": 4.9,
+    "instructor": "শাহরিয়ার হাসান",
+    "liveClassSerialNo": "০২",
+    "requirements": [
+      "ল্যাপটপ বা কম্পিউটার (কমপক্ষে ৪জিবি র‍্যাম)",
+      "কম্পিউটার চালানোর প্রাথমিক ধারণা"
+    ],
+    "liveClassTime": "20:30",
+    "reviewsCount": 42,
+    "instructorRole": "Full Stack Developer",
+    "liveClassTopic": "উ-কমার্স স্টোর সেটআপ ও বিকাশ/নগদ গেটওয়ে ইন্টিগ্রেশন",
+    "thumbnail": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
+    "modules": [
+      {
+        "order": 1,
+        "lessons": [
+          {
+            "courseId": "course-wp-dev",
+            "isFreePreview": true,
+            "duration": "৩০ মিনিট",
+            "order": 1,
+            "moduleId": "m-wp-1",
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "content": "XAMPP এবং লাইভ সিপ্যানেলে ওয়ার্ডপ্রেস ইনস্টলেশন।",
+            "id": "l-wp-1",
+            "title": "লেসন ০১: লোকালহোস্ট ও লাইভ সিপ্যানেলে ওয়ার্ডপ্রেস ইনস্টল"
+          }
+        ],
+        "id": "m-wp-1",
+        "courseId": "course-wp-dev",
+        "title": "ওয়ার্ডপ্রেস ইনস্টলেশন ও থিম কাস্টমাইজেশন"
+      }
+    ],
+    "category": "Web Development",
+    "published": true,
+    "price": 4500,
+    "title": "Complete WordPress & E-Commerce Development",
+    "tags": [
+      "#WordPress",
+      "#WooCommerce",
+      "#WebDevelopment",
+      "#Elementor"
+    ],
+    "enrolledCount": 180,
+    "_lastSynced": "2026-09-21T13:23:32.009Z",
+    "discountPrice": 2999,
+    "duration": "8 Weeks (28 Hours)",
+    "liveClassModuleNo": "০১",
+    "liveClassDate": "2026-09-02",
+    "isFree": false,
+    "description": "কোডিং ছাড়া প্রফেশনাল ই-কমার্স ওয়েবসাইট, ল্যান্ডিং পেজ, ব্লগ ও কর্পোরেট ওয়েবসাইট তৈরি শিখুন। bKash/Nagad পেমেন্ট গেটওয়ে সেটআপ সহ ক্লায়েন্ট হ্যান্ডলিং।",
+    "lessonsCount": 32,
+    "createdAt": "2026-02-10",
+    "liveClassLessonNo": "০২",
+    "whatYouWillLearn": [
+      "Domain & Hosting Setup Masterclass",
+      "Elementor Pro Page Builder Mastery",
+      "WooCommerce Online Shop Development",
+      "bKash & Nagad Payment Gateway Setup",
+      "Website Security & Backup Systems"
+    ],
+    "liveClassStatus": "scheduled"
+  },
+  {
+    "id": "course-yt-seo",
+    "liveSchedule": "০২ সেপ্টেম্বর ২০২৬, রাত ০৯:০০ টা",
+    "liveClassLink": "https://meet.google.com/yt-seo-live",
+    "targetModules": 5,
+    "rating": 4.8,
+    "teacherCommissionRate": 30,
+    "instructor": "কাজী সোহাগ",
+    "liveClassSerialNo": "০৮",
+    "requirements": [
+      "কম্পিউটার/ল্যাপটপ বা অ্যান্ড্রয়েড ফোন",
+      "বেসিক কম্পিউটার জানা থাকা ভালো"
+    ],
+    "liveClassTime": "21:00",
+    "reviewsCount": 54,
+    "instructorRole": "Digital Marketing Specialist",
+    "liveClassTopic": "TubeBuddy ও VidIQ দিয়ে হাই-র‍্যাংক কিওয়ার্ড সিলেকশন",
+    "thumbnail": "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=800&q=80",
+    "modules": [
+      {
+        "order": 1,
+        "id": "m-yt-1",
+        "courseId": "course-yt-seo",
+        "lessons": [
+          {
+            "moduleId": "m-yt-1",
+            "isFreePreview": true,
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "courseId": "course-yt-seo",
+            "duration": "৩৫ মিনিট",
+            "title": "লেসন ০১: ২০২৬ সালে ইউটিউব অ্যালগরিদম যেভাবে কাজ করে",
+            "order": 1,
+            "id": "l-yt-1",
+            "pdfResourceUrl": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+            "content": "ইউটিউব এলগরিদম কিভাবে ভিডিও প্রমোট করে তা বিস্তারিত আলোচনা।"
+          }
+        ],
+        "title": "ইউটিউব অ্যালগরিদম ও চ্যানেল সেটআপ"
+      }
+    ],
+    "category": "SEO",
+    "targetLessons": 22,
+    "published": true,
+    "price": 5999,
+    "title": "YouTube SEO & Channel Growth Blueprint",
+    "tags": [
+      "#SEOExpert",
+      "#YouTubeSEO",
+      "#SearchEngineOptimization",
+      "#Monetization"
+    ],
+    "enrolledCount": 215,
+    "_lastSynced": "2026-09-21T13:23:32.009Z",
+    "discountPrice": 3499,
+    "liveClassModuleNo": "০৩",
+    "duration": "6 Weeks (20 Hours)",
+    "liveClassDate": "2026-09-02",
+    "isFree": false,
+    "description": "আপনার ইউটিউব চ্যানেলের ভিডিও গুগলে ও ইউটিউব সার্চের ১ম স্থানে র‍্যাংক করানোর কমপ্লিট এসইও মাস্টারক্লাস। টাইটেল, ট্যাগ, ডেসক্রিপশন, হ্যাশট্যাগ ও TubeBuddy/vidiQ টুলস ব্যবহার শিখুন।",
+    "lessonsCount": 22,
+    "createdAt": "2026-01-15",
+    "liveClassLessonNo": "০১",
+    "whatYouWillLearn": [
+      "YouTube Algorithm & Ranking Factors",
+      "High Search Volume Keyword Research",
+      "TubeBuddy & VidIQ Keyword Masterclass",
+      "Click-Through-Rate (CTR) & Audience Retention Optimization",
+      "Channel Monetization & Sponsor Management"
+    ],
+    "liveClassStatus": "scheduled"
+  }
+]

@@ -1,0 +1,54 @@
+{
+  "id": "gig-5",
+  "sellerTitle": "SEO & Growth Marketing Lead",
+  "offerBadge": "আগে কাজ শুরু",
+  "status": "active",
+  "_lastSynced": "2026-09-21T13:23:34.271Z",
+  "sellerId": "teacher-2",
+  "sellerAvatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+  "reviewsCount": 31,
+  "thumbnail": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
+  "category": "Digital Marketing",
+  "title": "আমি ইউটিউব চ্যানেল এসইও, ট্যাগ রিচার্জ এবং ভিডিও র্যাঙ্কিং অপটিমাইজেশন করবো",
+  "salesCount": 39,
+  "sellerName": "আরিফ হোসেন",
+  "sellerRating": 4.8,
+  "packages": {
+    "standard": {
+      "deliveryDays": 4,
+      "price": 6500,
+      "revisions": 4,
+      "name": "10 Videos Channel SEO",
+      "features": [
+        "১০টি ভিডিও SEO",
+        "Channel Audit",
+        "Competitor Analysis"
+      ]
+    },
+    "basic": {
+      "name": "3 Videos SEO",
+      "revisions": 2,
+      "deliveryDays": 2,
+      "features": [
+        "৩টি ভিডিও SEO",
+        "Keyword Research"
+      ],
+      "price": 2500
+    },
+    "premium": {
+      "deliveryDays": 15,
+      "features": [
+        "৩০টি ভিডিও SEO",
+        "Thumbnail Strategy",
+        "Monthly Strategy Call"
+      ],
+      "revisions": "Unlimited",
+      "price": 15000,
+      "name": "Full Channel Growth Pack"
+    }
+  },
+  "description": "অর্গানিক ভিউ এবং সাবস্ক্রাইবার বাড়াতে সঠিক কিওয়ার্ড রিসার্চ, কাস্টম ট্যাগস ও এসইও ফ্রেন্ডলি টাইটেল প্রোভাইড করবো।",
+  "rating": 4.8,
+  "createdAt": "2026-01-22",
+  "isAgencyStaff": true
+}

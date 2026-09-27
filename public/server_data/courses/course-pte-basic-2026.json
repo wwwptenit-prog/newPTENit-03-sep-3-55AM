@@ -1,0 +1,49 @@
+{
+  "id": "course-pte-basic-2026",
+  "isPublicOffer": true,
+  "requirements": [
+    "বেসিক ইংরেজি জানা আবশ্যক"
+  ],
+  "liveClassModuleNo": "০১",
+  "published": true,
+  "assignedInstructorId": "teacher-1",
+  "isFree": false,
+  "liveSchedule": "০৩ সেপ্টেম্বর ২০২৬, সন্ধ্যা ০৭:০০ টা",
+  "level": "basic",
+  "liveClassStatus": "scheduled",
+  "liveClassDate": "2026-09-03",
+  "modules": [],
+  "_lastSynced": "2026-09-21T13:23:32.009Z",
+  "createdAt": "2026-02-10",
+  "discountPrice": 2200,
+  "whatYouWillLearn": [
+    "PTE 4 Sections Basic Structure & Scoring Rules",
+    "Pronunciation & Fluency Foundation",
+    "Basic Essay Template & Summarize Text Rules"
+  ],
+  "enrolledCount": 0,
+  "liveClassLessonNo": "০১",
+  "category": "PTE Academic",
+  "description": "মেইন এডমিন কর্তৃক অফারকৃত বেসিক কোর্স। PTE Speaking, Writing, Reading & Listening সেকশনের বেসিক ফরম্যাট, টেমপ্লেট ও ফাউন্ডেশন প্র্যাকটিস।",
+  "offerStatus": "offered",
+  "reviewsCount": 0,
+  "targetLessons": 12,
+  "teacherCommissionRate": 35,
+  "liveClassSerialNo": "০১",
+  "duration": "4 Weeks (15 Hours)",
+  "rating": 5,
+  "tags": [
+    "#PTEBasic",
+    "#StudyAbroad"
+  ],
+  "price": 3500,
+  "liveClassTime": "19:00",
+  "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+  "title": "PTE Academic - Basic Level (Foundation & Fundamentals 2026)",
+  "targetModules": 4,
+  "thumbnail": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80",
+  "liveClassTopic": "PTE Speaking Read Aloud & Repeat Sentence Masterclass",
+  "liveClassLink": "https://meet.google.com/pte-basic-live",
+  "instructorRole": "PTE Certified Trainer",
+  "lessonsCount": 12
+}

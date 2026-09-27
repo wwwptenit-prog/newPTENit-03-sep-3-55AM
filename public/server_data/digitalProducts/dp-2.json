@@ -1,0 +1,25 @@
+{
+  "id": "dp-2",
+  "price": 4900,
+  "title": "SaaS এআই চ্যাটবট ও অ্যাসিস্ট্যান্ট ওয়েব অ্যাপ (Next.js & Gemini API)",
+  "reviewsCount": 42,
+  "features": [
+    "Gemini 1.5 & Flash API",
+    "সাবস্ক্রিপশন ও ক্রেডিট সিস্টেম",
+    "রেসপন্সিভ রিঅ্যাক্ট ইউআই",
+    "অটো সিকিউর ডাউনলোড"
+  ],
+  "shortDescription": "গুগল জেমিনাই এআই দ্বারা চালিত অটোমেটেড এআই রাইটিং, চ্যাটবট ও ইমেজ জেনারেটর SaaS স্কিপ্ট।",
+  "deliveryType": "file_download",
+  "thumbnail": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+  "category": "AI SaaS Script",
+  "rating": 4.9,
+  "downloadUrl": "https://drive.google.com/file/d/ptenit-ai-chatbot-saas/view?usp=sharing",
+  "_lastSynced": "2026-09-21T13:23:36.323Z",
+  "fullDescription": "Next.js 14 এবং Tailwind CSS দিয়ে তৈরি আল্ট্রা-ফাস্ট এআই চ্যাটবট ও কনটেন্ট রাইটার SaaS ওয়েব অ্যাপ। সাবস্ক্রিপশন প্ল্যান (বিকাশ/স্ট্রাইপ) এবং লাইভ এআই চ্যাট সাপোর্ট ইনক্লুডেড। পেমেন্ট ভেরিফাই হওয়ার পর সুরক্ষিত ফাইল ডাউনলোড টোকেন পাওয়া যাবে।",
+  "fileFormat": "ZIP Source",
+  "salesCount": 124,
+  "licenseKey": "PTENIT-AICHAT-9982-KEY",
+  "fileSize": "32 MB",
+  "originalPrice": 9500
+}

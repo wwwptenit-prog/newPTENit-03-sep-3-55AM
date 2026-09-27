@@ -1,0 +1,52 @@
+{
+  "id": "gig-19",
+  "salesCount": 30,
+  "sellerName": "তানভীর আহমেদ",
+  "sellerRating": 5,
+  "isAgencyStaff": true,
+  "rating": 5,
+  "sellerId": "teacher-1",
+  "description": "PTE Academic রাইটিং এসে, রাইট ফ্রম ডিকটেশন এবং স্পিকিং রেকর্ডিং ইভালুয়েশন করে স্পেশাল স্কোর ইমপ্রুভমেন্ট টিপস।",
+  "_lastSynced": "2026-09-21T13:23:34.272Z",
+  "category": "Education & Training",
+  "thumbnail": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80",
+  "packages": {
+    "premium": {
+      "features": [
+        "5 Full Mocks",
+        "Custom Hacks",
+        "Direct WhatsApp Support"
+      ],
+      "revisions": "Unlimited",
+      "name": "5 Mocks + Live Mentorship",
+      "price": 9500,
+      "deliveryDays": 7
+    },
+    "basic": {
+      "deliveryDays": 1,
+      "features": [
+        "Detailed Scoring",
+        "Grammar & Vocab Edits"
+      ],
+      "price": 1000,
+      "name": "1 Essay Feedback",
+      "revisions": 2
+    },
+    "standard": {
+      "revisions": 3,
+      "deliveryDays": 2,
+      "name": "Full Speaking & Writing Mock",
+      "price": 3500,
+      "features": [
+        "1 Mock Evaluation",
+        "1-on-1 20m Zoom Session"
+      ]
+    }
+  },
+  "title": "আমি আপনার PTE/IELTS রাইটিং ও স্পিকিং টেস্ট অ্যাসেস করে ব্যান্ড স্কোর ফিডব্যাক দেবো",
+  "sellerTitle": "PTE Master Trainer & Lead Assessor",
+  "status": "active",
+  "reviewsCount": 25,
+  "createdAt": "2026-02-12",
+  "sellerAvatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80"
+}

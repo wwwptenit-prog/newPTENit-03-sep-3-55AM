@@ -1,0 +1,53 @@
+{
+  "id": "gig-18",
+  "_lastSynced": "2026-09-21T13:23:34.272Z",
+  "sellerName": "রাফসান সানি",
+  "salesCount": 16,
+  "reviewsCount": 13,
+  "createdAt": "2026-02-11",
+  "sellerAvatar": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80",
+  "category": "Graphic Design",
+  "sellerTitle": "Brand Identity Specialist",
+  "rating": 4.9,
+  "thumbnail": "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=800&q=80",
+  "packages": {
+    "basic": {
+      "price": 1500,
+      "name": "Visiting Card & Letterhead",
+      "deliveryDays": 1,
+      "revisions": 3,
+      "features": [
+        "Double Sided Card",
+        "Print Ready PDF"
+      ]
+    },
+    "standard": {
+      "deliveryDays": 3,
+      "price": 5000,
+      "revisions": 5,
+      "name": "Logo + Stationery Kit",
+      "features": [
+        "Vector Logo",
+        "Business Card",
+        "Envelop & Pad"
+      ]
+    },
+    "premium": {
+      "price": 14000,
+      "name": "Complete Brand Style Guide",
+      "revisions": "Unlimited",
+      "features": [
+        "Full Brand Book",
+        "Typography",
+        "Usage Rules & Mockups"
+      ],
+      "deliveryDays": 7
+    }
+  },
+  "isAgencyStaff": false,
+  "sellerId": "student-2",
+  "title": "আমি আপনার কোম্পানির ব্র্যান্ড আইডেন্টিটি, ভিজিটিং কার্ড ও ব্র্যান্ড গাইডলাইন বানাবো",
+  "status": "active",
+  "sellerRating": 4.9,
+  "description": "একটি প্রফেশনাল ব্র্যান্ডের জন্য ভেক্টর লোগো, ভিজিটিং কার্ড, প্যাড, ইনভয়েস ও কালার প্যালেট তৈরি।"
+}

@@ -1,0 +1,217 @@
+[
+  {
+    "id": "admin-1",
+    "avatar": "https://lh3.googleusercontent.com/a/ACg8ocLMmx6INPLiDd-YyJ4HF11aaevcPJIoldGPorIF8P9WEefTaTNE=s96-c",
+    "name": "Mds Kazi Sohag (Admin)",
+    "mobile": "01700000000",
+    "createdAt": "2026-01-01",
+    "role": "admin",
+    "sellerStatus": "approved",
+    "_lastUpdated": "2026-09-27T16:26:04.031Z",
+    "email": "mdskazisohag@gmail.com",
+    "isSeller": true,
+    "_lastSynced": "2026-09-21T13:23:36.684Z",
+    "title": "Founder, CEO & Lead Admin"
+  },
+  {
+    "id": "customer-1",
+    "email": "customer@ptenit.com",
+    "isSeller": false,
+    "_lastSynced": "2026-09-21T13:23:36.684Z",
+    "name": "মেহেদী হাসান (PTENit ক্লায়েন্ট)",
+    "mobile": "01988776655",
+    "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+    "sellerStatus": "not_applied",
+    "title": "Business Owner & IT Client",
+    "createdAt": "2026-01-15",
+    "role": "customer"
+  },
+  {
+    "id": "khbZyDVD8hcltXYscPIC7dtA0u23",
+    "_lastUpdated": "2026-09-27T08:25:26.460Z",
+    "name": "MDs Kazi Sohag",
+    "avatar": "https://lh3.googleusercontent.com/a/ACg8ocLMmx6INPLiDd-YyJ4HF11aaevcPJIoldGPorIF8P9WEefTaTNE=s96-c",
+    "mobile": "",
+    "role": "admin",
+    "roles": [
+      "admin"
+    ],
+    "createdAt": "2026-09-27",
+    "email": "mdskazisohag@gmail.com",
+    "activeRole": "admin"
+  },
+  {
+    "id": "mkt-buyer-1",
+    "mobile": "01811223344",
+    "email": "buyer@marketplace.com",
+    "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
+    "sellerStatus": "not_applied",
+    "title": "Marketplace Business Buyer & Client",
+    "isSeller": false,
+    "role": "customer",
+    "createdAt": "2026-01-22",
+    "_lastSynced": "2026-09-21T13:23:36.684Z",
+    "name": "তানজিল তানভীর (মার্কেটপ্লেস বায়ার)"
+  },
+  {
+    "id": "mkt-seller-1",
+    "isSeller": true,
+    "sellerStatus": "approved",
+    "name": "সোহাগ কাজী (ফ্রিলা্যান্সার সেলার)",
+    "createdAt": "2026-01-20",
+    "role": "instructor",
+    "bio": "মার্কেটপ্লেসের সার্টিফাইড টপ-রেটেড ফ্রিল্যান্সার ও গিগ ক্রিয়েটর।",
+    "title": "Top Rated Freelancer & Full-Stack Pro",
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+    "_lastSynced": "2026-09-21T13:23:36.684Z",
+    "email": "seller@marketplace.com",
+    "mobile": "01799887766"
+  },
+  {
+    "id": "seller-only-1",
+    "_lastSynced": "2026-09-21T13:23:36.685Z",
+    "isMentor": false,
+    "name": "নাজমুল করিম (ডিজিটাল ক্রিয়েটর ও সেলার)",
+    "mobile": "01855443322",
+    "createdAt": "2026-02-15",
+    "isSeller": true,
+    "role": "specialist",
+    "sellerStatus": "approved",
+    "title": "UI/UX & Graphics Specialist (Just Seller)",
+    "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80",
+    "roles": [
+      "specialist"
+    ],
+    "email": "nazmul.seller@ptenit.com",
+    "bio": "ফ্রিল্যান্স গ্রাফিক ডিজাইনার এবং টপ ডিজিটাল অ্যাসেট ও টেমপ্লেট সেলার।"
+  },
+  {
+    "id": "student-1",
+    "isSeller": false,
+    "sellerStatus": "not_applied",
+    "name": "সাব্বির রহমান",
+    "createdAt": "2026-01-10",
+    "role": "student",
+    "title": "Web Developer & Student",
+    "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+    "_lastSynced": "2026-09-21T13:23:36.684Z",
+    "mobile": "01822334455",
+    "email": "student@ptenit.com"
+  },
+  {
+    "id": "teacher-1",
+    "title": "Senior Full Stack Architect & Lead Instructor",
+    "_lastSynced": "2026-09-21T13:23:36.684Z",
+    "mobile": "01711112233",
+    "createdAt": "2026-01-05",
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+    "role": "instructor",
+    "email": "alamin@ptenit.com",
+    "sellerStatus": "approved",
+    "isSeller": true,
+    "name": "প্রকৌশলী আল-আমিন",
+    "bio": "১০ বছরের অভিজ্ঞতা সম্পন্ন ফুল-স্ট্যাক ও ক্লাউড ইঞ্জিনিয়ার।"
+  },
+  {
+    "id": "teacher-applicant-1",
+    "role": "instructor",
+    "title": "Senior Software Engineer & Python Instructor Applicant",
+    "_lastSynced": "2026-09-21T13:23:36.685Z",
+    "roles": [
+      "instructor"
+    ],
+    "createdAt": "2026-03-01",
+    "mentorApplication": {
+      "bio": "আমি বিগত ৪ বছর ধরে পাইথন ব্যাকএন্ড এবং রিয়েল-ওয়ার্ল্ড এন্টারপ্রাইজ প্রজেক্টে কর্মরত। পিটেন আইটি-তে প্রফেশনাল পাইথন কোর্স পরিচালনা করতে আগ্রহী।",
+      "expertise": [
+        "Python & Django",
+        "Machine Learning",
+        "Full-Stack Web"
+      ],
+      "portfolioUrl": "https://github.com/mahmudul-python-pro",
+      "appliedAt": "১ মার্চ ২০২৬",
+      "proposedCourseTopic": "Python Django & FastAPI Full Stack Masterclass",
+      "experienceYears": "4+ বছর",
+      "status": "pending",
+      "phone": "01788990011"
+    },
+    "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80",
+    "email": "mahmudul.mentor@ptenit.com",
+    "isMentor": false,
+    "name": "প্রকৌশলী মাহমুদুল হাসান",
+    "mobile": "01788990011",
+    "mentorStatus": "pending"
+  },
+  {
+    "id": "usr-1790001460392",
+    "specialistStatus": "not_applied",
+    "mobile": "01602954422",
+    "createdAt": "2026-09-21",
+    "isSpecialist": false,
+    "role": "customer",
+    "email": "www.pkenit@gmail.com",
+    "_lastUpdated": "2026-09-21T14:37:41.488Z",
+    "activeRole": "customer",
+    "name": "Monnni",
+    "roles": [
+      "customer"
+    ]
+  },
+  {
+    "id": "usr-1790075662913",
+    "specialistStatus": "not_applied",
+    "_lastUpdated": "2026-09-22T11:14:24.654Z",
+    "name": "yyy",
+    "email": "www.ptenit@gmail.com",
+    "createdAt": "2026-09-22",
+    "activeRole": "customer",
+    "mobile": "018028241",
+    "roles": [
+      "customer"
+    ],
+    "role": "customer",
+    "isSpecialist": false
+  },
+  {
+    "id": "usr-1790526662338",
+    "createdAt": "2026-09-27",
+    "mobile": "01795028524",
+    "specialistStatus": "not_applied",
+    "activeRole": "customer",
+    "isSpecialist": false,
+    "name": "Rabbi",
+    "email": "mdskazi2016@gmail.com",
+    "_lastUpdated": "2026-09-27T16:31:03.299Z",
+    "roles": [
+      "customer"
+    ],
+    "role": "customer"
+  },
+  {
+    "id": "usr-1790527291013",
+    "email": "student-1790527291013@ptenit.com",
+    "_lastUpdated": "2026-09-27T16:41:31.014Z",
+    "roles": [
+      "student"
+    ],
+    "mobile": "29 053-98",
+    "role": "student",
+    "createdAt": "2026-09-27",
+    "name": "সম্মানিত শিক্ষার্থী",
+    "activeRole": "student"
+  },
+  {
+    "id": "মোশাররফ-হোসেন",
+    "name": "মোশাররফ হোসেন",
+    "marketplaceMode": "buying",
+    "createdAt": "2026-09-24",
+    "_lastUpdated": "2026-09-24T22:56:15.871Z",
+    "role": "customer",
+    "roles": [
+      "customer"
+    ],
+    "email": "client@ptenit.com",
+    "activeRole": "customer",
+    "mobile": "01812345678"
+  }
+]

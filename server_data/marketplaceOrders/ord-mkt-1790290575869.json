@@ -1,0 +1,32 @@
+{
+  "id": "ord-mkt-1790290575869",
+  "type": "custom_agency_order",
+  "updates": [
+    {
+      "sender": "Mds Kazi Sohag (Admin)",
+      "note": "কাজ শুরু করা হয়েছে।",
+      "id": "upd-1790290637511",
+      "date": "২৫/৯/২০২৬, ৪:৫৭:১৭ AM"
+    }
+  ],
+  "deliveryNote": "আমাদের রানিং ফ্যাশন ব্র্যান্ডের জন্য Next.js ও Tailwind CSS বেসড একটি রেসপনসিভ অনলাইন স্টোর তৈরি করতে হবে। সাথে SSLCommerz/bKash পেমেন্ট গেটওয়ে এবং ইনভয়েস জেনারেশন সিস্টেম যুক্ত থাকবে। Figma ফাইল প্রস্তুত আছে।",
+  "sellerPayout": 13050,
+  "adminCommission": 1450,
+  "status": "in_progress",
+  "buyerEmail": "client@ptenit.com",
+  "paymentMethod": "bKash Escrow Security",
+  "category": "Web Development",
+  "deadlineDate": "2026-09-29",
+  "title": "ফুল-স্ট্যাক ই-কমার্স ওয়েবসাইট UI/UX রি-ডিজাইন ও পেমেন্ট ইন্টিগ্রেশন (bKash/Nagad)",
+  "buyerName": "মোশাররফ হোসেন",
+  "amount": 14500,
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "buyerId": "মোশাররফ-হোসেন",
+  "sellerId": "admin-1",
+  "packageType": "Standard",
+  "createdAt": "2026-09-24T22:56:15.869Z",
+  "sellerName": "Mds Kazi Sohag (Admin)",
+  "transactionId": "TRX-90575869",
+  "buyerPhone": "01812345678",
+  "_lastUpdated": "2026-09-24T22:57:17.512Z"
+}

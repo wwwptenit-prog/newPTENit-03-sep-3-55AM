@@ -1,0 +1,468 @@
+[
+  {
+    "id": "branding",
+    "thumbnail": "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&w=800&q=80",
+    "reviewsCount": 22,
+    "iconName": "Award",
+    "shortDescription": "Complete digital branding and visual identity solutions.",
+    "rating": 4.9,
+    "_lastSynced": "2026-09-21T13:23:33.289Z",
+    "category": "Design",
+    "priceText": "৳20,000 প্যাকেজ",
+    "fullDescription": "আপনার স্টার্টআপ বা রিননড ব্যবসার জন্য থ্রি-সিক্সটি ডিগ্রি ব্র্যান্ডিং সলিউশন। কনসেপ্ট আর্ট থেকে শুরু করে মার্কেটিং ম্যাটেরিয়াল তৈরি।",
+    "title": "Branding",
+    "packages": {
+      "premium": {
+        "price": 90000,
+        "name": "360 Growth & Brand Takeover",
+        "revisions": "Unlimited",
+        "features": [
+          "Design + Video + Web",
+          "Trademark Prep",
+          "National PR Kit"
+        ],
+        "deliveryDays": 20
+      },
+      "basic": {
+        "features": [
+          "Brand Style Guide",
+          "Stationery Kit",
+          "Social Media Cover"
+        ],
+        "name": "Corporate Identity Pack",
+        "revisions": 3,
+        "deliveryDays": 5,
+        "price": 20000
+      },
+      "standard": {
+        "deliveryDays": 10,
+        "revisions": 5,
+        "name": "Complete Brand Ecosystem",
+        "price": 45000,
+        "features": [
+          "Full Visual Identity",
+          "Packaging Design",
+          "Company Profile PDF"
+        ]
+      }
+    },
+    "features": [
+      "Full Brand Guidelines Manual",
+      "Stationery & Uniform Mockups",
+      "Packaging Design",
+      "Digital Presence Strategy",
+      "Brand Storytelling"
+    ],
+    "published": true,
+    "badge": "প্রিমিয়াম",
+    "order": 8
+  },
+  {
+    "id": "digital-marketing",
+    "priceText": "৳8,000 / মাস",
+    "iconName": "TrendingUp",
+    "reviewsCount": 37,
+    "rating": 4.9,
+    "fullDescription": "আপনার ব্যবসার সেলস ও ব্র্যান্ড ভ্যালু বহুগুণ বাড়াতে টার্গেটেড ডিজিটাল মার্কেটিং সেবা। ফেসবুক এডস ক্যাম্পেইন, গুগল পিসি এডস, ডিসপ্লে এডস এবং লিড জেনারেশনের মাধ্যমে সর্বোচ্চ ROI নিশ্চিত করা হয়।",
+    "shortDescription": "Facebook, Google, YouTube and other social media marketing solutions.",
+    "thumbnail": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+    "category": "Marketing",
+    "_lastSynced": "2026-09-21T13:23:33.288Z",
+    "packages": {
+      "premium": {
+        "features": [
+          "Full Funnel Strategy",
+          "Lead Gen & Remarketing",
+          "Dedicated Account Manager"
+        ],
+        "deliveryDays": 30,
+        "revisions": "Unlimited",
+        "price": 40000,
+        "name": "Enterprise Brand Growth"
+      },
+      "basic": {
+        "price": 8000,
+        "name": "Starter Ad Campaign",
+        "features": [
+          "Audience Targeting",
+          "Pixel & Event Setup",
+          "Ad Copywriting"
+        ],
+        "revisions": 2,
+        "deliveryDays": 7
+      },
+      "standard": {
+        "features": [
+          "Facebook + Google Ads",
+          "Custom Visual Creatives",
+          "Weekly Performance Report"
+        ],
+        "price": 18000,
+        "name": "Growth Sales Funnel",
+        "deliveryDays": 15,
+        "revisions": 4
+      }
+    },
+    "features": [
+      "Targeted Audience Research",
+      "Custom Ad Creatives & Copywriting",
+      "Conversion Tracking & Pixel Setup",
+      "Weekly Performance Reporting",
+      "Sales Funnel Optimization"
+    ],
+    "published": true,
+    "order": 2,
+    "badge": "আগে কাজ শুরু",
+    "title": "Digital Marketing"
+  },
+  {
+    "id": "graphic-design",
+    "thumbnail": "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=800&q=80",
+    "iconName": "Palette",
+    "title": "Graphic Design",
+    "rating": 5,
+    "badge": "আগে কাজ শুরু",
+    "order": 3,
+    "category": "Design",
+    "priceText": "৳5,000 থেকে শুরু",
+    "fullDescription": "ব্র্যান্ডের ভিজ্যুয়াল আইডেন্টিটি প্রতিষ্ঠা করতে চোখ ধাঁধানো গ্রাফিক ডিজাইন সেবা। লোগো ডিজাইন, সোশ্যাল মিডিয়া ব্যানার, ফ্লাইয়ার, ব্রোশিয়ার এবং ব্র্যান্ড বুক প্রিপারেশন।",
+    "shortDescription": "Professional branding, social media design, banner, poster, brochure, business card and marketing creatives.",
+    "_lastSynced": "2026-09-21T13:23:33.288Z",
+    "features": [
+      "Unique Vector Logo Design",
+      "Brand Color Palette & Typography",
+      "Social Media Kit (20+ Templates)",
+      "Print-Ready High Res Files",
+      "Unlimited Revisions"
+    ],
+    "packages": {
+      "premium": {
+        "name": "Complete Brand Identity Manual",
+        "price": 28000,
+        "revisions": "Unlimited",
+        "deliveryDays": 8,
+        "features": [
+          "Logo + Brand Guide",
+          "Packaging & Stationery",
+          "Marketing Creatives"
+        ]
+      },
+      "standard": {
+        "revisions": 5,
+        "features": [
+          "15 Custom Posts",
+          "Cover Photo",
+          "Canva Editable Links"
+        ],
+        "name": "Social Media Kit (15 Posts)",
+        "deliveryDays": 4,
+        "price": 12000
+      },
+      "basic": {
+        "deliveryDays": 2,
+        "price": 5000,
+        "revisions": 3,
+        "features": [
+          "2 Logo Concepts",
+          "Vector High Res Files",
+          "3D Mockup"
+        ],
+        "name": "Vector Logo & Branding Card"
+      }
+    },
+    "reviewsCount": 52,
+    "published": true
+  },
+  {
+    "id": "seo",
+    "title": "SEO (Search Engine Optimization)",
+    "reviewsCount": 41,
+    "shortDescription": "Google SEO, Local SEO, YouTube SEO and website optimization.",
+    "rating": 5,
+    "iconName": "Search",
+    "_lastSynced": "2026-09-21T13:23:33.289Z",
+    "published": true,
+    "category": "Marketing",
+    "badge": "আগে কাজ শুরু",
+    "order": 5,
+    "fullDescription": "গুগলের প্রথম পেজে আপনার ওয়েবসাইট বা সার্ভিস নিয়ে আসতে রেজাল্ট-ওরিয়েন্টেড SEO সার্ভিস। অন-পেজ, অফ-পেজ, টেকনিক্যাল SEO এবং গুগল ম্যাপস লোকাল SEO গ্যারান্টি।",
+    "packages": {
+      "premium": {
+        "features": [
+          "National/Global Target",
+          "Competitor Hijack",
+          "Monthly Guarantee"
+        ],
+        "name": "Top 3 Guaranteed Organic SEO",
+        "revisions": "Unlimited",
+        "price": 50000,
+        "deliveryDays": 60
+      },
+      "basic": {
+        "revisions": 3,
+        "price": 10000,
+        "features": [
+          "Keyword Research",
+          "Meta Optimization",
+          "Speed Fix"
+        ],
+        "deliveryDays": 5,
+        "name": "Technical & On-Page Audit"
+      },
+      "standard": {
+        "deliveryDays": 30,
+        "revisions": 5,
+        "features": [
+          "Full On-Page & Off-Page",
+          "High DA Backlinks",
+          "Rank Tracking"
+        ],
+        "name": "Google Rank Growth (Monthly)",
+        "price": 22000
+      }
+    },
+    "features": [
+      "Comprehensive Keyword Research",
+      "On-Page Title & Meta Tag Optimization",
+      "Technical SEO & Speed Boost",
+      "High Authority Backlink Building",
+      "Google My Business Rank Boost"
+    ],
+    "thumbnail": "https://images.unsplash.com/photo-1562577309-4932fdd64cd1?auto=format&fit=crop&w=800&q=80",
+    "priceText": "৳10,000 / মাস"
+  },
+  {
+    "id": "social-media",
+    "priceText": "৳7,000 / মাস",
+    "thumbnail": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
+    "packages": {
+      "standard": {
+        "price": 16000,
+        "features": [
+          "20 Posts + 4 Reels",
+          "Comment Inbox Mgmt",
+          "Ad Campaign Setup"
+        ],
+        "deliveryDays": 30,
+        "name": "Full Monthly Page Mgmt",
+        "revisions": 4
+      },
+      "premium": {
+        "features": [
+          "FB, IG, LinkedIn & TikTok",
+          "Video Reels Production",
+          "Growth Analytics"
+        ],
+        "deliveryDays": 30,
+        "price": 35000,
+        "name": "Cross-Platform Growth Pack",
+        "revisions": "Unlimited"
+      },
+      "basic": {
+        "price": 7000,
+        "name": "Weekly Content Mgmt",
+        "features": [
+          "8 Custom Posts",
+          "Captions",
+          "Hashtag Plan"
+        ],
+        "deliveryDays": 7,
+        "revisions": 2
+      }
+    },
+    "features": [
+      "Content Calendar Creation",
+      "Custom Post Designs & Captions",
+      "Community Engagement & Reply Mgmt",
+      "Competitor Analysis",
+      "Growth Analytics"
+    ],
+    "published": true,
+    "category": "Marketing",
+    "_lastSynced": "2026-09-21T13:23:33.289Z",
+    "rating": 4.8,
+    "shortDescription": "Facebook, Instagram, LinkedIn and other platform marketing.",
+    "title": "Social Media Marketing",
+    "iconName": "Share2",
+    "badge": "আগে কাজ শুরু",
+    "order": 6,
+    "reviewsCount": 31,
+    "fullDescription": "সোশ্যাল মিডিয়ায় অর্গানিক কন্টেন্ট পোস্টিং, অডিয়েন্স এনগেজমেন্ট এবং পেইড প্রমোশন পরিচালনা। নিয়মিত শিডিউলড পোস্ট ও গ্রাফিক্স কভার সার্ভিস।"
+  },
+  {
+    "id": "video-editing",
+    "published": true,
+    "category": "Multimedia",
+    "iconName": "Video",
+    "fullDescription": "আপনার প্রোডাক্ট বা ইউটিউব চ্যানেলের জন্য হাই-কোয়ালিটি ভিডিও এডিটিং। সাউন্ড ডিজাইন, মোশন গ্রাফিক্স, কালার গ্রেডিং এবং ক্যাচি সাবটাইটেল যোগ করে দর্শকনন্দিত ভিডিও তৈরি।",
+    "badge": "আগে কাজ শুরু",
+    "order": 4,
+    "rating": 4.9,
+    "priceText": "৳1,500 / ভিডিও",
+    "shortDescription": "Professional social media videos, promotional videos, reels, YouTube videos and motion graphics.",
+    "thumbnail": "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80",
+    "_lastSynced": "2026-09-21T13:23:33.288Z",
+    "packages": {
+      "premium": {
+        "revisions": "Unlimited",
+        "name": "Commercial Promo & Motion Video",
+        "deliveryDays": 5,
+        "features": [
+          "Voiceover Sync",
+          "Motion Graphics",
+          "3D Title Animations"
+        ],
+        "price": 15000
+      },
+      "standard": {
+        "deliveryDays": 3,
+        "features": [
+          "4K Output",
+          "Color Grading",
+          "Custom Lower Thirds"
+        ],
+        "revisions": 4,
+        "name": "YouTube Long Video (10m)",
+        "price": 4500
+      },
+      "basic": {
+        "revisions": 2,
+        "price": 1500,
+        "name": "Reels / Shorts Video (60s)",
+        "deliveryDays": 1,
+        "features": [
+          "Catchy Subtitles",
+          "Sound Effects",
+          "Trend Editing"
+        ]
+      }
+    },
+    "features": [
+      "4K & Full HD Video Output",
+      "Professional Sound Mixing & SFX",
+      "Custom Motion Graphics & Lower Thirds",
+      "Engaging Subtitles & Transitions",
+      "Fast Turnaround Time"
+    ],
+    "reviewsCount": 29,
+    "title": "Video Editing"
+  },
+  {
+    "id": "web-dev",
+    "order": 1,
+    "badge": "প্রিমিয়াম",
+    "fullDescription": "আমরা আধুনিক React, Next.js, WordPress এবং E-Commerce ফ্রেমওয়ার্ক ব্যবহার করে হাই-স্পিড ও রেসপন্সিভ ওয়েবসাইট তৈরি করি। আপনার ব্র্যান্ডের জন্য উপযোগী কাস্টম UI/UX ডিজাইন এবং সিকিউর ব্যাকএন্ড সাপোর্ট অন্তর্ভুক্ত।",
+    "published": true,
+    "packages": {
+      "standard": {
+        "features": [
+          "Up to 10 Pages",
+          "Admin CMS Panel",
+          "SEO Structure",
+          "bKash/SSL Integration"
+        ],
+        "revisions": 5,
+        "deliveryDays": 7,
+        "name": "Dynamic Business Website",
+        "price": 35000
+      },
+      "basic": {
+        "revisions": 3,
+        "price": 15000,
+        "deliveryDays": 4,
+        "features": [
+          "Mobile Responsive Layout",
+          "Speed Optimization",
+          "Free Hosting Setup"
+        ],
+        "name": "Landing Page / Single Page"
+      },
+      "premium": {
+        "price": 75000,
+        "features": [
+          "Full Custom Tech Stack",
+          "Payment Gateways",
+          "1 Year Support",
+          "Source Code Included"
+        ],
+        "name": "Custom E-Commerce & Web App",
+        "revisions": "Unlimited",
+        "deliveryDays": 15
+      }
+    },
+    "features": [
+      "100% Mobile Responsive Layout",
+      "SEO Friendly Code Structure",
+      "Free Domain & Hosting Setup",
+      "Admin Panel & Content Management",
+      "1 Year Technical Support"
+    ],
+    "title": "Web Design & Development",
+    "category": "Development",
+    "thumbnail": "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80",
+    "reviewsCount": 48,
+    "_lastSynced": "2026-09-21T13:23:33.288Z",
+    "iconName": "Code",
+    "rating": 5,
+    "priceText": "৳15,000 থেকে শুরু",
+    "shortDescription": "Professional responsive websites, landing pages, business websites, e-commerce websites and CMS solutions."
+  },
+  {
+    "id": "wordpress",
+    "order": 7,
+    "badge": "আগে কাজ শুরু",
+    "thumbnail": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
+    "packages": {
+      "standard": {
+        "features": [
+          "Up to 8 Pages",
+          "Blog & Gallery",
+          "Security Hardening"
+        ],
+        "name": "Complete Business Site",
+        "deliveryDays": 5,
+        "price": 25000,
+        "revisions": 5
+      },
+      "basic": {
+        "name": "WordPress Landing Page",
+        "deliveryDays": 2,
+        "features": [
+          "Elementor Pro Design",
+          "Contact Form",
+          "Mobile Friendly"
+        ],
+        "revisions": 3,
+        "price": 12000
+      },
+      "premium": {
+        "revisions": "Unlimited",
+        "price": 45000,
+        "deliveryDays": 8,
+        "name": "WooCommerce E-Commerce Store",
+        "features": [
+          "bKash/Nagad Integration",
+          "Inventory Mgmt",
+          "Automated Invoice"
+        ]
+      }
+    },
+    "features": [
+      "Elementor Pro Setup",
+      "WooCommerce Payment Gateway Setup",
+      "Fast Loading Speed Optimization",
+      "Security & Malware Protection",
+      "Video Tutorial for Admin"
+    ],
+    "reviewsCount": 63,
+    "_lastSynced": "2026-09-21T13:23:33.289Z",
+    "priceText": "৳12,000 থেকে শুরু",
+    "title": "WordPress Development",
+    "iconName": "Globe",
+    "category": "Development",
+    "rating": 5,
+    "shortDescription": "Business website, landing page, WooCommerce and Elementor solutions.",
+    "fullDescription": "সহজে পরিচালনাযোগ্য ওয়ার্ডপ্রেস ওয়েবসাইট। এলিমেন্টর প্রক্সি এবং প্রিমিয়াম থিম ব্যবহার করে দ্রুত ডেলিভারি ও কাস্টমাইজেশন।",
+    "published": true
+  }
+]

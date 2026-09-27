@@ -1,0 +1,70 @@
+{
+  "id": "gig-workfirst-web",
+  "description": "আগে কাজ শুরু অফার: আপনার ব্যবসার জন্য প্রফেশনাল ও রেসপন্সিভ ওয়েবসাইট বা ওয়েব অ্যাপ্লিকেশন তৈরি করে দেওয়া হবে সম্পূর্ণ বিনা অগ্রিম বিলে। কাজ সম্পন্ন হওয়ার পর লাইভ রিভিউ দেখে বিল পরিশোধ করবেন। সাথে পাবেন ১ বছর ফ্রি মেইনটেন্যান্স ও টেকনিক্যাল সাপোর্ট।",
+  "thumbnail": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+  "category": "Web Development",
+  "tags": [
+    "Next.js",
+    "React",
+    "E-commerce",
+    "আগে কাজ শুরু",
+    "Web Development"
+  ],
+  "offerBadge": "আগে কাজ শুরু",
+  "packages": {
+    "basic": {
+      "name": "ল্যান্ডিং পেজ / সিঙ্গেল পেজ",
+      "revisions": 3,
+      "deliveryDays": 3,
+      "price": 6500,
+      "features": [
+        "১টি রেসপন্সিভ ল্যান্ডিং পেজ",
+        "মোবাইল ফ্রেন্ডলি UI",
+        "কন্টাক্ট ফর্ম & হোয়াটসঅ্যাপ বাটন",
+        "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"
+      ]
+    },
+    "standard": {
+      "features": [
+        "৮টি ডায়নামিক পেজ",
+        "এডমিন প্যানেল CMS",
+        "পেমেন্ট গেটওয়ে ইন্টিগ্রেশন",
+        "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"
+      ],
+      "name": "ডায়নামিক বিজনেস ওয়েবসাইট",
+      "price": 16000,
+      "deliveryDays": 6,
+      "revisions": 5
+    },
+    "premium": {
+      "features": [
+        "সম্পূর্ণ কাস্টম ই-কমার্স শপ",
+        "ইনভেন্টরি & অর্ডার ট্র্যাকিং",
+        "১ বছর টেকনিক্যাল সাপোর্ট",
+        "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"
+      ],
+      "name": "ফুল ই-কমার্স / SaaS সলিউশন",
+      "deliveryDays": 12,
+      "price": 38000,
+      "revisions": "Unlimited"
+    }
+  },
+  "isAgencyStaff": true,
+  "createdAt": "2026-03-01",
+  "sellerLevel": "Level 2 Seller",
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "rating": 5,
+  "reviewsCount": 38,
+  "salesCount": 54,
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "sellerRating": 5,
+  "sellerTitle": "Senior Full Stack Architect (PTENit Core Team)",
+  "title": "আমি কোনো অগ্রিম বিল ছাড়াই আধুনিক ফুল-স্ট্যাক ও ই-কমার্স ওয়েবসাইট তৈরি করব (আগে কাজ শুরু)",
+  "status": "active",
+  "sellerId": "teacher-1",
+  "_lastSynced": "2026-09-21T13:23:34.269Z",
+  "galleryImages": [
+    "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80"
+  ]
+}

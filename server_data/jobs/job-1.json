@@ -1,0 +1,17 @@
+{
+  "id": "job-1",
+  "createdAt": "2026-02-10",
+  "deadlineDays": 7,
+  "buyerId": "customer-1",
+  "proposalsCount": 3,
+  "buyerPhone": "01988776655",
+  "budget": 25000,
+  "description": "আমাদের অনলাইন কাপড়ের ব্র্যান্ডের জন্য একটি আধুনিক ক্যাটালগ ও কার্ড পেমেন্ট সাপোর্ট সহ ই-কমার্স সাইট দরকার। মোবাইল রেসপন্সিভ হতে হবে।",
+  "visibility": "public",
+  "buyerEmail": "customer@ptenit.com",
+  "_lastSynced": "2026-09-21T13:23:35.954Z",
+  "title": "ক্লথিং ব্র্যান্ডের জন্য ই-কমার্স ওয়েবসাইট ডেভেলপমেন্ট",
+  "buyerName": "মেহেদী হাসান (কাস্টমার)",
+  "category": "Web Development",
+  "status": "open"
+}

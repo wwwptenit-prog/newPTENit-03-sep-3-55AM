@@ -1,0 +1,58 @@
+{
+  "id": "graphic-design",
+  "thumbnail": "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=800&q=80",
+  "iconName": "Palette",
+  "title": "Graphic Design",
+  "rating": 5,
+  "badge": "আগে কাজ শুরু",
+  "order": 3,
+  "category": "Design",
+  "priceText": "৳5,000 থেকে শুরু",
+  "fullDescription": "ব্র্যান্ডের ভিজ্যুয়াল আইডেন্টিটি প্রতিষ্ঠা করতে চোখ ধাঁধানো গ্রাফিক ডিজাইন সেবা। লোগো ডিজাইন, সোশ্যাল মিডিয়া ব্যানার, ফ্লাইয়ার, ব্রোশিয়ার এবং ব্র্যান্ড বুক প্রিপারেশন।",
+  "shortDescription": "Professional branding, social media design, banner, poster, brochure, business card and marketing creatives.",
+  "_lastSynced": "2026-09-21T13:23:33.288Z",
+  "features": [
+    "Unique Vector Logo Design",
+    "Brand Color Palette & Typography",
+    "Social Media Kit (20+ Templates)",
+    "Print-Ready High Res Files",
+    "Unlimited Revisions"
+  ],
+  "packages": {
+    "premium": {
+      "name": "Complete Brand Identity Manual",
+      "price": 28000,
+      "revisions": "Unlimited",
+      "deliveryDays": 8,
+      "features": [
+        "Logo + Brand Guide",
+        "Packaging & Stationery",
+        "Marketing Creatives"
+      ]
+    },
+    "standard": {
+      "revisions": 5,
+      "features": [
+        "15 Custom Posts",
+        "Cover Photo",
+        "Canva Editable Links"
+      ],
+      "name": "Social Media Kit (15 Posts)",
+      "deliveryDays": 4,
+      "price": 12000
+    },
+    "basic": {
+      "deliveryDays": 2,
+      "price": 5000,
+      "revisions": 3,
+      "features": [
+        "2 Logo Concepts",
+        "Vector High Res Files",
+        "3D Mockup"
+      ],
+      "name": "Vector Logo & Branding Card"
+    }
+  },
+  "reviewsCount": 52,
+  "published": true
+}

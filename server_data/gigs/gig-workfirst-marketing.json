@@ -1,0 +1,69 @@
+{
+  "id": "gig-workfirst-marketing",
+  "sellerAvatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+  "rating": 4.9,
+  "sellerTitle": "Digital Marketing Specialist & Media Buyer",
+  "reviewsCount": 31,
+  "thumbnail": "https://images.unsplash.com/photo-1557838923-2985c318be48?auto=format&fit=crop&w=800&q=80",
+  "packages": {
+    "premium": {
+      "features": [
+        "মাসব্যাপী এড ম্যানেজমেন্ট",
+        "উচ্চ ROI স্ট্র্যাটেজি",
+        "সাপ্তাহিক প্রগ্রেস রিপোর্ট",
+        "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"
+      ],
+      "revisions": "Unlimited",
+      "deliveryDays": 30,
+      "price": 16000,
+      "name": "৩০ দিন ফুল এডস ম্যানেজমেন্ট"
+    },
+    "standard": {
+      "revisions": 5,
+      "deliveryDays": 5,
+      "name": "গ্রোথ সেলস ফানেল",
+      "price": 7500,
+      "features": [
+        "৩টি ক্যাম্পেইন A/B টেস্ট",
+        "কনভার্সন অপটিমাইজেশন",
+        "রিটার্গেটিং অডিয়েন্স",
+        "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"
+      ]
+    },
+    "basic": {
+      "price": 3000,
+      "name": "টার্গেটেড এডস সেটআপ",
+      "features": [
+        "১টি অডিয়েন্স ক্যাম্পেইন",
+        "পিক্সেল সেটআপ",
+        "এড কপিরাইটিং",
+        "০ টাকা অগ্রিম (কাজের পর পেমেন্ট)"
+      ],
+      "deliveryDays": 2,
+      "revisions": 3
+    }
+  },
+  "sellerName": "আরিফ হোসেন",
+  "salesCount": 42,
+  "isAgencyStaff": true,
+  "_lastSynced": "2026-09-21T13:23:34.270Z",
+  "createdAt": "2026-03-02",
+  "category": "Digital Marketing",
+  "description": "আগে কাজ শুরু সুবিধা: কোনো অগ্রিম পেমেন্ট ছাড়াই আপনার ব্র্যান্ডের জন্য ফেসবুক ও গুগল এডস ক্যাম্পেইন, পিক্সেল ট্র্যাকিং এবং লিড ফানেল সেটআপ করব। ড্রাফট ও প্রাথমিক রেজাল্ট যাচাই করে বিল রিলিজ করবেন।",
+  "sellerId": "teacher-2",
+  "status": "active",
+  "tags": [
+    "Facebook Ads",
+    "Google Ads",
+    "Digital Marketing",
+    "আগে কাজ শুরু"
+  ],
+  "title": "আমি সেলস বহুগুণ বাড়াতে টার্গেটেড ফেসবুক ও গুগল এডস ফানেল সেটআপ করব (আগে কাজ শুরু)",
+  "galleryImages": [
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80"
+  ],
+  "sellerLevel": "Top Rated Seller",
+  "sellerRating": 4.9,
+  "offerBadge": "আগে কাজ শুরু"
+}

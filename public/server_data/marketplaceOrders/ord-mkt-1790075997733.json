@@ -1,0 +1,32 @@
+{
+  "id": "ord-mkt-1790075997733",
+  "category": "UI/UX Design",
+  "title": "মোবাইল অ্যাপ স্ক্রিন প্রোটোটাইপিং (Figma to Flutter/React Native)",
+  "buyerEmail": "client@ptenit.com",
+  "updates": [
+    {
+      "note": "কাজ শুরু করা হয়েছে।",
+      "date": "২৫/৯/২০২৬, ৪:৫৭:০৬ AM",
+      "id": "upd-1790290626780",
+      "sender": "Mds Kazi Sohag (Admin)"
+    }
+  ],
+  "deadlineDate": "2026-09-27",
+  "deliveryNote": "একটি হেলথ-টেক স্টার্টআপের জন্য ১২টি প্রিমিয়াম মোবাইল স্ক্রিনের আধুনিক Figma প্রোটোটাইপ ও কম্পোনেন্ট সিস্টেম ডিজাইন করতে হবে। ডার্ক ও লাইট মোড উভয়ই থাকতে হবে।",
+  "transactionId": "TRX-75997733",
+  "sellerPayout": 7650,
+  "createdAt": "2026-09-22T11:19:57.733Z",
+  "adminCommission": 850,
+  "amount": 8500,
+  "type": "custom_agency_order",
+  "buyerId": "ফারহানা-চৌধুরী-(nexgen-agency)",
+  "sellerName": "Mds Kazi Sohag (Admin)",
+  "_lastUpdated": "2026-09-24T22:57:06.781Z",
+  "packageType": "Standard",
+  "buyerPhone": "01812345678",
+  "paymentMethod": "bKash Escrow Security",
+  "status": "in_progress",
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "buyerName": "ফারহানা চৌধুরী (NexGen Agency)",
+  "sellerId": "admin-1"
+}

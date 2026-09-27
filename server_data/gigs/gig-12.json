@@ -1,0 +1,53 @@
+{
+  "id": "gig-12",
+  "rating": 5,
+  "salesCount": 26,
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "sellerId": "teacher-1",
+  "isAgencyStaff": true,
+  "sellerRating": 5,
+  "description": "AWS, DigitalOcean, Hetzner সার্ভারে Ubuntu, Nginx, Docker সেটআপ, জিরো ডাউনটাইম মাইগ্রেশন ও ফ্রি SSL সার্টিফিকেট।",
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "status": "active",
+  "reviewsCount": 21,
+  "thumbnail": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
+  "title": "আমি লিনাক্স ভিপিএস, সিপ্যানেল, এসএসএল এবং ক্লাউড সার্ভার মাইগ্রেশন সাপোর্ট দেবো",
+  "_lastSynced": "2026-09-21T13:23:34.271Z",
+  "category": "Cyber Security & Server",
+  "createdAt": "2026-02-05",
+  "packages": {
+    "basic": {
+      "price": 2000,
+      "deliveryDays": 1,
+      "revisions": 2,
+      "name": "SSL & Server Fix",
+      "features": [
+        "Free SSL Setup",
+        "Nginx Configuration"
+      ]
+    },
+    "standard": {
+      "price": 6000,
+      "features": [
+        "Database & File Migration",
+        "DNS Setup",
+        "Performance Check"
+      ],
+      "deliveryDays": 2,
+      "name": "Zero Downtime Migration",
+      "revisions": 3
+    },
+    "premium": {
+      "features": [
+        "Dockerization",
+        "CI/CD Pipeline",
+        "Security Hardening"
+      ],
+      "deliveryDays": 4,
+      "revisions": "Unlimited",
+      "price": 15000,
+      "name": "Full VPS / Docker Infra"
+    }
+  },
+  "sellerTitle": "DevOps & Cloud Specialist"
+}

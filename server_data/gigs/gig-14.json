@@ -1,0 +1,53 @@
+{
+  "id": "gig-14",
+  "packages": {
+    "premium": {
+      "revisions": "Unlimited",
+      "name": "Turnkey Automated Store",
+      "price": 38000,
+      "deliveryDays": 10,
+      "features": [
+        "Winning Products Research",
+        "Automated Order System",
+        "Marketing Apps"
+      ]
+    },
+    "basic": {
+      "name": "Shopify Starter",
+      "features": [
+        "Basic Theme Setup",
+        "৫টি প্রোডাক্ট"
+      ],
+      "price": 6000,
+      "deliveryDays": 2,
+      "revisions": 3
+    },
+    "standard": {
+      "revisions": 5,
+      "name": "Pro E-Commerce Store",
+      "price": 18000,
+      "deliveryDays": 5,
+      "features": [
+        "Premium Theme",
+        "২০টি প্রোডাক্ট",
+        "Payment & Courier Integration"
+      ]
+    }
+  },
+  "sellerRating": 5,
+  "category": "Web Development",
+  "title": "আমি শপিফাই (Shopify) স্টোর সেটআপ, কাস্টম থিম এবং ড্রপশিপিং কনফিগারেশন করবো",
+  "status": "active",
+  "description": "প্রফেশনাল শপিফাই ই-কমার্স স্টোর। উইনিং প্রোডাক্ট ইমপোর্ট, পেমেন্ট গেটওয়ে সেটআপ এবং হাই-কনভার্টিং লেআউট।",
+  "_lastSynced": "2026-09-21T13:23:34.271Z",
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "salesCount": 20,
+  "createdAt": "2026-02-07",
+  "sellerId": "teacher-1",
+  "reviewsCount": 15,
+  "sellerTitle": "E-Commerce & Shopify Architect",
+  "rating": 5,
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "thumbnail": "https://images.unsplash.com/photo-1556742049-0a670f4a4591?auto=format&fit=crop&w=800&q=80",
+  "isAgencyStaff": true
+}

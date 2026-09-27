@@ -1,0 +1,52 @@
+{
+  "id": "gig-21",
+  "description": "আপনার পেইজের কমেন্টে অটো রিপ্লাই, ইনবক্সে মেসেজ ফ্লো এবং হোয়াটসঅ্যাপে ক্যাটাগরি দেখিয়ে প্রোডাক্ট অর্ডার কনফার্মেশন।",
+  "title": "আমি ফেসবুক মেসেঞ্জার ও হোয়াটসঅ্যাপের জন্য মেনিচ্যাট (ManyChat) অটোমেশন বোট বানাবো",
+  "sellerRating": 4.8,
+  "status": "active",
+  "sellerId": "teacher-2",
+  "sellerAvatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+  "thumbnail": "https://images.unsplash.com/photo-1611746872915-64382b5c76da?auto=format&fit=crop&w=800&q=80",
+  "category": "AI & Automation",
+  "reviewsCount": 19,
+  "salesCount": 25,
+  "sellerName": "আরিফ হোসেন",
+  "sellerTitle": "Automation & Growth Lead",
+  "isAgencyStaff": true,
+  "packages": {
+    "premium": {
+      "deliveryDays": 6,
+      "features": [
+        "WhatsApp Business API Integration",
+        "CRM Connection"
+      ],
+      "price": 15000,
+      "revisions": "Unlimited",
+      "name": "WhatsApp & Messenger Automation"
+    },
+    "standard": {
+      "features": [
+        "Product Catalog Flow",
+        "Lead Form Capture",
+        "Broadcast Flow"
+      ],
+      "name": "Full E-Commerce Bot Flow",
+      "price": 6500,
+      "revisions": 4,
+      "deliveryDays": 3
+    },
+    "basic": {
+      "name": "Auto Reply Setup",
+      "price": 2000,
+      "revisions": 2,
+      "features": [
+        "Comment to Inbox Bot",
+        "Welcome Message"
+      ],
+      "deliveryDays": 1
+    }
+  },
+  "createdAt": "2026-02-14",
+  "rating": 4.8,
+  "_lastSynced": "2026-09-21T13:23:34.272Z"
+}

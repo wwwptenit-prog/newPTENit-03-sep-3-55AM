@@ -1,0 +1,58 @@
+{
+  "id": "seo",
+  "title": "SEO (Search Engine Optimization)",
+  "reviewsCount": 41,
+  "shortDescription": "Google SEO, Local SEO, YouTube SEO and website optimization.",
+  "rating": 5,
+  "iconName": "Search",
+  "_lastSynced": "2026-09-21T13:23:33.289Z",
+  "published": true,
+  "category": "Marketing",
+  "badge": "আগে কাজ শুরু",
+  "order": 5,
+  "fullDescription": "গুগলের প্রথম পেজে আপনার ওয়েবসাইট বা সার্ভিস নিয়ে আসতে রেজাল্ট-ওরিয়েন্টেড SEO সার্ভিস। অন-পেজ, অফ-পেজ, টেকনিক্যাল SEO এবং গুগল ম্যাপস লোকাল SEO গ্যারান্টি।",
+  "packages": {
+    "premium": {
+      "features": [
+        "National/Global Target",
+        "Competitor Hijack",
+        "Monthly Guarantee"
+      ],
+      "name": "Top 3 Guaranteed Organic SEO",
+      "revisions": "Unlimited",
+      "price": 50000,
+      "deliveryDays": 60
+    },
+    "basic": {
+      "revisions": 3,
+      "price": 10000,
+      "features": [
+        "Keyword Research",
+        "Meta Optimization",
+        "Speed Fix"
+      ],
+      "deliveryDays": 5,
+      "name": "Technical & On-Page Audit"
+    },
+    "standard": {
+      "deliveryDays": 30,
+      "revisions": 5,
+      "features": [
+        "Full On-Page & Off-Page",
+        "High DA Backlinks",
+        "Rank Tracking"
+      ],
+      "name": "Google Rank Growth (Monthly)",
+      "price": 22000
+    }
+  },
+  "features": [
+    "Comprehensive Keyword Research",
+    "On-Page Title & Meta Tag Optimization",
+    "Technical SEO & Speed Boost",
+    "High Authority Backlink Building",
+    "Google My Business Rank Boost"
+  ],
+  "thumbnail": "https://images.unsplash.com/photo-1562577309-4932fdd64cd1?auto=format&fit=crop&w=800&q=80",
+  "priceText": "৳10,000 / মাস"
+}

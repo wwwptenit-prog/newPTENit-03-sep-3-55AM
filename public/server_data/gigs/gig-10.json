@@ -1,0 +1,53 @@
+{
+  "id": "gig-10",
+  "sellerAvatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+  "reviewsCount": 26,
+  "salesCount": 31,
+  "sellerName": "আরিফ হোসেন",
+  "status": "active",
+  "thumbnail": "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?auto=format&fit=crop&w=800&q=80",
+  "sellerId": "teacher-2",
+  "description": "গুগলে ফার্স্ট পেজে র‍্যাংক করার জন্য টেকনিক্যাল ফিক্স, ক্যানোনিকাল ট্যাগ, মেটা টাইটেল, এইচ১ রি-রাইট এবং অন-পেজ SEO।",
+  "title": "আমি আপনার ওয়েবসাইটের সম্পূর্ণ অন-পেজ এবং টেকনিক্যাল এসইও র্যাঙ্কিং অডিট করবো",
+  "createdAt": "2026-02-03",
+  "isAgencyStaff": true,
+  "rating": 4.8,
+  "_lastSynced": "2026-09-21T13:23:34.271Z",
+  "sellerRating": 4.8,
+  "category": "Digital Marketing",
+  "packages": {
+    "standard": {
+      "features": [
+        "১০ পেজ SEO",
+        "Sitemap & Indexing",
+        "Meta Tags Fix"
+      ],
+      "revisions": 4,
+      "price": 7500,
+      "name": "On-Page SEO (10 Pages)",
+      "deliveryDays": 4
+    },
+    "premium": {
+      "revisions": "Unlimited",
+      "price": 20000,
+      "features": [
+        "On-page + Technical",
+        "High DA Backlinks",
+        "Monthly Rank Report"
+      ],
+      "name": "Full Monthly SEO Service",
+      "deliveryDays": 30
+    },
+    "basic": {
+      "name": "Technical Audit Report",
+      "price": 2000,
+      "revisions": 2,
+      "features": [
+        "Full Audit PDF",
+        "Actionable Plan"
+      ],
+      "deliveryDays": 1
+    }
+  },
+  "sellerTitle": "SEO & Growth Marketing Lead"
+}

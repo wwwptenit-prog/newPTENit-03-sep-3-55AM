@@ -1,0 +1,50 @@
+{
+  "id": "course-web-basic-2026",
+  "isPublicOffer": true,
+  "published": true,
+  "liveClassModuleNo": "০১",
+  "requirements": [
+    "কম্পিউটার বা ল্যাপটপ"
+  ],
+  "liveClassStatus": "scheduled",
+  "isFree": false,
+  "liveSchedule": "০৪ সেপ্টেম্বর ২০২৬, রাত ০৯:৩০ টা",
+  "whatYouWillLearn": [
+    "HTML5 & Responsive CSS3",
+    "Tailwind CSS Layouts",
+    "JavaScript Essentials & DOM manipulation"
+  ],
+  "liveClassDate": "2026-09-04",
+  "createdAt": "2026-02-12",
+  "duration": "6 Weeks (24 Hours)",
+  "enrolledCount": 0,
+  "reviewsCount": 0,
+  "price": 4500,
+  "discountPrice": 2800,
+  "liveClassLessonNo": "০৩",
+  "title": "Full Stack Web Development - Basic (HTML, CSS & JS Fundamentals)",
+  "targetLessons": 18,
+  "rating": 5,
+  "category": "Web Development",
+  "level": "basic",
+  "liveClassSerialNo": "০৩",
+  "tags": [
+    "#WebDevBasic",
+    "#HTML",
+    "#CSS"
+  ],
+  "modules": [],
+  "_lastSynced": "2026-09-21T13:23:32.009Z",
+  "liveClassTime": "21:30",
+  "lessonsCount": 18,
+  "targetModules": 4,
+  "offerStatus": "offered",
+  "description": "ওয়েব ডেভেলপমেন্টের বেসিক ফাউন্ডেশন কোর্স। শূন্য থেকে HTML5, CSS3, Tailwind এবং JavaScript শিখে ওয়েবসাইট তৈরি করুন।",
+  "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+  "thumbnail": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=800&q=80",
+  "liveClassTopic": "Tailwind CSS রেসপনসিভ লেআউট ও ফ্লেক্সবক্স হ্যান্ডস-অন",
+  "assignedInstructorId": "teacher-1",
+  "liveClassLink": "https://meet.google.com/web-basic-live",
+  "instructorRole": "Senior Software Engineer",
+  "teacherCommissionRate": 35
+}

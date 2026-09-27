@@ -1,0 +1,15 @@
+{
+  "id": "usr-1790075662913",
+  "specialistStatus": "not_applied",
+  "_lastUpdated": "2026-09-22T11:14:24.654Z",
+  "name": "yyy",
+  "email": "www.ptenit@gmail.com",
+  "createdAt": "2026-09-22",
+  "activeRole": "customer",
+  "mobile": "018028241",
+  "roles": [
+    "customer"
+  ],
+  "role": "customer",
+  "isSpecialist": false
+}

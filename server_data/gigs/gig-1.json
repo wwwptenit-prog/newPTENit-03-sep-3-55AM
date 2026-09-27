@@ -1,0 +1,57 @@
+{
+  "id": "gig-1",
+  "description": "আপনার স্টার্টআপ বা ব্যবসার জন্য হাই-পারফরম্যান্স স্পিডি ওয়েব অ্যাপ্লিকেশন। রেসপন্সিভ ইউআই, নিরাপদ ব্যাকএন্ড এবং রিয়েলটাইম ডাটাবেস ইন্টিগ্রেশন।",
+  "reviewsCount": 42,
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "rating": 4.9,
+  "sellerName": "প্রকৌশলী আল-আমিন",
+  "salesCount": 58,
+  "category": "Web Development",
+  "packages": {
+    "basic": {
+      "features": [
+        "১টি ল্যান্ডিং পেজ",
+        "Tailwind UI",
+        "মোবাইল ফ্রেন্ডলি"
+      ],
+      "revisions": 3,
+      "price": 8500,
+      "deliveryDays": 3,
+      "name": "Single Page App"
+    },
+    "premium": {
+      "name": "Enterprise Custom SaaS",
+      "deliveryDays": 14,
+      "price": 45000,
+      "revisions": "Unlimited",
+      "features": [
+        "Full SaaS Engine",
+        "Payment Gateway",
+        "Deployment",
+        "6 Months Support"
+      ]
+    },
+    "standard": {
+      "deliveryDays": 7,
+      "price": 22000,
+      "revisions": 5,
+      "name": "Full Dynamic Website",
+      "features": [
+        "৫টি ডায়নামিক পেজ",
+        "Admin Panel",
+        "API Setup",
+        "Database"
+      ]
+    }
+  },
+  "title": "আমি ফুল-স্ট্যাক রিয়েক্ট, নেক্সট-জেএস এবং নোড-জেএস কাস্টম ওয়েব অ্যাপ ডেভেলপ করবো",
+  "isAgencyStaff": true,
+  "thumbnail": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+  "sellerTitle": "Senior Full Stack Architect & Tech Lead",
+  "status": "active",
+  "sellerId": "teacher-1",
+  "createdAt": "2026-01-10",
+  "offerBadge": "আগে কাজ শুরু",
+  "_lastSynced": "2026-09-21T13:23:34.270Z",
+  "sellerRating": 5
+}

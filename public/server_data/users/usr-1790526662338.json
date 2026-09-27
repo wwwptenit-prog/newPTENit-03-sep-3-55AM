@@ -1,0 +1,15 @@
+{
+  "id": "usr-1790526662338",
+  "createdAt": "2026-09-27",
+  "mobile": "01795028524",
+  "specialistStatus": "not_applied",
+  "activeRole": "customer",
+  "isSpecialist": false,
+  "name": "Rabbi",
+  "email": "mdskazi2016@gmail.com",
+  "_lastUpdated": "2026-09-27T16:31:03.299Z",
+  "roles": [
+    "customer"
+  ],
+  "role": "customer"
+}

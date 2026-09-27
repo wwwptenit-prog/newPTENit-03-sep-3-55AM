@@ -1,0 +1,70 @@
+{
+  "id": "gig-premium-erp",
+  "reviewsCount": 46,
+  "galleryImages": [
+    "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80"
+  ],
+  "sellerAvatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "tags": [
+    "ERP",
+    "POS",
+    "Software",
+    "প্রিমিয়াম",
+    "Official Agency"
+  ],
+  "sellerLevel": "Top Rated Agency",
+  "createdAt": "2026-03-01",
+  "sellerName": "PTENit Official Agency",
+  "salesCount": 89,
+  "category": "Software Development",
+  "title": "PTENit অফিশিয়াল প্রিমিয়াম এন্টারপ্রাইজ ইআরপি, কাস্টম সফটওয়্যার ও ক্লাউড পজ সিস্টেম",
+  "description": "প্রিমিয়াম অফিশিয়াল সার্ভিস: মাঝারি ও বড় ব্যবসা, সুপারশপ এবং কর্পোরেট প্রতিষ্ঠানের জন্য কাস্টম ইআরপি, ইনভেন্টরি, একাউন্টিং ও মাল্টি-ব্রাঞ্চ বিলিং সফটওয়্যার। ক্লাউড ব্যাকআপ, রোল পারমিশন ও ডেডিকেটেড লাইফটাইম সাপোর্ট সহ।",
+  "rating": 5,
+  "thumbnail": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+  "packages": {
+    "basic": {
+      "name": "Starter POS & Billing",
+      "features": [
+        "ইনভয়েস ও বারকোড বিলিং",
+        "স্টক ও সেলস ট্র্যাকিং",
+        "ক্যাশ ও বাকি রেজিস্টার",
+        "লাইফটাইম অফিশিয়াল সাপোর্ট"
+      ],
+      "revisions": 3,
+      "price": 20000,
+      "deliveryDays": 5
+    },
+    "premium": {
+      "features": [
+        "ফুল কাস্টম বিজনেস সফটওয়্যার",
+        "মোবাইল অ্যাপ ইন্টিগ্রেশন",
+        "সোর্স কোড ও এপিআই অ্যাক্সেস",
+        "১ বছর ২৪/৭ প্রায়োরিটি সাপোর্ট"
+      ],
+      "revisions": "Unlimited",
+      "name": "Enterprise Custom SaaS Engine",
+      "price": 130000,
+      "deliveryDays": 30
+    },
+    "standard": {
+      "name": "Multi-Branch Cloud ERP",
+      "deliveryDays": 14,
+      "price": 55000,
+      "revisions": 5,
+      "features": [
+        "মাল্টি-ব্রাঞ্চ সিঙ্ক",
+        "অ্যাকাউন্টিং ও পে-রোল",
+        "কাস্টমার লেজার ও রিপোর্ট",
+        "অনলাইন ক্লাউড হোস্টিং"
+      ]
+    }
+  },
+  "_lastSynced": "2026-09-21T13:23:34.269Z",
+  "sellerId": "ptenit-agency",
+  "isAgencyStaff": true,
+  "sellerTitle": "Official IT Solutions & Software Agency",
+  "sellerRating": 5,
+  "offerBadge": "প্রিমিয়াম",
+  "status": "active"
+}

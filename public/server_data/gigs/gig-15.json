@@ -1,0 +1,54 @@
+{
+  "id": "gig-15",
+  "packages": {
+    "basic": {
+      "deliveryDays": 3,
+      "features": [
+        "৩০ সেকেন্ড ভিডিও",
+        "Full HD 1080p",
+        "Sound Effects"
+      ],
+      "revisions": 3,
+      "name": "30 Second Explainer",
+      "price": 5000
+    },
+    "standard": {
+      "price": 11000,
+      "deliveryDays": 5,
+      "name": "60 Second Explainer",
+      "revisions": 5,
+      "features": [
+        "৬০ সেকেন্ড ভিডিও",
+        "Voiceover Sync",
+        "Script Assistance"
+      ]
+    },
+    "premium": {
+      "revisions": "Unlimited",
+      "deliveryDays": 10,
+      "price": 22000,
+      "features": [
+        "১২০ সেকেন্ড ভিডিও",
+        "Custom Characters",
+        "Commercial Rights"
+      ],
+      "name": "2 Min Pro Brand Video"
+    }
+  },
+  "sellerRating": 4.8,
+  "category": "Video Editing",
+  "title": "আমি ব্যবসার প্রচারের জন্য ২ডি এনিমেটেড এক্সপ্লেইনার ভিডিও ও প্রমো তৈরি করবো",
+  "status": "active",
+  "description": "আকর্ষণীয় ক্যারেক্টার এনিমেশন, ভয়েসওভার ও বিজিএম সহ ২ডি এনিমেটেড প্রোমোশনাল ভিডিও এডিটিং।",
+  "_lastSynced": "2026-09-21T13:23:34.271Z",
+  "sellerName": "তামিম ইকবাল",
+  "salesCount": 14,
+  "createdAt": "2026-02-08",
+  "sellerId": "student-3",
+  "reviewsCount": 11,
+  "sellerAvatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80",
+  "rating": 4.8,
+  "sellerTitle": "2D Animator & Motion Designer",
+  "thumbnail": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80",
+  "isAgencyStaff": false
+}

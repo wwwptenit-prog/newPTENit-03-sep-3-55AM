@@ -1,0 +1,51 @@
+{
+  "id": "course-seo-content",
+  "instructorRole": "SEO Specialist & Growth Marketer",
+  "liveClassTopic": "Technical SEO Audit, Schema Markup ও Google Search Console",
+  "liveClassLink": "https://meet.google.com/seo-live-mastery",
+  "targetModules": 4,
+  "tags": [
+    "#SEO",
+    "#ContentMarketing",
+    "#GoogleRanking"
+  ],
+  "liveClassLessonNo": "০২",
+  "published": true,
+  "level": "advanced",
+  "category": "Digital Marketing",
+  "liveClassTime": "20:00",
+  "liveClassModuleNo": "০২",
+  "rating": 4.9,
+  "lessonsCount": 14,
+  "assignedInstructorId": "teacher-1",
+  "createdAt": "2026-02-24",
+  "targetLessons": 14,
+  "enrolledCount": 140,
+  "whatYouWillLearn": [
+    "Keyword Research & Competitor Gap Analysis",
+    "Technical On-Page & Schema Markup",
+    "Backlinks & Topical Authority"
+  ],
+  "discountPrice": 2900,
+  "requirements": [
+    "কম্পিউটার ও ব্রাউজার"
+  ],
+  "liveSchedule": "০৮ সেপ্টেম্বর ২০২৬, রাত ০৮:০০ টা",
+  "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+  "liveClassDate": "2026-09-08",
+  "liveClassSerialNo": "০৩",
+  "modules": [],
+  "thumbnail": "https://images.unsplash.com/photo-1571786256017-aee7a0c009b6?auto=format&fit=crop&w=800&q=80",
+  "price": 4500,
+  "liveClassStatus": "scheduled",
+  "title": "Advanced Technical SEO & AI Content Strategy Masterclass",
+  "_lastSynced": "2026-09-21T13:23:32.010Z",
+  "duration": "5 Weeks (18 Hours)",
+  "teacherCommissionRate": 40,
+  "targetAssignments": 14,
+  "reviewsCount": 38,
+  "offerStatus": "accepted",
+  "isFree": false,
+  "description": "গুগল র‍্যাংকিং ফ্যাক্টর, টেকনিক্যাল এসইও অডিট, কিওয়ার্ড রিসার্চ এবং এআই দিয়ে হাই-কনভার্টিং কন্টেন্ট স্ট্র্যাটেজি।",
+  "isPublicOffer": true
+}

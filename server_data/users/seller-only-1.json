@@ -1,0 +1,18 @@
+{
+  "id": "seller-only-1",
+  "_lastSynced": "2026-09-21T13:23:36.685Z",
+  "isMentor": false,
+  "name": "নাজমুল করিম (ডিজিটাল ক্রিয়েটর ও সেলার)",
+  "mobile": "01855443322",
+  "createdAt": "2026-02-15",
+  "isSeller": true,
+  "role": "specialist",
+  "sellerStatus": "approved",
+  "title": "UI/UX & Graphics Specialist (Just Seller)",
+  "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80",
+  "roles": [
+    "specialist"
+  ],
+  "email": "nazmul.seller@ptenit.com",
+  "bio": "ফ্রিল্যান্স গ্রাফিক ডিজাইনার এবং টপ ডিজিটাল অ্যাসেট ও টেমপ্লেট সেলার।"
+}

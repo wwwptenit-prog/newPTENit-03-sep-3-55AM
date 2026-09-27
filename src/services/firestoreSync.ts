@@ -127,11 +127,23 @@ export function subscribeToCollection<T>(
 }
 
 /**
- * Persist or update a single document in Firestore
+ * Persist or update a single document in Firestore & Server Storage
  */
 export async function syncDocToFirestore(collectionName: string, docId: string, data: any): Promise<boolean> {
   if (!docId || !data) return false;
   const path = `${collectionName}/${docId}`;
+
+  // 1. Post to Server Storage endpoint (cPanel & Node backend)
+  try {
+    const cleanData = JSON.parse(JSON.stringify(data));
+    fetch('/api/sync.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ collection: collectionName, docId: String(docId), data: cleanData }),
+    }).catch(() => {});
+  } catch (e) {}
+
+  // 2. Persist to Cloud Firestore
   try {
     const docRef = doc(db, collectionName, String(docId));
     // Clean data of undefined fields which Firestore rejects
@@ -154,11 +166,18 @@ export async function syncDocToFirestore(collectionName: string, docId: string, 
 }
 
 /**
- * Delete a document from Firestore
+ * Delete a document from Firestore & Server Storage
  */
 export async function deleteDocFromFirestore(collectionName: string, docId: string): Promise<boolean> {
   if (!docId) return false;
   const path = `${collectionName}/${docId}`;
+
+  try {
+    fetch(`/api/sync.php?collection=${encodeURIComponent(collectionName)}&id=${encodeURIComponent(docId)}`, {
+      method: 'DELETE'
+    }).catch(() => {});
+  } catch {}
+
   try {
     const docRef = doc(db, collectionName, String(docId));
     await deleteDoc(docRef);
@@ -175,11 +194,35 @@ export async function deleteDocFromFirestore(collectionName: string, docId: stri
 }
 
 /**
+ * Fetch a collection from Server Storage (fallback & instant boot)
+ */
+export async function fetchServerCollection<T>(collectionName: string): Promise<T[]> {
+  try {
+    const res = await fetch(`/api/sync.php?collection=${encodeURIComponent(collectionName)}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data)) return data;
+    }
+  } catch (err) {}
+  return [];
+}
+
+/**
  * Batch synchronize an entire collection (e.g. initial seed or bulk import)
  */
 export async function syncCollectionToFirestore(collectionName: string, items: any[], idField: string = 'id'): Promise<boolean> {
   try {
     if (!Array.isArray(items) || items.length === 0) return false;
+
+    // Send batch to server storage
+    try {
+      fetch('/api/sync.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ collection: collectionName, items }),
+      }).catch(() => {});
+    } catch {}
+
     const batch = writeBatch(db);
     // Firestore batch limit is 500 operations
     const chunk = items.slice(0, 450);

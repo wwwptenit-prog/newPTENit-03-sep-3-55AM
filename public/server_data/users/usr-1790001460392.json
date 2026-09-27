@@ -1,0 +1,15 @@
+{
+  "id": "usr-1790001460392",
+  "specialistStatus": "not_applied",
+  "mobile": "01602954422",
+  "createdAt": "2026-09-21",
+  "isSpecialist": false,
+  "role": "customer",
+  "email": "www.pkenit@gmail.com",
+  "_lastUpdated": "2026-09-21T14:37:41.488Z",
+  "activeRole": "customer",
+  "name": "Monnni",
+  "roles": [
+    "customer"
+  ]
+}

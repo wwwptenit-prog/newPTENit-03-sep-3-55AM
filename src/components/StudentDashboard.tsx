@@ -180,10 +180,10 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
     );
   }
 
-  // Student's data
-  const myEnrollments = enrollments.filter(e => e.userId === currentUser.id || true);
-  const myCertificates = certificates.filter(c => c.studentId === currentUser.id || true);
-  const myOrders = orders.filter(o => o.userId === currentUser.id || true);
+  // Student's data (strictly filtered to current user)
+  const myEnrollments = enrollments.filter(e => e.userId === currentUser.id || (currentUser.email && (e as any).userEmail && (e as any).userEmail.toLowerCase() === currentUser.email.toLowerCase()));
+  const myCertificates = certificates.filter(c => c.studentId === currentUser.id || (currentUser.email && (c as any).studentEmail && (c as any).studentEmail.toLowerCase() === currentUser.email.toLowerCase()));
+  const myOrders = orders.filter(o => o.userId === currentUser.id || (currentUser.email && o.userEmail && o.userEmail.toLowerCase() === currentUser.email.toLowerCase()));
 
   // File Upload Handler (Base64)
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, setUrl: (url: string) => void, setName?: (name: string) => void) => {

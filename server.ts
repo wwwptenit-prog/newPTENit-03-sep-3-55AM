@@ -535,6 +535,105 @@ app.post('/api/payment/verify-gateway', async (req, res) => {
   }
 });
 
+// =======================================================
+// SERVER DATA STORAGE & SYNC API ROUTES (cPanel & Local)
+// =======================================================
+const serverDataDir = path.join(process.cwd(), 'server_data');
+if (!fs.existsSync(serverDataDir)) {
+  fs.mkdirSync(serverDataDir, { recursive: true });
+}
+
+// 1. GET Server Data
+app.get(['/api/sync.php', '/api/sync'], (req, res) => {
+  try {
+    const collectionName = (req.query.collection as string || '').replace(/[^a-zA-Z0-9_\-]/g, '');
+    const docId = (req.query.id as string || '').replace(/[^a-zA-Z0-9_\-]/g, '');
+
+    if (!collectionName) {
+      return res.json({ status: 'online', engine: 'Node & Express Server Storage', timestamp: new Date().toISOString() });
+    }
+
+    const colFile = path.join(serverDataDir, `${collectionName}.json`);
+    if (docId) {
+      const docFile = path.join(serverDataDir, collectionName, `${docId}.json`);
+      if (fs.existsSync(docFile)) {
+        return res.sendFile(docFile);
+      }
+      if (fs.existsSync(colFile)) {
+        const items = JSON.parse(fs.readFileSync(colFile, 'utf-8') || '[]');
+        const found = items.find((i: any) => i.id === docId);
+        if (found) return res.json(found);
+      }
+      return res.status(404).json({ error: 'Document not found' });
+    }
+
+    if (fs.existsSync(colFile)) {
+      return res.sendFile(colFile);
+    }
+    return res.json([]);
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// 2. POST / PUT Server Data
+app.post(['/api/sync.php', '/api/sync'], (req, res) => {
+  try {
+    const payload = req.body || {};
+    const targetCollection = (req.query.collection as string || payload.collection || '').replace(/[^a-zA-Z0-9_\-]/g, '');
+    const docId = (payload.docId || payload.id || '').replace(/[^a-zA-Z0-9_\-]/g, '');
+    const data = payload.data || payload;
+
+    if (!targetCollection) {
+      return res.status(400).json({ error: 'Collection name is required' });
+    }
+
+    // Handle bulk items array
+    if (Array.isArray(payload.items)) {
+      const colFile = path.join(serverDataDir, `${targetCollection}.json`);
+      fs.writeFileSync(colFile, JSON.stringify(payload.items, null, 2), 'utf-8');
+      return res.json({ success: true, collection: targetCollection, count: payload.items.length });
+    }
+
+    const cleanDocId = docId || `doc_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    const subDir = path.join(serverDataDir, targetCollection);
+    if (!fs.existsSync(subDir)) {
+      fs.mkdirSync(subDir, { recursive: true });
+    }
+
+    const docFile = path.join(subDir, `${cleanDocId}.json`);
+    const cleanData = { ...data, id: cleanDocId, _server_saved_at: new Date().toISOString() };
+    fs.writeFileSync(docFile, JSON.stringify(cleanData, null, 2), 'utf-8');
+
+    // Update master collection JSON file
+    const colFile = path.join(serverDataDir, `${targetCollection}.json`);
+    let existingItems: any[] = [];
+    if (fs.existsSync(colFile)) {
+      try {
+        existingItems = JSON.parse(fs.readFileSync(colFile, 'utf-8') || '[]');
+      } catch {}
+    }
+
+    const foundIdx = existingItems.findIndex((i: any) => i.id === cleanDocId);
+    if (foundIdx >= 0) {
+      existingItems[foundIdx] = { ...existingItems[foundIdx], ...cleanData };
+    } else {
+      existingItems.unshift(cleanData);
+    }
+    fs.writeFileSync(colFile, JSON.stringify(existingItems, null, 2), 'utf-8');
+
+    return res.json({
+      success: true,
+      message: 'Data successfully saved to server storage',
+      collection: targetCollection,
+      docId: cleanDocId,
+      timestamp: new Date().toISOString()
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 // Direct Download Routes for PTENit.zip & cPanel zip archives
 app.get(['/PTENit.zip', '/ptenit.zip', '/ptenit_cpanel_upload.zip', '/api/download/PTENit.zip'], (req, res) => {
   const publicPath = path.join(process.cwd(), 'public', 'PTENit.zip');

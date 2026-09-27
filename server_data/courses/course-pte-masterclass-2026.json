@@ -1,0 +1,52 @@
+{
+  "id": "course-pte-masterclass-2026",
+  "discountPrice": 4200,
+  "enrolledCount": 0,
+  "instructorRole": "PTE Certified Trainer",
+  "rating": 5,
+  "requirements": [
+    "হেডফোন সহ ল্যাপটপ বা কম্পিউটার",
+    "ইংরেজি ইন্টারমিডিয়েট লেভেল"
+  ],
+  "createdAt": "2026-02-15",
+  "liveClassTopic": "PTE 79+ Speaking Describe Image & AI Scoring Live Mock",
+  "duration": "5 Weeks (20 Hours)",
+  "teacherCommissionRate": 40,
+  "liveClassDate": "2026-09-03",
+  "liveSchedule": "০৩ সেপ্টেম্বর ২০২৬, রাত ০৯:০০ টা",
+  "tags": [
+    "#PTEAcademic",
+    "#PTEPreparation",
+    "#StudyAbroad"
+  ],
+  "liveClassSerialNo": "০৪",
+  "instructor": "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
+  "assignedInstructorId": "teacher-1",
+  "published": true,
+  "title": "PTE Academic - Advanced Level (79+ Target Masterclass 2026)",
+  "price": 6500,
+  "liveClassStatus": "scheduled",
+  "reviewsCount": 0,
+  "isPublicOffer": true,
+  "modules": [],
+  "targetModules": 5,
+  "whatYouWillLearn": [
+    "PTE Speaking Describe Image & Read Aloud Standard",
+    "PTE Writing Essay Template & Grammar Rules",
+    "PTE Listening Summarize Spoken Text Mastery",
+    "Real AI Evaluation & Live Mock Test Practice"
+  ],
+  "liveClassLink": "https://meet.google.com/pte-79-masterclass",
+  "liveClassTime": "21:00",
+  "thumbnail": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80",
+  "level": "advanced",
+  "liveClassModuleNo": "০২",
+  "isFree": false,
+  "liveClassLessonNo": "০২",
+  "_lastSynced": "2026-09-21T13:23:32.009Z",
+  "lessonsCount": 16,
+  "targetLessons": 16,
+  "offerStatus": "offered",
+  "description": "মেইন এডমিন কর্তৃক অফারকৃত এডভান্সড কোর্স। PTE Speaking, Writing, Reading & Listening সেকশনে 79+ স্কোর তোলার কৌশল ও AI মডেল মক টেস্ট প্র্যাকটিস।",
+  "category": "PTE Academic"
+}

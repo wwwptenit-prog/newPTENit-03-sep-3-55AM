@@ -1,0 +1,14 @@
+{
+  "id": "mkt-seller-1",
+  "isSeller": true,
+  "sellerStatus": "approved",
+  "name": "সোহাগ কাজী (ফ্রিলা্যান্সার সেলার)",
+  "createdAt": "2026-01-20",
+  "role": "instructor",
+  "bio": "মার্কেটপ্লেসের সার্টিফাইড টপ-রেটেড ফ্রিল্যান্সার ও গিগ ক্রিয়েটর।",
+  "title": "Top Rated Freelancer & Full-Stack Pro",
+  "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+  "_lastSynced": "2026-09-21T13:23:36.684Z",
+  "email": "seller@marketplace.com",
+  "mobile": "01799887766"
+}

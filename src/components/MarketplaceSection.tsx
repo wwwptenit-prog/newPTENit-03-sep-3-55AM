@@ -1036,74 +1036,6 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
     const combined = [...marketplaceOrders, ...convertedCustProjects];
     const { updatedOrders } = checkAndAutoCancelOverdueOrders(combined);
-    if (updatedOrders.length === 0) {
-      return [
-        {
-          id: 'ord-demo-101',
-          type: 'gig_order',
-          title: 'ফুল স্ট্যাক ই-কমার্স ওয়েবসাইট ও কাস্টম পেমেন্ট গেটওয়ে ডেভেলপমেন্ট',
-          category: 'Programming & Tech',
-          buyerId: currentUser?.id || 'buyer-1',
-          buyerName: currentUser?.name || 'বায়ার',
-          buyerEmail: currentUser?.email || 'buyer@ptenit.com',
-          sellerId: 'seller-1',
-          sellerName: 'সোরাব হোসেন (Senior Web Dev)',
-          sellerAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
-          packageType: 'Standard',
-          amount: 12000,
-          adminCommission: 1200,
-          sellerPayout: 10800,
-          paymentMethod: 'bKash Escrow Security',
-          transactionId: 'TRX-BK8839210',
-          status: 'in_progress',
-          createdAt: new Date(Date.now() - 3 * 86400000).toISOString(),
-          deadlineDate: new Date(Date.now() + 4 * 86400000).toISOString().split('T')[0]
-        },
-        {
-          id: 'ord-demo-102',
-          type: 'gig_order',
-          title: 'মডার্ন ইউআই/ইউএক্স (UI/UX) মোবাইল অ্যাপ ডিজাইন & ফিগমা সোর্স ফাইল',
-          category: 'Graphics & Design',
-          buyerId: currentUser?.id || 'buyer-1',
-          buyerName: currentUser?.name || 'বায়ার',
-          buyerEmail: currentUser?.email || 'buyer@ptenit.com',
-          sellerId: 'seller-2',
-          sellerName: 'তানজিলা ইসলাম (UI/UX Designer)',
-          sellerAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
-          packageType: 'Premium',
-          amount: 8500,
-          adminCommission: 850,
-          sellerPayout: 7650,
-          paymentMethod: 'Nagad Escrow Security',
-          transactionId: 'TRX-NG9921104',
-          status: 'in_review',
-          deliveryNote: 'আপনার অ্যান্ড্রয়েড ও আইওএস মোবাইল অ্যাপের সমস্ত স্ক্রিন ডিজাইন সম্পূর্ণ করে ফিগমা (Figma) লিঙ্ক এবং ডিজাইন গাইডলাইন ফাইল অ্যাটাচ করে দেওয়া হলো। দয়া করে রিভিউ করে এস্ক্রো ফান্ড রিলিজ করুন।',
-          createdAt: new Date(Date.now() - 6 * 86400000).toISOString(),
-          deadlineDate: new Date(Date.now() - 1 * 86400000).toISOString().split('T')[0]
-        },
-        {
-          id: 'ord-demo-103',
-          type: 'gig_order',
-          title: 'ফেসবুক ও গুগল এডস ক্যাম্পেইন সেটআপ এবং ১০০% অর্গানিক এসইও',
-          category: 'Digital Marketing',
-          buyerId: currentUser?.id || 'buyer-1',
-          buyerName: currentUser?.name || 'বায়ার',
-          buyerEmail: currentUser?.email || 'buyer@ptenit.com',
-          sellerId: 'seller-3',
-          sellerName: 'আরিফুল ইসলাম (Growth Marketer)',
-          sellerAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
-          packageType: 'Basic',
-          amount: 5000,
-          adminCommission: 500,
-          sellerPayout: 4500,
-          paymentMethod: 'Bank Escrow Security',
-          transactionId: 'TRX-BK1002341',
-          status: 'completed',
-          createdAt: new Date(Date.now() - 12 * 86400000).toISOString(),
-          deadlineDate: new Date(Date.now() - 5 * 86400000).toISOString().split('T')[0]
-        }
-      ];
-    }
     return updatedOrders;
   }, [marketplaceOrders, customerProjects]);
 
@@ -1113,9 +1045,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     return (courses || []).filter(c => c.offerStatus === 'offered');
   }, [courses]);
   const userEnrollments = useMemo(() => {
-    if (!currentUser) return enrollments || [];
-    const matched = (enrollments || []).filter(e => e.userId === currentUser.id || e.studentId === currentUser.id);
-    return matched.length > 0 ? matched : (enrollments || []);
+    if (!currentUser) return [];
+    return (enrollments || []).filter(e => e.userId === currentUser.id || e.studentId === currentUser.id || (currentUser.email && (e as any).userEmail && (e as any).userEmail.toLowerCase() === currentUser.email.toLowerCase()));
   }, [enrollments, currentUser]);
 
   const buyerDigitalOrders = useMemo(() => {
@@ -6591,18 +6522,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
           {(() => {
             const rawSellerGigs = currentUser ? gigs.filter(g =>
               (currentUser.id && g.sellerId === currentUser.id) ||
-              (currentUser.email && (g as any).sellerEmail && (g as any).sellerEmail.toLowerCase() === currentUser.email.toLowerCase()) ||
-              (currentUser.name && g.sellerName && (
-                g.sellerName.toLowerCase().trim() === currentUser.name.toLowerCase().trim() ||
-                g.sellerName.toLowerCase().includes(currentUser.name.toLowerCase().trim()) ||
-                currentUser.name.toLowerCase().trim().includes(g.sellerName.toLowerCase().trim())
-              ))
+              (currentUser.email && (g as any).sellerEmail && (g as any).sellerEmail.toLowerCase() === currentUser.email.toLowerCase())
             ) : [];
 
-            // If seller has no custom uploaded gigs yet, show initial live seller gigs (24টি) so profile sidebar, stat counts & feeds are consistent
-            const sellerGigs = rawSellerGigs.length > 0
-              ? rawSellerGigs
-              : gigs.filter(g => g.sellerId === 'mkt-seller-1' || g.sellerId === 'teacher-1' || g.isAgencyStaff || g.id === 'gig-6' || g.id === 'gig-7' || g.id === 'gig-8');
+            const sellerGigs = rawSellerGigs;
 
             /* STANDALONE DEDICATED GIG CREATION FULL-PAGE EXPERIENCE */
             if (sellerSubTab === 'create_gig') {
@@ -8784,10 +8707,14 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         {/* Status Filter Tabs - 4 Responsive Columns Layout (Removed 'সকল অর্ডার') */}
                         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 pt-1">
                           {(() => {
-                            const pendingOrdersCount = marketplaceOrders.filter(o => o.status === 'pending' || o.status === 'pending_approval').length;
-                            const inProgressCount = marketplaceOrders.filter(o => o.status === 'in_progress').length;
-                            const inReviewCount = marketplaceOrders.filter(o => o.status === 'in_review' || o.status === 'revision_requested').length;
-                            const completedCount = marketplaceOrders.filter(o => o.status === 'completed' || o.status === 'cancelled').length;
+                            const mySellerOrders = currentUser?.role === 'admin' 
+                              ? marketplaceOrders 
+                              : marketplaceOrders.filter(o => o.sellerId === currentUser?.id || (currentUser?.email && o.sellerEmail && o.sellerEmail.toLowerCase() === currentUser.email.toLowerCase()) || (o.assignedExpert && currentUser?.name && o.assignedExpert === currentUser.name));
+
+                            const pendingOrdersCount = mySellerOrders.filter(o => o.status === 'pending' || o.status === 'pending_approval').length;
+                            const inProgressCount = mySellerOrders.filter(o => o.status === 'in_progress').length;
+                            const inReviewCount = mySellerOrders.filter(o => o.status === 'in_review' || o.status === 'revision_requested').length;
+                            const completedCount = mySellerOrders.filter(o => o.status === 'completed' || o.status === 'cancelled').length;
 
                             return [
                               { id: 'pending', label: 'পেন্ডিং', count: pendingOrdersCount, icon: Clock, color: 'text-amber-500' },
@@ -8824,7 +8751,11 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                         {/* Filtered Order List - Beautiful Home Card Style (3D Compact, Responsive on Phone, White Text Buttons) */}
                         {(() => {
-                          const filtered = marketplaceOrders.filter(o => {
+                          const mySellerOrders = currentUser?.role === 'admin' 
+                            ? marketplaceOrders 
+                            : marketplaceOrders.filter(o => o.sellerId === currentUser?.id || (currentUser?.email && o.sellerEmail && o.sellerEmail.toLowerCase() === currentUser.email.toLowerCase()) || (o.assignedExpert && currentUser?.name && o.assignedExpert === currentUser.name));
+
+                          const filtered = mySellerOrders.filter(o => {
                             if ((sellerOrderFilter as any) === 'all') return true;
                             if (sellerOrderFilter === 'pending') return o.status === 'pending' || o.status === 'pending_approval';
                             if (sellerOrderFilter === 'in_progress') return o.status === 'in_progress';

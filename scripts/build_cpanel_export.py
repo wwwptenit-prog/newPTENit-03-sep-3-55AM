@@ -57,14 +57,30 @@ def main():
         shutil.copy2(src_htaccess, dist_htaccess)
         print("[+] Copied .htaccess to dist/.htaccess")
 
-    # 4. Ensure README_CPANEL_INSTRUCTIONS.txt is in dist
+    # 4. Ensure api/sync.php is in dist/api/sync.php
+    dist_api_dir = os.path.join(dist_dir, 'api')
+    src_api_dir = os.path.join(workspace_root, 'public', 'api')
+    if os.path.exists(src_api_dir):
+        if not os.path.exists(dist_api_dir):
+            shutil.copytree(src_api_dir, dist_api_dir)
+            print("[+] Copied api/ directory to dist/api/")
+
+    # 5. Ensure server_data/ is in dist/server_data/
+    dist_server_data = os.path.join(dist_dir, 'server_data')
+    src_server_data = os.path.join(workspace_root, 'public', 'server_data')
+    if os.path.exists(src_server_data):
+        if not os.path.exists(dist_server_data):
+            shutil.copytree(src_server_data, dist_server_data)
+            print("[+] Copied server_data/ directory to dist/server_data/")
+
+    # 6. Ensure README_CPANEL_INSTRUCTIONS.txt is in dist
     dist_readme = os.path.join(dist_dir, 'README_CPANEL_INSTRUCTIONS.txt')
     src_readme = os.path.join(workspace_root, 'public', 'README_CPANEL_INSTRUCTIONS.txt')
     if not os.path.exists(dist_readme) and os.path.exists(src_readme):
         shutil.copy2(src_readme, dist_readme)
         print("[+] Copied README_CPANEL_INSTRUCTIONS.txt to dist/")
 
-    # 5. Build ZIP Archive
+    # 7. Build ZIP Archive
     output_zip_temp = os.path.join(workspace_root, 'temp_production_cpanel.zip')
     if os.path.exists(output_zip_temp):
         os.remove(output_zip_temp)

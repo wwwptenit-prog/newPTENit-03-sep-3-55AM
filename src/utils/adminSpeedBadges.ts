@@ -39,7 +39,7 @@ export function computeAdminSpeedBadge(
     return {
       level: 'ultra',
       title: 'সুপারফাস্ট এক্সিকিউটর',
-      badgeText: '⚡ লাইটনিং ফাস্ট (গতি: ৯৯%)',
+      badgeText: 'লাইটনিং ফাস্ট',
       badgeBg: 'bg-emerald-500/15',
       badgeBorder: 'border-emerald-500/40',
       badgeTextCol: 'text-emerald-300',
@@ -53,7 +53,7 @@ export function computeAdminSpeedBadge(
     return {
       level: 'fast',
       title: 'উচ্চ গতিশীল এডমিন',
-      badgeText: '🚀 উচ্চ গতিশীল (গতি: ৯৪%)',
+      badgeText: 'উচ্চ গতিশীল',
       badgeBg: 'bg-sky-500/15',
       badgeBorder: 'border-sky-500/40',
       badgeTextCol: 'text-sky-300',
@@ -67,7 +67,7 @@ export function computeAdminSpeedBadge(
     return {
       level: 'active',
       title: 'সক্রিয় ও নির্ভরযোগ্য',
-      badgeText: '⭐ নির্ভরযোগ্য ও দ্রুত (গতি: ৮৮%)',
+      badgeText: 'নির্ভরযোগ্য ও দ্রুত',
       badgeBg: 'bg-amber-500/15',
       badgeBorder: 'border-amber-500/40',
       badgeTextCol: 'text-amber-300',
@@ -81,7 +81,7 @@ export function computeAdminSpeedBadge(
     return {
       level: 'steady',
       title: 'স্ট্যান্ডার্ড পারফর্মার',
-      badgeText: '🎯 স্ট্যান্ডার্ড গতি (গতি: ৮০%)',
+      badgeText: 'স্ট্যান্ডার্ড গতি',
       badgeBg: 'bg-purple-500/15',
       badgeBorder: 'border-purple-500/40',
       badgeTextCol: 'text-purple-300',

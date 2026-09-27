@@ -52,6 +52,8 @@ import {
   createUserWithEmailAndPassword, 
   signOut, 
   sendPasswordResetEmail,
+  GoogleAuthProvider,
+  signInWithPopup,
   User as FirebaseUser
 } from 'firebase/auth';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
@@ -159,6 +161,7 @@ interface DataContextType {
   
   // Auth & Profile
   login: (emailOrPhone: string, pass: string) => boolean;
+  loginWithGoogle: (preferredRole?: 'customer' | 'specialist' | 'both') => Promise<boolean>;
   signup: (userData: Omit<User, 'id' | 'createdAt'>, pass: string) => boolean;
   logout: () => void;
   demoLogin: (role: 'student' | 'instructor' | 'customer' | 'admin') => void;
@@ -1823,6 +1826,74 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     setUsers(prev => [...prev, newUser]);
     return true;
+  };
+
+  // Google Sign-In with Firebase Auth & Firestore Persistence
+  const loginWithGoogle = async (preferredRole: 'customer' | 'specialist' | 'both' = 'customer'): Promise<boolean> => {
+    try {
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      const result = await signInWithPopup(auth, provider);
+      const fbUser = result.user;
+      if (!fbUser) return false;
+
+      const email = fbUser.email?.toLowerCase() || '';
+      const displayName = fbUser.displayName || email.split('@')[0] || 'Google User';
+
+      let user = users.find(u => u.email.toLowerCase() === email);
+
+      if (user) {
+        if (user.blocked) {
+          alert("আপনার একাউন্টটি সাময়িকভাবে স্থগিত করা হয়েছে। এডমিনের সাথে যোগাযোগ করুন।");
+          return false;
+        }
+        const updatedUser: User = {
+          ...user,
+          avatar: fbUser.photoURL || user.avatar,
+        };
+        setCurrentUser(updatedUser);
+        setPtenitUser(updatedUser);
+        setMarketplaceUser(updatedUser);
+        syncDocToFirestore('users', updatedUser.id, updatedUser);
+        return true;
+      }
+
+      // If new Google user, assign role according to selection
+      const isAdminUser = email === 'mdskazisohag@gmail.com' || email === 'admin@ptenit.com';
+      const isSpec = preferredRole === 'specialist' || preferredRole === 'both';
+      const assignedRole = isAdminUser ? 'admin' : (preferredRole === 'specialist' ? 'instructor' : 'customer');
+      const assignedRoles: ('customer' | 'specialist' | 'instructor' | 'admin')[] = isAdminUser
+        ? ['admin', 'customer', 'specialist', 'instructor']
+        : preferredRole === 'specialist'
+        ? ['specialist', 'instructor']
+        : preferredRole === 'both'
+        ? ['customer', 'specialist', 'instructor']
+        : ['customer'];
+
+      const newUser: User = {
+        id: fbUser.uid,
+        name: displayName,
+        email: fbUser.email || '',
+        mobile: fbUser.phoneNumber || '',
+        role: assignedRole as any,
+        roles: assignedRoles,
+        activeRole: isAdminUser ? 'admin' : (preferredRole === 'specialist' ? 'specialist' : 'customer'),
+        isSpecialist: isSpec,
+        specialistStatus: isSpec ? 'pending' : 'not_applied',
+        avatar: fbUser.photoURL || undefined,
+        createdAt: new Date().toISOString().split('T')[0]
+      };
+
+      setUsers(prev => [newUser, ...prev]);
+      setCurrentUser(newUser);
+      setPtenitUser(newUser);
+      setMarketplaceUser(newUser);
+      syncDocToFirestore('users', newUser.id, newUser);
+      return true;
+    } catch (err: any) {
+      console.error('[Firebase Auth Google Sign-in]', err);
+      throw err;
+    }
   };
 
   // Marketplace Auth Functions - Fully unified with PTENit
@@ -4287,6 +4358,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addMarketplaceOrder,
         dispatchJobToStaff,
         login,
+        loginWithGoogle,
         signup,
         logout,
         demoLogin,

@@ -81,10 +81,23 @@ export const Navbar: React.FC<NavbarProps> = ({
     };
   }, [mobileMenuOpen]);
 
-  // Inline Search State
-  const [inlineSearchOpen, setInlineSearchOpen] = useState(false);
+  // Search State & Outside click handler
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+        setIsSearchFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const navItems = [
     { id: 'home', label: t('হোম', 'Home') },
@@ -110,13 +123,6 @@ export const Navbar: React.FC<NavbarProps> = ({
         s.shortDescription.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
-
-  // Auto focus search input when search is opened
-  useEffect(() => {
-    if (inlineSearchOpen && searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, [inlineSearchOpen]);
 
   return (
     <header className="sticky top-0 z-50 w-full transition-all duration-300">
@@ -189,150 +195,151 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Desktop Navigation Links */}
-            {!inlineSearchOpen && (
-              <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
-                {navItems.map(item => {
-                  const isActive = activeTab === item.id;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => setActiveTab(item.id)}
-                      className={`relative px-3 py-2 text-sm lg:text-[14px] xl:text-[15px] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                        isActive
-                          ? 'text-white'
-                          : 'text-white/80 hover:text-white hover:bg-white/10 rounded-lg'
-                      }`}
-                    >
-                      <span>{item.label}</span>
-                      {/* Active Underline */}
-                      {isActive && (
-                        <span className="absolute bottom-0 left-2 right-2 h-[3px] bg-white rounded-full shadow-xs" />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+            <div className="hidden md:flex items-center space-x-0.5 lg:space-x-1 shrink-0">
+              {navItems.map(item => {
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`relative px-2 lg:px-2.5 xl:px-3 py-1.5 lg:py-2 text-xs lg:text-[13px] xl:text-[14px] font-bold transition-all cursor-pointer flex items-center gap-1 shrink-0 ${
+                      isActive
+                        ? 'text-white'
+                        : 'text-white/80 hover:text-white hover:bg-white/10 rounded-lg'
+                    }`}
+                  >
+                    <span>{item.label}</span>
+                    {/* Active Underline */}
+                    {isActive && (
+                      <span className="absolute bottom-0 left-2 right-2 h-[3px] bg-white rounded-full shadow-xs" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
 
-          {/* DESKTOP SEARCH BAR */}
-          <div className={`relative flex-1 ${inlineSearchOpen ? 'w-full max-w-none ml-2 mr-0' : 'max-w-md mx-2 hidden md:block'}`}>
-            {inlineSearchOpen ? (
-              <div className="relative flex items-center w-full animate-in fade-in zoom-in-95 duration-200">
-                <Search className="w-4 sm:w-5 h-4 sm:h-5 absolute left-3 text-slate-400" />
+            {/* DESKTOP SEARCH BAR (STRETCHES ACROSS AVAILABLE EMPTY SPACE) */}
+            <div
+              ref={searchContainerRef}
+              className="hidden md:flex flex-1 min-w-[180px] mx-2 lg:mx-4 xl:mx-6 relative items-center"
+            >
+              <div className="relative w-full flex items-center">
+                <Search className="w-4 h-4 text-white/70 absolute left-3.5 pointer-events-none transition-colors" />
                 <input
                   ref={searchInputRef}
                   type="text"
                   value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
+                  onChange={e => {
+                    setSearchQuery(e.target.value);
+                    setIsSearchFocused(true);
+                  }}
+                  onFocus={() => setIsSearchFocused(true)}
                   onKeyDown={e => {
                     if (e.key === 'Enter' && searchQuery.trim()) {
                       setActiveTab('marketplace');
-                      setInlineSearchOpen(false);
+                      setIsSearchFocused(false);
                     }
                   }}
                   placeholder={t("কোর্স বা সার্ভিস নাম লিখে খুঁজুন...", "Search courses or services...")}
-                  className="w-full bg-white border-2 border-emerald-400 rounded-xl pl-9 sm:pl-10 pr-9 py-2 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none shadow-sm font-bengali ring-2 ring-white/30"
+                  className="w-full bg-white/15 hover:bg-white/20 focus:bg-white text-white focus:text-slate-900 placeholder-white/75 focus:placeholder-slate-400 border border-white/25 focus:border-white rounded-xl pl-9 lg:pl-10 pr-9 py-1.5 lg:py-2 text-xs lg:text-sm font-bengali transition-all duration-200 outline-none focus:ring-2 focus:ring-white/40 shadow-inner focus:shadow-md"
                 />
-                <button
-                  onClick={() => {
-                    setInlineSearchOpen(false);
-                    setSearchQuery('');
-                  }}
-                  className="absolute right-2.5 text-slate-400 hover:text-slate-700 p-1 rounded-full hover:bg-slate-100 cursor-pointer"
-                  title="সার্চ বন্ধ করুন"
-                >
-                  <X className="w-5 h-5 text-slate-500 hover:text-slate-800" />
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setInlineSearchOpen(true)}
-                className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg bg-white/15 border border-white/25 hover:bg-white/25 text-white placeholder-white/70 transition-all text-xs cursor-pointer w-full max-w-[180px] lg:max-w-[220px] font-bengali"
-              >
-                <Search className="w-3.5 h-3.5 text-white/80" />
-                <span className="truncate">{t('সার্চ করুন...', 'Search here...')}</span>
-              </button>
-            )}
-
-            {/* LIVE FLOATING SEARCH RESULTS DROPDOWN (DESKTOP) */}
-            {inlineSearchOpen && searchQuery.trim() && (
-              <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-slate-200 rounded-xl shadow-xl p-3 z-50 text-slate-800 max-h-96 overflow-y-auto">
-                {filteredCourses.length > 0 && (
-                  <div className="mb-3">
-                    <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1 font-bengali">
-                      {t('কোর্সসমূহ', 'Courses')} ({filteredCourses.length})
-                    </div>
-                    <div className="space-y-1.5">
-                      {filteredCourses.map(c => (
-                        <div
-                          key={c.id}
-                          onClick={() => {
-                            openCourseDetail(c.id);
-                            setInlineSearchOpen(false);
-                            setSearchQuery('');
-                          }}
-                          className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors"
-                        >
-                          <img src={c.thumbnail} alt={c.title} className="w-10 h-10 rounded-lg object-cover" />
-                          <div className="flex-1 min-w-0 font-bengali">
-                            <p className="font-semibold text-xs text-slate-900 truncate">{c.title}</p>
-                            <p className="text-[11px] text-[#006A4E] font-bold">
-                              {c.isFree ? t('ফ্রি', 'Free') : `৳${c.discountPrice || c.price}`}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {filteredServices.length > 0 && (
-                  <div>
-                    <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1 font-bengali">
-                      {t('সার্ভিসসমূহ', 'Services')} ({filteredServices.length})
-                    </div>
-                    <div className="space-y-1.5">
-                      {filteredServices.map(s => (
-                        <div
-                          key={s.id}
-                          onClick={() => {
-                            setActiveTab('services');
-                            setInlineSearchOpen(false);
-                            setSearchQuery('');
-                          }}
-                          className="p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors font-bengali"
-                        >
-                          <p className="font-semibold text-xs text-slate-900">{s.title}</p>
-                          <p className="text-[11px] text-slate-500 line-clamp-1">{s.shortDescription}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {filteredCourses.length === 0 && filteredServices.length === 0 && (
-                  <p className="text-center text-slate-500 py-3 text-xs font-bengali">
-                    {t('কোনো ফলাফল পাওয়া যায়নি।', 'No results found.')}
-                  </p>
-                )}
-
-                <div className="pt-2 mt-2 border-t border-slate-200">
+                {searchQuery && (
                   <button
+                    type="button"
                     onClick={() => {
-                      setActiveTab('marketplace');
-                      setInlineSearchOpen(false);
                       setSearchQuery('');
+                      searchInputRef.current?.focus();
                     }}
-                    className="w-full py-2 px-3 rounded-lg bg-[#006A4E] hover:bg-[#00543e] text-white font-bold text-xs flex items-center justify-center gap-2 transition font-bengali cursor-pointer shadow-xs"
+                    className="absolute right-2.5 p-1 rounded-full text-white/70 hover:text-white focus:text-slate-600 transition cursor-pointer"
+                    title="মুছে ফেলুন"
                   >
-                    <Search className="w-3.5 h-3.5" />
-                    <span>সকল ফলাফল দেখুন</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <X className="w-4 h-4" />
                   </button>
-                </div>
+                )}
               </div>
-            )}
-          </div>
+
+              {/* LIVE FLOATING SEARCH RESULTS DROPDOWN (DESKTOP) */}
+              {isSearchFocused && searchQuery.trim() && (
+                <div
+                  onMouseDown={e => e.preventDefault()}
+                  className="absolute left-0 right-0 top-full mt-2 bg-white border border-slate-200 rounded-xl shadow-2xl p-3 z-50 text-slate-800 max-h-96 overflow-y-auto animate-in fade-in slide-in-from-top-1 duration-150"
+                >
+                  {filteredCourses.length > 0 && (
+                    <div className="mb-3">
+                      <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1 font-bengali">
+                        {t('কোর্সসমূহ', 'Courses')} ({filteredCourses.length})
+                      </div>
+                      <div className="space-y-1.5">
+                        {filteredCourses.map(c => (
+                          <div
+                            key={c.id}
+                            onClick={() => {
+                              openCourseDetail(c.id);
+                              setIsSearchFocused(false);
+                              setSearchQuery('');
+                            }}
+                            className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors"
+                          >
+                            <img src={c.thumbnail} alt={c.title} className="w-10 h-10 rounded-lg object-cover" />
+                            <div className="flex-1 min-w-0 font-bengali">
+                              <p className="font-semibold text-xs text-slate-900 truncate">{c.title}</p>
+                              <p className="text-[11px] text-[#006A4E] font-bold">
+                                {c.isFree ? t('ফ্রি', 'Free') : `৳${c.discountPrice || c.price}`}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {filteredServices.length > 0 && (
+                    <div>
+                      <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1 font-bengali">
+                        {t('সার্ভিসসমূহ', 'Services')} ({filteredServices.length})
+                      </div>
+                      <div className="space-y-1.5">
+                        {filteredServices.map(s => (
+                          <div
+                            key={s.id}
+                            onClick={() => {
+                              setActiveTab('services');
+                              setIsSearchFocused(false);
+                              setSearchQuery('');
+                            }}
+                            className="p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors font-bengali"
+                          >
+                            <p className="font-semibold text-xs text-slate-900">{s.title}</p>
+                            <p className="text-[11px] text-slate-500 line-clamp-1">{s.shortDescription}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {filteredCourses.length === 0 && filteredServices.length === 0 && (
+                    <p className="text-center text-slate-500 py-3 text-xs font-bengali">
+                      {t('কোনো ফলাফল পাওয়া যায়নি।', 'No results found.')}
+                    </p>
+                  )}
+
+                  <div className="pt-2 mt-2 border-t border-slate-200">
+                    <button
+                      onClick={() => {
+                        setActiveTab('marketplace');
+                        setIsSearchFocused(false);
+                        setSearchQuery('');
+                      }}
+                      className="w-full py-2 px-3 rounded-lg bg-[#006A4E] hover:bg-[#00543e] text-white font-bold text-xs flex items-center justify-center gap-2 transition font-bengali cursor-pointer shadow-xs"
+                    >
+                      <Search className="w-3.5 h-3.5" />
+                      <span>সকল ফলাফল দেখুন</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
 
           {/* MOBILE INLINE SEARCH BAR (CENTERED) */}
           <div className="flex md:hidden flex-1 min-w-0 px-1 relative items-center justify-center">

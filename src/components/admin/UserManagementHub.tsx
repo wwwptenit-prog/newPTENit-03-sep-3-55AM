@@ -322,13 +322,13 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
             </div>
             <div>
               <h1 className="text-base sm:text-xl font-bold text-white flex items-center gap-2">
-                <span>হাই-স্কেল ইউজার ডিরেক্টরি ও কমপ্লেইন হাব</span>
+                <span>ইউজার ডিরেক্টরি</span>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
-                  মোট {users.length} জন
+                  {users.length} জন
                 </span>
               </h1>
-              <p className="text-xs text-slate-400 font-normal mt-0.5 max-w-2xl">
-                টিচার, সেলার, শিক্ষার্থী ও বায়ারদের প্রোফাইল পর্যবেক্ষণ, অভিযোগ নিরীক্ষা, একক ও বাল্ক একশনে রেস্ট্রিক্ট বা অনুমোদন।
+              <p className="text-xs text-slate-400 font-normal mt-0.5">
+                সকল ইউজার প্রোফাইল মনিটরিং ও পারমিশন কন্ট্রোল।
               </p>
             </div>
           </div>

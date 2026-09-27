@@ -466,11 +466,11 @@ PTENit Technologies Ltd.`;
               <ShieldCheck className="w-5 h-5" />
             </div>
             <h2 className="text-base sm:text-xl font-bold text-white">
-              পদবীভিত্তিক এডমিন নিয়োগ ও একসেস কন্ট্রোল (RBAC)
+              এডমিন টিম ও রোল পারমিশন
             </h2>
           </div>
-          <p className="text-xs text-slate-400 font-normal max-w-2xl">
-            লক্ষ লক্ষ ইউজার, ট্রানজেকশন ও অর্ডার সুচারুভাবে পরিচালনার জন্য বিভিন্ন ডিপার্টমেন্ট ও পদবী অনুযায়ী দায়িত্বশীল কর্মকর্তাদের নিয়ন্ত্রণ ক্ষমতা নির্ধারণ করুন।
+          <p className="text-xs text-slate-400 font-normal">
+            ডিপার্টমেন্ট ও পদবী অনুযায়ী দায়িত্ব বণ্টন ও এক্সেস কন্ট্রোল।
           </p>
         </div>
 

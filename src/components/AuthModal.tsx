@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, LogIn, UserPlus, Lock, Mail, Phone, Eye, EyeOff, Briefcase, Wrench, Zap, KeyRound, Send, ArrowLeft, CheckCircle2, User, Sparkles } from 'lucide-react';
+import { X, Eye, EyeOff, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../services/firebase';
@@ -15,10 +15,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   onSuccess
 }) => {
-  const { login, signup, siteSettings } = useData();
+  const { login, loginWithGoogle, signup, siteSettings } = useData();
 
   const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login');
   const [imageError, setImageError] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   
   // Login Fields
   const [loginEmailOrPhone, setLoginEmailOrPhone] = useState(() => {
@@ -155,275 +156,286 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-5 sm:p-7 relative shadow-2xl space-y-4 text-white font-bengali my-auto overflow-hidden animate-in zoom-in-95 duration-150">
-        
-        {/* Decorative Top Emerald Glow */}
-        <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-24 bg-[#006A4E]/15 blur-2xl rounded-full pointer-events-none" />
+  const handleGoogleSignIn = async () => {
+    setErrorMsg('');
+    setGoogleLoading(true);
+    try {
+      const ok = await loginWithGoogle(selectedRoleType);
+      if (ok) {
+        onSuccess();
+        onClose();
+      }
+    } catch (err: any) {
+      console.warn('[Google Auth Error]', err?.code, err?.message);
+      if (err?.code === 'auth/popup-closed-by-user') {
+        setErrorMsg('গুগল লগইন পপআপটি বন্ধ করা হয়েছে।');
+      } else if (err?.code === 'auth/cancelled-popup-request') {
+        // Ignored
+      } else {
+        setErrorMsg('গুগল দিয়ে প্রবেশ করতে সমস্যা হয়েছে।');
+      }
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
 
+  return (
+    <div className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
+      <div className="bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)] border border-slate-100 max-w-[400px] w-full p-6 sm:p-7 font-bengali relative my-auto animate-in zoom-in-95 duration-150 text-slate-900">
+        
         {/* Close Button */}
         <button
           id="auth-modal-close-btn"
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white transition cursor-pointer rounded-full bg-slate-800/80 hover:bg-slate-700/80 z-10 active:scale-95"
+          className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition cursor-pointer active:scale-95"
           title="বন্ধ করুন"
         >
           <X className="w-4 h-4" />
         </button>
 
-        {/* Brand Header & PTEN Logo */}
-        <div className="text-center space-y-2 pt-1">
-          <div className="flex justify-center items-center">
+        {/* Brand Header */}
+        <div className="text-center mb-5">
+          <div className="flex justify-center items-center mb-2.5">
             {siteSettings?.logoUrl && !imageError ? (
               <img
                 src={siteSettings.logoUrl}
                 alt={siteSettings?.siteName || "PTENit"}
                 onError={() => setImageError(true)}
-                className="h-10 sm:h-12 w-auto max-w-[170px] object-contain mx-auto drop-shadow-md transition-transform hover:scale-105"
+                className="h-9 w-auto object-contain mx-auto"
               />
             ) : (
-              <div className="flex items-center justify-center gap-2.5">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-[#006A4E] to-blue-600 flex items-center justify-center font-heading font-black text-xl sm:text-2xl text-slate-950 shadow-md shadow-blue-500/25 shrink-0">
+              <div className="flex items-center gap-1.5">
+                <div className="w-7 h-7 rounded-lg bg-[#006A4E] text-white flex items-center justify-center font-heading font-black text-base shadow-sm">
                   P
                 </div>
-                <div className="flex flex-col text-left">
-                  <span className="font-heading text-xl sm:text-2xl font-black tracking-wider text-white flex items-center gap-0.5 leading-none">
-                    PTEN<span className="text-[#38BDF8]">it</span>
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-medium tracking-tight mt-0.5">
-                    IT Services, Training & Marketplace
-                  </span>
-                </div>
+                <span className="font-heading text-lg font-bold tracking-tight text-slate-900">
+                  PTEN<span className="text-[#006A4E]">it</span>
+                </span>
               </div>
             )}
           </div>
 
-          {/* Subtitle / Mode text */}
-          <p className="text-sm font-bold text-white pt-0.5">
+          <h2 className="text-lg font-bold text-slate-900">
             {mode === 'login'
-              ? 'লগইন করুন'
+              ? 'লগইন'
               : mode === 'signup'
-              ? 'নতুন অ্যাকাউন্ট করুন'
+              ? 'নতুন অ্যাকাউন্ট'
               : 'পাসওয়ার্ড রিসেট'}
-          </p>
-
-          {mode === 'forgot' && (
-            <div className="pt-0.5">
-              <button
-                type="button"
-                onClick={() => { setMode('login'); setErrorMsg(''); setResetSuccess(false); }}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#38BDF8] hover:text-sky-400 transition cursor-pointer"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>লগইন ফর্মে ফিরে যান</span>
-              </button>
-            </div>
-          )}
+          </h2>
         </div>
 
         {errorMsg && (
-          <div className="p-3 bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-semibold rounded-2xl leading-relaxed text-center animate-in fade-in duration-150">
+          <div className="mb-4 p-2.5 bg-rose-50 border border-rose-200/80 text-rose-700 text-xs font-medium rounded-xl text-center">
             {errorMsg}
+          </div>
+        )}
+
+        {/* ONE-CLICK GOOGLE SIGN IN */}
+        {mode !== 'forgot' && (
+          <div className="space-y-3.5 mb-4">
+            {/* If in signup mode, role choice is upfront */}
+            {mode === 'signup' && (
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  ভূমিকা বেছে নিন
+                </label>
+                <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 rounded-xl">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedRoleType('customer')}
+                    className={`py-1.5 text-xs font-semibold rounded-lg transition cursor-pointer ${
+                      selectedRoleType === 'customer'
+                        ? 'bg-white text-slate-900 shadow-xs font-bold'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    গ্রাহক
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedRoleType('specialist')}
+                    className={`py-1.5 text-xs font-semibold rounded-lg transition cursor-pointer ${
+                      selectedRoleType === 'specialist'
+                        ? 'bg-white text-slate-900 shadow-xs font-bold'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    স্পেশালিস্ট
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedRoleType('both')}
+                    className={`py-1.5 text-xs font-semibold rounded-lg transition cursor-pointer ${
+                      selectedRoleType === 'both'
+                        ? 'bg-white text-slate-900 shadow-xs font-bold'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    উভয়ই
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              disabled={googleLoading}
+              className="w-full h-11 px-4 rounded-xl border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2.5 transition active:scale-[0.99] cursor-pointer disabled:opacity-50 shadow-2xs"
+            >
+              <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+              </svg>
+              <span>
+                {googleLoading
+                  ? 'সংযোগ হচ্ছে...'
+                  : mode === 'signup'
+                  ? 'Google দিয়ে সাইনআপ'
+                  : 'Google দিয়ে লগইন'}
+              </span>
+            </button>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-white px-3 text-slate-400">অথবা</span>
+              </div>
+            </div>
           </div>
         )}
 
         {/* FORGOT PASSWORD MODE */}
         {mode === 'forgot' ? (
           resetSuccess ? (
-            <div className="space-y-3 text-center py-3 bg-blue-500/10 border border-blue-500/30 p-4 rounded-2xl">
-              <div className="w-11 h-11 rounded-full bg-[#006A4E] text-white flex items-center justify-center mx-auto shadow-md">
-                <CheckCircle2 className="w-6 h-6" />
+            <div className="space-y-3.5 text-center py-3 bg-emerald-50/70 border border-emerald-200/80 p-5 rounded-xl">
+              <div className="w-9 h-9 rounded-full bg-[#006A4E] text-white flex items-center justify-center mx-auto shadow-sm">
+                <CheckCircle2 className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-sm font-black text-[#38BDF8]">
-                  পাসওয়ার্ড রিসেট মেসেজ প্রেরিত!
+                <h3 className="text-sm font-bold text-slate-900">
+                  রিসেট লিঙ্ক পাঠানো হয়েছে
                 </h3>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  আপনার ইনবক্স (<span className="font-bold text-white">{resetEmailOrPhone}</span>)-এ রিসেট লিঙ্ক পাঠানো হয়েছে।
+                <p className="text-xs text-slate-600">
+                  ইনবক্স (<span className="font-semibold text-slate-900">{resetEmailOrPhone}</span>) চেক করুন।
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => { setMode('login'); setResetSuccess(false); setErrorMsg(''); }}
-                className="w-full py-2.5 bg-[#006A4E] hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow transition cursor-pointer active:scale-95"
+                className="w-full h-10 bg-[#006A4E] hover:bg-[#047857] text-white font-semibold text-xs rounded-xl transition cursor-pointer active:scale-95"
               >
                 লগইন করুন
               </button>
             </div>
           ) : (
-            <form onSubmit={handleForgotPasswordSubmit} className="space-y-3 font-bengali">
-              <div className="bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-xl text-xs text-amber-400 flex items-start gap-2">
-                <KeyRound className="w-4 h-4 shrink-0 mt-0.5" />
-                <span>
-                  আপনার জিমেইল বা ফোন নম্বর দিন। পাসওয়ার্ড রিকভারি লিঙ্ক পাঠানো হবে।
-                </span>
-              </div>
-
+            <form onSubmit={handleForgotPasswordSubmit} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-bold mb-1.5 text-slate-300">
-                  জিমেইল বা ফোন নম্বর *
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  ইমেইল বা ফোন নম্বর
                 </label>
-                <div className="relative">
-                  <Mail className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
-                  <input
-                    type="text"
-                    required
-                    placeholder="আপনার জিমেইল বা ফোন নম্বর"
-                    value={resetEmailOrPhone}
-                    onChange={e => setResetEmailOrPhone(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold mb-1.5 text-slate-300">
-                  মেসেজ / সাপোর্ট নোট (ঐচ্ছিক)
-                </label>
-                <textarea
-                  rows={2}
-                  placeholder="পাসওয়ার্ড ভুলে যাওয়ার মেসেজ..."
-                  value={resetSupportMsg}
-                  onChange={e => setResetSupportMsg(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
+                <input
+                  type="text"
+                  required
+                  placeholder="name@gmail.com বা 017..."
+                  value={resetEmailOrPhone}
+                  onChange={e => setResetEmailOrPhone(e.target.value)}
+                  className="w-full h-11 px-3.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 font-medium focus:outline-none focus:border-[#006A4E] focus:ring-3 focus:ring-[#006A4E]/10 transition"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={resetLoading}
-                className="w-full py-2.5 bg-[#006A4E] hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 disabled:opacity-50"
+                className="w-full h-11 bg-[#006A4E] hover:bg-[#047857] text-white font-semibold text-sm rounded-xl shadow-xs transition cursor-pointer flex items-center justify-center active:scale-[0.99] disabled:opacity-50"
               >
-                <Send className="w-3.5 h-3.5" />
-                <span>{resetLoading ? 'পাঠানো হচ্ছে...' : 'রিসেট মেইল পাঠান'}</span>
+                <span>{resetLoading ? 'পাঠানো হচ্ছে...' : 'রিসেট লিঙ্ক পাঠান'}</span>
               </button>
+
+              <div className="text-center pt-1">
+                <button
+                  type="button"
+                  onClick={() => { setMode('login'); setErrorMsg(''); }}
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#006A4E] hover:underline cursor-pointer"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>লগইন ফর্মে ফিরে যান</span>
+                </button>
+              </div>
             </form>
           )
         ) : mode === 'signup' ? (
           /* SIGNUP FORM */
           <form onSubmit={handleSignup} className="space-y-3">
-            {/* Account Role Choice */}
-            <div>
-              <label className="block text-xs font-bold mb-1.5 text-slate-300">
-                ভূমিকা বেছে নিন *
-              </label>
-              <div className="grid grid-cols-3 gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => setSelectedRoleType('customer')}
-                  className={`py-2 px-2 rounded-xl text-xs font-bold border transition cursor-pointer flex items-center justify-center gap-1.5 ${
-                    selectedRoleType === 'customer'
-                      ? 'bg-[#006A4E] text-white border-blue-600/50 font-black shadow-sm'
-                      : 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
-                  }`}
-                >
-                  <Briefcase className="w-3.5 h-3.5 shrink-0" />
-                  <span>গ্রাহক</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedRoleType('specialist')}
-                  className={`py-2 px-2 rounded-xl text-xs font-bold border transition cursor-pointer flex items-center justify-center gap-1.5 ${
-                    selectedRoleType === 'specialist'
-                      ? 'bg-[#006A4E] text-white border-blue-600/50 font-black shadow-sm'
-                      : 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
-                  }`}
-                >
-                  <Wrench className="w-3.5 h-3.5 shrink-0" />
-                  <span>স্পেশালিস্ট</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedRoleType('both')}
-                  className={`py-2 px-2 rounded-xl text-xs font-bold border transition cursor-pointer flex items-center justify-center gap-1.5 ${
-                    selectedRoleType === 'both'
-                      ? 'bg-[#006A4E] text-white border-blue-600/50 font-black shadow-sm'
-                      : 'bg-slate-800 border-slate-700 text-slate-300 hover:text-white'
-                  }`}
-                >
-                  <Zap className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                  <span>উভয়ই</span>
-                </button>
-              </div>
-            </div>
-
             {/* Full Name */}
             <div>
-              <label className="block text-xs font-bold mb-1 text-slate-300">
-                পূর্ণ নাম *
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                পূর্ণ নাম
               </label>
-              <div className="relative">
-                <User className="w-3.5 h-3.5 absolute left-3 top-3 text-slate-400" />
-                <input
-                  type="text"
-                  required
-                  placeholder="আপনার নাম"
-                  value={fullName}
-                  onChange={e => setFullName(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
-                />
-              </div>
+              <input
+                type="text"
+                required
+                placeholder="আপনার নাম"
+                value={fullName}
+                onChange={e => setFullName(e.target.value)}
+                className="w-full h-11 px-3.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 font-medium focus:outline-none focus:border-[#006A4E] focus:ring-3 focus:ring-[#006A4E]/10 transition"
+              />
             </div>
 
-            {/* Mobile / Phone */}
+            {/* Mobile */}
             <div>
-              <label className="block text-xs font-bold mb-1 text-slate-300">
-                মোবাইল নম্বর *
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                মোবাইল নম্বর
               </label>
-              <div className="relative">
-                <Phone className="w-3.5 h-3.5 absolute left-3 top-3 text-slate-400" />
-                <input
-                  type="tel"
-                  required
-                  placeholder="01712345678"
-                  value={signupPhone}
-                  onChange={e => setSignupPhone(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
-                />
-              </div>
+              <input
+                type="tel"
+                required
+                placeholder="01XXXXXXXXX"
+                value={signupPhone}
+                onChange={e => setSignupPhone(e.target.value)}
+                className="w-full h-11 px-3.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 font-medium focus:outline-none focus:border-[#006A4E] focus:ring-3 focus:ring-[#006A4E]/10 transition"
+              />
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-xs font-bold mb-1 text-slate-300">
-                ইমেইল অ্যাড্রেস *
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                ইমেইল ঠিকানা
               </label>
-              <div className="relative">
-                <Mail className="w-3.5 h-3.5 absolute left-3 top-3 text-slate-400" />
-                <input
-                  type="email"
-                  required
-                  placeholder="yourname@gmail.com"
-                  value={signupEmail}
-                  onChange={e => setSignupEmail(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
-                />
-              </div>
+              <input
+                type="email"
+                required
+                placeholder="yourname@gmail.com"
+                value={signupEmail}
+                onChange={e => setSignupEmail(e.target.value)}
+                className="w-full h-11 px-3.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 font-medium focus:outline-none focus:border-[#006A4E] focus:ring-3 focus:ring-[#006A4E]/10 transition"
+              />
             </div>
 
-            {/* Password */}
+            {/* Password Setup */}
             <div>
-              <label className="block text-xs font-bold mb-1 text-slate-300">
-                পাসওয়ার্ড *
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                পাসওয়ার্ড সেটআপ
               </label>
               <div className="relative">
-                <Lock className="w-3.5 h-3.5 absolute left-3 top-3 text-slate-400" />
                 <input
                   type={showSignupPassword ? "text" : "password"}
                   required
-                  placeholder="••••••••"
+                  placeholder="কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড"
                   value={signupPassword}
                   onChange={e => setSignupPassword(e.target.value)}
-                  className="w-full pl-9 pr-9 py-2 rounded-xl border border-slate-700 bg-slate-800 text-xs font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
+                  className="w-full h-11 pl-3.5 pr-10 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 font-medium focus:outline-none focus:border-[#006A4E] focus:ring-3 focus:ring-[#006A4E]/10 transition"
                 />
                 <button
                   type="button"
                   onClick={() => setShowSignupPassword(!showSignupPassword)}
-                  className="absolute right-3 top-2.5 text-slate-400 hover:text-sky-400 cursor-pointer"
+                  className="absolute right-3 top-3 text-slate-400 hover:text-slate-700 cursor-pointer"
+                  tabIndex={-1}
                 >
                   {showSignupPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -433,19 +445,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-2 sm:py-2.5 bg-[#006A4E] hover:bg-blue-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 mt-1"
+              className="w-full h-11 bg-[#006A4E] hover:bg-[#047857] text-white font-semibold text-sm rounded-xl shadow-xs transition active:scale-[0.99] cursor-pointer mt-1"
             >
-              <UserPlus className="w-4 h-4" />
-              <span>সাইনআপ সম্পন্ন করুন</span>
+              সাইনআপ সম্পন্ন করুন
             </button>
 
-            {/* Switch to Login */}
-            <div className="text-center pt-2 text-xs text-slate-400">
-              আপনার কি অ্যাকাউন্ট আছে?{' '}
+            {/* Switch to Login Link */}
+            <div className="text-center pt-1.5 text-xs text-slate-500">
+              ইতিমধ্যে অ্যাকাউন্ট আছে?{' '}
               <button
                 type="button"
                 onClick={() => { setMode('login'); setErrorMsg(''); }}
-                className="font-bold text-[#38BDF8] hover:underline cursor-pointer ml-1"
+                className="font-bold text-[#006A4E] hover:underline cursor-pointer"
               >
                 লগইন করুন
               </button>
@@ -455,83 +466,80 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           /* LOGIN FORM */
           <form onSubmit={handleLogin} className="space-y-3.5">
             <div>
-              <label className="block text-xs font-bold mb-1.5 text-slate-300">
-                ইমেইল অথবা মোবাইল নম্বর *
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                ইমেইল বা মোবাইল নম্বর
               </label>
-              <div className="relative">
-                <Mail className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
-                <input
-                  type="text"
-                  required
-                  placeholder="ইমেইল বা মোবাইল নম্বর"
-                  value={loginEmailOrPhone}
-                  onChange={e => setLoginEmailOrPhone(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-xs sm:text-sm font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
-                />
-              </div>
+              <input
+                type="text"
+                required
+                placeholder="yourname@gmail.com বা 017..."
+                value={loginEmailOrPhone}
+                onChange={e => setLoginEmailOrPhone(e.target.value)}
+                className="w-full h-11 px-3.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 font-medium focus:outline-none focus:border-[#006A4E] focus:ring-3 focus:ring-[#006A4E]/10 transition"
+              />
             </div>
 
             <div>
-              <label className="block text-xs font-bold mb-1.5 text-slate-300">
-                পাসওয়ার্ড *
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-semibold text-slate-700">
+                  পাসওয়ার্ড
+                </label>
+                <button
+                  type="button"
+                  onClick={() => { setMode('forgot'); setErrorMsg(''); setResetSuccess(false); }}
+                  className="text-xs font-medium text-[#006A4E] hover:underline cursor-pointer"
+                >
+                  পাসওয়ার্ড ভুলে গেছেন?
+                </button>
+              </div>
               <div className="relative">
-                <Lock className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
                 <input
                   type={showLoginPassword ? "text" : "password"}
                   required
                   placeholder="••••••••"
                   value={loginPassword}
                   onChange={e => setLoginPassword(e.target.value)}
-                  className="w-full pl-9 pr-9 py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-xs sm:text-sm font-medium focus:outline-none focus:border-[#006A4E] focus:ring-1 focus:ring-[#006A4E]/30"
+                  className="w-full h-11 pl-3.5 pr-10 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 font-medium focus:outline-none focus:border-[#006A4E] focus:ring-3 focus:ring-[#006A4E]/10 transition"
                 />
                 <button
                   type="button"
                   onClick={() => setShowLoginPassword(!showLoginPassword)}
-                  className="absolute right-3 top-3 text-slate-400 hover:text-sky-400 cursor-pointer"
+                  className="absolute right-3 top-3 text-slate-400 hover:text-slate-700 cursor-pointer"
+                  tabIndex={-1}
                 >
                   {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            {/* Remember Me & Forgot Password Row */}
-            <div className="flex items-center justify-between text-xs pt-0.5">
-              <label className="flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white transition">
+            {/* Remember Me */}
+            <div className="flex items-center text-xs">
+              <label className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={e => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-700 text-[#38BDF8] focus:ring-[#006A4E] accent-[#006A4E] cursor-pointer"
+                  className="w-4 h-4 rounded border-slate-300 text-[#006A4E] focus:ring-[#006A4E] accent-[#006A4E] cursor-pointer"
                 />
-                <span className="font-medium">পাসওয়ার্ড সেভ রাখুন</span>
+                <span>পাসওয়ার্ড মনে রাখুন</span>
               </label>
-
-              <button
-                type="button"
-                onClick={() => { setMode('forgot'); setErrorMsg(''); setResetSuccess(false); }}
-                className="font-bold text-[#38BDF8] hover:text-sky-400 hover:underline cursor-pointer"
-              >
-                পাসওয়ার্ড ভুলে গেছেন?
-              </button>
             </div>
 
-            {/* Slim & Compact Login Button */}
+            {/* Primary Login Button */}
             <button
               type="submit"
-              className="w-full py-2 sm:py-2.5 bg-[#006A4E] hover:bg-blue-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md shadow-blue-500/20 transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 tracking-wide mt-1"
+              className="w-full h-11 bg-[#006A4E] hover:bg-[#047857] text-white font-semibold text-sm rounded-xl shadow-xs transition active:scale-[0.99] cursor-pointer"
             >
-              <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.5]" />
-              <span>লগইন করুন</span>
+              লগইন করুন
             </button>
 
-            {/* Switch to Signup (নিচে থাকবে সাইনআপ বিষয়টা) */}
-            <div className="text-center pt-2 text-xs text-slate-400">
-              আপনার কি অ্যাকাউন্ট করা নেই?{' '}
+            {/* Switch to Signup Link */}
+            <div className="text-center pt-1.5 text-xs text-slate-500">
+              নতুন অ্যাকাউন্ট করতে চান?{' '}
               <button
                 type="button"
                 onClick={() => { setMode('signup'); setErrorMsg(''); }}
-                className="font-bold text-[#38BDF8] hover:underline cursor-pointer ml-1"
+                className="font-bold text-[#006A4E] hover:underline cursor-pointer"
               >
                 সাইনআপ করুন
               </button>

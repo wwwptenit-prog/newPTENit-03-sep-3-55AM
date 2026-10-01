@@ -1,6 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useData } from '../context/DataContext';
-import { ChatMessage, ActiveChatWindow } from '../types';
+import { ChatMessage, ActiveChatWindow, DirectOfferMeta } from '../types';
+import { DirectProjectOfferChatCard } from './DirectProjectOfferChatCard';
+import { SendDirectOfferModal } from './SendDirectOfferModal';
 import {
   X,
   Lock,
@@ -53,8 +55,34 @@ import {
   CheckCircle,
   MessageSquare,
   Package,
-  Users
 } from 'lucide-react';
+
+const getDirectOfferFromMessage = (m: { text: string; id: string; directOffer?: DirectOfferMeta }, winSenderName: string, winSenderId?: string): DirectOfferMeta | null => {
+  if (m.directOffer) return m.directOffer;
+  if (!m.text.includes('💼') && !m.text.includes('অফার') && !m.text.includes('অর্ডার')) return null;
+
+  const titleMatch = m.text.match(/সার্ভিস:\s*([^\n]+)/) || m.text.match(/প্রজেক্ট:\s*([^\n]+)/);
+  const budgetMatch = m.text.match(/বাজেট:\s*৳?([^\n]+)/);
+  const deliveryMatch = m.text.match(/ডেলিভারি[^\:]*:\s*([^\n]+)/);
+
+  const title = titleMatch ? titleMatch[1].trim() : 'কাস্টম প্রজেক্ট প্রস্তাব';
+  const budgetStr = budgetMatch ? budgetMatch[1].replace(/[^\d]/g, '') : '5000';
+  const deliveryStr = deliveryMatch ? deliveryMatch[1].replace(/[^\d]/g, '') : '3';
+
+  return {
+    id: `parsed-${m.id}`,
+    title,
+    category: 'কাস্টম সার্ভিস',
+    budget: Number(budgetStr) || 5000,
+    deliveryDays: Number(deliveryStr) || 3,
+    description: m.text,
+    createdAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+    status: 'pending',
+    targetSellerName: winSenderName,
+    targetSellerId: winSenderId
+  };
+};
 
 interface ConversationItem {
   id: string;
@@ -70,6 +98,7 @@ interface ConversationItem {
   isOnline: boolean;
   onlineTimeAgo?: string;
   category?: string;
+  orderId?: string;
 }
 
 interface FloatingMessengerWindowsProps {
@@ -106,8 +135,7 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
     closeNotificationCenter,
     isOfferSoundEnabled,
     toggleOfferSound,
-    marketplaceMode,
-    openInAppMeet
+    marketplaceMode
   } = useData();
 
   const isSellerMode = marketplaceMode === 'selling' || Boolean(
@@ -240,182 +268,10 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
   }, [activeCallState?.active]);
 
   // Dedicated Seller Client Conversations (When in Seller Mode)
-  const sellerDefaultHistory: ConversationItem[] = [
-    {
-      id: 'chat-client-sohag',
-      name: 'সোহাগ কাজী (বায়ার / ক্লায়েন্ট)',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
-      role: 'ক্লায়েন্ট • ই-কমার্স প্রজেক্ট #ORD-8821',
-      badge: 'Active Client',
-      rating: 5.0,
-      ordersCount: 4,
-      lastMessage: 'ভাইয়া, আমার ই-কমার্স প্রজেক্টের ডিজাইন ডেমো কি তৈরি হয়েছে? একটু আপডেট দিবেন।',
-      time: '১০ মিনিট আগে',
-      unreadCount: 0,
-      isOnline: true,
-      category: 'orders'
-    },
-    {
-      id: 'chat-client-tanjim',
-      name: 'তানজিম আহমেদ (সেবাগ্রহীতা বায়ার)',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
-      role: 'ক্লায়েন্ট • গিগ সার্ভিস #ORD-5542',
-      badge: 'Verified Buyer',
-      rating: 4.9,
-      ordersCount: 2,
-      lastMessage: 'আপনার গিগ সার্ভিস অর্ডার করেছি, এস্ক্রো ওয়ালেটে টাকা জমা হয়েছে। কোড শুরু করুন।',
-      time: '৩৫ মিনিট আগে',
-      unreadCount: 0,
-      isOnline: true,
-      category: 'orders'
-    },
-    {
-      id: 'chat-client-sumaiya',
-      name: 'সুমাইয়া ইসলাম (ক্লায়েন্ট)',
-      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80',
-      role: 'ক্লায়েন্ট • মোবাইল অ্যাপ ইনকোয়ারি',
-      badge: 'Client',
-      rating: 5.0,
-      ordersCount: 1,
-      lastMessage: 'আমাদের মোবাইল অ্যাপের API ডকুমেন্টেশন ইনবক্সে পাঠিয়েছি, একটু দেখে নিন।',
-      time: '১ ঘণ্টা আগে',
-      unreadCount: 0,
-      isOnline: true,
-      category: 'sellers'
-    },
-    {
-      id: 'chat-piten-support',
-      name: 'PTENit এসক্রো সাপোর্ট ও সিকিউরিটি',
-      avatar: 'https://images.unsplash.com/photo-1556742049-0a67e557224f?auto=format&fit=crop&w=120&q=80',
-      role: 'অফিসিয়াল সেলার এসক্রো সুরক্ষা',
-      badge: 'Verified Official',
-      rating: 5.0,
-      ordersCount: 999,
-      lastMessage: 'অর্ডার #ORD-8821 এর এস্ক্রো পেমেন্ট ভেরিফিকেশন সফল হয়েছে।',
-      time: '২ ঘণ্টা আগে',
-      unreadCount: 0,
-      isOnline: true,
-      category: 'orders'
-    },
-    {
-      id: 'chat-client-ariful',
-      name: 'আরিফুল হাসান (বায়ার)',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80',
-      role: 'ক্লায়েন্ট • লোগো ও ব্র্যান্ডিং রিভিশন',
-      badge: 'Buyer',
-      rating: 5.0,
-      ordersCount: 3,
-      lastMessage: 'লোগো কনসেপ্টের প্রাথমিক কালার প্যালেট চমৎকার হয়েছে।',
-      time: '৩ ঘণ্টা আগে',
-      unreadCount: 0,
-      isOnline: false,
-      onlineTimeAgo: '৩ ঘণ্টা আগে',
-      category: 'sellers'
-    }
-  ];
+  const sellerDefaultHistory: ConversationItem[] = [];
 
   // Dedicated Buyer Top Seller Conversations (When in Buyer Mode)
-  const buyerDefaultHistory: ConversationItem[] = [
-    {
-      id: 'chat-tanvir-ahmed',
-      name: 'Tanvir Ahmed',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
-      role: 'Top Rated • Full-Stack Web',
-      badge: 'Top Rated',
-      rating: 5.0,
-      ordersCount: 142,
-      lastMessage: 'প্রজেক্টের সোর্স কোড ও লাইভ প্রিভিউ লিংক পাঠিয়েছি, চেক করে জানাবেন।',
-      time: '১০ মিনিট আগে',
-      unreadCount: 0,
-      isOnline: true,
-      category: 'sellers'
-    },
-    {
-      id: 'chat-creative-pixels',
-      name: 'Creative Pixels Agency',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
-      role: 'Level 2 • UI/UX Designer',
-      badge: 'Level 2',
-      rating: 4.9,
-      ordersCount: 89,
-      lastMessage: 'Figma ডিজাইন ফাইল আপডেট করা হয়েছে, ক্লায়েন্ট রিভিশন রেডি।',
-      time: '৪৫ মিনিট আগে',
-      unreadCount: 0,
-      isOnline: true,
-      category: 'sellers'
-    },
-    {
-      id: 'chat-piten-support',
-      name: 'PiTen Marketplace Official',
-      avatar: 'https://images.unsplash.com/photo-1556742049-0a67e557224f?auto=format&fit=crop&w=120&q=80',
-      role: 'অফিসিয়াল সাপোর্ট ও এসক্রো সিকিউরিটি',
-      badge: 'Verified Official',
-      rating: 5.0,
-      ordersCount: 999,
-      lastMessage: 'অর্ডার #PT-8942 এর এস্ক্রো পেমেন্ট ভেরিফিকেশন সফল হয়েছে।',
-      time: '২ ঘণ্টা আগে',
-      unreadCount: 0,
-      isOnline: true,
-      category: 'orders'
-    },
-    {
-      id: 'chat-shahinur-rahman',
-      name: 'Shahinur Rahman',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80',
-      role: 'Pro Seller • React & Node Specialist',
-      badge: 'Verified Pro',
-      rating: 5.0,
-      ordersCount: 65,
-      lastMessage: 'পেমেন্ট গেটওয়ে এবং ডাটাবেস এপিআই ইন্টিগ্রেশন সম্পন্ন।',
-      time: '৩ ঘণ্টা আগে',
-      unreadCount: 0,
-      isOnline: false,
-      onlineTimeAgo: '৩ ঘণ্টা আগে',
-      category: 'sellers'
-    },
-    {
-      id: 'chat-zubair-hossain',
-      name: 'Zubair Hossain',
-      avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=120&q=80',
-      role: 'Level 2 • Mobile App Dev',
-      badge: 'Level 2',
-      rating: 4.9,
-      ordersCount: 78,
-      lastMessage: 'Android APK ও iOS টেস্টফ্লাইট বিল্ড ডাউনলোড লিংক পাঠানো হয়েছে।',
-      time: '৫ ঘণ্টা আগে',
-      unreadCount: 0,
-      isOnline: false,
-      onlineTimeAgo: '৫ ঘণ্টা আগে',
-      category: 'sellers'
-    },
-    {
-      id: 'chat-sadia-afrin',
-      name: 'Sadia Afrin',
-      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80',
-      role: 'Top Rated • SEO & Marketing',
-      badge: 'Top Rated',
-      rating: 4.8,
-      ordersCount: 54,
-      lastMessage: 'অন-পেজ এসইও ও কিওয়ার্ড র‍্যাংকিং অডিট রিপোর্ট পাঠানো হয়েছে।',
-      time: '১ দিন আগে',
-      isOnline: true,
-      category: 'sellers'
-    },
-    {
-      id: 'chat-mouson-art',
-      name: 'Mouson Branding Studio',
-      avatar: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=120&q=80',
-      role: 'Level 2 • Logo & Graphics',
-      badge: 'Level 2',
-      rating: 5.0,
-      ordersCount: 112,
-      lastMessage: 'লোগো ভেক্টর ফাইল ও ব্র্যান্ডিং কিট প্যাকেজ রেডি।',
-      time: '১ দিন আগে',
-      isOnline: false,
-      onlineTimeAgo: '১ দিন আগে',
-      category: 'sellers'
-    }
-  ];
+  const buyerDefaultHistory: ConversationItem[] = [];
 
   const defaultHistory = isSellerMode ? sellerDefaultHistory : buyerDefaultHistory;
 
@@ -435,12 +291,38 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
   }));
 
   const allConversationsMap = new Map<string, ConversationItem>();
-  activeWindowsAsConversations.forEach(c => allConversationsMap.set(c.id, c));
-  defaultHistory.forEach(c => {
-    if (!allConversationsMap.has(c.id)) {
-      allConversationsMap.set(c.id, c);
-    }
-  });
+  if (currentUser) {
+    activeWindowsAsConversations.forEach(c => allConversationsMap.set(c.id, c));
+  }
+
+  // Add real direct messages scoped to current user
+  if (directMessages && directMessages.length > 0) {
+    directMessages.forEach(dm => {
+      const isForMe = currentUser ? (
+        (dm.recipientId && dm.recipientId === currentUser.id) ||
+        (dm.senderId && dm.senderId === currentUser.id) ||
+        (currentUser.email && dm.recipientEmail && dm.recipientEmail.toLowerCase() === currentUser.email.toLowerCase()) ||
+        (currentUser.email && dm.senderEmail && dm.senderEmail.toLowerCase() === currentUser.email.toLowerCase())
+      ) : false;
+      if (isForMe && !allConversationsMap.has(dm.id)) {
+        allConversationsMap.set(dm.id, {
+          id: dm.id,
+          name: dm.senderName || 'ইউজার',
+          avatar: dm.senderAvatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80',
+          role: dm.senderRole || (isSellerMode ? 'বায়ার' : 'সেলার'),
+          badge: isSellerMode ? 'Buyer' : 'Seller',
+          rating: 5.0,
+          ordersCount: 1,
+          lastMessage: dm.message,
+          time: dm.time || 'এইমাত্র',
+          unreadCount: dm.read ? 0 : (dm.unreadCount || 1),
+          isOnline: true,
+          category: dm.category || (isSellerMode ? 'orders' : 'sellers'),
+          orderId: dm.orderId
+        });
+      }
+    });
+  }
 
   const conversationList = Array.from(allConversationsMap.values())
     .map(c => {
@@ -448,19 +330,14 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
         return { ...c, unreadCount: 0 };
       }
       const directMatch = directMessages?.find(m => {
-        if (m.id === c.id || m.orderId === c.id) return true;
-        const sender = (m.senderName || '').toLowerCase();
-        const cid = c.id.toLowerCase();
-        if (cid.includes('sohag') && sender.includes('সোহাগ')) return true;
-        if (cid.includes('tanjim') && sender.includes('তানজিম')) return true;
-        if (cid.includes('sumaiya') && sender.includes('সুমাইয়া')) return true;
-        if (cid.includes('ariful') && sender.includes('আরিফুল')) return true;
-        if (cid.includes('tanvir') && sender.includes('tanvir')) return true;
-        if (cid.includes('creative') && sender.includes('creative')) return true;
-        if (cid.includes('shahinur') && sender.includes('shahinur')) return true;
-        if (cid.includes('zubair') && sender.includes('zubair')) return true;
-        if (cid.includes('piten') && (sender.includes('pten') || sender.includes('piten') || sender.includes('এসক্রো'))) return true;
-        return false;
+        if (!currentUser) return false;
+        const isForMe =
+          (m.recipientId && m.recipientId === currentUser.id) ||
+          (m.senderId && m.senderId === currentUser.id) ||
+          (currentUser.email && m.recipientEmail && m.recipientEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) ||
+          (currentUser.email && m.senderEmail && m.senderEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim());
+        if (!isForMe) return false;
+        return m.id === c.id || Boolean(m.orderId && m.orderId === c.id);
       });
       if (directMatch) {
         if (directMatch.read || (directMatch.unreadCount !== undefined && directMatch.unreadCount <= 0) || (readConversationIds && readConversationIds.includes(directMatch.id))) {
@@ -490,28 +367,43 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
       return 0;
     });
 
-  // Filter notifications scoped to the current active mode
-  const roleScopedNotifications = (notifications || []).filter(n => {
-    if (n.mode === 'selling') return isSellerMode;
-    if (n.mode === 'buying') return !isSellerMode;
-    if (n.mode === 'both') return true;
+  // Filter notifications strictly scoped to currentUser and current active mode
+  const roleScopedNotifications = useMemo(() => {
+    if (!currentUser) return [];
+    return (notifications || []).filter(n => {
+      // Admin notifications only for admin
+      if ((n.recipientRole === 'admin' || n.targetTab === 'admin' || n.recipientId === 'admin') && currentUser.role !== 'admin') {
+        return false;
+      }
+      // Scoped to this user
+      if (currentUser.role !== 'admin') {
+        const matchesId = Boolean(n.recipientId && (n.recipientId === currentUser.id || (n.recipientId === 'all' && n.isBroadcast)));
+        const matchesEmail = Boolean(currentUser.email && n.recipientEmail && n.recipientEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim());
+        const isOfficialBroadcast = Boolean(n.isBroadcast && n.recipientId === 'broadcast');
+        if (!matchesId && !matchesEmail && !isOfficialBroadcast) return false;
+      }
 
-    if (isSellerMode) {
-      if (n.recipientRole === 'seller' || n.category === 'seller' || n.category === 'payout') return true;
-      if (n.recipientRole === 'buyer' || n.category === 'buyer' || n.category === 'course') return false;
-      const t = (n.title || '').toLowerCase();
-      const m = (n.message || '').toLowerCase();
-      if (t.includes('অ্যাসাইনমেন্ট') || t.includes('কোর্স') || t.includes('মডিউল') || t.includes('ক্লাস') || m.includes('মডিউল')) return false;
-      return true;
-    } else {
-      if (n.recipientRole === 'buyer' || n.category === 'buyer' || n.category === 'course') return true;
-      if (n.recipientRole === 'seller' || n.category === 'seller' || n.category === 'payout') return false;
-      const t = (n.title || '').toLowerCase();
-      const m = (n.message || '').toLowerCase();
-      if (t.includes('ক্লাইন্ট') || t.includes('ক্লায়েন্ট') || t.includes('সেলিং') || t.includes('উইথড্র') || t.includes('পেআউট') || m.includes('পেআউট')) return false;
-      return true;
-    }
-  });
+      if (n.mode === 'selling') return isSellerMode;
+      if (n.mode === 'buying') return !isSellerMode;
+      if (n.mode === 'both') return true;
+
+      if (isSellerMode) {
+        if (n.recipientRole === 'seller' || n.category === 'seller' || n.category === 'payout') return true;
+        if (n.recipientRole === 'buyer' || n.category === 'buyer' || n.category === 'course') return false;
+        const t = (n.title || '').toLowerCase();
+        const m = (n.message || '').toLowerCase();
+        if (t.includes('অ্যাসাইনমেন্ট') || t.includes('কোর্স') || t.includes('মডিউল') || t.includes('ক্লাস') || m.includes('মডিউল')) return false;
+        return true;
+      } else {
+        if (n.recipientRole === 'buyer' || n.category === 'buyer' || n.category === 'course') return true;
+        if (n.recipientRole === 'seller' || n.category === 'seller' || n.category === 'payout') return false;
+        const t = (n.title || '').toLowerCase();
+        const m = (n.message || '').toLowerCase();
+        if (t.includes('ক্লাইন্ট') || t.includes('ক্লায়েন্ট') || t.includes('সেলিং') || t.includes('উইথড্র') || t.includes('পেআউট') || m.includes('পেআউট')) return false;
+        return true;
+      }
+    });
+  }, [notifications, currentUser, isSellerMode]);
 
   const handleSelectConversation = (convoId: string) => {
     setSelectedConversationId(convoId);
@@ -645,110 +537,8 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
 
   const topSellers = isSellerMode ? sellerStories : buyerStories;
 
-  // Rich per-conversation message thread histories for realistic marketplace communication
-  const initialThreadHistories: Record<string, ChatMessage[]> = {
-    'chat-tanvir-ahmed': [
-      {
-        id: 'msg-tanvir-1',
-        senderName: 'Tanvir Ahmed',
-        senderAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
-        isSelf: false,
-        text: 'আসসালামু আলাইকুম! আপনার ওয়েব ডেভেলপমেন্ট প্রজেক্টের রিকোয়ারমেন্ট পেয়েছি।',
-        time: '১৫ মিনিট আগে'
-      },
-      {
-        id: 'msg-tanvir-2',
-        senderName: 'আমি',
-        isSelf: true,
-        text: 'ওয়ালাইকুম আসসালাম! লাইভ ডেমো লিংকটি কি শেয়ার করতে পারবেন?',
-        time: '১২ মিনিট আগে'
-      },
-      {
-        id: 'msg-tanvir-3',
-        senderName: 'Tanvir Ahmed',
-        senderAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
-        isSelf: false,
-        text: 'প্রজেক্টের সোর্স কোড ও লাইভ প্রিভিউ লিংক পাঠিয়েছি, চেক করে জানাবেন।',
-        time: '১০ মিনিট আগে'
-      }
-    ],
-    'chat-creative-pixels': [
-      {
-        id: 'msg-pixels-1',
-        senderName: 'Creative Pixels Agency',
-        senderAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
-        isSelf: false,
-        text: 'UI/UX রিডিজাইনের ১ম ড্রাফট সম্পূর্ণ তৈরি হয়েছে।',
-        time: '১ ঘণ্টা আগে'
-      },
-      {
-        id: 'msg-pixels-2',
-        senderName: 'Creative Pixels Agency',
-        senderAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
-        isSelf: false,
-        text: 'Figma ডিজাইন ফাইল আপডেট করা হয়েছে, ক্লায়েন্ট রিভিশন রেডি।',
-        time: '৪৫ মিনিট আগে'
-      }
-    ],
-    'chat-piten-support': [
-      {
-        id: 'msg-support-1',
-        senderName: 'PiTen Marketplace Official',
-        senderAvatar: 'https://images.unsplash.com/photo-1556742049-0a67e557224f?auto=format&fit=crop&w=120&q=80',
-        isSelf: false,
-        text: 'স্বাগতম! আপনার অর্ডার ও একাউন্ট সিকিউরিটি সম্পূর্ণ এনক্রিপ্টেড।',
-        time: '৩ ঘণ্টা আগে'
-      },
-      {
-        id: 'msg-support-2',
-        senderName: 'PiTen Marketplace Official',
-        senderAvatar: 'https://images.unsplash.com/photo-1556742049-0a67e557224f?auto=format&fit=crop&w=120&q=80',
-        isSelf: false,
-        text: 'অর্ডার #PT-8942 এর এস্ক্রো পেমেন্ট ভেরিফিকেশন সফল হয়েছে।',
-        time: '২ ঘণ্টা আগে'
-      }
-    ],
-    'chat-shahinur-rahman': [
-      {
-        id: 'msg-shahinur-1',
-        senderName: 'Shahinur Rahman',
-        senderAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80',
-        isSelf: false,
-        text: 'পেমেন্ট গেটওয়ে এবং ডাটাবেস এপিআই ইন্টিগ্রেশন সম্পন্ন।',
-        time: '৩ ঘণ্টা আগে'
-      }
-    ],
-    'chat-zubair-hossain': [
-      {
-        id: 'msg-zubair-1',
-        senderName: 'Zubair Hossain',
-        senderAvatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=120&q=80',
-        isSelf: false,
-        text: 'Android APK ও iOS টেস্টফ্লাইট বিল্ড ডাউনলোড লিংক পাঠানো হয়েছে।',
-        time: '৫ ঘণ্টা আগে'
-      }
-    ],
-    'chat-sadia-afrin': [
-      {
-        id: 'msg-sadia-1',
-        senderName: 'Sadia Afrin',
-        senderAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80',
-        isSelf: false,
-        text: 'অন-পেজ এসইও ও কিওয়ার্ড র‍্যাংকিং অডিট রিপোর্ট পাঠানো হয়েছে।',
-        time: '১ দিন আগে'
-      }
-    ],
-    'chat-mouson-art': [
-      {
-        id: 'msg-mouson-1',
-        senderName: 'Mouson Branding Studio',
-        senderAvatar: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=120&q=80',
-        isSelf: false,
-        text: 'লোগো ভেক্টর ফাইল ও ব্র্যান্ডিং কিট প্যাকেজ রেডি।',
-        time: '১ দিন আগে'
-      }
-    ]
-  };
+  // Real per-conversation message thread histories (no fake mock chats)
+  const initialThreadHistories: Record<string, ChatMessage[]> = {};
 
   const currentActiveWin = activeChatWindows?.find(w => w.id === selectedConversationId) || (
     selectedConversationId ? {
@@ -934,7 +724,6 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                 onClick={() => {
                   setIsSettingsModalOpen(false);
                   setIsMobileSearchActive(false);
-                  setActiveNotifFilter('all');
                   setActiveTopTab('notifications');
                   setSelectedNotification(null);
                 }}
@@ -1184,20 +973,30 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                     </div>
                   </div>
                 ) : (
-                  /* List View Sub-Header for Notifications (Single line, equal size, no extra subtitle) */
-                  <div className="pb-1 pt-0.5">
-                    <div className="flex items-center justify-between">
+                  /* List View Sub-Header for Notifications */
+                  <div>
+                    <div className="flex items-center justify-between py-0.5 pb-1">
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
                           onClick={handleCloseAll}
-                          className="p-1 -ml-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-95"
+                          className="p-1 -ml-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
                           title="বন্ধ করে পেজে ফিরে যান"
                         >
-                          <ChevronLeft className="w-5 h-5 text-white stroke-[2.5]" />
+                          <ChevronLeft className="w-5 h-5 text-white" />
                         </button>
-                        <div className="flex items-center gap-1.5">
-                          <h2 className="text-sm font-black text-white tracking-tight leading-none font-english">Notifications</h2>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <h2 className="text-sm font-black text-white tracking-tight leading-none">Notifications</h2>
+                            {roleScopedNotifications.filter(n => !n.read).length > 0 && (
+                              <span className="bg-white/20 text-white text-[10px] font-black rounded-full px-1.5 py-0.2 shrink-0">
+                                {roleScopedNotifications.filter(n => !n.read).length}
+                              </span>
+                            )}
+                          </div>
+                          <p className={`text-[10px] font-semibold ${isSellerMode ? 'text-rose-100' : 'text-emerald-100'} tracking-wide leading-tight mt-0.5 font-sans`}>
+                            PTENit Marketplace Updates
+                          </p>
                         </div>
                       </div>
 
@@ -1206,38 +1005,110 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                         <button
                           type="button"
                           onClick={() => setIsMobileSearchActive(true)}
-                          className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-95"
+                          className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
                           title="সার্চ করুন"
                         >
-                          <Search className="w-4.5 h-4.5" />
+                          <Search className="w-4 h-4" />
                         </button>
                         <button
                           type="button"
                           onClick={() => setIsSettingsModalOpen(true)}
-                          className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-95"
+                          className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
                           title="সেটিংস"
                         >
-                          <Settings className="w-4.5 h-4.5" />
+                          <Settings className="w-4 h-4" />
                         </button>
                       </div>
+                    </div>
+
+                    {/* SUB-TAB BAR FOR NOTIFICATIONS (NO CARDS, SIMPLE, UNDERLINE INDICATOR) */}
+                    <div className="grid grid-cols-4 w-full border-t border-white/10 mt-1 -mx-3 px-1">
+                      <button
+                        type="button"
+                        onClick={() => setActiveNotifFilter('all')}
+                        className={`relative py-2 px-1 text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:opacity-80 text-center ${
+                          activeNotifFilter === 'all'
+                            ? 'text-white font-black'
+                            : 'text-white/70 hover:text-white font-medium'
+                        }`}
+                      >
+                        <Bell className={`w-3.5 h-3.5 shrink-0 ${activeNotifFilter === 'all' ? 'stroke-[2.4]' : 'stroke-[1.8]'}`} />
+                        <span className="truncate">সকল ({roleScopedNotifications.length})</span>
+                        {activeNotifFilter === 'all' && (
+                          <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-white rounded-full" />
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setActiveNotifFilter('unread')}
+                        className={`relative py-2 px-1 text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:opacity-80 text-center ${
+                          activeNotifFilter === 'unread'
+                            ? 'text-white font-black'
+                            : 'text-white/70 hover:text-white font-medium'
+                        }`}
+                      >
+                        <CheckCheck className={`w-3.5 h-3.5 shrink-0 ${activeNotifFilter === 'unread' ? 'stroke-[2.4]' : 'stroke-[1.8]'}`} />
+                        <span className="truncate">অপঠিত ({roleScopedNotifications.filter(n => !n.read).length})</span>
+                        {activeNotifFilter === 'unread' && (
+                          <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-white rounded-full" />
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setActiveNotifFilter('orders')}
+                        className={`relative py-2 px-1 text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:opacity-80 text-center ${
+                          activeNotifFilter === 'orders'
+                            ? 'text-white font-black'
+                            : 'text-white/70 hover:text-white font-medium'
+                        }`}
+                      >
+                        <ShoppingBag className={`w-3.5 h-3.5 shrink-0 ${activeNotifFilter === 'orders' ? 'stroke-[2.4]' : 'stroke-[1.8]'}`} />
+                        <span className="truncate">অর্ডার</span>
+                        {activeNotifFilter === 'orders' && (
+                          <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-white rounded-full" />
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setActiveNotifFilter('updates')}
+                        className={`relative py-2 px-1 text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:opacity-80 text-center ${
+                          activeNotifFilter === 'updates'
+                            ? 'text-white font-black'
+                            : 'text-white/70 hover:text-white font-medium'
+                        }`}
+                      >
+                        <Sparkles className={`w-3.5 h-3.5 shrink-0 ${activeNotifFilter === 'updates' ? 'stroke-[2.4]' : 'stroke-[1.8]'}`} />
+                        <span className="truncate">আপডেট</span>
+                        {activeNotifFilter === 'updates' && (
+                          <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-white rounded-full" />
+                        )}
+                      </button>
                     </div>
                   </div>
                 )
               ) : (
-                /* List View Sub-Header: Messages (Single line, equal size, no extra subtitle) */
-                <div className="pb-1 pt-0.5">
-                  <div className="flex items-center justify-between">
+                /* List View Sub-Header: Messages • PTENit Marketplace Inbox */
+                <div>
+                  <div className="flex items-center justify-between py-0.5 pb-1">
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={handleCloseAll}
-                        className="p-1 -ml-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-95"
+                        className="p-1 -ml-1 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
                         title="বন্ধ করে পেজে ফিরে যান"
                       >
-                        <ChevronLeft className="w-5 h-5 text-white stroke-[2.5]" />
+                        <ChevronLeft className="w-5 h-5 text-white" />
                       </button>
-                      <div className="flex items-center gap-1.5">
-                        <h2 className="text-sm font-black text-white tracking-tight leading-none font-english">Messages</h2>
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <h2 className="text-sm font-black text-white tracking-tight leading-none">Messages</h2>
+                        </div>
+                        <p className={`text-[10px] font-semibold ${isSellerMode ? 'text-rose-100' : 'text-emerald-100'} tracking-wide leading-tight mt-0.5 font-sans`}>
+                          PTENit Marketplace Inbox
+                        </p>
                       </div>
                     </div>
 
@@ -1246,18 +1117,18 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                       <button
                         type="button"
                         onClick={() => setIsMobileSearchActive(true)}
-                        className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-95"
+                        className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
                         title="সার্চ করুন"
                       >
-                        <Search className="w-4.5 h-4.5" />
+                        <Search className="w-4 h-4" />
                       </button>
                       <button
                         type="button"
                         onClick={() => setIsSettingsModalOpen(true)}
-                        className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-95"
+                        className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
                         title="সেটিংস"
                       >
-                        <Settings className="w-4.5 h-4.5" />
+                        <Settings className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
@@ -1288,6 +1159,9 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                     <h1 className="text-lg sm:text-xl font-black text-slate-950 dark:text-white tracking-tight flex items-center gap-1.5">
                       <span>{activeTopTab === 'notifications' ? 'Notifications' : 'Messages'}</span>
                     </h1>
+                    <p className="text-[10px] font-semibold text-slate-400/90 tracking-wide leading-tight mt-0.5 font-sans">
+                      {activeTopTab === 'notifications' ? 'PTENit Marketplace Updates' : 'PTENit Marketplace Inbox'}
+                    </p>
                   </div>
                 </div>
 
@@ -2039,23 +1913,13 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
                   onSend={(text) => sendChatMessage(currentActiveWin.id, text)}
                   onCreateMeet={() => createGoogleMeetCall(currentActiveWin.id)}
                   onStartVoiceCall={() => {
-                    if (openInAppMeet) {
-                      openInAppMeet({
-                        windowId: currentActiveWin.id,
-                        targetName: currentActiveWin.senderName,
-                        targetAvatar: currentActiveWin.senderAvatar,
-                        targetRole: currentActiveWin.senderRole,
-                        initialType: 'audio'
-                      });
-                    } else {
-                      setActiveCallState({
-                        active: true,
-                        callerName: currentActiveWin.senderName,
-                        callerAvatar: currentActiveWin.senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80',
-                        muted: false,
-                        duration: 0
-                      });
-                    }
+                    setActiveCallState({
+                      active: true,
+                      callerName: currentActiveWin.senderName,
+                      callerAvatar: currentActiveWin.senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80',
+                      muted: false,
+                      duration: 0
+                    });
                   }}
                   currentUserName={currentUser?.name || 'আমি'}
                 />
@@ -2361,82 +2225,49 @@ export const FloatingMessengerWindows: React.FC<FloatingMessengerWindowsProps> =
         </div>
       )}
 
-      {/* 7. LIVE VOICE CALL OVERLAY (100% Responsive, Clean & Professional Phone/Desktop Call Screen) */}
+      {/* 7. LIVE VOICE CALL OVERLAY */}
       {activeCallState?.active && (
-        <div className="fixed inset-0 z-[100000] pointer-events-auto bg-slate-950/95 backdrop-blur-md flex flex-col justify-between p-4 sm:p-8 text-white font-bengali animate-in fade-in duration-200 select-none pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
-          {/* Top Info Bar */}
-          <div className="flex items-center justify-between max-w-md w-full mx-auto px-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-emerald-400 bg-slate-900/80 border border-slate-800 px-3 py-1.5 rounded-full">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>নিরাপদ এনক্রিপ্টেড কল</span>
-            </div>
-            <span className="text-xs font-mono font-bold text-slate-400 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
-              HD অডিও
-            </span>
-          </div>
-
-          {/* Center: Caller Avatar with Acoustic Waves & Info */}
-          <div className="text-center space-y-4 max-w-sm w-full mx-auto my-auto">
+        <div className="fixed inset-0 z-[100000] pointer-events-auto bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-white font-bengali animate-in zoom-in-95 duration-200">
+          <div className="text-center space-y-4 max-w-sm w-full">
             <div className="relative inline-block">
-              <div className="absolute inset-0 rounded-full bg-[#0084FF]/25 animate-ping scale-150" />
-              <div className="absolute inset-0 rounded-full bg-emerald-500/15 animate-pulse scale-175" />
               <img
                 src={activeCallState.callerAvatar}
                 alt={activeCallState.callerName}
-                className="w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover border-4 border-[#0084FF] shadow-2xl mx-auto relative z-10 ring-4 ring-[#0084FF]/30"
+                className="w-24 h-24 rounded-full object-cover border-4 border-[#0084FF] shadow-2xl mx-auto animate-pulse"
               />
-              <span className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-slate-950 z-20 shadow-md" />
+              <span className="absolute bottom-1 right-1 w-5 h-5 bg-blue-500 rounded-full border-2 border-slate-950" />
             </div>
 
-            <div className="space-y-1">
-              <h3 className="text-xl sm:text-2xl font-black">{activeCallState.callerName}</h3>
-              <p className="text-xs text-sky-400 font-bold">PiTen ভয়েস কল চলছে (HD অডিও)</p>
-              <div className="text-sm font-mono text-emerald-400 font-bold tracking-wider pt-1 flex items-center justify-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span>
-                  {Math.floor(activeCallState.duration / 60).toString().padStart(2, '0')}:
-                  {(activeCallState.duration % 60).toString().padStart(2, '0')}
-                </span>
+            <div>
+              <h3 className="text-xl font-black">{activeCallState.callerName}</h3>
+              <p className="text-xs text-sky-400 font-bold mt-0.5">PiTen ভয়েস কল চলছে (HD অডিও)</p>
+              <div className="text-sm font-mono text-slate-300 mt-2 font-bold">
+                {Math.floor(activeCallState.duration / 60).toString().padStart(2, '0')}:
+                {(activeCallState.duration % 60).toString().padStart(2, '0')}
               </div>
             </div>
 
-            {/* Dynamic Soundwave Equalizer */}
-            <div className="flex items-center justify-center gap-1 py-1 h-8">
-              <span className="w-1 bg-[#0084FF] rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-3" />
-              <span className="w-1 bg-emerald-400 rounded-full animate-[pulse_0.8s_ease-in-out_infinite] h-6" />
-              <span className="w-1 bg-cyan-400 rounded-full animate-[pulse_0.5s_ease-in-out_infinite] h-8" />
-              <span className="w-1 bg-[#0084FF] rounded-full animate-[pulse_0.7s_ease-in-out_infinite] h-5" />
-              <span className="w-1 bg-sky-400 rounded-full animate-[pulse_0.9s_ease-in-out_infinite] h-7" />
-              <span className="w-1 bg-emerald-400 rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-4" />
-              <span className="w-1 bg-[#0084FF] rounded-full animate-[pulse_0.8s_ease-in-out_infinite] h-2" />
+            <div className="flex items-center justify-center gap-6 pt-6">
+              <button
+                type="button"
+                onClick={() => setActiveCallState(prev => prev ? { ...prev, muted: !prev.muted } : null)}
+                className={`p-4 rounded-full transition cursor-pointer ${
+                  activeCallState.muted ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-white hover:bg-slate-700'
+                }`}
+                title={activeCallState.muted ? 'আনমিউট করুন' : 'মিউট করুন'}
+              >
+                {activeCallState.muted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveCallState(null)}
+                className="p-4 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-xl transition cursor-pointer active:scale-95"
+                title="কল শেষ করুন"
+              >
+                <PhoneOff className="w-6 h-6" />
+              </button>
             </div>
-
-            <p className="text-[11px] text-slate-400">
-              {activeCallState.muted ? '🔇 আপনার মাইক্রোফোন মিউট করা আছে' : '🎙️ কথা স্পষ্ট শোনা যাচ্ছে'}
-            </p>
-          </div>
-
-          {/* Bottom Call Controls (Responsive, Touch-Friendly) */}
-          <div className="flex items-center justify-center gap-6 max-w-sm w-full mx-auto">
-            <button
-              type="button"
-              onClick={() => setActiveCallState(prev => prev ? { ...prev, muted: !prev.muted } : null)}
-              className={`w-13 h-13 rounded-full flex items-center justify-center transition cursor-pointer active:scale-95 shadow-lg ${
-                activeCallState.muted ? 'bg-rose-600 text-white shadow-rose-950/60' : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700'
-              }`}
-              title={activeCallState.muted ? 'আনমিউট করুন' : 'মিউট করুন'}
-            >
-              {activeCallState.muted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveCallState(null)}
-              className="w-15 h-15 rounded-full bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center shadow-xl shadow-rose-950/80 cursor-pointer hover:scale-105 active:scale-95 transition"
-              title="কল শেষ করুন"
-            >
-              <PhoneOff className="w-7 h-7" />
-            </button>
           </div>
         </div>
       )}
@@ -2484,7 +2315,17 @@ const SingleChatWindow: React.FC<SingleChatWindowProps> = ({
   onCreateMeet,
   onExpandFullScreen
 }) => {
-  const { marketplaceOrders, openInAppMeet } = useData();
+  const { 
+    marketplaceOrders, 
+    openInAppMeet,
+    createCustomerProject,
+    acceptDirectOffer,
+    declineDirectOffer,
+    publishDirectProjectToPublicFeed,
+    resendDirectOffer24h,
+    currentUser,
+    sendChatMessage
+  } = useData();
   const linkedOrder = marketplaceOrders?.find(o => 
     (win.orderId && (o.id === win.orderId || o.id.endsWith(win.orderId))) ||
     (win.senderName && (o.buyerName === win.senderName || o.sellerName === win.senderName))
@@ -2493,6 +2334,7 @@ const SingleChatWindow: React.FC<SingleChatWindowProps> = ({
 
   const [inputText, setInputText] = useState('');
   const [showEmojis, setShowEmojis] = useState(false);
+  const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -2505,6 +2347,95 @@ const SingleChatWindow: React.FC<SingleChatWindowProps> = ({
     if (!inputText.trim()) return;
     onSend(inputText.trim());
     setInputText('');
+  };
+
+  const handleSendCustomOfferData = (data: {
+    title: string;
+    category: string;
+    budget: number;
+    budgetRange?: string;
+    budgetMode?: 'range' | 'fixed';
+    minBudget?: number;
+    maxBudget?: number;
+    deliveryDays: number;
+    description: string;
+    skills?: string;
+    requirements?: string[];
+    attachmentName?: string;
+    attachmentUrl?: string;
+    coverImage?: string;
+    offerType?: 'work_first' | 'paid';
+  }) => {
+    const offerId = `offer-${Date.now()}`;
+    const expiresAt = new Date(Date.now() + 24 * 3600 * 1000).toISOString();
+    const projId = `proj-${Date.now()}`;
+
+    let fullDescription = data.description.trim();
+    if (data.requirements && data.requirements.length > 0) {
+      fullDescription += `\n\n📌 প্রজেক্ট রিকোয়ারমেন্টস ও ডেলিভারেবলস:\n` + data.requirements.map((r, i) => `${i + 1}. ${r}`).join('\n');
+    }
+    if (data.skills && data.skills.trim()) {
+      fullDescription += `\n\n🏷️ স্কিলস ও কীওয়ার্ড: ${data.skills.trim()}`;
+    }
+
+    const computedRange = data.budgetRange || `৳${data.budget.toLocaleString('bn-BD')}`;
+
+    const offerMeta: DirectOfferMeta = {
+      id: offerId,
+      projectId: projId,
+      title: data.title,
+      category: data.category,
+      budget: data.budget,
+      budgetRange: computedRange,
+      deliveryDays: data.deliveryDays,
+      description: fullDescription,
+      skills: data.skills,
+      requirements: data.requirements,
+      attachmentName: data.attachmentName,
+      attachmentUrl: data.attachmentUrl,
+      coverImage: data.coverImage,
+      offerType: data.offerType || 'work_first',
+      createdAt: new Date().toISOString(),
+      expiresAt: expiresAt,
+      status: 'pending',
+      targetSellerId: win.targetUserId || win.id.replace('chat-', ''),
+      targetSellerName: win.senderName,
+      buyerId: currentUser?.id,
+      buyerName: currentUser?.name
+    };
+
+    // Create 24h private direct CustomerProject
+    createCustomerProject({
+      customerId: currentUser?.id || `cust-${Date.now()}`,
+      customerName: currentUser?.name || 'সম্মানিত বায়ার',
+      customerEmail: currentUser?.email || 'buyer@ptenit.com',
+      customerPhone: currentUser?.mobile || '01700000000',
+      serviceTitle: data.title,
+      category: data.category,
+      description: fullDescription,
+      budgetRange: computedRange,
+      priceEstimate: data.budget,
+      deadline: new Date(Date.now() + data.deliveryDays * 86400000).toISOString().split('T')[0],
+      isDirectOffer: true,
+      targetSellerId: win.targetUserId || win.id.replace('chat-', ''),
+      targetSellerName: win.senderName,
+      expiresAt: expiresAt,
+      attachmentName: data.attachmentName || (data.coverImage ? 'কভার ছবি সংযুক্ত' : undefined),
+      attachmentUrl: data.attachmentUrl || data.coverImage || undefined,
+      offerType: data.offerType || 'work_first',
+      isWorkFirst: (data.offerType || 'work_first') === 'work_first'
+    });
+
+    try {
+      const stored = JSON.parse(localStorage.getItem('ptenit_my_buyer_post_ids') || '[]');
+      const updated = Array.from(new Set([...stored, projId, `ord-${projId}`, `ord-ptenit-${projId}`]));
+      localStorage.setItem('ptenit_my_buyer_post_ids', JSON.stringify(updated));
+    } catch {}
+
+    const displayMsg = `💼 [ডিরেক্ট ২৪-ঘণ্টা প্রজেক্ট অফার]\n📌 প্রজেক্ট: ${data.title}\n🏷️ ক্যাটাগরি: ${data.category}\n💰 বাজেট: ${computedRange}\n⏱️ ডেলিভারি সময়: ${data.deliveryDays} দিন\n⏳ ভ্যালিডিটি: ২৪ ঘণ্টা (অটো-রিটার্ন প্রযোজ্য)\n\n👉 সেলার ২৪ ঘণ্টার মধ্যে রিসিভ না করলে অফারটি স্বয়ংক্রিয়ভাবে বায়ারের কাছে ফেরত আসবে।`;
+
+    sendChatMessage(win.id, displayMsg, undefined, offerMeta);
+    setIsOfferModalOpen(false);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -2611,7 +2542,24 @@ const SingleChatWindow: React.FC<SingleChatWindowProps> = ({
                       : 'bg-white dark:bg-[#243447] text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700/80 rounded-tl-xs'
                   }`}
                 >
-                  <p className="whitespace-pre-wrap break-words">{m.text}</p>
+                  {(() => {
+                    const directOffer = (m as any).directOffer || getDirectOfferFromMessage(m, win.senderName, win.targetUserId || win.id.replace('chat-', ''));
+                    if (directOffer) {
+                      return (
+                        <DirectProjectOfferChatCard
+                          offer={directOffer}
+                          isSelf={m.isSelf}
+                          currentUserId={currentUser?.id}
+                          currentUserRole={currentUser?.role}
+                          onAccept={(off) => acceptDirectOffer(off.projectId || off.orderId || win.id)}
+                          onDecline={(off) => declineDirectOffer(off.projectId || off.orderId || win.id)}
+                          onPublishToPublic={(off) => publishDirectProjectToPublicFeed(off.projectId || off.orderId || win.id)}
+                          onResend={(off) => resendDirectOffer24h(off.projectId || off.orderId || win.id)}
+                        />
+                      );
+                    }
+                    return <p className="whitespace-pre-wrap break-words">{m.text}</p>;
+                  })()}
 
                   {m.meetLink && (
                     <div className="mt-2 p-2.5 bg-slate-900 text-white rounded-xl border border-emerald-500/50 space-y-1.5 shadow-lg">
@@ -2710,6 +2658,15 @@ const SingleChatWindow: React.FC<SingleChatWindowProps> = ({
                 <Smile className="w-4 h-4" />
               </button>
 
+              <button
+                type="button"
+                onClick={() => setIsOfferModalOpen(true)}
+                className="p-1.5 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-full transition cursor-pointer shrink-0"
+                title="২৪ ঘণ্টার কাস্টম প্রজেক্ট অফার পাঠান"
+              >
+                <Briefcase className="w-4 h-4" />
+              </button>
+
               <input
                 type="text"
                 value={inputText}
@@ -2739,6 +2696,16 @@ const SingleChatWindow: React.FC<SingleChatWindowProps> = ({
               </button>
             </form>
           )}
+
+          {/* 24-HOUR DIRECT CUSTOM PROJECT OFFER MODAL */}
+          <SendDirectOfferModal
+            isOpen={isOfferModalOpen}
+            onClose={() => setIsOfferModalOpen(false)}
+            recipientName={win.senderName}
+            recipientRole={win.senderRole}
+            recipientAvatar={win.senderAvatar}
+            onSubmit={handleSendCustomOfferData}
+          />
         </>
       )}
     </div>
@@ -2784,13 +2751,19 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
   onCreateMeet,
   onStartVoiceCall
 }) => {
-  const { openInAppMeet } = useData();
+  const { 
+    openInAppMeet,
+    createCustomerProject,
+    acceptDirectOffer,
+    declineDirectOffer,
+    publishDirectProjectToPublicFeed,
+    resendDirectOffer24h,
+    currentUser,
+    sendChatMessage
+  } = useData();
   const [inputText, setInputText] = useState('');
   const [showEmojis, setShowEmojis] = useState(false);
   const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
-  const [offerTitle, setOfferTitle] = useState('ওয়েবসাইট ডিজাইন ও ডেভেলপমেন্ট সার্ভিস');
-  const [offerPrice, setOfferPrice] = useState('৫০০০');
-  const [offerDelivery, setOfferDelivery] = useState('৩ দিন');
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -2814,9 +2787,93 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
     if (e.target) e.target.value = '';
   };
 
-  const handleSendCustomOffer = () => {
-    if (!offerTitle.trim() || !offerPrice.trim()) return;
-    onSend(`💼 [কাস্টম প্রজেক্ট অফার]\n📦 সার্ভিস: ${offerTitle}\n💰 বাজেট: ৳${offerPrice}\n⏱️ ডেলিভারি সময়: ${offerDelivery}\n\n👉 অর্ডার নিশ্চিত করতে বায়ার একসেপ্ট বাটনে ট্যাপ করতে পারেন।`);
+  const handleSendCustomOfferData = (data: {
+    title: string;
+    category: string;
+    budget: number;
+    budgetRange?: string;
+    budgetMode?: 'range' | 'fixed';
+    minBudget?: number;
+    maxBudget?: number;
+    deliveryDays: number;
+    description: string;
+    skills?: string;
+    requirements?: string[];
+    attachmentName?: string;
+    attachmentUrl?: string;
+    coverImage?: string;
+    offerType?: 'work_first' | 'paid';
+  }) => {
+    const offerId = `offer-${Date.now()}`;
+    const expiresAt = new Date(Date.now() + 24 * 3600 * 1000).toISOString();
+    const projId = `proj-${Date.now()}`;
+
+    let fullDescription = data.description.trim();
+    if (data.requirements && data.requirements.length > 0) {
+      fullDescription += `\n\n📌 প্রজেক্ট রিকোয়ারমেন্টস ও ডেলিভারেবলস:\n` + data.requirements.map((r, i) => `${i + 1}. ${r}`).join('\n');
+    }
+    if (data.skills && data.skills.trim()) {
+      fullDescription += `\n\n🏷️ স্কিলস ও কীওয়ার্ড: ${data.skills.trim()}`;
+    }
+
+    const computedRange = data.budgetRange || `৳${data.budget.toLocaleString('bn-BD')}`;
+
+    const offerMeta: DirectOfferMeta = {
+      id: offerId,
+      projectId: projId,
+      title: data.title,
+      category: data.category,
+      budget: data.budget,
+      budgetRange: computedRange,
+      deliveryDays: data.deliveryDays,
+      description: fullDescription,
+      skills: data.skills,
+      requirements: data.requirements,
+      attachmentName: data.attachmentName,
+      attachmentUrl: data.attachmentUrl,
+      coverImage: data.coverImage,
+      offerType: data.offerType || 'work_first',
+      createdAt: new Date().toISOString(),
+      expiresAt: expiresAt,
+      status: 'pending',
+      targetSellerId: win.id.replace('chat-', ''),
+      targetSellerName: win.senderName,
+      buyerId: currentUser?.id,
+      buyerName: currentUser?.name
+    };
+
+    // 1. Create 24h direct private project
+    createCustomerProject({
+      customerId: currentUser?.id || `cust-${Date.now()}`,
+      customerName: currentUser?.name || 'সম্মানিত বায়ার',
+      customerEmail: currentUser?.email || 'buyer@ptenit.com',
+      customerPhone: currentUser?.mobile || '01700000000',
+      serviceTitle: data.title,
+      category: data.category,
+      description: fullDescription,
+      budgetRange: computedRange,
+      priceEstimate: data.budget,
+      deadline: new Date(Date.now() + data.deliveryDays * 86400000).toISOString().split('T')[0],
+      isDirectOffer: true,
+      targetSellerId: win.id.replace('chat-', ''),
+      targetSellerName: win.senderName,
+      expiresAt: expiresAt,
+      attachmentName: data.attachmentName || (data.coverImage ? 'কভার ছবি সংযুক্ত' : undefined),
+      attachmentUrl: data.attachmentUrl || data.coverImage || undefined,
+      offerType: data.offerType || 'work_first',
+      isWorkFirst: (data.offerType || 'work_first') === 'work_first'
+    });
+
+    try {
+      const stored = JSON.parse(localStorage.getItem('ptenit_my_buyer_post_ids') || '[]');
+      const updated = Array.from(new Set([...stored, projId, `ord-${projId}`, `ord-ptenit-${projId}`]));
+      localStorage.setItem('ptenit_my_buyer_post_ids', JSON.stringify(updated));
+    } catch {}
+
+    // 2. Send structured message
+    const displayMsg = `💼 [ডিরেক্ট ২৪-ঘণ্টা প্রজেক্ট অফার]\n📌 প্রজেক্ট: ${data.title}\n🏷️ ক্যাটাগরি: ${data.category}\n💰 বাজেট: ${computedRange}\n⏱️ ডেলিভারি সময়: ${data.deliveryDays} দিন\n⏳ ভ্যালিডিটি: ২৪ ঘণ্টা (অটো-রিটার্ন প্রযোজ্য)\n\n👉 সেলার ২৪ ঘণ্টার মধ্যে রিসিভ না করলে অফারটি স্বয়ংক্রিয়ভাবে বায়ারের কাছে ফেরত আসবে।`;
+
+    sendChatMessage(win.id, displayMsg, undefined, offerMeta);
     setIsOfferModalOpen(false);
   };
 
@@ -2962,47 +3019,24 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
                     : 'bg-white dark:bg-[#243447] text-slate-900 dark:text-slate-100 border border-slate-200/70 dark:border-slate-700/60 rounded-2xl rounded-bl-xs'
                 }`}
               >
-                {m.text.includes('💼') || m.text.includes('অফার') || m.text.includes('অর্ডার') ? (
-                  <div className="my-1 p-3.5 bg-white text-slate-900 rounded-2xl border border-slate-200 shadow-md space-y-3 font-bengali">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                      <div className="flex items-center gap-2">
-                        <span className="p-1.5 rounded-xl bg-emerald-100 text-[#006A4E]">
-                          <Briefcase className="w-4 h-4" />
-                        </span>
-                        <div>
-                          <span className="text-[10px] font-black uppercase tracking-wider text-[#006A4E] block">
-                            ডাইরেক্ট প্রজেক্ট অর্ডার কার্ড
-                          </span>
-                          <span className="text-xs font-bold text-slate-800">
-                            {win.senderName}-এর জন্য ব্যক্তিগত প্রস্তাব
-                          </span>
-                        </div>
-                      </div>
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-[#006A4E] text-[10px] font-black border border-emerald-200">
-                        অপেক্ষমাণ (Pending)
-                      </span>
-                    </div>
-
-                    <div className="text-xs space-y-1 text-slate-700">
-                      <p className="whitespace-pre-wrap font-medium">{m.text}</p>
-                    </div>
-
-                    <div className="pt-2 border-t border-slate-100 flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          alert('অভিনন্দন! ডাইরেক্ট প্রজেক্ট অর্ডার কনফার্ম করা হয়েছে এবং এস্ক্রো গেটওয়েতে ফান্ড সিকিউরড করা হয়েছে।');
-                        }}
-                        className="w-full py-2 px-3 bg-[#006A4E] hover:bg-[#047857] text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-xs cursor-pointer transition active:scale-95"
-                      >
-                        <ShoppingBag className="w-4 h-4" />
-                        <span>অর্ডার একসেপ্ট ও সিকিউরড পেমেন্ট</span>
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="whitespace-pre-wrap break-words">{m.text}</p>
-                )}
+                {(() => {
+                  const directOffer = (m as any).directOffer || getDirectOfferFromMessage(m, win.senderName, win.id.replace('chat-', ''));
+                  if (directOffer) {
+                    return (
+                      <DirectProjectOfferChatCard
+                        offer={directOffer}
+                        isSelf={m.isSelf}
+                        currentUserId={currentUser?.id}
+                        currentUserRole={currentUser?.role}
+                        onAccept={(off) => acceptDirectOffer(off.projectId || off.orderId || win.id)}
+                        onDecline={(off) => declineDirectOffer(off.projectId || off.orderId || win.id)}
+                        onPublishToPublic={(off) => publishDirectProjectToPublicFeed(off.projectId || off.orderId || win.id)}
+                        onResend={(off) => resendDirectOffer24h(off.projectId || off.orderId || win.id)}
+                      />
+                    );
+                  }
+                  return <p className="whitespace-pre-wrap break-words">{m.text}</p>;
+                })()}
 
                 {m.meetLink && (
                   <div className="mt-2.5 p-3.5 bg-slate-900 text-white rounded-2xl border border-emerald-500/40 space-y-2.5 shadow-xl">
@@ -3151,90 +3185,15 @@ const FullScreenChatThread: React.FC<FullScreenChatThreadProps> = ({
         </form>
       )}
 
-      {/* CUSTOM OFFER MODAL */}
-      {isOfferModalOpen && (
-        <div 
-          onClick={() => setIsOfferModalOpen(false)}
-          className="fixed inset-0 z-[100000] pointer-events-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 font-bengali animate-in fade-in duration-150"
-        >
-          <div 
-            onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-[#1C2733] border border-slate-200 dark:border-slate-700 w-full max-w-sm rounded-2xl shadow-2xl p-4 sm:p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
-                <Briefcase className="w-5 h-5 text-blue-500" />
-                <span>কাস্টম প্রজেক্ট অফার পাঠান</span>
-              </h3>
-              <button
-                type="button"
-                onClick={() => setIsOfferModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xs cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-3 text-xs">
-              <div>
-                <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                  সার্ভিস / প্রজেক্টের বিবরণ
-                </label>
-                <input
-                  type="text"
-                  value={offerTitle}
-                  onChange={(e) => setOfferTitle(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006A4E]"
-                  placeholder="যেমন: ফুল স্ট্যাক ওয়েবসাইট ডেভেলপমেন্ট"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                    বাজেট (টাকা ৳)
-                  </label>
-                  <input
-                    type="number"
-                    value={offerPrice}
-                    onChange={(e) => setOfferPrice(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006A4E]"
-                    placeholder="৫০০০"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-1">
-                    ডেলিভারি সময়
-                  </label>
-                  <input
-                    type="text"
-                    value={offerDelivery}
-                    onChange={(e) => setOfferDelivery(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#006A4E]"
-                    placeholder="৩ দিন"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setIsOfferModalOpen(false)}
-                className="flex-1 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold"
-              >
-                বাতিল
-              </button>
-              <button
-                type="button"
-                onClick={handleSendCustomOffer}
-                className="flex-1 py-2 rounded-xl bg-[#047857] hover:bg-blue-500 text-white text-xs font-black shadow-md transition cursor-pointer"
-              >
-                অফার পাঠান
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 24-HOUR DIRECT CUSTOM PROJECT OFFER MODAL */}
+      <SendDirectOfferModal
+        isOpen={isOfferModalOpen}
+        onClose={() => setIsOfferModalOpen(false)}
+        recipientName={win.senderName}
+        recipientRole={win.senderRole}
+        recipientAvatar={win.senderAvatar}
+        onSubmit={handleSendCustomOfferData}
+      />
     </div>
   );
 };

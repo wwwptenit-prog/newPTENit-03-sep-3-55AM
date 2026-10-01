@@ -536,11 +536,11 @@ export const CustomerCareDispatcher: React.FC = () => {
               <Headphones className="w-5 h-5" />
             </div>
             <h2 className="text-base sm:text-xl font-bold text-white">
-              কাস্টমার সাপোর্ট কনসোল
+              কাস্টমার কেয়ার ও স্মার্ট অটো-ডেসপ্যাচ সাপোর্ট কনসোল
             </h2>
           </div>
-          <p className="text-xs text-slate-400 font-normal">
-            লাইভ সাপোর্ট টিকেট ও স্মার্ট মেসেজ রাউটিং।
+          <p className="text-xs text-slate-400 font-normal max-w-2xl">
+            সকল এডমিন ও সাব-এডমিন নিজ নিজ দায়িত্ব অনুসারে সাপোর্ট প্রদান করতে পারেন। কোনো সাব-এডমিন ব্যস্ত (Busy) থাকলে ইনকামিং মেসেজ স্বয়ংক্রিয়ভাবে পরবর্তী সক্রিয় এডমিনের নিকট অটো-ট্রান্সফার হয়।
           </p>
         </div>
 
@@ -550,20 +550,19 @@ export const CustomerCareDispatcher: React.FC = () => {
             type="button"
             onClick={() => handleSimulateIncomingMessage('Finance')}
             className="px-3 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-xs font-bold transition cursor-pointer flex items-center gap-1.5"
-            title="ফাইন্যান্স টেস্ট"
+            title="ফাইন্যান্স ডিপার্টমেন্টে টেস্ট মেসেজ পাঠিয়ে অটো-রাউটিং পরীক্ষা করুন"
           >
             <Zap className="w-3.5 h-3.5 text-emerald-400" />
-            <span>+ ফাইন্যান্স টেস্ট</span>
+            <span>+ ফাইন্যান্স মেসেজ টেস্ট (অটো-রাউটিং)</span>
           </button>
 
           <button
             type="button"
             onClick={() => handleSimulateIncomingMessage('Marketplace')}
             className="px-3 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-bold transition cursor-pointer flex items-center gap-1.5"
-            title="মার্কেটপ্লেস টেস্ট"
           >
             <Zap className="w-3.5 h-3.5 text-amber-400" />
-            <span>+ মার্কেটপ্লেস টেস্ট</span>
+            <span>+ মার্কেটপ্লেস মেসেজ টেস্ট</span>
           </button>
         </div>
       </div>

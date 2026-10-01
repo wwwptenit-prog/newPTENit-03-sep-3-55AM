@@ -52,7 +52,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-6 overflow-y-auto print:p-0 print:bg-white">
       
-      <div className="bg-white rounded-3xl max-w-3xl w-full p-2 relative shadow-2xl my-auto print:shadow-none print:m-0 print:p-0">
+      <div className="liquid-glass-modal rounded-3xl max-w-3xl w-full p-2 relative shadow-2xl my-auto print:shadow-none print:m-0 print:p-0 text-slate-900 dark:text-white">
         
         {/* Top Floating Controls */}
         <div className="flex justify-between items-center p-4 border-b border-slate-100 print:hidden">

@@ -43,7 +43,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   };
 
   return (
-    <div className={`bg-white dark:bg-slate-900 rounded-2xl border ${isEnrolled ? 'border-blue-600/50 shadow-sm dark:border-blue-600/50/60' : 'border-slate-200/90 dark:border-slate-800 shadow-xs'} hover:shadow-xl hover:-translate-y-1 hover:border-blue-600/50 transition-all duration-300 flex flex-col justify-between overflow-hidden group`}>
+    <div className={`bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl ${isEnrolled ? 'border-emerald-500/50 shadow-md' : 'shadow-xs'} hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden group`}>
       
       {/* Thumbnail: Standard Aspect Ratio 16:10 */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-950">
@@ -109,7 +109,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
       </div>
 
       {/* Price & Actions Ribbon - Harmonized with GigCard and DigitalProducts */}
-      <div className="p-2.5 sm:p-3.5 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1.5 rounded-b-2xl">
+      <div className="p-2.5 sm:p-3.5 bg-white/40 dark:bg-slate-950/40 backdrop-blur-md border-t border-white/60 dark:border-white/10 flex items-center justify-between gap-1.5 rounded-b-2xl">
         <div className="min-w-0 flex flex-col justify-center">
           {isEnrolled ? (
             <span className="text-[11px] sm:text-xs font-bold text-[#38BDF8] flex items-center gap-1 truncate">
@@ -150,7 +150,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
                   onOpenDetail(course.id);
                 }
               }}
-              className="py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 active:scale-95 shrink-0 group/btn"
+              className="py-1.5 px-3 sm:py-2 sm:px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#006A4E] hover:bg-[#00543e] shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5 active:scale-95 shrink-0 group/btn"
             >
               <PlayCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
               <span>{t('ক্লাসে যান', 'Go to Class')}</span>
@@ -159,7 +159,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             <button
               type="button"
               onClick={() => onOpenDetail(course.id)}
-              className="py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
+              className="py-1.5 px-3 sm:py-2 sm:px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#006A4E] hover:bg-[#00543e] shadow-xs transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
             >
               <span>{t('বিস্তারিত', 'Details')}</span>
             </button>

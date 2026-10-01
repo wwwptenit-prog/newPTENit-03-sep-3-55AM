@@ -122,24 +122,24 @@ export const StatsCounter: React.FC = () => {
   ];
 
   return (
-    <section className="py-6 sm:py-8 bg-white border-b border-slate-200 shadow-xs">
+    <section className="py-7 sm:py-9 relative border-b border-white/60 dark:border-white/10 z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (
               <div
                 key={stat.id}
-                className="p-3.5 sm:p-5 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2 sm:gap-3.5 hover:border-[#006A4E] transition-all transform hover:-translate-y-0.5 shadow-xs"
+                className="liquid-glass-card p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-3 sm:gap-4 cursor-default group"
               >
-                <div className={`p-2.5 sm:p-3 rounded-lg ${stat.bgColor} ${stat.color} shrink-0`}>
+                <div className="p-2.5 sm:p-3 rounded-xl bg-gradient-to-br from-cyan-500/15 via-emerald-500/10 to-indigo-500/15 border border-white/80 dark:border-white/15 text-[#006A4E] dark:text-cyan-400 shrink-0 shadow-xs group-hover:scale-105 transition-transform">
                   <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="text-lg sm:text-2xl lg:text-3xl font-black font-heading text-slate-900">
+                  <h3 className="text-lg sm:text-2xl lg:text-3xl font-black font-heading text-slate-900 dark:text-white tracking-tight">
                     <AnimatedCounter value={stat.value} lang={lang} />
                   </h3>
-                  <p className="text-[11px] sm:text-xs lg:text-sm font-semibold text-slate-600 font-bengali leading-snug">
+                  <p className="text-[11px] sm:text-xs lg:text-sm font-bold text-slate-600 dark:text-slate-300 font-bengali leading-snug mt-0.5">
                     {stat.label}
                   </p>
                 </div>

@@ -31,7 +31,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onBack }) => {
   ];
 
   return (
-    <div className="py-8 sm:py-12 bg-slate-50 dark:bg-slate-900/90 text-slate-800 dark:text-slate-100">
+    <div className="py-10 sm:py-16 liquid-canvas-bg text-slate-800 dark:text-slate-100 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
         
         {/* Main Intro */}
@@ -62,8 +62,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onBack }) => {
 
         {/* Mission & Vision Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-          <div className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-[#006A4E]/20 text-[#38BDF8] flex items-center justify-center font-bold">
+          <div className="liquid-glass-card p-6 sm:p-8 rounded-3xl shadow-sm space-y-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-[#006A4E]/15 text-[#006A4E] dark:text-cyan-400 border border-white/60 dark:border-white/10 flex items-center justify-center font-bold shadow-xs">
               <Target className="w-6 h-6" />
             </div>
             <h3 className="text-xl sm:text-2xl font-bold font-heading text-slate-900 dark:text-white font-bengali">
@@ -77,8 +77,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onBack }) => {
             </p>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-sky-500/20 text-sky-500 flex items-center justify-center font-bold">
+          <div className="liquid-glass-card p-6 sm:p-8 rounded-3xl shadow-sm space-y-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border border-white/60 dark:border-white/10 flex items-center justify-center font-bold shadow-xs">
               <Eye className="w-6 h-6" />
             </div>
             <h3 className="text-xl sm:text-2xl font-bold font-heading text-slate-900 dark:text-white font-bengali">
@@ -106,17 +106,17 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onBack }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
             {teamMembers.map((m, idx) => (
-              <div key={idx} className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 text-center space-y-3 shadow-sm hover:border-blue-600/50 transition-all">
+              <div key={idx} className="liquid-glass-card p-6 rounded-3xl text-center space-y-3.5 shadow-sm hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1.5 transition-all">
                 <img
                   src={m.image}
                   alt={m.name}
-                  className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-blue-600/50 shadow-md"
+                  className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-cyan-400/50 shadow-md"
                 />
                 <div>
                   <h3 className="font-bold text-lg font-heading text-slate-900 dark:text-white">{m.name}</h3>
-                  <span className="text-xs text-[#38BDF8] font-bold block">{m.role}</span>
+                  <span className="text-xs text-[#006A4E] dark:text-cyan-400 font-bold block">{m.role}</span>
                 </div>
-                <p className="text-xs text-slate-500 font-bengali leading-relaxed">{m.bio}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-bengali leading-relaxed">{m.bio}</p>
               </div>
             ))}
           </div>

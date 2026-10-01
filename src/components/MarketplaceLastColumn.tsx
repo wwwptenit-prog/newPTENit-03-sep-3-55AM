@@ -19,13 +19,15 @@ import {
   Trash2,
   Maximize2,
   ShieldCheck,
-  MessageSquare
+  MessageSquare,
+  Eye
 } from 'lucide-react';
 
 interface MarketplaceLastColumnProps {
   children?: React.ReactNode;
   isSellerMode?: boolean;
   onOpenOrder?: (orderId: string) => void;
+  onOpenGig?: (gigId: string) => void;
   onNavigateTab?: (tab: string, subTab?: string) => void;
 }
 
@@ -50,6 +52,7 @@ export const MarketplaceLastColumn: React.FC<MarketplaceLastColumnProps> = ({
   children,
   isSellerMode = false,
   onOpenOrder,
+  onOpenGig,
   onNavigateTab
 }) => {
   const {
@@ -80,205 +83,67 @@ export const MarketplaceLastColumn: React.FC<MarketplaceLastColumnProps> = ({
   const [msgFilter, setMsgFilter] = useState<'all' | 'unread' | 'sellers' | 'orders'>('all');
   const [notifFilter, setNotifFilter] = useState<'all' | 'unread' | 'orders' | 'system'>('all');
 
-  // Seller client conversations
-  const sellerConversations: ConversationItem[] = [
-    {
-      id: 'chat-client-sohag',
-      name: 'সোহাগ কাজী (বায়ার / ক্লায়েন্ট)',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
-      role: 'ক্লায়েন্ট • ই-কমার্স প্রজেক্ট #ORD-8821',
-      badge: 'Active Client',
-      rating: 5.0,
-      ordersCount: 4,
-      lastMessage: 'ভাইয়া, আমার ই-কমার্স প্রজেক্টের ডিজাইন ডেমো কি তৈরি হয়েছে? একটু আপডেট দিবেন।',
-      time: '১০ মিনিট আগে',
-      unreadCount: 1,
-      isOnline: true,
-      category: 'orders',
-      orderId: 'ORD-8821'
-    },
-    {
-      id: 'chat-client-tanjim',
-      name: 'তানজিম আহমেদ (সেবাগ্রহীতা বায়ার)',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
-      role: 'ক্লায়েন্ট • গিগ সার্ভিস #ORD-5542',
-      badge: 'Verified Buyer',
-      rating: 4.9,
-      ordersCount: 2,
-      lastMessage: 'আপনার গিগ সার্ভিস অর্ডার করেছি, এস্ক্রো ওয়ালেটে টাকা জমা হয়েছে। কোড শুরু করুন।',
-      time: '৩৫ মিনিট আগে',
-      unreadCount: 0,
-      isOnline: true,
-      category: 'orders',
-      orderId: 'ORD-5542'
-    },
-    {
-      id: 'chat-client-sumaiya',
-      name: 'সুমাইয়া ইসলাম (ক্লায়েন্ট)',
-      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80',
-      role: 'ক্লায়েন্ট • মোবাইল অ্যাপ ইনকোয়ারি',
-      badge: 'Client',
-      rating: 5.0,
-      ordersCount: 1,
-      lastMessage: 'আমাদের মোবাইল অ্যাপের API ডকুমেন্টেশন ইনবক্সে পাঠিয়েছি, একটু দেখে নিন।',
-      time: '১ ঘণ্টা আগে',
-      unreadCount: 0,
-      isOnline: true,
-      category: 'sellers'
-    },
-    {
-      id: 'chat-piten-support',
-      name: 'PTENit এসক্রো সাপোর্ট ও সিকিউরিটি',
-      avatar: 'https://images.unsplash.com/photo-1556742049-0a67e557224f?auto=format&fit=crop&w=120&q=80',
-      role: 'অফিসিয়াল সেলার এসক্রো সুরক্ষা',
-      badge: 'Verified Official',
-      rating: 5.0,
-      ordersCount: 999,
-      lastMessage: 'অর্ডার #ORD-8821 এর এস্ক্রো পেমেন্ট ভেরিফিকেশন সফল হয়েছে।',
-      time: '২ ঘণ্টা আগে',
-      unreadCount: 0,
-      isOnline: true,
-      category: 'orders'
-    },
-    {
-      id: 'chat-client-ariful',
-      name: 'আরিফুল হাসান (বায়ার)',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80',
-      role: 'ক্লায়েন্ট • লোগো ও ব্র্যান্ডিং রিভিশন',
-      badge: 'Buyer',
-      rating: 5.0,
-      ordersCount: 3,
-      lastMessage: 'লোগো কনসেপ্টের প্রাথমিক কালার প্যালেট চমৎকার হয়েছে।',
-      time: '৩ ঘণ্টা আগে',
-      unreadCount: 0,
-      isOnline: false,
-      onlineTimeAgo: '৩ ঘণ্টা আগে',
-      category: 'sellers'
-    }
-  ];
-
-  // Buyer freelancer conversations
-  const buyerConversations: ConversationItem[] = [
-    {
-      id: 'chat-tanvir-ahmed',
-      name: 'Tanvir Ahmed',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
-      role: 'Top Rated • Full-Stack Web',
-      badge: 'Top Rated',
-      rating: 5.0,
-      ordersCount: 142,
-      lastMessage: 'প্রজেক্টের সোর্স কোড ও লাইভ প্রিভিউ লিংক পাঠিয়েছি, চেক করে জানাবেন।',
-      time: '১০ মিনিট আগে',
-      unreadCount: 2,
-      isOnline: true,
-      category: 'sellers'
-    },
-    {
-      id: 'chat-creative-pixels',
-      name: 'Creative Pixels Agency',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
-      role: 'Level 2 • UI/UX Designer',
-      badge: 'Level 2',
-      rating: 4.9,
-      ordersCount: 89,
-      lastMessage: 'Figma ডিজাইন ফাইল আপডেট করা হয়েছে, ক্লায়েন্ট রিভিশন রেডি।',
-      time: '৪৫ মিনিট আগে',
-      unreadCount: 0,
-      isOnline: true,
-      category: 'sellers'
-    },
-    {
-      id: 'chat-piten-support',
-      name: 'PiTen Marketplace Official',
-      avatar: 'https://images.unsplash.com/photo-1556742049-0a67e557224f?auto=format&fit=crop&w=120&q=80',
-      role: 'অফিসিয়াল সাপোর্ট ও এসক্রো সিকিউরিটি',
-      badge: 'Verified Official',
-      rating: 5.0,
-      ordersCount: 999,
-      lastMessage: 'অর্ডার #PT-8942 এর এস্ক্রো পেমেন্ট ভেরিফিকেশন সফল হয়েছে।',
-      time: '২ ঘণ্টা আগে',
-      unreadCount: 0,
-      isOnline: true,
-      category: 'orders'
-    },
-    {
-      id: 'chat-shahinur-rahman',
-      name: 'Shahinur Rahman',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80',
-      role: 'Pro Seller • React & Node Specialist',
-      badge: 'Verified Pro',
-      rating: 5.0,
-      ordersCount: 65,
-      lastMessage: 'পেমেন্ট গেটওয়ে এবং ডাটাবেস এপিআই ইন্টিগ্রেশন সম্পন্ন।',
-      time: '৩ ঘণ্টা আগে',
-      unreadCount: 0,
-      isOnline: false,
-      onlineTimeAgo: '৩ ঘণ্টা আগে',
-      category: 'sellers'
-    },
-    {
-      id: 'chat-zubair-hossain',
-      name: 'Zubair Hossain',
-      avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=120&q=80',
-      role: 'Level 2 • Mobile App Dev',
-      badge: 'Level 2',
-      rating: 4.9,
-      ordersCount: 78,
-      lastMessage: 'Android APK ও iOS টেস্টফ্লাইট বিল্ড ডাউনলোড লিংক পাঠানো হয়েছে।',
-      time: '৫ ঘণ্টা আগে',
-      unreadCount: 0,
-      isOnline: false,
-      onlineTimeAgo: '৫ ঘণ্টা আগে',
-      category: 'sellers'
-    }
-  ];
-
-  const baseConversations = isSellerMode ? sellerConversations : buyerConversations;
-
-  // Merge with directMessages if any
+  // Build conversations strictly from real active chat windows and directMessages for currentUser (No default/mock fake chats)
   const mergedConversations: ConversationItem[] = useMemo(() => {
-    // Clone baseConversations so we don't mutate original objects
-    const list: ConversationItem[] = baseConversations.map(c => {
-      const isRead = readConversationIds && (readConversationIds.includes(c.id) || (c.orderId && readConversationIds.includes(c.orderId)));
-      return {
-        ...c,
-        unreadCount: isRead ? 0 : (c.unreadCount || 0)
-      };
+    if (!currentUser) return [];
+    const map = new Map<string, ConversationItem>();
+
+    // 1. Convert active chat windows to conversations
+    (activeChatWindows || []).forEach(w => {
+      const isRead = readConversationIds && readConversationIds.includes(w.id);
+      map.set(w.id, {
+        id: w.id,
+        name: w.senderName,
+        avatar: w.senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+        role: w.senderRole || (isSellerMode ? 'বায়ার • প্রজেক্ট ক্লায়েন্ট' : 'সেলার • ভেরিফাইড প্রফেশনাল'),
+        badge: isSellerMode ? 'Buyer' : 'Verified Seller',
+        rating: 5.0,
+        ordersCount: 1,
+        lastMessage: w.messages[w.messages.length - 1]?.text || 'চ্যাট শুরু হয়েছে...',
+        time: w.messages[w.messages.length - 1]?.time || 'এইমাত্র',
+        unreadCount: isRead ? 0 : 0,
+        isOnline: true,
+        category: isSellerMode ? 'orders' : 'sellers'
+      });
     });
 
+    // 2. Add real directMessages strictly for currentUser
     if (directMessages && directMessages.length > 0) {
       directMessages.forEach(dm => {
+        const isForMe =
+          (dm.recipientId && dm.recipientId === currentUser.id) ||
+          (dm.senderId && dm.senderId === currentUser.id) ||
+          (currentUser.email && dm.recipientEmail && dm.recipientEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) ||
+          (currentUser.email && dm.senderEmail && dm.senderEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim());
+
+        if (!isForMe) return;
+
         const isDmRead = dm.read || (readConversationIds && readConversationIds.includes(dm.id));
-        const found = list.find(c => 
-          c.id === dm.senderId || 
-          c.id === dm.id ||
-          (dm.senderName && (c.name.includes(dm.senderName) || dm.senderName.includes(c.name)))
-        );
-        if (found) {
-          found.lastMessage = dm.text;
-          found.time = dm.time;
-          if (!isDmRead) {
-            found.unreadCount = Math.max(found.unreadCount || 0, 1);
-          } else {
-            found.unreadCount = 0;
-          }
+        if (map.has(dm.id)) {
+          const item = map.get(dm.id)!;
+          item.lastMessage = dm.message;
+          item.time = dm.time;
+          item.unreadCount = isDmRead ? 0 : (dm.unreadCount || 1);
         } else {
-          list.unshift({
-            id: dm.senderId || dm.id || `chat-dm-${dm.id}`,
-            name: dm.senderName,
-            avatar: dm.senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
-            role: dm.senderRole || 'মেম্বার',
-            lastMessage: dm.text,
-            time: dm.time,
-            unreadCount: isDmRead ? 0 : 1,
+          map.set(dm.id, {
+            id: dm.id,
+            name: dm.senderName || 'ইউজার',
+            avatar: dm.senderAvatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80',
+            role: dm.senderRole || (isSellerMode ? 'বায়ার' : 'সেলার'),
+            badge: isSellerMode ? 'Buyer' : 'Seller',
+            lastMessage: dm.message,
+            time: dm.time || 'এইমাত্র',
+            unreadCount: isDmRead ? 0 : (dm.unreadCount || 1),
             isOnline: true,
-            category: 'sellers'
+            category: dm.category || (isSellerMode ? 'orders' : 'sellers'),
+            orderId: dm.orderId
           });
         }
       });
     }
-    return list;
-  }, [baseConversations, directMessages, readConversationIds]);
+
+    return Array.from(map.values());
+  }, [activeChatWindows, directMessages, readConversationIds, isSellerMode, currentUser]);
 
   // Filter conversations
   const filteredConversations = useMemo(() => {
@@ -298,8 +163,43 @@ export const MarketplaceLastColumn: React.FC<MarketplaceLastColumnProps> = ({
     });
   }, [mergedConversations, msgSearchQuery, msgFilter]);
 
-  // Notifications
-  const effectiveNotifications = roleScopedNotifications || notifications || [];
+  // Notifications strictly scoped to currentUser and isSellerMode
+  const effectiveNotifications = useMemo(() => {
+    if (!currentUser) return [];
+    const list = roleScopedNotifications || notifications || [];
+    return list.filter(n => {
+      // Exclude admin alerts from non-admins
+      if ((n.recipientRole === 'admin' || n.targetTab === 'admin' || n.recipientId === 'admin') && currentUser.role !== 'admin') {
+        return false;
+      }
+      // Scoped to this user
+      if (currentUser.role !== 'admin') {
+        const matchesId = Boolean(n.recipientId && (n.recipientId === currentUser.id || (n.recipientId === 'all' && n.isBroadcast)));
+        const matchesEmail = Boolean(currentUser.email && n.recipientEmail && n.recipientEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim());
+        const isOfficialBroadcast = Boolean(n.isBroadcast && n.recipientId === 'broadcast');
+        if (!matchesId && !matchesEmail && !isOfficialBroadcast) return false;
+      }
+
+      if (n.mode === 'selling') return isSellerMode;
+      if (n.mode === 'buying') return !isSellerMode;
+      if (n.recipientRole) {
+        if (n.recipientRole === 'all') return true;
+        return isSellerMode ? n.recipientRole === 'seller' : n.recipientRole === 'buyer';
+      }
+      const cat = (n.category || '').toLowerCase();
+      const title = (n.title || '').toLowerCase();
+      const isSellerSpecific = cat === 'seller' || cat === 'payout' || title.includes('সেলার') || title.includes('উইথড্র') || title.includes('ক্লাইন্ট') || title.includes('ক্লায়েন্ট');
+      const isBuyerSpecific = cat === 'buyer' || cat === 'course' || title.includes('বায়ার') || title.includes('কোর্স') || title.includes('অ্যাসাইনমেন্ট');
+      if (isSellerMode) {
+        if (isBuyerSpecific && !isSellerSpecific) return false;
+        return true;
+      } else {
+        if (isSellerSpecific && !isBuyerSpecific) return false;
+        return true;
+      }
+    });
+  }, [roleScopedNotifications, notifications, isSellerMode, currentUser]);
+
   const unreadNotifCount = effectiveNotifications.filter(n => !n.read).length;
 
   const filteredNotifications = useMemo(() => {
@@ -311,7 +211,7 @@ export const MarketplaceLastColumn: React.FC<MarketplaceLastColumnProps> = ({
         return n.category === 'payout' || titleLower.includes('অর্ডার') || titleLower.includes('order') || msgLower.includes('অর্ডার');
       }
       if (notifFilter === 'system') {
-        return n.category === 'system' || n.category === 'enrollment';
+        return (n.category as any) === 'system' || (n.category as any) === 'enrollment';
       }
       return true;
     });
@@ -378,34 +278,49 @@ export const MarketplaceLastColumn: React.FC<MarketplaceLastColumnProps> = ({
       return;
     }
 
-    // 2. Order notification -> open order
+    // 2. Order notification -> open order in 2nd column
     if (
       notif.targetTab === 'marketplace' ||
       notif.category === 'payout' ||
       titleLower.includes('অর্ডার') ||
       msgLower.includes('অর্ডার') ||
+      titleLower.includes('পেমেন্ট') ||
+      msgLower.includes('পেমেন্ট') ||
+      titleLower.includes('এস্ক্রো') ||
       notif.targetId?.includes('ORD') ||
-      notif.targetId?.includes('PT-')
+      notif.targetId?.includes('PT-') ||
+      notif.targetId?.includes('ord-')
     ) {
-      if (onOpenOrder && notif.targetId) {
-        onOpenOrder(notif.targetId);
+      if (onOpenOrder) {
+        onOpenOrder(notif.targetId || '');
       } else if (onNavigateTab) {
-        onNavigateTab('marketplace', 'my-orders');
+        onNavigateTab('marketplace', isSellerMode ? 'orders' : 'my-orders');
       }
       return;
     }
 
-    // 3. Course notification -> navigate to course
-    if (notif.targetTab === 'courses' || notif.category === 'enrollment' || titleLower.includes('কোর্স')) {
+    // 3. Gig notification -> open gig details in 2nd column
+    if (
+      notif.targetId &&
+      (notif.targetId.startsWith('gig-') || notif.targetId.startsWith('srv-') || titleLower.includes('গিগ') || msgLower.includes('গিগ'))
+    ) {
+      if (onOpenGig) {
+        onOpenGig(notif.targetId);
+        return;
+      }
+    }
+
+    // 4. Course notification -> show courses in 2nd column
+    if (notif.targetTab === 'courses' || notif.category === 'enrollment' || titleLower.includes('কোর্স') || msgLower.includes('কোর্স')) {
       if (onNavigateTab) {
-        onNavigateTab('courses');
+        onNavigateTab('marketplace', 'courses');
       }
       return;
     }
 
-    // 4. Default: fallback to target tab if provided
-    if (notif.targetTab && onNavigateTab) {
-      onNavigateTab(notif.targetTab);
+    // 5. Default -> show target subtab in 2nd column
+    if (onNavigateTab) {
+      onNavigateTab('marketplace', notif.targetTab || (isSellerMode ? 'orders' : 'my-orders'));
     }
   };
 
@@ -746,7 +661,7 @@ export const MarketplaceLastColumn: React.FC<MarketplaceLastColumnProps> = ({
               } else if (notif.category === 'system') {
                 IconComponent = Sparkles;
                 iconColor = 'text-purple-500 bg-purple-50 dark:bg-purple-950/30';
-              } else if (notif.category === 'enrollment') {
+              } else if ((notif.category as any) === 'enrollment') {
                 IconComponent = CheckCircle2;
                 iconColor = 'text-sky-500 bg-sky-50 dark:bg-sky-950/30';
               }
@@ -755,12 +670,12 @@ export const MarketplaceLastColumn: React.FC<MarketplaceLastColumnProps> = ({
                 <div
                   key={notif.id}
                   onClick={() => handleOpenNotification(notif)}
-                  className={`p-2.5 rounded-xl transition cursor-pointer group border flex items-start gap-2.5 relative ${
+                  className={`p-3 rounded-xl transition cursor-pointer group border flex items-start gap-2.5 relative ${
                     isUnread
-                      ? 'bg-slate-50/90 dark:bg-slate-800/80 border-[#006A4E]/30 shadow-2xs'
+                      ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-[#006A4E]/30 shadow-2xs'
                       : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50'
                   }`}
-                  title="ওপেন করতে ক্লিক করুন"
+                  title="২য় কলামে দেখতে ক্লিক করুন"
                 >
                   {/* Category Icon */}
                   <div className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center ${iconColor}`}>
@@ -784,17 +699,13 @@ export const MarketplaceLastColumn: React.FC<MarketplaceLastColumnProps> = ({
                       {notif.message}
                     </p>
 
-                    <div className="flex items-center justify-between mt-1.5 pt-1 border-t border-slate-100/80 dark:border-slate-800/60">
+                    <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-slate-100 dark:border-slate-800">
                       <span className="text-[10px] text-slate-400 flex items-center gap-1 font-mono">
                         <Clock className="w-2.5 h-2.5" />
                         {notif.time || 'কিছুক্ষণ আগে'}
                       </span>
 
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-[#006A4E] dark:text-emerald-400 group-hover:underline flex items-center gap-0.5">
-                          ওপেন করুন <ArrowRight className="w-2.5 h-2.5" />
-                        </span>
-
+                      <div className="flex items-center gap-1.5">
                         {deleteNotification && (
                           <button
                             type="button"
@@ -802,12 +713,24 @@ export const MarketplaceLastColumn: React.FC<MarketplaceLastColumnProps> = ({
                               e.stopPropagation();
                               deleteNotification(notif.id);
                             }}
-                            className="text-slate-400 hover:text-rose-500 p-0.5 rounded transition"
+                            className="text-slate-400 hover:text-rose-500 p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                             title="মুছে ফেলুন"
                           >
-                            <Trash2 className="w-3 h-3" />
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         )}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenNotification(notif);
+                          }}
+                          className="px-2.5 py-1 rounded-lg bg-[#006A4E] hover:bg-[#00543e] text-white text-[11px] font-bold flex items-center gap-1 shadow-2xs transition active:scale-95 cursor-pointer"
+                          title="২য় কলামে দেখুন"
+                        >
+                          <Eye className="w-3 h-3 text-white" />
+                          <span>দেখুন</span>
+                        </button>
                       </div>
                     </div>
                   </div>

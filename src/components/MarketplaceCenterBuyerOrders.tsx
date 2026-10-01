@@ -11,9 +11,11 @@ import {
   AlertCircle, 
   Eye, 
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  Globe
 } from 'lucide-react';
 import { MarketplaceOrder } from '../types';
+import { useData } from '../context/DataContext';
 
 interface MarketplaceCenterBuyerOrdersProps {
   orders: MarketplaceOrder[];
@@ -36,26 +38,44 @@ export const MarketplaceCenterBuyerOrders: React.FC<MarketplaceCenterBuyerOrders
   onViewOrderDetails,
   onBrowseGigs
 }) => {
-  const [statusFilter, setStatusFilter] = useState<'in_progress' | 'in_review' | 'completed'>('in_progress');
+  const { publishDirectProjectToPublicFeed, resendDirectOffer24h } = useData();
+  const [statusFilter, setStatusFilter] = useState<'pending' | 'in_progress' | 'in_review' | 'completed'>('pending');
 
   // Filter orders by status
   const filteredOrders = useMemo(() => {
     return (orders || []).filter(order => {
-      if (statusFilter === 'in_progress') {
-        const isInProgress = order.status === 'in_progress' || order.status === 'active' || order.status === 'pending';
-        if (!isInProgress) return false;
-      } else if (statusFilter === 'in_review') {
-        const isInReview = order.status === 'in_review' || order.status === 'review' || order.status === 'pending_approval' || order.status === 'revision';
-        if (!isInReview) return false;
-      } else if (statusFilter === 'completed') {
-        if (order.status !== 'completed' && order.status !== 'cancelled') return false;
-      }
+      const isPending = order.status === 'pending' || order.status === 'pending_approval' || (order.isDirectOffer && !order.isAccepted && order.status !== 'completed' && order.status !== 'cancelled');
+      const isInProgress = (order.status === 'in_progress' || order.status === 'active') && !order.isDirectOffer;
+      const isInReview = order.status === 'in_review' || order.status === 'review' || order.status === 'revision' || order.status === 'revision_requested';
+      const isCompleted = order.status === 'completed' || order.status === 'cancelled';
+
+      if (statusFilter === 'pending') return isPending;
+      if (statusFilter === 'in_progress') return isInProgress;
+      if (statusFilter === 'in_review') return isInReview;
+      if (statusFilter === 'completed') return isCompleted;
       return true;
     });
   }, [orders, statusFilter]);
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
+  const getStatusBadge = (order: MarketplaceOrder) => {
+    if (order.isExpiredReturned) {
+      return (
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 text-[11px] font-bold border border-amber-300 dark:border-amber-800 animate-pulse">
+          <Clock className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+          ২৪h উত্তীর্ণ • অটো ফেরত
+        </span>
+      );
+    }
+    if (order.isDirectOffer && (order.status === 'pending' || order.status === 'pending_approval')) {
+      return (
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sky-100 dark:bg-sky-950/60 text-sky-800 dark:text-sky-300 text-[11px] font-bold border border-sky-300 dark:border-sky-800">
+          <Clock className="w-3 h-3 text-sky-600 dark:text-sky-400 animate-spin" />
+          প্রাইভেট অফার (২৪h)
+        </span>
+      );
+    }
+
+    switch (order.status as string) {
       case 'in_progress':
       case 'active':
         return (
@@ -91,7 +111,7 @@ export const MarketplaceCenterBuyerOrders: React.FC<MarketplaceCenterBuyerOrders
       default:
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-bold border border-slate-300 dark:border-slate-700">
-            {status}
+            {order.status}
           </span>
         );
     }
@@ -126,13 +146,22 @@ export const MarketplaceCenterBuyerOrders: React.FC<MarketplaceCenterBuyerOrders
           </button>
         </div>
 
-        {/* Status Filter Tabs: Strictly 3 (চলমান, রিভিউ, সম্পন্ন) */}
-        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+        {/* Status Filter Tabs: 4-Column Grid (পেন্ডিং, চলমান, রিভিউ, সম্পন্ন) */}
+        <div className="grid grid-cols-4 gap-1 sm:gap-2">
           {[
+            {
+              id: 'pending',
+              label: 'পেন্ডিং',
+              count: orders.filter(o => o.status === 'pending' || o.status === 'pending_approval' || (o.isDirectOffer && !o.isAccepted && o.status !== 'completed' && o.status !== 'cancelled')).length,
+              activeClass: 'bg-sky-600 text-white shadow-xs font-black',
+              inactiveClass: 'bg-sky-50 dark:bg-sky-950/40 text-sky-800 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900/50',
+              badgeActive: 'bg-black/20 text-white',
+              badgeInactive: 'bg-sky-200/70 dark:bg-sky-900 text-sky-900 dark:text-sky-200'
+            },
             {
               id: 'in_progress',
               label: 'চলমান',
-              count: orders.filter(o => o.status === 'in_progress' || o.status === 'active' || o.status === 'pending').length,
+              count: orders.filter(o => (o.status === 'in_progress' || o.status === 'active') && !o.isDirectOffer).length,
               activeClass: 'bg-blue-600 text-white shadow-xs font-black',
               inactiveClass: 'bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50',
               badgeActive: 'bg-black/20 text-white',
@@ -141,7 +170,7 @@ export const MarketplaceCenterBuyerOrders: React.FC<MarketplaceCenterBuyerOrders
             {
               id: 'in_review',
               label: 'রিভিউ',
-              count: orders.filter(o => o.status === 'in_review' || o.status === 'review' || o.status === 'pending_approval' || o.status === 'revision').length,
+              count: orders.filter(o => o.status === 'in_review' || o.status === 'review' || o.status === 'pending_approval' || o.status === 'revision' || o.status === 'revision_requested').length,
               activeClass: 'bg-amber-500 text-white shadow-xs font-black',
               inactiveClass: 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/50',
               badgeActive: 'bg-black/20 text-white',
@@ -244,9 +273,42 @@ export const MarketplaceCenterBuyerOrders: React.FC<MarketplaceCenterBuyerOrders
                       <ShieldCheck className="w-3.5 h-3.5" />
                       ৳{(order.totalAmount || order.price || 0).toLocaleString()} এসক্রো
                     </span>
-                    {getStatusBadge(order.status)}
+                    {getStatusBadge(order)}
                   </div>
                 </div>
+
+                {/* 24-Hour Auto-Returned Direct Offer Action Bar */}
+                {order.isExpiredReturned && (
+                  <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                    <div className="text-xs text-amber-900 dark:text-amber-200 space-y-0.5">
+                      <p className="font-bold flex items-center gap-1.5">
+                        <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                        ২৪ ঘণ্টার মধ্যে সেলার রিসিভ না করায় অফারটি ফেরত এসেছে
+                      </p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        এখনই সবার জন্য পাবলিক ফিডে উন্মুক্ত করুন অথবা নতুন করে পাঠান।
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => publishDirectProjectToPublicFeed(order.id)}
+                        className="px-3 py-1.5 bg-[#006A4E] hover:bg-[#047857] text-white text-xs font-black rounded-xl transition cursor-pointer active:scale-95 flex items-center gap-1.5 shadow-xs"
+                      >
+                        <Globe className="w-3.5 h-3.5" />
+                        <span>পাবলিক ফিডে পোস্ট করুন 📢</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => resendDirectOffer24h(order.id)}
+                        className="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition cursor-pointer"
+                        title="নতুন ২৪ ঘণ্টার জন্য পুনরায় পাঠান"
+                      >
+                        পুনরায় পাঠান
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Gig Title & Package */}
                 <div className="space-y-1">

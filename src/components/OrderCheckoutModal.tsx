@@ -185,11 +185,11 @@ export const OrderCheckoutModal: React.FC<OrderCheckoutModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 font-bengali animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 max-w-2xl w-full relative shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden transition-all my-auto">
+    <div className="fixed inset-0 z-[100] bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 font-bengali animate-in fade-in duration-200">
+      <div className="liquid-glass-modal rounded-3xl max-w-2xl w-full relative shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] overflow-hidden transition-all my-auto text-slate-900 dark:text-white">
         
         {/* Header Section */}
-        <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white p-3.5 sm:p-4 flex items-center justify-between border-b border-slate-800/80 relative shrink-0">
+        <div className="bg-gradient-to-r from-[#005a42]/95 via-[#006A4E]/90 to-[#0284c7]/90 text-white p-3.5 sm:p-4 flex items-center justify-between border-b border-white/20 relative shrink-0 backdrop-blur-xl">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-[#006A4E]/15 border border-blue-600/50/30 flex items-center justify-center text-[#38BDF8] shrink-0 shadow-xs">
               <Sparkles className="w-4 h-4 text-[#38BDF8]" />

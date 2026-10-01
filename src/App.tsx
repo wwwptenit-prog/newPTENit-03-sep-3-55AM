@@ -15,6 +15,7 @@ import { GallerySection } from './components/GallerySection';
 import { OfficeLocation } from './components/OfficeLocation';
 import { Course } from './types';
 import { getUrlParams, updateUrlState } from './utils/urlRouter';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Performance optimization: Lazy load heavy sub-systems and dashboards on-demand
 const CourseDetailModal = React.lazy(() => import('./components/CourseDetailModal').then(m => ({ default: m.CourseDetailModal })));
@@ -404,12 +405,8 @@ const MainAppContent: React.FC = () => {
   return (
     <div
       style={siteSettings?.customScalePercent && siteSettings.customScalePercent !== 100 ? { zoom: `${siteSettings.customScalePercent}%` } : undefined}
-      className="min-h-screen bg-slate-50/90 text-slate-900 flex flex-col font-sans selection:bg-[#006A4E] selection:text-white max-w-full overflow-x-clip relative"
+      className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-[#006A4E] selection:text-white max-w-full overflow-x-clip relative"
     >
-      {/* Ambient Glass Glow Spheres */}
-      <div className="glass-ambient-sphere-1" />
-      <div className="glass-ambient-sphere-2" />
-      
       {/* Top Main Navbar (Only shown on public website pages, not in dashboards or marketplace) */}
       {!isDashboardView && activeTab !== 'marketplace' && (
         <Navbar
@@ -651,11 +648,13 @@ const MainAppContent: React.FC = () => {
     </div>
   );
 };
-
+ 
 export default function App() {
   return (
-    <DataProvider>
-      <MainAppContent />
-    </DataProvider>
+    <ErrorBoundary>
+      <DataProvider>
+        <MainAppContent />
+      </DataProvider>
+    </ErrorBoundary>
   );
 }

@@ -706,18 +706,19 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
     selectedOrderIds.forEach(id => {
       updateOrderStatus(id, bulkOrderTargetStatus);
     });
-    alert(`সফলভাবে ${selectedOrderIds.length}টি অর্ডারের স্ট্যাটাস '${bulkOrderTargetStatus}' এ আপডেট করা হয়েছে!`);
+    setOfficeActionMsg(`সফলভাবে ${selectedOrderIds.length}টি অর্ডারের স্ট্যাটাস '${bulkOrderTargetStatus}' এ আপডেট করা হয়েছে!`);
+    setTimeout(() => setOfficeActionMsg(''), 4000);
     setSelectedOrderIds([]);
   };
 
   const handleBulkDeleteCourseOrders = () => {
     if (selectedOrderIds.length === 0) return;
-    if (window.confirm(`আপনি কি নিশ্চিত যে নির্বাচিত ${selectedOrderIds.length}টি অর্ডার মুছে ফেলতে চান?`)) {
-      selectedOrderIds.forEach(id => {
-        deleteOrder(id);
-      });
-      setSelectedOrderIds([]);
-    }
+    selectedOrderIds.forEach(id => {
+      deleteOrder(id);
+    });
+    setOfficeActionMsg(`নির্বাচিত ${selectedOrderIds.length}টি কোর্স অর্ডার মুছে ফেলা হয়েছে।`);
+    setTimeout(() => setOfficeActionMsg(''), 4000);
+    setSelectedOrderIds([]);
   };
 
   // Marketplace Orders Filtering & Bulk Handlers
@@ -758,18 +759,19 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
         updateMarketplaceOrderStatus(id, bulkMktOrderTargetStatus as any, "এডমিন কর্তৃক বাল্ক স্ট্যাটাস আপডেট");
       }
     });
-    alert(`সফলভাবে ${selectedMktOrderIds.length}টি এস্ক্রো অর্ডারের স্ট্যাটাস '${bulkMktOrderTargetStatus}' এ আপডেট করা হয়েছে!`);
+    setOfficeActionMsg(`সফলভাবে ${selectedMktOrderIds.length}টি এস্ক্রো অর্ডারের স্ট্যাটাস '${bulkMktOrderTargetStatus}' এ আপডেট করা হয়েছে!`);
+    setTimeout(() => setOfficeActionMsg(''), 4000);
     setSelectedMktOrderIds([]);
   };
 
   const handleBulkDeleteMktOrders = () => {
     if (selectedMktOrderIds.length === 0) return;
-    if (window.confirm(`আপনি কি নিশ্চিত যে নির্বাচিত ${selectedMktOrderIds.length}টি এস্ক্রো অর্ডার মুছে ফেলতে চান?`)) {
-      selectedMktOrderIds.forEach(id => {
-        deleteMarketplaceOrder(id);
-      });
-      setSelectedMktOrderIds([]);
-    }
+    selectedMktOrderIds.forEach(id => {
+      deleteMarketplaceOrder(id);
+    });
+    setOfficeActionMsg(`নির্বাচিত ${selectedMktOrderIds.length}টি এস্ক্রো অর্ডার মুছে ফেলা হয়েছে।`);
+    setTimeout(() => setOfficeActionMsg(''), 4000);
+    setSelectedMktOrderIds([]);
   };
   
   // Admin Gig Edit & Performance States
@@ -1624,7 +1626,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
   };
 
   return (
-    <div className="py-2 sm:py-4 bg-slate-950 text-slate-100 min-h-screen transition-colors font-bengali w-full overflow-x-clip pb-12 admin-surface text-[15px] sm:text-[16px] lg:text-[17px] leading-relaxed">
+    <div className="py-2 sm:py-4 bg-slate-950 text-slate-100 min-h-screen transition-colors font-bengali w-full overflow-x-clip pb-32 admin-surface text-[15px] sm:text-[16px] lg:text-[17px] leading-relaxed">
       <div className="w-full px-2 sm:px-4 lg:px-6 space-y-3 sm:space-y-4">
         
         {/* DESKTOP TOP NAV HEADER (lg:flex) */}
@@ -1875,9 +1877,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
             })()}
           </div>
 
-          {/* Mobile Secondary Sub-Tabs Row (Only when module !== 'dashboard') */}
+          {/* Mobile Secondary Sub-Tabs Row (Only for mobile/tablet screens: lg:hidden) */}
           {activeMainModule !== 'dashboard' && (
-            <div className="flex items-center gap-1 overflow-x-auto pb-0.5 scrollbar-none bg-slate-900/90 p-1 rounded-lg border border-slate-800">
+            <div className="lg:hidden flex items-center gap-1 overflow-x-auto pb-0.5 scrollbar-none bg-slate-900/90 p-1 rounded-lg border border-slate-800">
               {(() => {
                 let currentSubTabs: { id: string; label: string; badge?: number }[] = [];
                 if (activeMainModule === 'support') {
@@ -1921,6 +1923,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 } else if (activeMainModule === 'users') {
                   const pendingCount = users.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication?.status === 'pending').length;
                   currentSubTabs = [
+                    { id: 'users', label: 'সকল ইউজার', badge: users.length },
                     { id: 'users_teacher_seller', label: 'টিচার ও সেলার' },
                     { id: 'users_just_seller', label: 'যাস্ট সেলার' },
                     { id: 'users_trainees', label: 'প্রশিক্ষণার্থী' },
@@ -2151,7 +2154,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                       isActive: activeMainModule === 'users',
                       show: !userPerms || userPerms.canManageUsers || userPerms.canApproveTeachers,
                       onClick: () => {
-                        handleOpenOrSwitchTask('users_teacher_seller');
+                        handleOpenOrSwitchTask('users');
                       }
                     },
                     {
@@ -2395,6 +2398,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 categoryTitle = '👥 ইউজার হাব:';
                 categoryColor = 'text-sky-400';
                 subTabs = [
+                  { id: 'users', label: 'সকল ইউজার', icon: Users, badge: users.length },
                   { id: 'users_teacher_seller', label: 'টিচার ও সেলার', icon: GraduationCap },
                   { id: 'users_just_seller', label: 'যাস্ট সেলার', icon: ShoppingBag },
                   { id: 'users_trainees', label: 'প্রশিক্ষণার্থী', icon: BookOpen },
@@ -2521,11 +2525,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                 onApproveAllMentors={() => {
                   const pendingUsers = users.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication?.status === 'pending');
                   if (pendingUsers.length === 0) {
-                    alert('কোনো পেন্ডিং মেন্টর বা স্পেশালিস্ট আবেদন নেই!');
+                    setOfficeActionMsg('কোনো পেন্ডিং মেন্টর বা স্পেশালিস্ট আবেদন নেই!');
+                    setTimeout(() => setOfficeActionMsg(''), 4000);
                     return;
                   }
                   pendingUsers.forEach(u => approveMentorApplication(u.id));
-                  alert(`সফলভাবে ${pendingUsers.length} জন আবেদনকারীকে মেন্টর ও স্পেশালিস্ট হিসেবে অনুমোদন দেওয়া হয়েছে!`);
+                  setOfficeActionMsg(`সফলভাবে ${pendingUsers.length} জন আবেদনকারীকে মেন্টর ও স্পেশালিস্ট হিসেবে অনুমোদন দেওয়া হয়েছে!`);
+                  setTimeout(() => setOfficeActionMsg(''), 4000);
                 }}
               />
             )}
@@ -4532,11 +4538,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ setActiveTab }) => {
                               {/* Cancel Button */}
                               {ord.status !== 'cancelled' && ord.status !== 'completed' && (
                                 <button
+                                  type="button"
                                   onClick={() => {
-                                    if (confirm(`আপনি কি নিশ্চিত যে অর্ডার #${ord.id} বাতিল করতে চান?`)) {
-                                      updateMarketplaceOrderStatus?.(ord.id, 'cancelled', 'অফিস এডমিন কর্তৃক অর্ডারটি বাতিল করা হয়েছে।');
-                                      setOfficeActionMsg(`অর্ডার #${ord.id} বাতিল করা হয়েছে।`);
-                                    }
+                                    updateMarketplaceOrderStatus?.(ord.id, 'cancelled', 'অফিস এডমিন কর্তৃক অর্ডারটি বাতিল করা হয়েছে।');
+                                    setOfficeActionMsg(`অর্ডার #${ord.id} বাতিল করা হয়েছে।`);
+                                    setTimeout(() => setOfficeActionMsg(''), 4000);
                                   }}
                                   className="px-3 py-1.5 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 text-xs font-bold rounded-xl cursor-pointer border border-rose-500/30"
                                 >
@@ -5749,10 +5755,11 @@ PTENit ডিজিটাল টিম`;
                       </button>
 
                       <button
+                        type="button"
                         onClick={() => {
-                          if (window.confirm(`আপনি কি "${product.title}" সফটওয়্যারটি মুছে ফেলতে চান?`)) {
-                            deleteDigitalProduct(product.id);
-                          }
+                          deleteDigitalProduct(product.id);
+                          setOfficeActionMsg(`"${product.title}" সফটওয়্যারটি মুছে ফেলা হয়েছে।`);
+                          setTimeout(() => setOfficeActionMsg(''), 4000);
                         }}
                         className="p-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 rounded-xl cursor-pointer border border-rose-500/30"
                         title="ডিলিট করুন"
@@ -6251,9 +6258,9 @@ PTENit ডিজিটাল টিম`;
                             <button
                               type="button"
                               onClick={() => {
-                                if (window.confirm(`আপনি কি অর্ডার #${order.id} মুছে ফেলতে চান?`)) {
-                                  deleteMarketplaceOrder(order.id);
-                                }
+                                deleteMarketplaceOrder(order.id);
+                                setOfficeActionMsg(`অর্ডার #${order.id} মুছে ফেলা হয়েছে।`);
+                                setTimeout(() => setOfficeActionMsg(''), 4000);
                               }}
                               className="p-2 bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 rounded-xl border border-slate-700 transition cursor-pointer ml-auto"
                               title="অর্ডার ডিলিট করুন"

@@ -1,0 +1,37 @@
+{
+  "id": "course-offer-1789496428296-327",
+  "duration": "4 Weeks",
+  "rating": 5,
+  "isPublicOffer": false,
+  "whatYouWillLearn": [
+    "২৪টি প্রফেশনাল লাইভ ক্লাস লেকচার",
+    "৪টি রিয়েল-টাইম অ্যাসাইনমেন্ট ও কোড রিভিউ",
+    "প্রজেক্ট ফিডব্যাক ও সার্টিফিকেট প্রদান"
+  ],
+  "teacherCommissionRate": 35,
+  "_lastSynced": "2026-09-21T12:25:28.663Z",
+  "requirements": [
+    "কম্পিউটার বা ইন্টারনেট সংযোগ"
+  ],
+  "instructor": "Mds Kazi Sohag (Admin)",
+  "targetModules": 4,
+  "isFree": false,
+  "thumbnail": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80",
+  "lessonsCount": 16,
+  "price": 8500,
+  "published": true,
+  "offerStatus": "accepted",
+  "category": "Full-Stack Development",
+  "modules": [],
+  "level": "professional",
+  "description": "PTENit একাডেমি কর্তৃক নির্ধারিত লাইভ প্রফেশনাল কোর্স ও মেন্টরিং ব্যাচ।",
+  "createdAt": "2026-09-15",
+  "enrolledCount": 1,
+  "tags": [
+    "#PTENit",
+    "#LiveCourse"
+  ],
+  "targetLessons": 16,
+  "title": "প্রফেশনাল লাইভ কোর্স এনরোলমেন্ট (অফিশিয়াল অফার)",
+  "assignedInstructorId": "admin-1"
+}

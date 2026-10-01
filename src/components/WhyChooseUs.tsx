@@ -51,11 +51,11 @@ export const WhyChooseUs: React.FC = () => {
   ];
 
   return (
-    <section className="py-8 sm:py-12 bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800">
+    <section className="py-10 sm:py-14 relative border-t border-white/60 dark:border-white/10 z-10 font-bengali">
       <div className="max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
         
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-8 sm:mb-10 gap-2.5 sm:gap-3">
-          <span className="inline-flex items-center gap-1.5 text-[#38BDF8] font-bold text-xs uppercase tracking-widest bg-[#006A4E]/10 px-3 py-1 rounded-full border border-blue-600/50/20">
+          <span className="liquid-glass-pill inline-flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest px-3.5 py-1 rounded-full text-[#006A4E] dark:text-cyan-400">
             {t('কেন PTENit', 'Why Choose PTENit')}
           </span>
           <h2 className="text-sm sm:text-xl md:text-3xl font-bold font-bengali text-slate-900 dark:text-white leading-tight">
@@ -72,9 +72,9 @@ export const WhyChooseUs: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="bg-slate-50 dark:bg-slate-800/60 p-3.5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-xs hover:shadow-xl hover:border-blue-600/50 transition-all duration-300 space-y-2 sm:space-y-4 flex flex-col justify-start"
+                className="liquid-glass-card p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl shadow-xs hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1.5 transition-all duration-300 space-y-2.5 sm:space-y-4 flex flex-col justify-start"
               >
-                <div className={`p-2.5 sm:p-4 rounded-xl sm:rounded-2xl ${feat.bgColor} ${feat.color} w-fit`}>
+                <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl ${feat.bgColor} ${feat.color} w-fit border border-white/60 dark:border-white/10 shadow-xs`}>
                   <Icon className="w-5 h-5 sm:w-7 sm:h-7" />
                 </div>
                 <h3 className="text-xs sm:text-lg lg:text-xl font-bold font-heading text-slate-900 dark:text-white leading-tight">

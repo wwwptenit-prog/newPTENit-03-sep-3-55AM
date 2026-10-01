@@ -414,11 +414,11 @@ export const GigCard: React.FC<GigCardProps> = ({
         onClick={onClick}
         className={`${
           isFeedMode ? "flex" : "hidden"
-        } flex-col bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border ${
+        } flex-col liquid-glass-card ${
           userOrder
-            ? "border-[#006A4E] ring-2 ring-[#006A4E]/25 shadow-lg"
-            : "border-slate-200/90 dark:border-slate-800/90 shadow-sm"
-        } rounded-2xl sm:rounded-3xl overflow-hidden hover:shadow-xl hover:border-[#006A4E]/50 transition-all duration-300 cursor-pointer font-bengali w-full ${className}`}
+            ? "!border-cyan-500/60 ring-2 ring-cyan-500/25 shadow-lg"
+            : ""
+        } rounded-2xl sm:rounded-3xl overflow-hidden hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300 cursor-pointer font-bengali w-full ${className}`}
       >
         {/* --- Facebook Post Header --- */}
         <div className="p-3 sm:p-4 pb-1.5 sm:pb-2 flex items-center justify-between gap-2.5">
@@ -853,11 +853,11 @@ export const GigCard: React.FC<GigCardProps> = ({
         onClick={onClick}
         className={`${
           isFeedMode ? "hidden" : "flex"
-        } group relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border ${
+        } group relative liquid-glass-card ${
           userOrder
-            ? "border-[#006A4E] ring-2 ring-[#006A4E]/25 shadow-md"
-            : "border-slate-200/90 dark:border-slate-800/90"
-        } rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs hover:shadow-xl hover:border-[#006A4E]/60 transition-all duration-300 cursor-pointer flex flex-col justify-between font-bengali ${className}`}
+            ? "!border-cyan-500/60 ring-2 ring-cyan-500/25 shadow-md"
+            : ""
+        } rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between font-bengali ${className}`}
       >
         <div>
           {/* Thumbnail Header with Left/Right Image Navigation */}

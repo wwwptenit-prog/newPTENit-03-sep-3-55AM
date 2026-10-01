@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import {
   Search,
@@ -60,12 +60,40 @@ export const Navbar: React.FC<NavbarProps> = ({
     openNotificationCenter,
     notifications,
     directMessages,
+    rightColumnView,
+    setRightColumnView,
     logout,
     logoutMarketplace
   } = useData();
 
-  const unreadMsgCount = (directMessages || []).filter(m => !m.read).length;
-  const unreadNotifCount = (notifications || []).filter(n => !n.read).length;
+  const unreadMsgCount = useMemo(() => {
+    if (!currentUser || !directMessages) return 0;
+    return directMessages.filter(m => {
+      if (m.read) return false;
+      return (m.recipientId && m.recipientId === currentUser.id) ||
+        (currentUser.email && m.recipientEmail && m.recipientEmail.toLowerCase() === currentUser.email.toLowerCase());
+    }).length;
+  }, [directMessages, currentUser]);
+
+  const unreadNotifCount = useMemo(() => {
+    if (!currentUser || !notifications) return 0;
+    return notifications.filter(n => {
+      if (n.read) return false;
+      if ((n.recipientRole === 'admin' || n.targetTab === 'admin' || n.recipientId === 'admin') && currentUser.role !== 'admin') {
+        return false;
+      }
+      if (currentUser.role === 'admin') {
+        if (n.recipientRole === 'admin' || n.recipientId === 'admin' || n.targetTab === 'admin') return true;
+        if (n.recipientId === currentUser.id) return true;
+        if (currentUser.email && n.recipientEmail && n.recipientEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) return true;
+        return Boolean(n.isBroadcast && n.recipientId === 'broadcast');
+      }
+      const matchesId = Boolean(n.recipientId && (n.recipientId === currentUser.id || (n.recipientId === 'all' && n.isBroadcast)));
+      const matchesEmail = Boolean(currentUser.email && n.recipientEmail && n.recipientEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim());
+      const isOfficialBroadcast = Boolean(n.isBroadcast && n.recipientId === 'broadcast');
+      return matchesId || matchesEmail || isOfficialBroadcast;
+    }).length;
+  }, [notifications, currentUser]);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -81,23 +109,10 @@ export const Navbar: React.FC<NavbarProps> = ({
     };
   }, [mobileMenuOpen]);
 
-  // Search State & Outside click handler
+  // Inline Search State
+  const [inlineSearchOpen, setInlineSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
-        setIsSearchFocused(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const navItems = [
     { id: 'home', label: t('হোম', 'Home') },
@@ -124,17 +139,24 @@ export const Navbar: React.FC<NavbarProps> = ({
       )
     : [];
 
+  // Auto focus search input when search is opened
+  useEffect(() => {
+    if (inlineSearchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [inlineSearchOpen]);
+
   return (
     <header className="sticky top-0 z-50 w-full transition-all duration-300">
       {/* Top Slim Header Bar - Hidden on mobile/phone screens */}
-      <div className="hidden md:block bg-slate-50/85 backdrop-blur-md text-slate-700 text-[11px] sm:text-xs py-1 sm:py-1.5 px-3 sm:px-4 border-b border-slate-200/80">
+      <div className="hidden md:block bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-[11px] sm:text-xs py-1.5 px-3 sm:px-4 border-b border-slate-200 dark:border-slate-700 shadow-xs transition-colors">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 flex justify-between items-center gap-2">
-          <div className="flex items-center gap-2 sm:gap-4 text-slate-600 font-medium text-[11px] sm:text-xs">
+          <div className="flex items-center gap-2 sm:gap-4 text-slate-600 dark:text-slate-300 font-medium text-[11px] sm:text-xs">
             <span className="flex items-center gap-1">
-              <PhoneCall className="w-3.5 h-3.5 text-[#006A4E]" />
+              <PhoneCall className="w-3.5 h-3.5 text-[#006A4E] dark:text-emerald-400" />
               <span>{siteSettings.phone}</span>
             </span>
-            <span className="hidden md:inline-block text-slate-300">|</span>
+            <span className="hidden md:inline-block text-slate-300 dark:text-slate-700">|</span>
             <span className="hidden md:inline-block">
               {siteSettings.email}
             </span>
@@ -144,26 +166,26 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => {
                 setActiveTab('verify');
               }}
-              className="hover:text-[#006A4E] text-slate-600 transition-colors text-[11px] sm:text-xs underline cursor-pointer shrink-0 font-bengali"
+              className="hover:text-[#006A4E] dark:hover:text-emerald-400 text-slate-600 dark:text-slate-300 transition-colors text-[11px] sm:text-xs underline cursor-pointer shrink-0 font-bengali"
             >
               {t('সার্টিফিকেট ভেরিফাই', 'Verify Certificate')}
             </button>
-            <span className="text-slate-300">|</span>
+            <span className="text-slate-300 dark:text-slate-700">|</span>
             {/* Single Official Language Switcher Button */}
             <button
               onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')}
-              className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 transition-all text-xs font-bold cursor-pointer shrink-0"
+              className="flex items-center gap-1 px-3 py-1 rounded-full bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-[#006A4E] transition-all text-xs font-bold cursor-pointer shrink-0 border border-slate-200 dark:border-slate-600 shadow-xs"
               title={lang === 'bn' ? 'English - এ পরিবর্তিত করুন' : 'Switch to Bangla'}
             >
-              <Globe className="w-3.5 h-3.5 text-[#006A4E]" />
+              <Globe className="w-3.5 h-3.5 text-[#006A4E] dark:text-emerald-400" />
               <span>{lang === 'bn' ? 'English' : 'বাংলা'}</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Main Navigation - Forest Green Glass Brand Bar */}
-      <nav className="bg-[#006A4E]/92 backdrop-blur-xl border-b border-[#00543e]/70 text-white shadow-lg relative">
+      {/* Main Navigation - Brand Bar */}
+      <nav className="bg-[#006A4E] text-white shadow-md relative">
         <div className="max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
           <div className="flex items-center justify-between h-14 sm:h-16 gap-2 sm:gap-3">
             
@@ -195,151 +217,150 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Desktop Navigation Links */}
-            <div className="hidden md:flex items-center space-x-0.5 lg:space-x-1 shrink-0">
-              {navItems.map(item => {
-                const isActive = activeTab === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTab(item.id)}
-                    className={`relative px-2 lg:px-2.5 xl:px-3 py-1.5 lg:py-2 text-xs lg:text-[13px] xl:text-[14px] font-bold transition-all cursor-pointer flex items-center gap-1 shrink-0 ${
-                      isActive
-                        ? 'text-white'
-                        : 'text-white/80 hover:text-white hover:bg-white/10 rounded-lg'
-                    }`}
-                  >
-                    <span>{item.label}</span>
-                    {/* Active Underline */}
-                    {isActive && (
-                      <span className="absolute bottom-0 left-2 right-2 h-[3px] bg-white rounded-full shadow-xs" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+            {!inlineSearchOpen && (
+              <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
+                {navItems.map(item => {
+                  const isActive = activeTab === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveTab(item.id)}
+                      className={`relative px-3 py-2 text-sm lg:text-[14px] xl:text-[15px] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                        isActive
+                          ? 'text-white'
+                          : 'text-white/80 hover:text-white hover:bg-white/10 rounded-lg'
+                      }`}
+                    >
+                      <span>{item.label}</span>
+                      {/* Active Underline */}
+                      {isActive && (
+                        <span className="absolute bottom-0 left-2 right-2 h-[3px] bg-white rounded-full shadow-xs" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
-            {/* DESKTOP SEARCH BAR (STRETCHES ACROSS AVAILABLE EMPTY SPACE) */}
-            <div
-              ref={searchContainerRef}
-              className="hidden md:flex flex-1 min-w-[180px] mx-2 lg:mx-4 xl:mx-6 relative items-center"
-            >
-              <div className="relative w-full flex items-center">
-                <Search className="w-4 h-4 text-white/70 absolute left-3.5 pointer-events-none transition-colors" />
+          {/* DESKTOP SEARCH BAR */}
+          <div className={`relative flex-1 ${inlineSearchOpen ? 'w-full max-w-none ml-2 mr-0' : 'max-w-md mx-2 hidden md:block'}`}>
+            {inlineSearchOpen ? (
+              <div className="relative flex items-center w-full animate-in fade-in zoom-in-95 duration-200">
+                <Search className="w-4 sm:w-5 h-4 sm:h-5 absolute left-3 text-slate-400" />
                 <input
                   ref={searchInputRef}
                   type="text"
                   value={searchQuery}
-                  onChange={e => {
-                    setSearchQuery(e.target.value);
-                    setIsSearchFocused(true);
-                  }}
-                  onFocus={() => setIsSearchFocused(true)}
+                  onChange={e => setSearchQuery(e.target.value)}
                   onKeyDown={e => {
                     if (e.key === 'Enter' && searchQuery.trim()) {
                       setActiveTab('marketplace');
-                      setIsSearchFocused(false);
+                      setInlineSearchOpen(false);
                     }
                   }}
                   placeholder={t("কোর্স বা সার্ভিস নাম লিখে খুঁজুন...", "Search courses or services...")}
-                  className="w-full bg-white/15 hover:bg-white/20 focus:bg-white text-white focus:text-slate-900 placeholder-white/75 focus:placeholder-slate-400 border border-white/25 focus:border-white rounded-xl pl-9 lg:pl-10 pr-9 py-1.5 lg:py-2 text-xs lg:text-sm font-bengali transition-all duration-200 outline-none focus:ring-2 focus:ring-white/40 shadow-inner focus:shadow-md"
+                  className="w-full bg-white border-2 border-emerald-400 rounded-xl pl-9 sm:pl-10 pr-9 py-2 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none shadow-sm font-bengali ring-2 ring-white/30"
                 />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery('');
-                      searchInputRef.current?.focus();
-                    }}
-                    className="absolute right-2.5 p-1 rounded-full text-white/70 hover:text-white focus:text-slate-600 transition cursor-pointer"
-                    title="মুছে ফেলুন"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-
-              {/* LIVE FLOATING SEARCH RESULTS DROPDOWN (DESKTOP) */}
-              {isSearchFocused && searchQuery.trim() && (
-                <div
-                  onMouseDown={e => e.preventDefault()}
-                  className="absolute left-0 right-0 top-full mt-2 bg-white border border-slate-200 rounded-xl shadow-2xl p-3 z-50 text-slate-800 max-h-96 overflow-y-auto animate-in fade-in slide-in-from-top-1 duration-150"
+                <button
+                  onClick={() => {
+                    setInlineSearchOpen(false);
+                    setSearchQuery('');
+                  }}
+                  className="absolute right-2.5 text-slate-400 hover:text-slate-700 p-1 rounded-full hover:bg-slate-100 cursor-pointer"
+                  title="সার্চ বন্ধ করুন"
                 >
-                  {filteredCourses.length > 0 && (
-                    <div className="mb-3">
-                      <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1 font-bengali">
-                        {t('কোর্সসমূহ', 'Courses')} ({filteredCourses.length})
-                      </div>
-                      <div className="space-y-1.5">
-                        {filteredCourses.map(c => (
-                          <div
-                            key={c.id}
-                            onClick={() => {
-                              openCourseDetail(c.id);
-                              setIsSearchFocused(false);
-                              setSearchQuery('');
-                            }}
-                            className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors"
-                          >
-                            <img src={c.thumbnail} alt={c.title} className="w-10 h-10 rounded-lg object-cover" />
-                            <div className="flex-1 min-w-0 font-bengali">
-                              <p className="font-semibold text-xs text-slate-900 truncate">{c.title}</p>
-                              <p className="text-[11px] text-[#006A4E] font-bold">
-                                {c.isFree ? t('ফ্রি', 'Free') : `৳${c.discountPrice || c.price}`}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                  <X className="w-5 h-5 text-slate-500 hover:text-slate-800" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setInlineSearchOpen(true)}
+                className="hidden md:flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white/15 hover:bg-white/25 border border-white/25 text-white placeholder-white/80 transition-all text-xs cursor-pointer w-full max-w-[180px] lg:max-w-[220px] font-bengali shadow-xs"
+              >
+                <Search className="w-3.5 h-3.5 text-white/90" />
+                <span className="truncate">{t('সার্চ করুন...', 'Search here...')}</span>
+              </button>
+            )}
+
+            {/* LIVE FLOATING SEARCH RESULTS DROPDOWN (DESKTOP) */}
+            {inlineSearchOpen && searchQuery.trim() && (
+              <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-slate-200 rounded-xl shadow-xl p-3 z-50 text-slate-800 max-h-96 overflow-y-auto">
+                {filteredCourses.length > 0 && (
+                  <div className="mb-3">
+                    <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1 font-bengali">
+                      {t('কোর্সসমূহ', 'Courses')} ({filteredCourses.length})
                     </div>
-                  )}
-
-                  {filteredServices.length > 0 && (
-                    <div>
-                      <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1 font-bengali">
-                        {t('সার্ভিসসমূহ', 'Services')} ({filteredServices.length})
-                      </div>
-                      <div className="space-y-1.5">
-                        {filteredServices.map(s => (
-                          <div
-                            key={s.id}
-                            onClick={() => {
-                              setActiveTab('services');
-                              setIsSearchFocused(false);
-                              setSearchQuery('');
-                            }}
-                            className="p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors font-bengali"
-                          >
-                            <p className="font-semibold text-xs text-slate-900">{s.title}</p>
-                            <p className="text-[11px] text-slate-500 line-clamp-1">{s.shortDescription}</p>
+                    <div className="space-y-1.5">
+                      {filteredCourses.map(c => (
+                        <div
+                          key={c.id}
+                          onClick={() => {
+                            openCourseDetail(c.id);
+                            setInlineSearchOpen(false);
+                            setSearchQuery('');
+                          }}
+                          className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors"
+                        >
+                          <img src={c.thumbnail} alt={c.title} className="w-10 h-10 rounded-lg object-cover" />
+                          <div className="flex-1 min-w-0 font-bengali">
+                            <p className="font-semibold text-xs text-slate-900 truncate">{c.title}</p>
+                            <p className="text-[11px] text-[#006A4E] font-bold">
+                              {c.isFree ? t('ফ্রি', 'Free') : `৳${c.discountPrice || c.price}`}
+                            </p>
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
-                  )}
-
-                  {filteredCourses.length === 0 && filteredServices.length === 0 && (
-                    <p className="text-center text-slate-500 py-3 text-xs font-bengali">
-                      {t('কোনো ফলাফল পাওয়া যায়নি।', 'No results found.')}
-                    </p>
-                  )}
-
-                  <div className="pt-2 mt-2 border-t border-slate-200">
-                    <button
-                      onClick={() => {
-                        setActiveTab('marketplace');
-                        setIsSearchFocused(false);
-                        setSearchQuery('');
-                      }}
-                      className="w-full py-2 px-3 rounded-lg bg-[#006A4E] hover:bg-[#00543e] text-white font-bold text-xs flex items-center justify-center gap-2 transition font-bengali cursor-pointer shadow-xs"
-                    >
-                      <Search className="w-3.5 h-3.5" />
-                      <span>সকল ফলাফল দেখুন</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
                   </div>
+                )}
+
+                {filteredServices.length > 0 && (
+                  <div>
+                    <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1 font-bengali">
+                      {t('সার্ভিসসমূহ', 'Services')} ({filteredServices.length})
+                    </div>
+                    <div className="space-y-1.5">
+                      {filteredServices.map(s => (
+                        <div
+                          key={s.id}
+                          onClick={() => {
+                            setActiveTab('services');
+                            setInlineSearchOpen(false);
+                            setSearchQuery('');
+                          }}
+                          className="p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors font-bengali"
+                        >
+                          <p className="font-semibold text-xs text-slate-900">{s.title}</p>
+                          <p className="text-[11px] text-slate-500 line-clamp-1">{s.shortDescription}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {filteredCourses.length === 0 && filteredServices.length === 0 && (
+                  <p className="text-center text-slate-500 py-3 text-xs font-bengali">
+                    {t('কোনো ফলাফল পাওয়া যায়নি।', 'No results found.')}
+                  </p>
+                )}
+
+                <div className="pt-2 mt-2 border-t border-slate-200">
+                  <button
+                    onClick={() => {
+                      setActiveTab('marketplace');
+                      setInlineSearchOpen(false);
+                      setSearchQuery('');
+                    }}
+                    className="w-full py-2 px-3 rounded-lg bg-[#006A4E] hover:bg-[#00543e] text-white font-bold text-xs flex items-center justify-center gap-2 transition font-bengali cursor-pointer shadow-xs"
+                  >
+                    <Search className="w-3.5 h-3.5" />
+                    <span>সকল ফলাফল দেখুন</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+          </div>
 
           {/* MOBILE INLINE SEARCH BAR (CENTERED) */}
           <div className="flex md:hidden flex-1 min-w-0 px-1 relative items-center justify-center">
@@ -450,7 +471,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* PRIMARY CTA ENROLL BUTTON */}
             <button
               onClick={() => setActiveTab('courses')}
-              className="px-3.5 py-2 rounded-lg text-xs font-bold text-[#006A4E] bg-white hover:bg-slate-100 shadow-sm active:scale-95 transition-all cursor-pointer flex items-center gap-1.5 shrink-0 font-bengali"
+              className="px-4 py-2 rounded-lg text-xs font-bold bg-white text-[#006A4E] hover:bg-emerald-50 shadow-sm active:scale-95 transition-all cursor-pointer flex items-center gap-1.5 shrink-0 font-bengali hover:text-[#00543e]"
             >
               <BookOpen className="w-4 h-4 text-[#006A4E]" />
               <span>কোর্সে জয়েন</span>
@@ -462,8 +483,28 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {/* MESSENGER BUTTON */}
                 <button
                   type="button"
-                  onClick={() => openMessengerInbox ? openMessengerInbox(undefined, 'messages') : null}
-                  className="p-2 rounded-lg bg-white/15 hover:bg-white/25 text-white border border-white/25 transition cursor-pointer relative active:scale-95"
+                  onClick={() => {
+                    const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
+                    if (isDesktop && setRightColumnView) {
+                      setActiveTab('marketplace');
+                      setRightColumnView(prev => prev === 'messages' ? 'default' : 'messages');
+                      setTimeout(() => {
+                        const col3 = document.getElementById('marketplace-column-3-seller')
+                          || document.getElementById('marketplace-column-3-agency')
+                          || document.getElementById('marketplace-column-3');
+                        if (col3) {
+                          col3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }, 100);
+                    } else if (openMessengerInbox) {
+                      openMessengerInbox(undefined, 'messages');
+                    }
+                  }}
+                  className={`p-2 rounded-lg transition cursor-pointer relative active:scale-95 ${
+                    rightColumnView === 'messages'
+                      ? 'bg-white text-[#006A4E] shadow-sm ring-2 ring-white/50'
+                      : 'bg-white/15 hover:bg-white/25 text-white border border-white/25'
+                  }`}
                   title="মেসেঞ্জার ও চ্যাট"
                 >
                   <Mail className="w-4 h-4" />
@@ -477,14 +518,34 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {/* NOTIFICATION BUTTON */}
                 <button
                   type="button"
-                  onClick={() => openNotificationCenter ? openNotificationCenter() : null}
-                  className="p-2 rounded-lg bg-white/15 hover:bg-white/25 text-white border border-white/25 transition cursor-pointer relative active:scale-95"
+                  onClick={() => {
+                    const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
+                    if (isDesktop && setRightColumnView) {
+                      setActiveTab('marketplace');
+                      setRightColumnView(prev => prev === 'notifications' ? 'default' : 'notifications');
+                      setTimeout(() => {
+                        const col3 = document.getElementById('marketplace-column-3-seller')
+                          || document.getElementById('marketplace-column-3-agency')
+                          || document.getElementById('marketplace-column-3');
+                        if (col3) {
+                          col3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }, 100);
+                    } else if (openNotificationCenter) {
+                      openNotificationCenter();
+                    }
+                  }}
+                  className={`p-2 rounded-lg transition cursor-pointer relative active:scale-95 ${
+                    rightColumnView === 'notifications'
+                      ? 'bg-white text-[#006A4E] shadow-sm ring-2 ring-white/50'
+                      : 'bg-white/15 hover:bg-white/25 text-white border border-white/25'
+                  }`}
                   title="নোটিফিকেশন সেন্টার"
                 >
                   <Bell className="w-4 h-4" />
-                  {notifications && notifications.filter(n => !n.read).length > 0 && (
+                  {unreadNotifCount > 0 && (
                     <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E11D48] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
-                      {notifications.filter(n => !n.read).length}
+                      {unreadNotifCount}
                     </span>
                   )}
                 </button>
@@ -524,7 +585,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 type="button"
                 onClick={openAuthModal}
-                className="px-3.5 py-2 rounded-lg text-xs font-bold text-white bg-white/15 hover:bg-white/25 border border-white/25 transition cursor-pointer flex items-center gap-1.5 font-bengali active:scale-95"
+                className="px-4 py-2 rounded-lg text-xs font-bold text-white bg-white/15 hover:bg-white/25 border border-white/25 transition cursor-pointer flex items-center gap-1.5 font-bengali active:scale-95 shadow-xs"
               >
                 <User className="w-3.5 h-3.5 text-white" />
                 <span>লগইন</span>
@@ -590,10 +651,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             aria-hidden="true"
           />
 
-          {/* Side Drawer Panel (Slide-in from Right) - Clean White */}
-          <div className="fixed inset-y-0 right-0 w-[85vw] max-w-[320px] bg-white text-slate-800 shadow-2xl flex flex-col z-50 animate-in slide-in-from-right duration-300 ease-out border-l border-slate-200">
+          {/* Side Drawer Panel (Slide-in from Right) */}
+          <div className="fixed inset-y-0 right-0 w-[85vw] max-w-[320px] bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 shadow-2xl flex flex-col z-50 animate-in slide-in-from-right duration-300 ease-out">
             {/* Drawer Top Bar */}
-            <div className="flex items-center justify-between px-4 py-3 bg-[#006A4E] text-white border-b border-[#00543e] shrink-0">
+            <div className="flex items-center justify-between px-4 py-3 bg-[#006A4E] text-white border-b border-[#00543D] shrink-0">
               <span className="text-xs font-bold text-white">মেনু</span>
               <button
                 type="button"

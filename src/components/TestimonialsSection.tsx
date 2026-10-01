@@ -26,7 +26,7 @@ export const TestimonialsSection: React.FC = () => {
   };
 
   return (
-    <section className="py-8 sm:py-12 bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 font-bengali">
+    <section className="py-12 sm:py-16 relative border-t border-white/60 dark:border-white/10 font-bengali z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-10">
         
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto gap-2.5 sm:gap-4">
@@ -55,7 +55,7 @@ export const TestimonialsSection: React.FC = () => {
                 const loc = getLocalizedTestimonial(item, lang);
                 return (
                   <div key={item.id || idx} className="w-full shrink-0 px-1">
-                    <div className="bg-slate-50 dark:bg-slate-800/80 p-5 sm:p-6 rounded-3xl border border-slate-200/90 dark:border-slate-700 shadow-xs relative flex flex-col justify-between min-h-[260px]">
+                    <div className="liquid-glass-card p-5 sm:p-6 rounded-3xl shadow-xs relative flex flex-col justify-between min-h-[260px]">
                       <Quote className="w-8 h-8 text-[#38BDF8]/20 absolute top-4 right-4" />
 
                       <div className="space-y-3 relative z-10">
@@ -79,7 +79,7 @@ export const TestimonialsSection: React.FC = () => {
                         <div className="min-w-0 flex-1">
                           <h4 className="font-bold text-sm text-slate-900 dark:text-white font-bengali truncate flex items-center gap-1">
                             <span className="truncate">{loc.name}</span>
-                            <CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
+                            <span title="ভেরিফাইড প্রোফাইল"><CheckCircle2 className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF] text-white shrink-0" /></span>
                           </h4>
                           <p className="text-[11px] text-slate-500 font-bengali truncate">
                             {loc.role} • <span className="text-[#38BDF8] font-semibold">{loc.courseOrService}</span>
@@ -139,7 +139,7 @@ export const TestimonialsSection: React.FC = () => {
             return (
               <div
                 key={item.id}
-                className="bg-slate-50 dark:bg-slate-800/60 p-8 rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-xs hover:shadow-xl hover:border-blue-600/50 transition-all duration-300 flex flex-col justify-between relative group"
+                className="liquid-glass-card p-7 sm:p-8 rounded-3xl shadow-sm hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between relative group"
               >
                 <Quote className="w-10 h-10 text-[#38BDF8]/20 absolute top-6 right-6 group-hover:text-sky-400/40 transition-colors" />
 
@@ -164,7 +164,7 @@ export const TestimonialsSection: React.FC = () => {
                   <div>
                     <h4 className="font-bold text-base text-slate-900 dark:text-white font-bengali flex items-center gap-1">
                       <span>{loc.name}</span>
-                      <CheckCircle2 className="w-4 h-4 text-[#0084FF] fill-[#0084FF] text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
+                      <span title="ভেরিফাইড প্রোফাইল"><CheckCircle2 className="w-4 h-4 text-[#0084FF] fill-[#0084FF] text-white shrink-0" /></span>
                     </h4>
                     <p className="text-xs text-slate-500 font-bengali">
                       {loc.role} • <span className="text-[#38BDF8] font-semibold">{loc.courseOrService}</span>

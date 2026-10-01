@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   BookOpen,
   Award,
@@ -118,24 +118,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   const [studentChatInput, setStudentChatInput] = useState('');
   const [studentChatAttachedFile, setStudentChatAttachedFile] = useState<{ name: string; url: string; type: string } | null>(null);
   const studentFileInputRef = React.useRef<HTMLInputElement>(null);
-  const [studentChatList, setStudentChatList] = useState([
-    {
-      id: 'st-msg-1',
-      sender: 'PTENit সাপোর্ট',
-      text: 'আসসালামু আলাইকুম! PTENit একাডেমির স্টুডেন্ট সাপোর্টে স্বাগতম। আপনার যেকোনো জিজ্ঞাসা, কোর্স কনফিউশন বা সহায়তার জন্য মেসেজ পাঠাতে পারেন।',
-      isStudent: false,
-      time: 'আজ ১০:১৫ AM',
-      read: true
-    },
-    {
-      id: 'st-msg-2',
-      sender: 'কোর্স ইনস্ট্রাক্টর',
-      text: 'প্রিয় শিক্ষার্থী, ক্লাসের রিসোর্স ও অ্যাসাইনমেন্ট সংক্রান্ত যেকোনো সাহায্যে সরাসরি এখানে যোগাযোগ করতে পারেন।',
-      isStudent: false,
-      time: 'গতকাল ৪:৩০ PM',
-      read: true
-    }
-  ]);
+  const [studentChatList, setStudentChatList] = useState<Array<{ id: string; sender: string; text: string; isStudent: boolean; time: string; read: boolean }>>([]);
 
   // Assignment Submission modal state
   const [selectedAsgn, setSelectedAsgn] = useState<Assignment | null>(null);
@@ -160,7 +143,18 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   const [profAvatar, setProfAvatar] = useState(currentUser?.avatar || '');
   const [profSaved, setProfSaved] = useState(false);
 
-  const unreadNotifCount = notifications.filter(n => !n.read).length;
+  const studentNotifications = useMemo(() => {
+    if (!currentUser || !notifications) return [];
+    return notifications.filter(n => {
+      if (n.recipientRole === 'admin' && currentUser.role !== 'admin') return false;
+      if (n.targetTab === 'admin' && currentUser.role !== 'admin') return false;
+      if (n.recipientId && n.recipientId !== currentUser.id && n.recipientId !== 'all') return false;
+      if (n.recipientEmail && currentUser.email && n.recipientEmail.toLowerCase() !== currentUser.email.toLowerCase() && n.recipientEmail !== 'all') return false;
+      if (!n.recipientId && !n.recipientEmail && !n.isBroadcast && n.recipientRole !== 'all') return false;
+      return true;
+    });
+  }, [notifications, currentUser]);
+  const unreadNotifCount = studentNotifications.filter(n => !n.read).length;
 
   if (!currentUser) {
     return (
@@ -180,10 +174,31 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
     );
   }
 
-  // Student's data (strictly filtered to current user)
-  const myEnrollments = enrollments.filter(e => e.userId === currentUser.id || (currentUser.email && (e as any).userEmail && (e as any).userEmail.toLowerCase() === currentUser.email.toLowerCase()));
-  const myCertificates = certificates.filter(c => c.studentId === currentUser.id || (currentUser.email && (c as any).studentEmail && (c as any).studentEmail.toLowerCase() === currentUser.email.toLowerCase()));
-  const myOrders = orders.filter(o => o.userId === currentUser.id || (currentUser.email && o.userEmail && o.userEmail.toLowerCase() === currentUser.email.toLowerCase()));
+  // Student's data strictly filtered to currentUser
+  const myEnrollments = useMemo(() => {
+    if (!currentUser) return [];
+    return enrollments.filter(e => 
+      e.userId === currentUser.id || 
+      (e as any).studentId === currentUser.id || 
+      (currentUser.email && (e as any).userEmail && (e as any).userEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim())
+    );
+  }, [enrollments, currentUser]);
+
+  const myCertificates = useMemo(() => {
+    if (!currentUser) return [];
+    return certificates.filter(c => 
+      c.studentId === currentUser.id || 
+      (currentUser.email && (c as any).studentEmail && (c as any).studentEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim())
+    );
+  }, [certificates, currentUser]);
+
+  const myOrders = useMemo(() => {
+    if (!currentUser) return [];
+    return orders.filter(o => 
+      o.userId === currentUser.id || 
+      (currentUser.email && (o as any).userEmail && (o as any).userEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim())
+    );
+  }, [orders, currentUser]);
 
   // File Upload Handler (Base64)
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, setUrl: (url: string) => void, setName?: (name: string) => void) => {
@@ -237,12 +252,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   };
 
   return (
-    <div className={`font-bengali transition-colors ${hideHeaderBanner ? '' : 'py-4 sm:py-8 bg-slate-100/90 dark:bg-slate-950 min-h-screen'}`}>
+    <div className={`font-bengali transition-colors text-slate-900 dark:text-slate-100 ${hideHeaderBanner ? '' : 'py-4 sm:py-8 bg-slate-50 dark:bg-slate-900 min-h-screen'}`}>
       <div className={hideHeaderBanner ? 'w-full space-y-4' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'}>
         
         {/* Teacher-Style Rich Student Profile Header Banner */}
         {!hideHeaderBanner && (
-          <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-slate-900 shadow-sm border border-slate-200 mb-6 sm:mb-8 relative overflow-hidden">
+          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-slate-900 dark:text-white shadow-sm mb-6 sm:mb-8 relative overflow-hidden">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 relative z-10 text-center sm:text-left">
               <div className="relative group shrink-0">
                 <img
@@ -419,7 +434,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
                   {/* Notification Items */}
                   <div className="p-3 space-y-2 max-h-80 sm:max-h-96 overflow-y-auto bg-slate-950/50">
-                    {notifications.filter(n => {
+                    {studentNotifications.filter(n => {
                       if (n.title.includes('এডমিন') || n.title.includes('Admin')) {
                         if (!studentNotifToggles.admin) return false;
                       } else if (n.title.includes('অ্যাসাইনমেন্ট') || n.title.includes('Assignment')) {
@@ -431,7 +446,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                     }).length === 0 ? (
                       <p className="text-xs text-slate-400 text-center py-10">ফিল্টার ফিল্ড অনুযায়ী কোনো নোটিফিকেশন নেই।</p>
                     ) : (
-                      notifications
+                      studentNotifications
                         .filter(n => {
                           if (n.title.includes('এডমিন') || n.title.includes('Admin')) {
                             if (!studentNotifToggles.admin) return false;
@@ -671,6 +686,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                         email: currentUser?.email || 'student@ptenit.com',
                         phone: currentUser?.mobile || '',
                         subject: `[${activeSupportSender}] স্টুডেন্ট মেসেজ`,
+                        serviceOrCourse: `Student Support - ${activeSupportSender}`,
                         message: newMsg.text
                       });
                       setStudentChatInput('');

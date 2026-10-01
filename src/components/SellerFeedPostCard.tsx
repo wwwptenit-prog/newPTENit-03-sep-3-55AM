@@ -130,7 +130,7 @@ export const SellerFeedPostCard: React.FC<SellerFeedPostCardProps> = ({
   const salesCount = gig.salesCount ?? 0;
 
   return (
-    <div className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-200 font-bengali">
+    <div className="w-full liquid-glass-card rounded-xl sm:rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300 font-bengali">
       {/* 1. Header (Poster Info + 3-Dot Menu) */}
       <div className="p-2.5 sm:p-3 pb-1 sm:pb-1.5 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
@@ -148,10 +148,11 @@ export const SellerFeedPostCard: React.FC<SellerFeedPostCardProps> = ({
               <span className="text-xs sm:text-lg md:text-xl font-bold text-slate-900 dark:text-white truncate">
                 {sellerName}
               </span>
-              <CheckCircle2
-                className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
-                title="Verified Profile"
-              />
+              <span title="Verified Profile">
+                <CheckCircle2
+                  className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 text-[#006A4E] fill-[#006A4E] text-white shrink-0"
+                />
+              </span>
             </div>
             <div className="flex items-center text-[10.5px] sm:text-[13px] text-slate-500 dark:text-slate-400 font-medium mt-0.5 whitespace-nowrap overflow-hidden">
               <span className="shrink-0">{postTime}</span>
@@ -161,9 +162,9 @@ export const SellerFeedPostCard: React.FC<SellerFeedPostCardProps> = ({
               </span>
               <span className="text-slate-400 dark:text-slate-500 select-none leading-none inline-flex items-center justify-center px-0.5 font-bold">·</span>
               {isAgency ? (
-                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#006A4E] dark:text-emerald-400 shrink-0" aria-label="Verified Agency" title="১০০% ভেরিফাইড এজেন্সি" />
+                <span title="১০০% ভেরিফাইড এজেন্সি"><ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#006A4E] dark:text-emerald-400 shrink-0" aria-label="Verified Agency" /></span>
               ) : (
-                <Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400 shrink-0" aria-label="Public" title="Public" />
+                <span title="Public"><Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400 shrink-0" aria-label="Public" /></span>
               )}
             </div>
           </div>

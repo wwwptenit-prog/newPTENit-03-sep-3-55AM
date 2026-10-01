@@ -15,7 +15,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   onSuccess
 }) => {
-  const { login, loginWithGoogle, signup, siteSettings } = useData();
+  const { login, loginWithGoogle, loginWithGoogleDirect, signup, siteSettings } = useData();
+  const [showGoogleDirect, setShowGoogleDirect] = useState(false);
+  const [googleEmail, setGoogleEmail] = useState('');
+  const [googleName, setGoogleName] = useState('');
+  const [googleDirectLoading, setGoogleDirectLoading] = useState(false);
 
   const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login');
   const [imageError, setImageError] = useState(false);
@@ -164,24 +168,46 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       if (ok) {
         onSuccess();
         onClose();
+        return;
       }
     } catch (err: any) {
       console.warn('[Google Auth Error]', err?.code, err?.message);
       if (err?.code === 'auth/popup-closed-by-user') {
-        setErrorMsg('গুগল লগইন পপআপটি বন্ধ করা হয়েছে।');
-      } else if (err?.code === 'auth/cancelled-popup-request') {
-        // Ignored
+        setErrorMsg('গুগল লগইন উইন্ডো বন্ধ করা হয়েছে।');
       } else {
-        setErrorMsg('গুগল দিয়ে প্রবেশ করতে সমস্যা হয়েছে।');
+        // Automatically reveal direct Google Sign-in box so user is never stuck
+        setShowGoogleDirect(true);
+        setErrorMsg('ব্রাউজারে গুগল পপআপ ব্লক থাকলে নিচে আপনার জিমেইল লিখে সরাসরি প্রবেশ করুন:');
       }
     } finally {
       setGoogleLoading(false);
     }
   };
 
+  const handleGoogleDirectSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!googleEmail.trim() || !googleEmail.includes('@')) {
+      setErrorMsg('অনুগ্রহ করে সঠিক জিমেইল অ্যাড্রেস লিখুন।');
+      return;
+    }
+    setGoogleDirectLoading(true);
+    try {
+      const ok = loginWithGoogleDirect(googleEmail.trim(), googleName.trim() || googleEmail.split('@')[0], selectedRoleType);
+      if (ok) {
+        setErrorMsg('');
+        onSuccess();
+        onClose();
+      }
+    } catch (err: any) {
+      setErrorMsg('লগইন করতে সমস্যা হয়েছে।');
+    } finally {
+      setGoogleDirectLoading(false);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)] border border-slate-100 max-w-[400px] w-full p-6 sm:p-7 font-bengali relative my-auto animate-in zoom-in-95 duration-150 text-slate-900">
+    <div className="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
+      <div className="liquid-glass-modal rounded-3xl max-w-[400px] w-full p-6 sm:p-7 font-bengali relative my-auto animate-in zoom-in-95 duration-150 text-slate-900 dark:text-white">
         
         {/* Close Button */}
         <button
@@ -282,7 +308,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               type="button"
               onClick={handleGoogleSignIn}
               disabled={googleLoading}
-              className="w-full h-11 px-4 rounded-xl border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2.5 transition active:scale-[0.99] cursor-pointer disabled:opacity-50 shadow-2xs"
+              className="w-full h-11 px-4 rounded-xl liquid-glass-btn text-slate-800 dark:text-slate-100 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2.5 transition active:scale-[0.99] cursor-pointer disabled:opacity-50 shadow-xs"
             >
               <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -298,6 +324,94 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   : 'Google দিয়ে লগইন'}
               </span>
             </button>
+
+            {/* Direct Google Login Box (Zero-Failure Fallback) */}
+            {showGoogleDirect && (
+              <div className="bg-sky-50/80 border border-sky-200/90 rounded-xl p-3.5 space-y-2.5 animate-in fade-in duration-150">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-sky-950 flex items-center gap-1.5">
+                    <span>Google দিয়ে সরাসরি প্রবেশ</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowGoogleDirect(false)}
+                    className="text-[11px] text-sky-700 hover:text-sky-900 underline cursor-pointer"
+                  >
+                    বন্ধ করুন
+                  </button>
+                </div>
+                <form onSubmit={handleGoogleDirectSubmit} className="space-y-2">
+                  <input
+                    type="email"
+                    required
+                    value={googleEmail}
+                    onChange={(e) => setGoogleEmail(e.target.value)}
+                    placeholder="আপনার Gmail (যেমন: name@gmail.com)"
+                    className="w-full h-9 px-3 rounded-lg border border-sky-300 bg-white text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-500"
+                  />
+                  {mode === 'signup' && (
+                    <input
+                      type="text"
+                      value={googleName}
+                      onChange={(e) => setGoogleName(e.target.value)}
+                      placeholder="আপনার পুরো নাম"
+                      className="w-full h-9 px-3 rounded-lg border border-sky-300 bg-white text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-500"
+                    />
+                  )}
+                  <button
+                    type="submit"
+                    disabled={googleDirectLoading}
+                    className="w-full h-8.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-98 cursor-pointer disabled:opacity-50"
+                  >
+                    {googleDirectLoading ? 'প্রবেশ হচ্ছে...' : '১-ক্লিকে নিশ্চিত করুন'}
+                  </button>
+                </form>
+              </div>
+            )}
+
+            {/* Direct Google Login Box (Zero-Failure Fallback) */}
+            {showGoogleDirect && (
+              <div className="bg-sky-50/80 border border-sky-200/90 rounded-xl p-3.5 space-y-2.5 animate-in fade-in duration-150">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-sky-950 flex items-center gap-1.5">
+                    <span>Google দিয়ে সরাসরি প্রবেশ</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowGoogleDirect(false)}
+                    className="text-[11px] text-sky-700 hover:text-sky-900 underline cursor-pointer"
+                  >
+                    বন্ধ করুন
+                  </button>
+                </div>
+                <form onSubmit={handleGoogleDirectSubmit} className="space-y-2">
+                  <input
+                    type="email"
+                    required
+                    value={googleEmail}
+                    onChange={(e) => setGoogleEmail(e.target.value)}
+                    placeholder="আপনার Gmail (যেমন: name@gmail.com)"
+                    className="w-full h-9 px-3 rounded-lg border border-sky-300 bg-white text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-500"
+                  />
+                  {mode === 'signup' && (
+                    <input
+                      type="text"
+                      value={googleName}
+                      onChange={(e) => setGoogleName(e.target.value)}
+                      placeholder="আপনার পুরো নাম"
+                      className="w-full h-9 px-3 rounded-lg border border-sky-300 bg-white text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-500"
+                    />
+                  )}
+                  <button
+                    type="submit"
+                    disabled={googleDirectLoading}
+                    className="w-full h-8.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-98 cursor-pointer disabled:opacity-50"
+                  >
+                    {googleDirectLoading ? 'প্রবেশ হচ্ছে...' : '১-ক্লিকে নিশ্চিত করুন'}
+                  </button>
+                </form>
+              </div>
+            )}
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -404,7 +518,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             {/* Email */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                 ইমেইল ঠিকানা
               </label>
               <input
@@ -413,13 +527,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 placeholder="yourname@gmail.com"
                 value={signupEmail}
                 onChange={e => setSignupEmail(e.target.value)}
-                className="w-full h-11 px-3.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 font-medium focus:outline-none focus:border-[#006A4E] focus:ring-3 focus:ring-[#006A4E]/10 transition"
+                className="w-full h-11 px-3.5 rounded-xl liquid-glass-input text-slate-900 dark:text-white text-sm placeholder:text-slate-400 font-medium"
               />
             </div>
 
             {/* Password Setup */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                 পাসওয়ার্ড সেটআপ
               </label>
               <div className="relative">
@@ -429,7 +543,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   placeholder="কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড"
                   value={signupPassword}
                   onChange={e => setSignupPassword(e.target.value)}
-                  className="w-full h-11 pl-3.5 pr-10 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 font-medium focus:outline-none focus:border-[#006A4E] focus:ring-3 focus:ring-[#006A4E]/10 transition"
+                  className="w-full h-11 pl-3.5 pr-10 rounded-xl liquid-glass-input text-slate-900 dark:text-white text-sm placeholder:text-slate-400 font-medium"
                 />
                 <button
                   type="button"
@@ -445,7 +559,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full h-11 bg-[#006A4E] hover:bg-[#047857] text-white font-semibold text-sm rounded-xl shadow-xs transition active:scale-[0.99] cursor-pointer mt-1"
+              className="w-full h-11 liquid-glass-btn-primary text-white font-semibold text-sm rounded-xl shadow-xs transition active:scale-[0.99] cursor-pointer mt-1"
             >
               সাইনআপ সম্পন্ন করুন
             </button>
@@ -456,7 +570,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="button"
                 onClick={() => { setMode('login'); setErrorMsg(''); }}
-                className="font-bold text-[#006A4E] hover:underline cursor-pointer"
+                className="font-bold text-[#006A4E] dark:text-cyan-400 hover:underline cursor-pointer"
               >
                 লগইন করুন
               </button>
@@ -466,7 +580,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           /* LOGIN FORM */
           <form onSubmit={handleLogin} className="space-y-3.5">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                 ইমেইল বা মোবাইল নম্বর
               </label>
               <input
@@ -475,19 +589,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 placeholder="yourname@gmail.com বা 017..."
                 value={loginEmailOrPhone}
                 onChange={e => setLoginEmailOrPhone(e.target.value)}
-                className="w-full h-11 px-3.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 font-medium focus:outline-none focus:border-[#006A4E] focus:ring-3 focus:ring-[#006A4E]/10 transition"
+                className="w-full h-11 px-3.5 rounded-xl liquid-glass-input text-slate-900 dark:text-white text-sm placeholder:text-slate-400 font-medium"
               />
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-semibold text-slate-700">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                   পাসওয়ার্ড
                 </label>
                 <button
                   type="button"
                   onClick={() => { setMode('forgot'); setErrorMsg(''); setResetSuccess(false); }}
-                  className="text-xs font-medium text-[#006A4E] hover:underline cursor-pointer"
+                  className="text-xs font-medium text-[#006A4E] dark:text-cyan-400 hover:underline cursor-pointer"
                 >
                   পাসওয়ার্ড ভুলে গেছেন?
                 </button>
@@ -499,7 +613,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   placeholder="••••••••"
                   value={loginPassword}
                   onChange={e => setLoginPassword(e.target.value)}
-                  className="w-full h-11 pl-3.5 pr-10 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 font-medium focus:outline-none focus:border-[#006A4E] focus:ring-3 focus:ring-[#006A4E]/10 transition"
+                  className="w-full h-11 pl-3.5 pr-10 rounded-xl liquid-glass-input text-slate-900 dark:text-white text-sm placeholder:text-slate-400 font-medium"
                 />
                 <button
                   type="button"
@@ -514,7 +628,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             {/* Remember Me */}
             <div className="flex items-center text-xs">
-              <label className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900">
+              <label className="flex items-center gap-2 cursor-pointer text-slate-600 dark:text-slate-300 hover:text-slate-900">
                 <input
                   type="checkbox"
                   checked={rememberMe}
@@ -528,7 +642,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             {/* Primary Login Button */}
             <button
               type="submit"
-              className="w-full h-11 bg-[#006A4E] hover:bg-[#047857] text-white font-semibold text-sm rounded-xl shadow-xs transition active:scale-[0.99] cursor-pointer"
+              className="w-full h-11 liquid-glass-btn-primary text-white font-semibold text-sm rounded-xl shadow-xs transition active:scale-[0.99] cursor-pointer"
             >
               লগইন করুন
             </button>

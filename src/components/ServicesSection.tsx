@@ -204,7 +204,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     return (
       <div
         key={service.id}
-        className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1.5 hover:border-emerald-600/50 dark:hover:border-emerald-600/50 transition-all duration-300 flex flex-col justify-between"
+        className="group relative liquid-glass-card rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
       >
         <div>
           {/* Clean Cover Thumbnail - purely the image without text overlays */}
@@ -255,7 +255,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
         </div>
 
         {/* Card Footer: Harmonized Price & Action Button (Matching CourseCard) */}
-        <div className="p-2.5 sm:p-3.5 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1.5 rounded-b-2xl">
+        <div className="p-2.5 sm:p-3.5 bg-white/40 dark:bg-slate-950/40 backdrop-blur-md border-t border-white/60 dark:border-white/10 flex items-center justify-between gap-1.5 rounded-b-2xl">
           <div className="min-w-0 flex flex-col justify-center">
             {isFree ? (
               <div className="flex flex-col justify-center min-w-0 leading-tight">
@@ -284,7 +284,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
             <button
               type="button"
               onClick={() => handleOpenServiceDetail(service)}
-              className="py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold text-white bg-[#006A4E] hover:bg-[#047857] shadow-xs transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
+              className="py-1.5 px-3 sm:py-2 sm:px-4 rounded-xl text-xs sm:text-sm font-bold text-white liquid-glass-btn-primary shadow-xs transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
             >
               <span>{t('বিস্তারিত', 'Details')}</span>
             </button>
@@ -299,7 +299,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   // STANDALONE FULL-PAGE VIEW FOR OFFICIAL AGENCY PACKAGES
   if (isStandalonePage) {
     return (
-      <div className="w-full min-h-screen bg-white dark:bg-slate-900 font-bengali text-slate-900 dark:text-slate-100 py-6 sm:py-8 px-4 sm:px-6 lg:px-8 animate-fadeIn">
+      <div className="w-full min-h-screen liquid-canvas-bg font-bengali text-slate-900 dark:text-slate-100 py-6 sm:py-8 px-4 sm:px-6 lg:px-8 animate-fadeIn">
         <div className="max-w-7xl mx-auto space-y-8 sm:space-y-12">
           
           {/* Top Header Bar - Centered on Mobile, Row on Desktop */}
@@ -353,10 +353,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
 
   return (
     <div className="w-full">
-      {/* SECTION 1: Official Agency Packages - হালকা শেড / অফ-হোয়াইট (Soft Light Shade, not full white) */}
-      <section className="py-10 sm:py-14 bg-slate-100/90 dark:bg-slate-950 text-slate-900 dark:text-white border-y border-slate-200/70 dark:border-slate-800/80">
+      {/* SECTION 1: Official Agency Packages - Translucent Frosted Glass */}
+      <section className="py-10 sm:py-14 relative bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl text-slate-900 dark:text-white border-y border-white/60 dark:border-white/10 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
-          <div className="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3 mb-4 sm:mb-6">
+          <div className="flex items-center justify-between gap-3 border-b border-slate-200/80 dark:border-slate-800 pb-3 mb-4 sm:mb-6">
             <div className="space-y-0.5 sm:space-y-1 text-left min-w-0">
               <h2 className="text-sm sm:text-lg md:text-2xl font-bold font-bengali text-slate-900 dark:text-white leading-tight">
                 {t('অফিশিয়াল এজেন্সি প্যাকেজ', 'Official Agency Packages')}
@@ -397,8 +397,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
         </div>
       </section>
 
-      {/* SECTION 2: Digital Products Section - একদুম সাদা (Completely Pure White) */}
-      <section className="py-10 sm:py-14 bg-white text-slate-900 dark:bg-slate-900">
+      {/* SECTION 2: Digital Products Section */}
+      <section className="py-10 sm:py-14 relative text-slate-900 dark:text-slate-100 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <DigitalProductsSection setActiveTab={setActiveTab} />
         </div>

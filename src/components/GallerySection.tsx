@@ -33,7 +33,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onBack }) => {
     : gallery.filter(g => g.category === selectedCategory);
 
   return (
-    <section className="py-10 sm:py-16 bg-slate-100/90 text-slate-900 dark:bg-slate-950 dark:text-white border-y border-slate-200/70 dark:border-slate-800/80 font-bengali">
+    <section className="py-10 sm:py-16 relative z-10 font-bengali">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
         
         {/* Header */}
@@ -43,7 +43,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onBack }) => {
               <button
                 type="button"
                 onClick={onBack}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition cursor-pointer border-0 shadow-xs"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl liquid-glass-btn text-slate-800 dark:text-slate-200 font-bold text-xs transition cursor-pointer shadow-xs"
                 title={t('পূর্ববর্তী স্থানে ফিরে যান', 'Go back to previous page')}
               >
                 <ArrowLeft className="w-4 h-4 text-[#38BDF8]" />
@@ -65,10 +65,10 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onBack }) => {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all cursor-pointer border-0 ${
+              className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
                 selectedCategory === cat
-                  ? 'bg-[#006A4E] text-white shadow-lg shadow-blue-500/20'
-                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                  ? 'liquid-glass-btn-primary text-white shadow-lg'
+                  : 'liquid-glass-pill text-slate-700 dark:text-slate-300'
               }`}
             >
               {getCategoryLabel(cat)}
@@ -82,7 +82,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onBack }) => {
             <div
               key={item.id}
               onClick={() => setLightboxImage(item)}
-              className="group relative bg-slate-900 rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer aspect-4/3 border border-slate-200 dark:border-slate-800"
+              className="group relative liquid-glass-card rounded-3xl overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer aspect-4/3"
             >
               <img
                 src={item.imageUrl}

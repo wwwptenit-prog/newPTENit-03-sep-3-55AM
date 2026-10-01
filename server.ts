@@ -101,36 +101,11 @@ Return ONLY a raw valid JSON object without markdown formatting:
   }
 });
 
-// 2. Gemini AI Multi-Turn Role-Based Chatbot API Route
+// 2. Gemini AI General Assistant Chatbot API Route
 app.post('/api/gemini/chat', async (req, res) => {
   try {
-    const { message, history, currentTab, role = 'general', taskType } = req.body;
+    const { message, history, currentTab } = req.body;
     const ai = getAiClient();
-
-    // Determine target model based on specific task requirement:
-    // - gemini-3.1-pro-preview for particularly complex tasks
-    // - gemini-3.5-flash for general tasks
-    // - gemini-3.1-flash-lite for tasks that should happen fast
-    let primaryModel = 'gemini-3.5-flash';
-    let roleSystemInstruction = '';
-    const activeTask = taskType || role;
-
-    if (activeTask === 'speed' || activeTask === 'fast') {
-      primaryModel = 'gemini-3.1-flash-lite';
-      roleSystemInstruction = `You are PTENit Speed Assistant (দ্রুত এআই সহকারী). 
-Role: Fast response assistant for instant answers, quick guidance, and swift explanations.
-Tone: Concise, immediate, helpful, and direct in natural Bengali. Avoid unnecessary preamble.`;
-    } else if (activeTask === 'complex' || activeTask === 'pro') {
-      primaryModel = 'gemini-3.1-pro-preview';
-      roleSystemInstruction = `You are PTENit Senior Technical Architect & AI Problem Solver (জটিল টেকনিক্যাল এক্সপার্ট).
-Role: Specialized in deep reasoning, complex full-stack coding, algorithms, system architecture, database design, and debugging.
-Tone: Highly knowledgeable, rigorous, step-by-step, providing production-grade code snippets and technical solutions in Bengali or English as appropriate.`;
-    } else {
-      primaryModel = 'gemini-3.5-flash';
-      roleSystemInstruction = `You are PTENit & Order Boss Customer Care & Academic Advisor (কাস্টমার কেয়ার ও একাডেমি মেন্টর).
-Role: Assisting users with course details, IT services, freelance marketplace inquiries, and general career advice.
-Tone: Polite, knowledgeable, respectful, encouraging, and clear in Bengali. Keep answers structured and clean.`;
-    }
 
     // Default smart suggestions engine based on genuine user intent
     const generateSmartSuggestions = (userText: string, aiText: string) => {
@@ -155,11 +130,10 @@ Tone: Polite, knowledgeable, respectful, encouraging, and clear in Bengali. Keep
       return res.json({
         reply: defaultReply,
         suggestions: generateSmartSuggestions(message, defaultReply),
-        modelUsed: primaryModel,
       });
     }
 
-    const systemInstruction = `${roleSystemInstruction}
+    const systemInstruction = `You are an intelligent, highly skilled, and professional AI Tech Consultant, Mentor & Assistant for the PTENit & Order Boss ecosystem.
 
 CORE DIRECTIVE - RESPECT USER INTENT (CRITICAL):
 1. ACCURATE ADVICE FIRST: When the user asks for advice, guidance, programming concepts, career roadmaps, bug fixing, learning paths, business strategies, or general tech questions:
@@ -179,8 +153,7 @@ STYLE & FORMATTING:
 - End your response with a line starting with "SUGGESTIONS:" followed by exactly 3 short, relevant options separated by "|". Example:
 SUGGESTIONS: লার্নিং রোডম্যাপ|প্র্যাকটিস প্রজেক্ট আইডিয়া|অন্যান্য পরামর্শ`;
 
-    // Maintain multi-turn conversation history
-    const recentHistory = (history || []).slice(-10).map((h: any) => ({
+    const recentHistory = (history || []).slice(-6).map((h: any) => ({
       role: h.role === 'user' ? 'user' : 'model',
       parts: [{ text: h.text }],
     }));
@@ -190,42 +163,16 @@ SUGGESTIONS: লার্নিং রোডম্যাপ|প্র্যা�
       { role: 'user', parts: [{ text: message }] },
     ];
 
-    // Priority models list starting with the requested role model
-    const modelsToAttempt = [
-      primaryModel,
-      'gemini-3.8-flash',
-      'gemini-3.5-flash',
-      'gemini-3.1-flash-lite',
-      'gemini-flash-latest'
-    ];
-
     let response: any = null;
-    let modelUsed = primaryModel;
-    let lastErr: any = null;
-
-    for (const m of modelsToAttempt) {
-      try {
-        response = await ai.models.generateContent({
-          model: m,
-          contents: chatContents,
-          config: {
-            systemInstruction,
-            maxOutputTokens: activeTask === 'speed' ? 400 : 1000,
-            temperature: activeTask === 'complex' ? 0.4 : 0.7,
-          },
-        });
-        if (response && response.text) {
-          modelUsed = m;
-          break;
-        }
-      } catch (mErr: any) {
-        lastErr = mErr;
-        console.warn(`Model ${m} attempt failed, trying next compliant fallback...`);
-      }
-    }
-
-    if (!response || !response.text) {
-      console.warn('All Gemini chat model attempts failed, using intelligent domain fallback engine:', lastErr?.message);
+    try {
+      response = await generateWithFallback(ai, chatContents, {
+        systemInstruction,
+        maxOutputTokens: 800,
+        temperature: 0.7,
+      });
+    } catch (apiErr: any) {
+      console.warn('Gemini API call failed, using intelligent domain fallback engine:', apiErr?.message || apiErr);
+      // Smart domain fallback when API quota is exhausted
       const lower = message.toLowerCase();
       let fallbackReply = `ধন্যবাদ আপনার প্রশ্নের জন্য! আমি আপনার পরামর্শ ও টেকনিক্যাল বিষয়ে সাহায্য করতে প্রস্তুত। আপনার সুনির্দিষ্ট লক্ষ্য বা সমস্যাটি বিস্তারিত জানালে আমি ধাপে ধাপে দিকনির্দেশনা প্রদান করতে পারব।`;
 
@@ -240,7 +187,6 @@ SUGGESTIONS: লার্নিং রোডম্যাপ|প্র্যা�
       return res.json({
         reply: fallbackReply,
         suggestions: generateSmartSuggestions(message, fallbackReply),
-        modelUsed: 'domain-fallback',
       });
     }
 
@@ -251,7 +197,7 @@ SUGGESTIONS: লার্নিং রোডম্যাপ|প্র্যা�
       const parts = rawText.split('SUGGESTIONS:');
       rawText = parts[0].trim();
       const suggStr = parts[1].trim();
-      suggestions = suggStr.split('|').map((s: string) => s.trim()).filter(Boolean).slice(0, 3);
+      suggestions = suggStr.split('|').map(s => s.trim()).filter(Boolean).slice(0, 3);
     }
 
     // Clean any residual markdown bold asterisks
@@ -264,13 +210,12 @@ SUGGESTIONS: লার্নিং রোডম্যাপ|প্র্যা�
     return res.json({
       reply: rawText,
       suggestions: suggestions,
-      modelUsed,
     });
   } catch (err: any) {
     console.error('Gemini Chat error:', err);
     return res.json({
-      reply: 'PTENit এআই সহকারী সংযোগে সাময়িক সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।',
-      suggestions: ['লাইভ সাপোর্ট টিমের সাথে কথা বলুন 🎧', 'এডমিন প্যানেলে প্রবেশ করুন 🛡️', 'হোমপেজে ফিরে যান 🏠'],
+      reply: 'PTENit ও Order Boss এআই সহকারী সংযোগে সাময়িক সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।',
+      suggestions: ['লাইভ সাপোর্ট টিমের সাথে কথা বলুন 🎧', 'এডমিন প্যানেলে প্রবেশ করুন 🛡️', 'ওয়েবসাইটে ফিরে যান 🏠'],
     });
   }
 });
@@ -535,115 +480,20 @@ app.post('/api/payment/verify-gateway', async (req, res) => {
   }
 });
 
-// =======================================================
-// SERVER DATA STORAGE & SYNC API ROUTES (cPanel & Local)
-// =======================================================
-const serverDataDir = path.join(process.cwd(), 'server_data');
-if (!fs.existsSync(serverDataDir)) {
-  fs.mkdirSync(serverDataDir, { recursive: true });
-}
-
-// 1. GET Server Data
-app.get(['/api/sync.php', '/api/sync'], (req, res) => {
-  try {
-    const collectionName = (req.query.collection as string || '').replace(/[^a-zA-Z0-9_\-]/g, '');
-    const docId = (req.query.id as string || '').replace(/[^a-zA-Z0-9_\-]/g, '');
-
-    if (!collectionName) {
-      return res.json({ status: 'online', engine: 'Node & Express Server Storage', timestamp: new Date().toISOString() });
-    }
-
-    const colFile = path.join(serverDataDir, `${collectionName}.json`);
-    if (docId) {
-      const docFile = path.join(serverDataDir, collectionName, `${docId}.json`);
-      if (fs.existsSync(docFile)) {
-        return res.sendFile(docFile);
-      }
-      if (fs.existsSync(colFile)) {
-        const items = JSON.parse(fs.readFileSync(colFile, 'utf-8') || '[]');
-        const found = items.find((i: any) => i.id === docId);
-        if (found) return res.json(found);
-      }
-      return res.status(404).json({ error: 'Document not found' });
-    }
-
-    if (fs.existsSync(colFile)) {
-      return res.sendFile(colFile);
-    }
-    return res.json([]);
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message });
-  }
-});
-
-// 2. POST / PUT Server Data
-app.post(['/api/sync.php', '/api/sync'], (req, res) => {
-  try {
-    const payload = req.body || {};
-    const targetCollection = (req.query.collection as string || payload.collection || '').replace(/[^a-zA-Z0-9_\-]/g, '');
-    const docId = (payload.docId || payload.id || '').replace(/[^a-zA-Z0-9_\-]/g, '');
-    const data = payload.data || payload;
-
-    if (!targetCollection) {
-      return res.status(400).json({ error: 'Collection name is required' });
-    }
-
-    // Handle bulk items array
-    if (Array.isArray(payload.items)) {
-      const colFile = path.join(serverDataDir, `${targetCollection}.json`);
-      fs.writeFileSync(colFile, JSON.stringify(payload.items, null, 2), 'utf-8');
-      return res.json({ success: true, collection: targetCollection, count: payload.items.length });
-    }
-
-    const cleanDocId = docId || `doc_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-    const subDir = path.join(serverDataDir, targetCollection);
-    if (!fs.existsSync(subDir)) {
-      fs.mkdirSync(subDir, { recursive: true });
-    }
-
-    const docFile = path.join(subDir, `${cleanDocId}.json`);
-    const cleanData = { ...data, id: cleanDocId, _server_saved_at: new Date().toISOString() };
-    fs.writeFileSync(docFile, JSON.stringify(cleanData, null, 2), 'utf-8');
-
-    // Update master collection JSON file
-    const colFile = path.join(serverDataDir, `${targetCollection}.json`);
-    let existingItems: any[] = [];
-    if (fs.existsSync(colFile)) {
-      try {
-        existingItems = JSON.parse(fs.readFileSync(colFile, 'utf-8') || '[]');
-      } catch {}
-    }
-
-    const foundIdx = existingItems.findIndex((i: any) => i.id === cleanDocId);
-    if (foundIdx >= 0) {
-      existingItems[foundIdx] = { ...existingItems[foundIdx], ...cleanData };
-    } else {
-      existingItems.unshift(cleanData);
-    }
-    fs.writeFileSync(colFile, JSON.stringify(existingItems, null, 2), 'utf-8');
-
-    return res.json({
-      success: true,
-      message: 'Data successfully saved to server storage',
-      collection: targetCollection,
-      docId: cleanDocId,
-      timestamp: new Date().toISOString()
-    });
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message });
-  }
-});
-
 // Direct Download Routes for PTENit.zip & cPanel zip archives
-app.get(['/PTENit.zip', '/ptenit.zip', '/ptenit_cpanel_upload.zip', '/api/download/PTENit.zip'], (req, res) => {
+app.get(['/cpanel-deployment-ready.zip', '/public_html.zip', '/PTENit.zip', '/ptenit.zip', '/ptenit_cpanel_upload.zip', '/api/download/PTENit.zip', '/api/download/cpanel-deployment-ready.zip'], (req, res) => {
+  const readyPublic = path.join(process.cwd(), 'public', 'cpanel-deployment-ready.zip');
+  const readyDist = path.join(process.cwd(), 'dist', 'cpanel-deployment-ready.zip');
+  const readyRoot = path.join(process.cwd(), 'cpanel-deployment-ready.zip');
   const publicPath = path.join(process.cwd(), 'public', 'PTENit.zip');
   const rootPath = path.join(process.cwd(), 'PTENit.zip');
   const distPath = path.join(process.cwd(), 'dist', 'PTENit.zip');
   const cpanelPath = path.join(process.cwd(), 'ptenit_cpanel_upload.zip');
 
-  const fileToServe = [publicPath, rootPath, distPath, cpanelPath].find(p => fs.existsSync(p));
+  const fileToServe = [readyPublic, readyDist, readyRoot, publicPath, rootPath, distPath, cpanelPath].find(p => fs.existsSync(p));
   if (fileToServe) {
-    return res.download(fileToServe, 'PTENit.zip', (err) => {
+    const fileName = path.basename(fileToServe);
+    return res.download(fileToServe, fileName, (err) => {
       if (err && !res.headersSent) {
         res.status(500).send('Error downloading file');
       }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Bell,
   X,
@@ -25,6 +25,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
   const {
     currentUser,
     notifications,
+    marketplaceMode,
     isNotificationCenterOpen,
     isMessengerInboxOpen,
     closeNotificationCenter,
@@ -62,10 +63,48 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
 
   if (!isNotificationCenterOpen || isMessengerInboxOpen) return null;
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const isSeller = marketplaceMode === 'selling';
+
+  // Strict User-Scoped Notifications: Each user ONLY sees their own notifications, never default/other users' data
+  const scopedNotifications = useMemo(() => {
+    if (!currentUser) return [];
+
+    return notifications.filter(n => {
+      // 1. Never show admin notifications to non-admins
+      if ((n.recipientRole === 'admin' || n.targetTab === 'admin' || n.recipientId === 'admin') && currentUser.role !== 'admin') {
+        return false;
+      }
+
+      // 2. Admin sees admin alerts + their personal notifications
+      if (currentUser.role === 'admin') {
+        if (n.recipientRole === 'admin' || n.recipientId === 'admin' || n.targetTab === 'admin') return true;
+        if (n.recipientId === currentUser.id) return true;
+        if (currentUser.email && n.recipientEmail && n.recipientEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) return true;
+        return Boolean(n.isBroadcast && n.recipientId === 'broadcast');
+      }
+
+      // 3. For all regular users (students, clients, buyers, sellers):
+      // Must strictly match their own user ID or their own email address!
+      const matchesId = Boolean(n.recipientId && (n.recipientId === currentUser.id || (n.recipientId === 'all' && n.isBroadcast)));
+      const matchesEmail = Boolean(currentUser.email && n.recipientEmail && n.recipientEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim());
+      const isOfficialBroadcast = Boolean(n.isBroadcast && n.recipientId === 'broadcast');
+
+      if (!matchesId && !matchesEmail && !isOfficialBroadcast) {
+        return false;
+      }
+
+      // Check seller vs buyer mode filtering if mode is specified
+      if (n.mode === 'selling' && !isSeller) return false;
+      if (n.mode === 'buying' && isSeller) return false;
+
+      return true;
+    });
+  }, [notifications, currentUser, isSeller]);
+
+  const unreadCount = scopedNotifications.filter((n) => !n.read).length;
 
   // Filter & Sort Notifications
-  const filteredNotifications = notifications
+  const filteredNotifications = scopedNotifications
     .filter((n) => {
       const matchesSearch =
         n.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -129,27 +168,50 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
       return;
     }
 
-    if (
-      notif.targetTab === "financials" ||
-      notif.category === "payout" ||
-      notifTitle.includes("ওয়ালেট") ||
-      notifTitle.includes("পেমেন্ট") ||
-      notifTitle.includes("বোনাস") ||
-      notifTitle.includes("ক্যাশআউট")
-    ) {
-      if (onNavigateTab) onNavigateTab("financials", undefined, true);
-      return;
-    }
+    if (isSeller) {
+      if (
+        notif.targetTab === "financials" ||
+        notif.category === "payout" ||
+        notifTitle.includes("ওয়ালেট") ||
+        notifTitle.includes("পেমেন্ট") ||
+        notifTitle.includes("বোনাস") ||
+        notifTitle.includes("ক্যাশআউট")
+      ) {
+        if (onNavigateTab) onNavigateTab("marketplace", "seller-payout", true);
+        return;
+      }
 
-    if (
-      notif.targetTab === "marketplace" ||
-      notifTitle.includes("অর্ডার") ||
-      notifTitle.includes("ord-") ||
-      notifTitle.includes("এস্ক্রো") ||
-      notifTitle.includes("গিগ")
-    ) {
-      if (onNavigateTab) onNavigateTab("marketplace", "my-orders", true);
-      return;
+      if (
+        notif.targetTab === "marketplace" ||
+        notifTitle.includes("অর্ডার") ||
+        notifTitle.includes("ord-") ||
+        notifTitle.includes("এস্ক্রো") ||
+        notifTitle.includes("গিগ")
+      ) {
+        if (onNavigateTab) onNavigateTab("marketplace", "seller-orders", true);
+        return;
+      }
+    } else {
+      // BUYER MODE: STRICTLY KEEP IN BUYER MODE!
+      if (
+        notif.targetTab === "financials" ||
+        notifTitle.includes("বোনাস") ||
+        notifTitle.includes("ওয়ালেট")
+      ) {
+        if (onNavigateTab) onNavigateTab("financials", undefined, true);
+        return;
+      }
+
+      if (
+        notif.targetTab === "marketplace" ||
+        notifTitle.includes("অর্ডার") ||
+        notifTitle.includes("ord-") ||
+        notifTitle.includes("এস্ক্রো") ||
+        notifTitle.includes("গিগ")
+      ) {
+        if (onNavigateTab) onNavigateTab("marketplace", "my-orders", true);
+        return;
+      }
     }
 
     if (notif.targetTab && onNavigateTab) {
@@ -199,16 +261,16 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/50 backdrop-blur-xs p-0 sm:p-4 animate-in fade-in duration-200">
       {/* PHONE VIEW (100% Full Screen Mobile & Centered Desktop Modal) */}
       <div className="w-full h-[100dvh] sm:h-[650px] sm:max-w-lg sm:rounded-3xl bg-white text-slate-900 flex flex-col overflow-hidden shadow-2xl border-0 sm:border sm:border-slate-200 font-bengali">
-        {/* HEADER BAR */}
-        <div className="p-3.5 sm:p-4 bg-slate-50 border-b border-slate-200 flex flex-col gap-2 shrink-0">
+        {/* HEADER BAR & ATTACHED SUB-TAB BAR (MATCHES MENUBAR THEME EXACTLY) */}
+        <div className={`p-3.5 pb-0 sm:p-4 sm:pb-0 ${isSeller ? 'bg-[#E11D48]' : 'bg-[#006A4E]'} text-white border-b border-white/10 flex flex-col gap-2 shrink-0 shadow-xs`}>
           <div className="flex items-center justify-between">
             {selectedNotification ? (
               <button
                 type="button"
                 onClick={() => setSelectedNotification(null)}
-                className="flex items-center gap-1.5 text-slate-700 hover:text-slate-900 transition cursor-pointer active:scale-95 py-1 px-2.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100"
+                className="flex items-center gap-1.5 text-white/90 hover:text-white transition cursor-pointer active:scale-95 py-1 px-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20"
               >
-                <ChevronLeft className="w-5 h-5 text-[#006A4E] stroke-[2.5]" />
+                <ChevronLeft className="w-5 h-5 text-white stroke-[2.5]" />
                 <span className="text-xs sm:text-sm font-black">তালিকায় ফিরে যান</span>
               </button>
             ) : (
@@ -216,20 +278,31 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                 <button
                   type="button"
                   onClick={closeNotificationCenter}
-                  className="p-1.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-200 transition cursor-pointer active:scale-95"
+                  className="p-1.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-95"
                   title="বন্ধ করুন"
                 >
-                  <ChevronLeft className="w-6 h-6 stroke-[2.5] text-slate-600" />
+                  <ChevronLeft className="w-6 h-6 stroke-[2.5] text-white" />
                 </button>
 
                 <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-xl bg-emerald-100 border border-emerald-200 text-[#006A4E]">
-                    <Bell className="w-4 h-4" />
+                  <div className="p-2 rounded-xl bg-white/15 border border-white/25 text-white">
+                    <Bell className="w-5 h-5" />
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <h2 className="text-sm font-black text-slate-900 tracking-tight leading-none font-english">
-                      Notifications
-                    </h2>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h2 className="text-sm sm:text-base font-black text-white tracking-tight leading-none flex items-center gap-1.5">
+                        <span>নোটিফিকেশন সেন্টার</span>
+                        <span className="w-2 h-2 rounded-full bg-white" />
+                        {unreadCount > 0 && (
+                          <span className="min-w-5 h-5 px-1.5 bg-white text-[#E11D48] text-[10px] font-black rounded-full flex items-center justify-center shrink-0 shadow-xs">
+                            {unreadCount}
+                          </span>
+                        )}
+                      </h2>
+                    </div>
+                    <p className={`text-[10px] font-semibold ${isSeller ? 'text-rose-100' : 'text-emerald-100'} tracking-wide leading-tight mt-0.5 font-sans`}>
+                      PTENit Notifications & Updates
+                    </p>
                   </div>
                 </div>
               </div>
@@ -239,7 +312,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
               <button
                 type="button"
                 onClick={() => setIsNotifSettingsOpen(true)}
-                className="p-2 rounded-xl bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition cursor-pointer active:scale-95 border border-slate-200"
+                className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition cursor-pointer active:scale-95 border border-white/20"
                 title="নোটিফিকেশন সেটিংস"
               >
                 <Settings className="w-5 h-5" />
@@ -247,7 +320,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
               <button
                 type="button"
                 onClick={closeNotificationCenter}
-                className="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-[#E11D48] transition cursor-pointer active:scale-95 border border-rose-200"
+                className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition cursor-pointer active:scale-95 border border-white/20"
                 title="বন্ধ করুন (X)"
               >
                 <X className="w-5 h-5 stroke-[2.5]" />
@@ -256,7 +329,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
           </div>
 
           {/* QUICK TOP ACTION BUTTONS */}
-          <div className="flex items-center justify-between pt-2 border-t border-slate-200 text-xs">
+          <div className="flex items-center justify-between pt-2 border-t border-white/15 text-xs text-white">
             <button
               type="button"
               onClick={() => {
@@ -264,7 +337,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                 playAppSound("notification");
               }}
               disabled={unreadCount === 0}
-              className="text-[#006A4E] hover:underline disabled:opacity-40 font-bold flex items-center gap-1.5 cursor-pointer text-[11px] sm:text-xs"
+              className="text-white hover:underline disabled:opacity-40 font-bold flex items-center gap-1.5 cursor-pointer text-[11px] sm:text-xs"
             >
               <CheckCheck className="w-4 h-4" />
               <span>সব পড়া চিহ্নিত করুন</span>
@@ -276,17 +349,84 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                 clearAllNotifications();
                 playAppSound("notification");
               }}
-              disabled={notifications.length === 0}
-              className="text-[#E11D48] hover:underline disabled:opacity-40 font-bold flex items-center gap-1.5 cursor-pointer text-[11px] sm:text-xs"
+              disabled={scopedNotifications.length === 0}
+              className="text-rose-200 hover:text-white hover:underline disabled:opacity-40 font-bold flex items-center gap-1.5 cursor-pointer text-[11px] sm:text-xs"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>সব মুছে ফেলুন</span>
             </button>
           </div>
+
+          {/* SUB-TAB BAR (NO CARDS, SIMPLE, SAME COLOR AS MENUBAR, UNDERLINE INDICATOR) */}
+          <div className="grid grid-cols-4 w-full border-t border-white/15 pt-1 mt-1 -mx-3.5 sm:-mx-4 px-1">
+            <button
+              type="button"
+              onClick={() => setActiveFilter("all")}
+              className={`relative py-2 px-1 text-[11.5px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:opacity-80 text-center ${
+                activeFilter === "all"
+                  ? "text-white font-black"
+                  : "text-white/70 hover:text-white font-medium"
+              }`}
+            >
+              <Bell className={`w-3.5 h-3.5 shrink-0 ${activeFilter === 'all' ? 'stroke-[2.4]' : 'stroke-[1.8]'}`} />
+              <span className="truncate">সকল ({scopedNotifications.length})</span>
+              {activeFilter === "all" && (
+                <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-white rounded-full" />
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveFilter("unread")}
+              className={`relative py-2 px-1 text-[11.5px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:opacity-80 text-center ${
+                activeFilter === "unread"
+                  ? "text-white font-black"
+                  : "text-white/70 hover:text-white font-medium"
+              }`}
+            >
+              <CheckCheck className={`w-3.5 h-3.5 shrink-0 ${activeFilter === 'unread' ? 'stroke-[2.4]' : 'stroke-[1.8]'}`} />
+              <span className="truncate">পড়া হয়নি ({unreadCount})</span>
+              {activeFilter === "unread" && (
+                <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-white rounded-full" />
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveFilter("orders")}
+              className={`relative py-2 px-1 text-[11.5px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:opacity-80 text-center ${
+                activeFilter === "orders"
+                  ? "text-white font-black"
+                  : "text-white/70 hover:text-white font-medium"
+              }`}
+            >
+              <ShoppingBag className={`w-3.5 h-3.5 shrink-0 ${activeFilter === 'orders' ? 'stroke-[2.4]' : 'stroke-[1.8]'}`} />
+              <span className="truncate">অর্ডার</span>
+              {activeFilter === "orders" && (
+                <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-white rounded-full" />
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveFilter("updates")}
+              className={`relative py-2 px-1 text-[11.5px] font-bold transition flex items-center justify-center gap-1 cursor-pointer active:opacity-80 text-center ${
+                activeFilter === "updates"
+                  ? "text-white font-black"
+                  : "text-white/70 hover:text-white font-medium"
+              }`}
+            >
+              <Sparkles className={`w-3.5 h-3.5 shrink-0 ${activeFilter === 'updates' ? 'stroke-[2.4]' : 'stroke-[1.8]'}`} />
+              <span className="truncate">আপডেট</span>
+              {activeFilter === "updates" && (
+                <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-white rounded-full" />
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* SEARCH BAR (CLEAN WHITE TEXT FIELD, CENTERED / BALANCED FOR PHONE VIEW) & FILTER TABS */}
-        <div className="p-3 bg-white border-b border-slate-200 space-y-2.5 shrink-0">
+        {/* SEARCH BAR (CLEAN WHITE TEXT FIELD, BALANCED FOR PHONE VIEW) */}
+        <div className="p-3 bg-white border-b border-slate-200 shrink-0">
           <div className="w-full max-w-md mx-auto">
             <div className="relative flex items-center">
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -295,7 +435,9 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="নোটিফিকেশন বা বার্তা খুঁজুন..."
-                className="w-full pl-10 pr-9 py-2.5 bg-slate-50 text-slate-900 placeholder-slate-400 font-medium text-xs sm:text-sm rounded-xl shadow-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#006A4E] focus:border-transparent transition-all"
+                className={`w-full pl-10 pr-9 py-2 bg-slate-50 text-slate-900 placeholder-slate-400 font-medium text-xs sm:text-sm rounded-xl shadow-xs border border-slate-200 focus:outline-none focus:ring-2 ${
+                  isSeller ? 'focus:ring-[#E11D48]' : 'focus:ring-[#006A4E]'
+                } focus:border-transparent transition-all`}
               />
               {searchQuery && (
                 <button
@@ -308,55 +450,6 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                 </button>
               )}
             </div>
-          </div>
-
-          {/* Filter Pills (Hidden on Phone View for clean layout) */}
-          <div className="hidden sm:flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[11px] font-bold pb-0.5 justify-center">
-            <button
-              type="button"
-              onClick={() => setActiveFilter("all")}
-              className={`px-3 py-1.5 rounded-full transition cursor-pointer whitespace-nowrap ${
-                activeFilter === "all"
-                  ? "bg-[#006A4E] text-white font-black shadow-xs"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-              }`}
-            >
-              সকল ({notifications.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveFilter("unread")}
-              className={`px-3 py-1.5 rounded-full transition cursor-pointer whitespace-nowrap flex items-center gap-1 ${
-                activeFilter === "unread"
-                  ? "bg-[#006A4E] text-white font-black shadow-xs"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-              }`}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48]" />
-              পড়া হয়নি ({unreadCount})
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveFilter("orders")}
-              className={`px-3 py-1.5 rounded-full transition cursor-pointer whitespace-nowrap ${
-                activeFilter === "orders"
-                  ? "bg-[#006A4E] text-white font-black shadow-xs"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-              }`}
-            >
-              অর্ডার ও পেমেন্ট
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveFilter("updates")}
-              className={`px-3 py-1.5 rounded-full transition cursor-pointer whitespace-nowrap ${
-                activeFilter === "updates"
-                  ? "bg-[#006A4E] text-white font-black shadow-xs"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-              }`}
-            >
-              সিস্টেম ও সাপোর্ট
-            </button>
           </div>
         </div>
 

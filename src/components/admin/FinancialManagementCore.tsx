@@ -721,18 +721,18 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-800 pb-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2.5 flex-wrap">
-              <div className="p-2.5 bg-blue-500/10 text-sky-400 border border-blue-500/20 rounded-xl">
-                <Wallet className="w-5 h-5 lg:w-6 lg:h-6" />
+              <div className="p-2 bg-blue-500/10 text-sky-400 border border-blue-500/20 rounded-xl">
+                <Wallet className="w-5 h-5" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white flex items-center gap-2">
-                  <span>ফাইন্যান্সিয়াল ও পেমেন্ট কোর</span>
-                  <span className="px-2.5 py-0.5 bg-blue-500/20 text-sky-400 border border-blue-500/30 text-xs font-black rounded-full uppercase">
-                    Live
+                <h1 className="text-lg sm:text-2xl font-black text-white flex items-center gap-2">
+                  <span>ফাইন্যান্সিয়াল অ্যাকাউন্টিং ও অল-ইন-ওয়ান পেমেন্ট কোর</span>
+                  <span className="px-2 py-0.5 bg-blue-500/20 text-sky-400 border border-blue-500/30 text-[10px] font-black rounded-full uppercase">
+                    Live Accounting
                   </span>
                 </h1>
-                <p className="text-xs lg:text-sm text-slate-400 mt-1">
-                  আয়-ব্যয়, পেমেন্ট ও পেআউট হিসাব
+                <p className="text-xs text-slate-400 mt-0.5">
+                  সকল কোর্স ফি, মার্কেটপ্লেস এস্ক্রো, ডিজিটাল প্রোডাক্ট সেল, উত্তোলন অনুরোধ (Payout) এবং প্রাতিষ্ঠানিক বিলের সমন্বিত কেন্দ্রীয় হিসাব।
                 </p>
               </div>
             </div>
@@ -742,95 +742,94 @@ export const FinancialManagementCore: React.FC<FinancialManagementCoreProps> = (
           <div className="flex items-center gap-2 flex-wrap shrink-0">
             <button
               onClick={() => setAddBillModalOpen(true)}
-              className="px-4 py-2.5 bg-[#047857] hover:bg-emerald-600 text-white font-bold text-xs lg:text-sm rounded-xl flex items-center gap-2 shadow-sm transition cursor-pointer"
+              className="px-3.5 py-2 bg-[#047857] hover:bg-blue-500 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm transition cursor-pointer"
             >
-              <Plus className="w-4 h-4" />
-              <span>+ নতুন ভাউচার</span>
+              <Plus className="w-3.5 h-3.5" />
+              <span>+ নতুন বিল / ভাউচার তৈরি</span>
             </button>
 
             <button
               onClick={handleExportCSV}
-              className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs lg:text-sm rounded-xl flex items-center gap-2 transition cursor-pointer"
+              className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs rounded-xl flex items-center gap-1.5 transition cursor-pointer"
             >
-              <Download className="w-4 h-4 text-sky-400" />
-              <span>এক্সপোর্ট (CSV)</span>
+              <Download className="w-3.5 h-3.5 text-sky-400" />
+              <span>এক্সপোর্ট লেজার (CSV)</span>
             </button>
           </div>
         </div>
 
-        {/* FINANCIAL SUMMARY METRIC CARDS */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 lg:gap-4">
+        {/* FINANCIAL SUMMARY METRIC CARDS ("সকল হিসাব") */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {/* Card 1: Total Inflow */}
-          <div className="bg-slate-950/70 border border-slate-800/90 p-4 lg:p-4.5 rounded-2xl flex flex-col justify-between hover:border-sky-500/40 transition shadow-sm">
+          <div className="bg-slate-950/60 border border-slate-800/80 p-3.5 rounded-xl space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-xs lg:text-sm font-bold text-slate-300">মোট আদায়</span>
-              <ArrowUpRight className="w-4 h-4 lg:w-4.5 lg:h-4.5 text-sky-400" />
+              <span className="text-[10px] font-black text-slate-400">মোট প্ল্যাটফর্ম আদায়</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-sky-400" />
             </div>
-            <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-black text-sky-400 font-mono mt-2">
+            <p className="text-base sm:text-xl font-black text-sky-400">
               ৳{stats.totalInflow.toLocaleString('bn-BD')}
             </p>
+            <p className="text-[9px] text-slate-500">কোর্স + গিগ + ডিজিটাল সেল</p>
           </div>
 
           {/* Card 2: Net Treasury Balance */}
-          <div className="bg-slate-950/70 border border-slate-800/90 p-4 lg:p-4.5 rounded-2xl flex flex-col justify-between hover:border-emerald-500/40 transition shadow-sm">
+          <div className="bg-slate-950/60 border border-slate-800/80 p-3.5 rounded-xl space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-xs lg:text-sm font-bold text-slate-300">নেট নগদ তহবিল</span>
-              <Wallet className="w-4 h-4 lg:w-4.5 lg:h-4.5 text-emerald-400" />
+              <span className="text-[10px] font-black text-slate-400">নেট নগদ তহবিল</span>
+              <Wallet className="w-3.5 h-3.5 text-sky-400" />
             </div>
-            <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-black text-emerald-400 font-mono mt-2">
+            <p className="text-base sm:text-xl font-black text-sky-400">
               ৳{stats.netTreasury.toLocaleString('bn-BD')}
             </p>
+            <p className="text-[9px] text-slate-500">আদায় - পেআউট - খরচ</p>
           </div>
 
           {/* Card 3: Escrow Held */}
-          <div className="bg-slate-950/70 border border-slate-800/90 p-4 lg:p-4.5 rounded-2xl flex flex-col justify-between hover:border-amber-500/40 transition shadow-sm">
+          <div className="bg-slate-950/60 border border-slate-800/80 p-3.5 rounded-xl space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-xs lg:text-sm font-bold text-slate-300">এস্ক্রো সিকিউরড</span>
-              <ShieldCheck className="w-4 h-4 lg:w-4.5 lg:h-4.5 text-amber-400" />
+              <span className="text-[10px] font-black text-slate-400">এস্ক্রো সিকিউরড হোল্ড</span>
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
             </div>
-            <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-black text-amber-400 font-mono mt-2">
+            <p className="text-base sm:text-xl font-black text-amber-400">
               ৳{stats.escrowHeld.toLocaleString('bn-BD')}
             </p>
+            <p className="text-[9px] text-slate-500">চলমান অর্ডারের গ্রাহক আমানত</p>
           </div>
 
           {/* Card 4: Platform Profit / Commission */}
-          <div className="bg-slate-950/70 border border-slate-800/90 p-4 lg:p-4.5 rounded-2xl flex flex-col justify-between hover:border-purple-500/40 transition shadow-sm">
+          <div className="bg-slate-950/60 border border-slate-800/80 p-3.5 rounded-xl space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-xs lg:text-sm font-bold text-slate-300">কমিশন ও লাভ</span>
-              <TrendingUp className="w-4 h-4 lg:w-4.5 lg:h-4.5 text-purple-400" />
+              <span className="text-[10px] font-black text-slate-400">প্ল্যাটফর্ম কমিশন ও লাভ</span>
+              <TrendingUp className="w-3.5 h-3.5 text-purple-400" />
             </div>
-            <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-black text-purple-400 font-mono mt-2">
+            <p className="text-base sm:text-xl font-black text-purple-400">
               ৳{stats.totalCommission.toLocaleString('bn-BD')}
             </p>
+            <p className="text-[9px] text-slate-500">গিগ ১০% ফি ও মার্জিন</p>
           </div>
 
-          {/* Card 5: Pending Requests */}
-          <div className="bg-slate-950/70 border border-slate-800/90 p-4 lg:p-4.5 rounded-2xl flex flex-col justify-between hover:border-rose-500/40 transition shadow-sm">
+          {/* Card 5: Pending Requests (অনুরোধ) */}
+          <div className="bg-slate-950/60 border border-slate-800/80 p-3.5 rounded-xl space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-xs lg:text-sm font-bold text-rose-300">অপেক্ষমাণ অনুরোধ</span>
-              <Clock className="w-4 h-4 lg:w-4.5 lg:h-4.5 text-rose-400" />
+              <span className="text-[10px] font-black text-rose-400">অপেক্ষমাণ অনুরোধ</span>
+              <Clock className="w-3.5 h-3.5 text-rose-400" />
             </div>
-            <div>
-              <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-black text-rose-400 font-mono mt-2">
-                ৳{(stats.pendingPayoutsAmt + stats.pendingBillsAmt).toLocaleString('bn-BD')}
-              </p>
-              {stats.pendingCount > 0 && (
-                <span className="inline-block text-[11px] lg:text-xs text-rose-300 font-bold mt-1">
-                  {stats.pendingCount}টি পেন্ডিং
-                </span>
-              )}
-            </div>
+            <p className="text-base sm:text-xl font-black text-rose-400">
+              ৳{(stats.pendingPayoutsAmt + stats.pendingBillsAmt).toLocaleString('bn-BD')}
+            </p>
+            <p className="text-[9px] text-slate-500">{stats.pendingCount} টি রিকোয়েস্ট পেন্ডিং</p>
           </div>
 
           {/* Card 6: Total Expenses */}
-          <div className="bg-slate-950/70 border border-slate-800/90 p-4 lg:p-4.5 rounded-2xl flex flex-col justify-between hover:border-rose-400/40 transition shadow-sm">
+          <div className="bg-slate-950/60 border border-slate-800/80 p-3.5 rounded-xl space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-xs lg:text-sm font-bold text-slate-300">পরিশোধিত খরচ</span>
-              <ArrowDownLeft className="w-4 h-4 lg:w-4.5 lg:h-4.5 text-rose-300" />
+              <span className="text-[10px] font-black text-slate-400">পরিশোধিত খরচ ও পেআউট</span>
+              <ArrowDownLeft className="w-3.5 h-3.5 text-rose-300" />
             </div>
-            <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-black text-rose-300 font-mono mt-2">
+            <p className="text-base sm:text-xl font-black text-rose-300">
               ৳{stats.totalOutflow.toLocaleString('bn-BD')}
             </p>
+            <p className="text-[9px] text-slate-500">টিচার পেআউট + অফিস ব্যয়</p>
           </div>
         </div>
       </div>

@@ -1,10 +1,11 @@
-export type UserRole = 'student' | 'instructor' | 'specialist' | 'customer' | 'admin' | 'both';
+export type UserRole = 'student' | 'instructor' | 'specialist' | 'customer' | 'admin' | 'both' | 'teacher';
 
 export interface User {
   id: string;
   name: string;
   email: string;
   mobile: string;
+  phone?: string;
   role: UserRole;
   roles?: ('customer' | 'specialist' | 'instructor' | 'admin' | 'student')[];
   activeRole?: 'customer' | 'specialist' | 'instructor' | 'admin' | 'student';
@@ -54,23 +55,24 @@ export interface User {
 
 export interface Lesson {
   id: string;
-  courseId: string;
-  moduleId: string;
+  courseId?: string;
+  moduleId?: string;
   title: string;
   duration: string;
   videoUrl: string;
   pdfResourceUrl?: string;
   content?: string;
+  isFree?: boolean;
   isFreePreview?: boolean;
-  order: number;
+  order?: number;
 }
 
 export interface CourseModule {
   id: string;
-  courseId: string;
+  courseId?: string;
   title: string;
   lessons: Lesson[];
-  order: number;
+  order?: number;
 }
 
 export interface QuizQuestion {
@@ -99,6 +101,7 @@ export interface Assignment {
 export interface AssignmentSubmission {
   id: string;
   assignmentId: string;
+  courseId?: string;
   studentId: string;
   studentName: string;
   studentEmail: string;
@@ -130,6 +133,13 @@ export interface CustomerProject {
   status: 'Pending Review' | 'In Progress' | 'Under Testing' | 'Completed' | 'Cancelled';
   priceEstimate?: number;
   assignedStaff?: string;
+  offerType?: string;
+  isWorkFirst?: boolean;
+  isDirectOffer?: boolean;
+  targetSellerId?: string;
+  targetSellerName?: string;
+  expiresAt?: string;
+  isExpiredReturned?: boolean;
   createdAt: string;
   updatedAt?: string;
 }
@@ -138,6 +148,7 @@ export interface Course {
   id: string;
   title: string;
   instructor: string;
+  instructorName?: string;
   instructorRole?: string;
   category: string;
   duration: string;
@@ -158,6 +169,8 @@ export interface Course {
   quiz?: QuizQuestion[];
   published: boolean;
   createdAt: string;
+  students?: number;
+  studentsCount?: number;
   targetModules?: number;
   targetLessons?: number;
   targetAssignments?: number;
@@ -188,11 +201,15 @@ export interface Course {
 export interface Service {
   id: string;
   title: string;
+  sellerId?: string;
+  sellerName?: string;
   category: string;
   shortDescription: string;
   fullDescription: string;
   iconName: string;
+  price?: number;
   priceText?: string;
+  tags?: string[];
   features: string[];
   published: boolean;
   order?: number;
@@ -214,6 +231,7 @@ export interface Service {
 export interface Enrollment {
   id: string;
   userId: string;
+  studentId?: string;
   courseId: string;
   progress: number; // 0 to 100
   completedLessons: string[]; // lessonIds
@@ -228,9 +246,11 @@ export interface Certificate {
   id: string;
   certificateCode: string;
   studentId: string;
+  studentEmail?: string;
   studentName: string;
   courseId: string;
   courseName: string;
+  courseTitle?: string;
   issueDate: string;
   instructorName: string;
   qrCodeUrl?: string;
@@ -260,7 +280,8 @@ export interface ContactMessage {
   name: string;
   phone: string;
   email: string;
-  serviceOrCourse: string;
+  subject?: string;
+  serviceOrCourse?: string;
   message: string;
   createdAt: string;
   read: boolean;
@@ -322,13 +343,16 @@ export interface PaymentMethodItem {
   id: string;
   name: string;
   logoUrl: string;
-  type?: 'mobile' | 'bank' | 'card' | 'other';
+  type?: 'mobile' | 'bank' | 'card' | 'mfs' | 'other' | string;
   isActive?: boolean;
 }
 
 export interface SiteSettings {
+  siteName?: string;
   heroHeading: string;
   heroSubtext: string;
+  supportPhone?: string;
+  officeHours?: string;
   statsStudents: string;
   statsProjects: string;
   statsCourses: string;
@@ -383,6 +407,7 @@ export interface SiteSettings {
   bankAccountName?: string;
   bankAccountNumber?: string;
   bankBranch?: string;
+  bankLogoUrl?: string;
   paymentLogos?: PaymentMethodItem[];
   // Payment Automation Gateway Settings
   paymentAutomationMode?: 'manual' | 'automated'; // 'manual' = Admin TrxID verification, 'automated' = Instant Gateway API
@@ -457,8 +482,12 @@ export interface NotificationItem {
   time: string;
   read: boolean;
   type: 'info' | 'success' | 'warning' | 'error';
-  category?: 'seller' | 'mentor' | 'message' | 'payout' | 'system' | 'buyer' | 'course';
-  recipientRole?: 'seller' | 'buyer' | 'all';
+  category?: 'seller' | 'mentor' | 'message' | 'payout' | 'system' | 'buyer' | 'course' | 'enrollment' | string;
+  recipientId?: string;
+  recipientEmail?: string;
+  recipientRole?: 'seller' | 'buyer' | 'admin' | 'all';
+  isBroadcast?: boolean;
+  mode?: 'buying' | 'selling' | 'all' | string;
   targetTab?: string;
   targetId?: string;
   senderName?: string;
@@ -477,17 +506,47 @@ export interface NotificationItem {
 
 export interface DirectMessageItem {
   id: string;
+  senderId?: string;
+  senderEmail?: string;
+  recipientEmail?: string;
   senderName: string;
   senderRole?: string;
   senderAvatar?: string;
   recipientRole?: 'customer' | 'instructor' | 'admin' | 'all' | 'seller' | 'buyer';
+  mode?: 'buying' | 'selling' | 'all' | string;
+  category?: string;
   text: string;
-  time: string;
+  time?: string;
   read: boolean;
   unreadCount?: number;
   orderId?: string;
   orderTitle?: string;
   targetTab?: string;
+}
+
+export interface DirectOfferMeta {
+  id: string;
+  orderId?: string;
+  projectId?: string;
+  title: string;
+  category?: string;
+  budget: number;
+  budgetRange?: string;
+  deliveryDays: number;
+  description: string;
+  skills?: string;
+  requirements?: string[];
+  attachmentName?: string;
+  attachmentUrl?: string;
+  coverImage?: string;
+  offerType?: 'work_first' | 'paid';
+  createdAt: string;
+  expiresAt: string; // ISO 24h
+  status: 'pending' | 'accepted' | 'declined' | 'expired_returned';
+  targetSellerId?: string;
+  targetSellerName?: string;
+  buyerId?: string;
+  buyerName?: string;
 }
 
 export interface ChatMessage {
@@ -498,6 +557,7 @@ export interface ChatMessage {
   text: string;
   time: string;
   meetLink?: string;
+  directOffer?: DirectOfferMeta;
 }
 
 export interface ActiveChatWindow {
@@ -506,6 +566,8 @@ export interface ActiveChatWindow {
   senderName: string;
   senderRole?: string;
   senderAvatar?: string;
+  targetUserId?: string;
+  targetUserEmail?: string;
   messages: ChatMessage[];
   minimized?: boolean;
 }
@@ -516,7 +578,7 @@ export interface TeacherPayout {
   teacherName: string;
   teacherEmail: string;
   amount: number;
-  paymentMethod: 'bKash' | 'Nagad' | 'Rocket' | 'Bank';
+  paymentMethod: 'bKash' | 'Nagad' | 'Rocket' | 'Bank' | 'Bank Transfer';
   accountNumber: string;
   note?: string;
   status: 'Pending' | 'Approved' | 'Rejected' | 'Paid';
@@ -538,7 +600,9 @@ export interface TeacherNotice {
 
 // Marketplace & Agency Project Dispatch Types
 export interface MarketplaceGigPackage {
-  name: string;
+  name?: string;
+  title?: string;
+  description?: string;
   price: number;
   deliveryDays: number;
   revisions: number | string;
@@ -549,14 +613,27 @@ export interface MarketplaceGig {
   id: string;
   sellerId: string;
   sellerName: string;
+  sellerPhone?: string;
+  seller?: string;
+  badge?: string;
+  deliveryDays?: number;
+  images?: string[];
+  fullDescription?: string;
+  shortDescription?: string;
   sellerAvatar?: string;
   sellerTitle?: string;
   sellerLevel?: string;
   sellerRating?: number;
+  price?: number;
+  priceText?: string;
+  deliveryTime?: string;
   isAgencyStaff?: boolean; // internal PTENit office staff/instructor
+  _lastSynced?: string;
+  _lastUpdated?: string;
   title: string;
   category: string;
   description: string;
+  features?: string[];
   thumbnail: string;
   galleryImages?: string[];
   videoUrl?: string;
@@ -604,6 +681,11 @@ export interface MarketplaceJob {
   assignedStaffName?: string;
   proposalsCount: number;
   status: 'open' | 'assigned' | 'in_progress' | 'delivered' | 'completed' | 'cancelled';
+  isDirectOffer?: boolean;
+  targetSellerId?: string;
+  targetSellerName?: string;
+  expiresAt?: string;
+  isExpiredReturned?: boolean;
   createdAt: string;
 }
 
@@ -624,7 +706,7 @@ export interface MarketplaceProposal {
 
 export interface MarketplaceOrder {
   id: string;
-  type: 'gig_order' | 'job_order' | 'custom_agency_order' | 'digital_product_order';
+  type: 'gig_order' | 'job_order' | 'custom_agency_order' | 'digital_product_order' | 'direct_offer';
   digitalProductId?: string;
   downloadUrl?: string;
   licenseKey?: string;
@@ -639,14 +721,22 @@ export interface MarketplaceOrder {
   sellerId: string;
   sellerName: string;
   sellerAvatar?: string;
+  sellerEmail?: string;
+  sellerPhone?: string;
   isInternalStaff?: boolean;
   packageType?: 'Basic' | 'Standard' | 'Premium' | 'Custom';
   amount: number;
   adminCommission: number;
   sellerPayout: number;
+  gigTitle?: string;
+  serviceTitle?: string;
+  clientName?: string;
+  clientPhone?: string;
+  selectedPackageName?: string;
+  statusNote?: string;
   paymentMethod?: string;
   transactionId?: string;
-  status: 'pending' | 'pending_approval' | 'in_progress' | 'in_review' | 'revision_requested' | 'completed' | 'disputed' | 'cancelled';
+  status: 'pending' | 'pending_approval' | 'in_progress' | 'in_review' | 'revision_requested' | 'completed' | 'disputed' | 'cancelled' | 'delivered';
   deliveryNote?: string;
   deliveryFileUrl?: string;
   deliveryFileName?: string;
@@ -659,6 +749,10 @@ export interface MarketplaceOrder {
   deadlineDate: string;
   unreadMessageCount?: number;
   isPublicOffer?: boolean;
+  isDirectOffer?: boolean;
+  targetSellerId?: string;
+  expiresAt?: string;
+  isExpiredReturned?: boolean;
   assignedExpert?: string;
   reachCount?: number;
   likesCount?: number;
@@ -713,11 +807,15 @@ export interface DigitalProduct {
   deliveryType: DigitalProductDeliveryType;
   fileFormat: string;
   fileSize: string;
+  version?: string;
+  requirements?: string | string[];
   rating: number;
   reviewsCount: number;
   salesCount: number;
   features: string[];
   downloadUrl: string;
+  demoImages?: string[];
+  galleryImages?: string[];
   licenseKey?: string;
   demoUrl?: string;
   canvaInviteLink?: string;
@@ -736,12 +834,12 @@ export interface LiveClassSession {
   moduleTitle?: string;
   lessonNo: string;
   lessonTitle?: string;
-  serialNo: string;
+  serialNo?: string;
   classSerialNo?: string;
   date: string; // "YYYY-MM-DD"
   time: string; // "HH:mm"
   durationMinutes?: number; // default 90 minutes
-  meetLink: string;
+  meetLink?: string;
   meetingLink?: string;
   platform?: 'google_meet' | 'zoom' | 'youtube' | 'custom';
   note?: string;

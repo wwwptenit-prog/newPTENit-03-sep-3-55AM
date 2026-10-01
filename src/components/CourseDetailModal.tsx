@@ -304,15 +304,15 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 overflow-y-auto min-h-screen font-bengali animate-fadeIn text-slate-800 dark:text-slate-100 flex flex-col">
+    <div className="fixed inset-0 z-50 liquid-canvas-bg overflow-y-auto min-h-screen font-bengali animate-fadeIn text-slate-800 dark:text-slate-100 flex flex-col">
       {/* 1. TOP BAR: সম্পূর্ণ স্ক্রিনের শীর্ষে ফিক্সড/স্টিকি (স্ক্রোল করার সময় উপরে কোনো ফাঁকা থাকবে না) */}
-      <header className="sticky top-0 z-40 w-full bg-[#006A4E] text-white border-b border-[#00543D] shadow-sm shrink-0">
+      <header className="sticky top-0 z-40 w-full liquid-glass-header text-white shadow-md shrink-0 liquid-specular-top">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2">
           {/* LEFT: BACK BUTTON (বেক বাটন - ChevronLeft, সাদা কালার, কোনো বর্ডার ছাড়া) */}
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
+            className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-white/10 text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
             title="ফিরে যান"
           >
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5] text-white" />
@@ -333,7 +333,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
             <button
               type="button"
               onClick={() => setIsShareMenuOpen(!isShareMenuOpen)}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-white/10 text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
               title="সোশ্যাল মিডিয়ায় শেয়ার করুন"
             >
               <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
@@ -347,7 +347,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                   className="fixed inset-0 z-40"
                   onClick={() => setIsShareMenuOpen(false)}
                 />
-                <div className="absolute right-0 top-full mt-2 z-50 w-56 sm:w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-3 space-y-2 animate-fadeIn font-bengali">
+                <div className="absolute right-0 top-full mt-2 z-50 w-56 sm:w-64 liquid-glass-modal rounded-2xl shadow-2xl p-3 space-y-2 animate-fadeIn font-bengali">
                   <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1 border-b border-slate-100 dark:border-slate-800 pb-1.5 flex items-center justify-between">
                     <span>সোশ্যাল মিডিয়ায় শেয়ার করুন</span>
                     <button
@@ -439,7 +439,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
 
       {/* Main Course Content Container */}
       <div className="max-w-6xl mx-auto w-full p-2 sm:p-4 md:p-6 lg:p-8 space-y-3 sm:space-y-4 flex-1">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-xs overflow-hidden">
+        <div className="liquid-glass-card rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden">
 
           {/* Clean Course Banner Image */}
           <div className="relative aspect-video sm:aspect-[21/9] w-full bg-slate-950 overflow-hidden">
@@ -468,7 +468,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
           </div>
 
           {/* Header Outside/Below the Photo (Matching Digital Modal Style) */}
-          <div className="p-3.5 sm:p-5 md:p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+          <div className="p-3.5 sm:p-5 md:p-6 border-b border-white/60 dark:border-white/10 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md">
             {/* Title - Full display (টাইটেলের সাথে ডিজিটাল মার্কেটিং ক্যাটাগরি ট্যাগ থাকবে না) */}
             <div className="min-w-0">
               <h1 className="text-sm sm:text-base font-bold font-heading text-slate-900 dark:text-white leading-snug break-words" title={course.title}>
@@ -740,8 +740,8 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
 
       {/* 2-Step Enrollment & Payment Checkout Modal */}
       {paymentModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-5 sm:p-7 relative shadow-2xl space-y-5 text-slate-900 dark:text-white my-auto animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="liquid-glass-modal rounded-3xl max-w-lg w-full p-5 sm:p-7 relative shadow-2xl space-y-5 text-slate-900 dark:text-white my-auto animate-in fade-in zoom-in-95 duration-200">
             
             <button
               onClick={() => setPaymentModalOpen(false)}
@@ -825,7 +825,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                       setStudentName(e.target.value);
                       if (paymentFormError) setPaymentFormError(null);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#00543e] dark:focus:border-[#006A4E]"
+                    className="w-full px-3.5 py-2.5 rounded-xl liquid-glass-input text-sm text-slate-900 dark:text-white"
                   />
                 </div>
 
@@ -842,7 +842,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                       setStudentPhone(e.target.value);
                       if (paymentFormError) setPaymentFormError(null);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#00543e] dark:focus:border-[#006A4E]"
+                    className="w-full px-3.5 py-2.5 rounded-xl liquid-glass-input text-sm text-slate-900 dark:text-white"
                   />
                 </div>
 
@@ -859,12 +859,12 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                       setStudentEmail(e.target.value);
                       if (paymentFormError) setPaymentFormError(null);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-[#00543e] dark:focus:border-[#006A4E]"
+                    className="w-full px-3.5 py-2.5 rounded-xl liquid-glass-input text-sm text-slate-900 dark:text-white"
                   />
                 </div>
 
                 {/* Course Order Summary Pill */}
-                <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between text-xs">
+                <div className="p-3 liquid-glass-card rounded-xl flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2 min-w-0">
                     <BookOpen className="w-4 h-4 text-[#00543e] shrink-0" />
                     <span className="truncate text-slate-600 dark:text-slate-300">{course.title}</span>
@@ -877,7 +877,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
                 {/* Next Step Button */}
                 <button
                   type="submit"
-                  className="w-full py-3.5 px-4 rounded-xl text-white font-bold font-bengali text-sm bg-[#00543e] hover:bg-[#004231] active:bg-[#14532d] shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98 mt-2"
+                  className="w-full py-3.5 px-4 rounded-xl text-white font-bold font-bengali text-sm liquid-glass-btn-primary shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98 mt-2"
                 >
                   <span>পরবর্তী ধাপ (পেমেন্ট নির্বাচন)</span>
                   <ArrowRight className="w-4 h-4" />

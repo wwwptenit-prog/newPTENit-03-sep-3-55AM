@@ -22,9 +22,9 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
   const { siteSettings, services, courses, t } = useData();
 
   return (
-    <footer className="bg-white text-slate-600 pt-16 pb-8 border-t border-slate-200">
+    <footer className="relative bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl text-slate-600 dark:text-slate-300 pt-16 pb-8 border-t border-white/80 dark:border-white/10 z-10 liquid-specular-top">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-slate-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-slate-200/80 dark:border-slate-800">
           
           {/* Column 1: Logo & About */}
           <div className="space-y-4">
@@ -54,9 +54,9 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
                           {boxLetter}
                         </div>
                       )}
-                      <span className="font-heading text-2xl font-black text-slate-900 flex items-center gap-0.5">
+                      <span className="font-heading text-2xl font-black text-slate-900 dark:text-white flex items-center gap-0.5">
                         {textMain}
-                        {textHighlight && <span className="text-[#006A4E]">{textHighlight}</span>}
+                        {textHighlight && <span className="text-[#006A4E] dark:text-cyan-400">{textHighlight}</span>}
                       </span>
                     </>
                   )}
@@ -64,16 +64,16 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
               );
             })()}
 
-            <p className="text-sm text-slate-500 leading-relaxed font-bengali">
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-bengali">
               {t('PTENit আপনার ব্যবসা ও ক্যারিয়ারের জন্য আধুনিক IT Services, Digital Marketing, Web Development এবং Professional Training Solutions প্রদান করে।', 'PTENit provides modern IT Services, Digital Marketing, Web Development, and Professional Training Solutions for your business and career.')}
             </p>
 
-            <div className="pt-2 flex items-center gap-3">
+            <div className="pt-2 flex items-center gap-2.5">
               <a
                 href={siteSettings.facebookUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-slate-100 hover:bg-[#006A4E] text-slate-600 hover:text-white flex items-center justify-center transition-colors border border-slate-200"
+                className="w-9 h-9 rounded-xl liquid-glass-btn text-slate-600 dark:text-slate-300 hover:text-white hover:bg-[#006A4E] flex items-center justify-center transition-all shadow-xs"
               >
                 <Facebook className="w-4 h-4" />
               </a>
@@ -81,7 +81,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
                 href={siteSettings.youtubeUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-slate-100 hover:bg-[#E11D48] text-slate-600 hover:text-white flex items-center justify-center transition-colors border border-slate-200"
+                className="w-9 h-9 rounded-xl liquid-glass-btn text-slate-600 dark:text-slate-300 hover:text-white hover:bg-[#E11D48] flex items-center justify-center transition-all shadow-xs"
               >
                 <Youtube className="w-4 h-4" />
               </a>
@@ -89,7 +89,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
                 href={siteSettings.instagramUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-slate-100 hover:bg-[#E11D48] text-slate-600 hover:text-white flex items-center justify-center transition-colors border border-slate-200"
+                className="w-9 h-9 rounded-xl liquid-glass-btn text-slate-600 dark:text-slate-300 hover:text-white hover:bg-[#E11D48] flex items-center justify-center transition-all shadow-xs"
               >
                 <Instagram className="w-4 h-4" />
               </a>
@@ -97,7 +97,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
                 href={siteSettings.linkedinUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-slate-100 hover:bg-[#006A4E] text-slate-600 hover:text-white flex items-center justify-center transition-colors border border-slate-200"
+                className="w-9 h-9 rounded-xl liquid-glass-btn text-slate-600 dark:text-slate-300 hover:text-white hover:bg-[#006A4E] flex items-center justify-center transition-all shadow-xs"
               >
                 <Linkedin className="w-4 h-4" />
               </a>
@@ -105,7 +105,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
                 href={`https://wa.me/${siteSettings.whatsapp}`}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-[#006A4E] hover:bg-[#047857] text-white flex items-center justify-center transition-colors"
+                className="w-9 h-9 rounded-xl bg-[#006A4E] hover:bg-[#047857] text-white flex items-center justify-center transition-all shadow-xs"
               >
                 <MessageSquare className="w-4 h-4" />
               </a>
@@ -274,7 +274,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
               <div
                 key={item.id}
                 title={item.name}
-                className="bg-white p-1.5 sm:p-2 rounded-lg sm:rounded-xl border border-slate-200 shadow-xs hover:border-[#006A4E] transition-all flex items-center justify-center h-8 sm:h-9 min-w-[50px] sm:min-w-[58px]"
+                className="liquid-glass-card p-1.5 sm:p-2 rounded-lg sm:rounded-xl shadow-xs hover:border-[#006A4E] transition-all flex items-center justify-center h-8 sm:h-9 min-w-[50px] sm:min-w-[58px]"
               >
                 <img
                   src={item.logoUrl}
@@ -296,9 +296,19 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
           </div>
         </div>
 
-        {/* Bottom Copyright */}
-        <div className="pt-8 flex flex-col sm:flex-row justify-center items-center text-xs text-slate-500 text-center">
+        {/* Bottom Copyright & cPanel ZIP */}
+        <div className="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 text-center gap-3">
           <p>© {new Date().getFullYear()} PTENit. All Rights Reserved.</p>
+          <div className="flex items-center gap-3 text-xs">
+            <a
+              href="/cpanel-deployment-ready.zip"
+              download="cpanel-deployment-ready.zip"
+              className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 rounded-lg font-bold transition shadow-xs cursor-pointer"
+              title="cPanel public_html ডিপ্লয়মেন্ট জিপ সরাসরি ডাউনলোড করুন"
+            >
+              📦 cPanel Deployment ZIP
+            </a>
+          </div>
         </div>
       </div>
     </footer>

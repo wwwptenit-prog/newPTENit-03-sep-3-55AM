@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Users,
   GraduationCap,
@@ -61,15 +61,45 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
     playAppSound
   } = useData();
 
-  // Unified Current Active Tab (Single Source of Truth from AdminPanel or internal state)
-  const currentTab = useMemo(() => {
-    const raw = activeTab || initialTab || 'teacher_seller';
+  // Unified Current Active Tab - defaults to 'all' so admin immediately sees all users!
+  const [internalTab, setInternalTab] = useState<string>(() => {
+    const raw = activeTab || initialTab;
     if (raw === 'users_just_seller' || raw === 'just_seller') return 'just_seller';
     if (raw === 'users_trainees' || raw === 'trainees') return 'trainees';
     if (raw === 'users_buyers' || raw === 'buyers') return 'buyers';
     if (raw === 'users_applications' || raw === 'applications') return 'applications';
-    return 'teacher_seller';
-  }, [activeTab, initialTab]);
+    if (raw === 'users_teacher_seller' || raw === 'teacher_seller') return 'teacher_seller';
+    return 'all';
+  });
+
+  useEffect(() => {
+    if (activeTab) {
+      if (activeTab === 'users' || activeTab === 'users_manage' || activeTab === 'all') {
+        setInternalTab('all');
+      } else if (activeTab === 'users_just_seller' || activeTab === 'just_seller') {
+        setInternalTab('just_seller');
+      } else if (activeTab === 'users_trainees' || activeTab === 'trainees') {
+        setInternalTab('trainees');
+      } else if (activeTab === 'users_buyers' || activeTab === 'buyers') {
+        setInternalTab('buyers');
+      } else if (activeTab === 'users_applications' || activeTab === 'applications') {
+        setInternalTab('applications');
+      } else if (activeTab === 'users_teacher_seller' || activeTab === 'teacher_seller') {
+        setInternalTab('teacher_seller');
+      }
+    }
+  }, [activeTab]);
+
+  const [actionToast, setActionToast] = useState<{ message: string; type: 'success' | 'warning' | 'info' } | null>(null);
+  const [rejectModalUser, setRejectModalUser] = useState<User | null>(null);
+  const [rejectReasonText, setRejectReasonText] = useState('তথ্য অসম্পূর্ণ বা ক্রাইটেরিয়া পূর্ণ হয়নি।');
+
+  const showActionToast = (message: string, type: 'success' | 'warning' | 'info' = 'success') => {
+    setActionToast({ message, type });
+    setTimeout(() => setActionToast(null), 4000);
+  };
+
+  const currentTab = internalTab;
 
   // Search & Filter States
   const [searchQuery, setSearchQuery] = useState('');
@@ -123,7 +153,9 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
   const buyers = useMemo(() => {
     return (users || []).filter(u => {
       if (!u || u.role === 'admin') return false;
-      return u.role === 'customer' || u.marketplaceMode === 'buying';
+      const isTeacher = u.role === 'instructor' || u.isMentor === true;
+      const isSeller = u.isSeller === true || u.role === 'specialist' || u.sellerStatus === 'approved';
+      return u.role === 'customer' || u.role === 'buyer' || u.marketplaceMode === 'buying' || (!isTeacher && !isSeller && u.role !== 'student');
     });
   }, [users]);
 
@@ -141,6 +173,9 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
   const activeTabList = useMemo(() => {
     let list: User[] = [];
     switch (currentTab) {
+      case 'all':
+        list = [...(users || [])];
+        break;
       case 'teacher_seller':
         list = teacherSellers;
         break;
@@ -157,7 +192,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
         list = pendingApplicants;
         break;
       default:
-        list = (users || []).filter(u => u && u.role !== 'admin');
+        list = [...(users || [])];
     }
 
     // Apply Search Query
@@ -180,6 +215,14 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
     } else if (statusFilter === 'pending') {
       list = list.filter(u => u.mentorStatus === 'pending' || u.specialistStatus === 'pending' || u.mentorApplication?.status === 'pending');
     }
+
+    // Always sort with newest registered users first
+    list.sort((a, b) => {
+      const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      if (timeB !== timeA) return timeB - timeA;
+      return (b.id || '').localeCompare(a.id || '');
+    });
 
     return list;
   }, [currentTab, users, teacherSellers, justSellers, trainees, buyers, pendingApplicants, searchQuery, statusFilter]);
@@ -232,7 +275,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
     });
 
     playAppSound('notification');
-    alert(`${warningModalUser.name}-কে অফিসিয়াল সতর্কতা বার্তা সফলভাবে পাঠানো হয়েছে!`);
+    showActionToast(`${warningModalUser.name}-কে অফিসিয়াল সতর্কতা বার্তা পাঠানো হয়েছে!`, 'warning');
     setWarningModalUser(null);
     setWarningMessage('');
   };
@@ -240,14 +283,12 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
   // Handle Bulk Restrict
   const handleBulkRestrict = () => {
     if (selectedUserIds.length === 0) return;
-    if (window.confirm(`আপনি কি নিশ্চিত যে নির্বাচিত ${selectedUserIds.length} জন ইউজারকে একযোগে রেস্ট্রিক্ট করতে চান?`)) {
-      selectedUserIds.forEach(id => {
-        restrictUser(id, 'প্রশাসনিক গণ-তদন্ত ও নীতি লঙ্ঘন');
-      });
-      playAppSound('notification');
-      alert(`সফলভাবে ${selectedUserIds.length} জন ইউজারকে রেস্ট্রিক্ট করা হয়েছে।`);
-      setSelectedUserIds([]);
-    }
+    selectedUserIds.forEach(id => {
+      restrictUser(id, 'প্রশাসনিক গণ-তদন্ত ও নীতি লঙ্ঘন');
+    });
+    playAppSound('notification');
+    showActionToast(`সফলভাবে ${selectedUserIds.length} জন ইউজারকে রেস্ট্রিক্ট করা হয়েছে।`, 'warning');
+    setSelectedUserIds([]);
   };
 
   // Handle Bulk Unrestrict
@@ -257,7 +298,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
       unrestrictUser(id);
     });
     playAppSound('success');
-    alert(`সফলভাবে ${selectedUserIds.length} জন ইউজারকে সক্রিয় করা হয়েছে।`);
+    showActionToast(`সফলভাবে ${selectedUserIds.length} জন ইউজারকে সক্রিয় করা হয়েছে।`, 'success');
     setSelectedUserIds([]);
   };
 
@@ -274,7 +315,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
     });
 
     playAppSound('notification');
-    alert(`নির্বাচিত ${selectedUserIds.length} জন ইউজারের অ্যাকাউন্টে সতর্কবার্তা পাঠানো হয়েছে!`);
+    showActionToast(`নির্বাচিত ${selectedUserIds.length} জন ইউজারের অ্যাকাউন্টে সতর্কবার্তা পাঠানো হয়েছে!`, 'info');
     setIsBulkWarningOpen(false);
     setBulkWarningText('');
     setSelectedUserIds([]);
@@ -313,6 +354,29 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
 
   return (
     <div className="space-y-5 font-bengali">
+      {/* ACTION FEEDBACK TOAST */}
+      {actionToast && (
+        <div className={`p-3.5 rounded-2xl border text-xs font-bold flex items-center justify-between shadow-lg transition-all animate-fadeIn ${
+          actionToast.type === 'success'
+            ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-300'
+            : actionToast.type === 'warning'
+            ? 'bg-amber-950/80 border-amber-500/50 text-amber-300'
+            : 'bg-sky-950/80 border-sky-500/50 text-sky-300'
+        }`}>
+          <div className="flex items-center gap-2">
+            <CheckCircle className="w-4 h-4 shrink-0" />
+            <span>{actionToast.message}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setActionToast(null)}
+            className="text-slate-400 hover:text-white p-1"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       {/* HEADER BANNER - UNIFIED ENTERPRISE DESIGN */}
       <div className="bg-slate-900 border border-slate-800 p-4 sm:p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
@@ -577,7 +641,17 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                         )}
                         {user.role === 'customer' && !isTeacher && !isSeller && (
                           <span className="px-2 py-0.2 rounded-md text-[9px] font-black bg-blue-500/20 text-blue-300 border border-blue-500/40">
-                            বায়ার
+                            বায়ার / ক্লায়েন্ট
+                          </span>
+                        )}
+                        {user.role === 'admin' && (
+                          <span className="px-2 py-0.2 rounded-md text-[9px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                            এডমিন
+                          </span>
+                        )}
+                        {user.createdAt && (
+                          <span className="px-2 py-0.2 rounded-md text-[9px] font-mono font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                            {user.createdAt}
                           </span>
                         )}
                       </div>
@@ -704,10 +778,11 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                   {isPending && (
                     <>
                       <button
+                        type="button"
                         onClick={() => {
                           approveMentorApplication(user.id);
                           playAppSound('success');
-                          alert(`${user.name}-কে সফলভাবে টিচার ও মেন্টর হিসেবে অনুমোদন প্রদান করা হয়েছে!`);
+                          showActionToast(`${user.name}-কে সফলভাবে টিচার ও মেন্টর হিসেবে অনুমোদন প্রদান করা হয়েছে!`, 'success');
                         }}
                         className="px-3 py-1.5 rounded-xl bg-[#047857] hover:bg-blue-500 text-white font-bold text-xs shadow-md cursor-pointer transition flex items-center gap-1 active:scale-95"
                       >
@@ -716,13 +791,10 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                       </button>
 
                       <button
+                        type="button"
                         onClick={() => {
-                          const r = prompt("আবেদন বাতিলের কারণ লিখুন (ঐচ্ছিক):", "তথ্য অসম্পূর্ণ বা ক্রাইটেরিয়া পূর্ণ হয়নি।");
-                          if (r !== null) {
-                            rejectMentorApplication(user.id, r);
-                            playAppSound('notification');
-                            alert(`${user.name}-এর আবেদন বাতিল করা হয়েছে।`);
-                          }
+                          setRejectModalUser(user);
+                          setRejectReasonText('তথ্য অসম্পূর্ণ বা ক্রাইটেরিয়া পূর্ণ হয়নি।');
                         }}
                         className="px-3 py-1.5 rounded-xl bg-rose-600/30 hover:bg-rose-600 text-rose-200 hover:text-white border border-rose-500/40 font-bold text-xs transition cursor-pointer flex items-center gap-1"
                       >
@@ -735,6 +807,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                   {/* WARNING NOTICE BUTTON */}
                   {!isPending && (
                     <button
+                      type="button"
                       onClick={() => {
                         setWarningModalUser(user);
                         setWarningMessage(`প্রিয় ${user.name}, আপনার অ্যাকাউন্ট বিষয়ে একটি সতর্কতা নোটিশ জারি করা হয়েছে। নীতিমালা অনুসরণ নিশ্চিত করুন।`);
@@ -752,7 +825,11 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                     <>
                       {isBlocked ? (
                         <button
-                          onClick={() => handleUnrestrict(user)}
+                          type="button"
+                          onClick={() => {
+                            handleUnrestrict(user);
+                            showActionToast(`${user.name}-এর অ্যাকাউন্ট পুনরায় সক্রিয় করা হয়েছে।`, 'success');
+                          }}
                           className="px-3 py-1.5 rounded-xl bg-[#047857] hover:bg-blue-500 text-white font-black text-xs shadow cursor-pointer transition flex items-center gap-1 active:scale-95"
                         >
                           <Unlock className="w-3.5 h-3.5" />
@@ -760,6 +837,7 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                         </button>
                       ) : (
                         <button
+                          type="button"
                           onClick={() => {
                             setRestrictionModalUser(user);
                             setCustomRestrictionNotes('');
@@ -773,10 +851,11 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
 
                       {/* DELETE USER BUTTON */}
                       <button
+                        type="button"
                         onClick={() => {
-                          if (confirm(`আপনি কি নিশ্চিতভাবে ${user.name}-এর অ্যাকাউন্ট স্থায়ীভাবে ডিলিট করতে চান?`)) {
-                            deleteUser(user.id);
-                          }
+                          deleteUser(user.id);
+                          playAppSound('click');
+                          showActionToast(`${user.name}-এর অ্যাকাউন্ট স্থায়ীভাবে ডিলিট করা হয়েছে।`, 'info');
                         }}
                         className="p-1.5 rounded-xl bg-slate-800 hover:bg-rose-700 text-slate-400 hover:text-white border border-slate-700 hover:border-rose-600 transition cursor-pointer"
                         title="ইউজার ডিলিট করুন"
@@ -941,6 +1020,82 @@ export const UserManagementHub: React.FC<UserManagementHubProps> = ({
                 >
                   <Send className="w-4 h-4" />
                   <span>সতর্কবার্তা পাঠান</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* REJECT APPLICANT MODAL (NO WINDOW.PROMPT) */}
+      {rejectModalUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-slate-900 border-2 border-rose-500/50 text-white w-full max-w-md rounded-3xl p-5 sm:p-6 shadow-2xl relative space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/40">
+                  <XCircle className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-white">আবেদন বাতিলকরণ</h3>
+                  <p className="text-xs text-rose-300/80">বাতিলের কারণ উল্লেখ করুন</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setRejectModalUser(null)}
+                className="p-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                rejectMentorApplication(rejectModalUser.id, rejectReasonText.trim());
+                playAppSound('notification');
+                showActionToast(`${rejectModalUser.name}-এর আবেদন বাতিল করা হয়েছে।`, 'warning');
+                setRejectModalUser(null);
+              }}
+              className="space-y-3.5 text-xs"
+            >
+              <div>
+                <label className="block text-slate-300 font-bold mb-1">আবেদনকারী</label>
+                <input
+                  type="text"
+                  disabled
+                  value={`${rejectModalUser.name} (${rejectModalUser.email})`}
+                  className="w-full p-2.5 bg-slate-800 border border-slate-700 rounded-xl text-slate-300 font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-300 font-bold mb-1">বাতিলের কারণ লিখুন *</label>
+                <textarea
+                  rows={3}
+                  required
+                  value={rejectReasonText}
+                  onChange={(e) => setRejectReasonText(e.target.value)}
+                  placeholder="যেমন: তথ্য অসম্পূর্ণ বা ক্রাইটেরিয়া পূর্ণ হয়নি..."
+                  className="w-full p-2.5 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-rose-400 resize-none font-medium"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setRejectModalUser(null)}
+                  className="px-4 py-2 rounded-xl text-slate-400 hover:text-white font-bold transition"
+                >
+                  ফিরে যান
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black shadow-lg transition flex items-center gap-1.5 active:scale-95 cursor-pointer"
+                >
+                  <XCircle className="w-4 h-4" />
+                  <span>বাতিল নিশ্চিত করুন</span>
                 </button>
               </div>
             </form>

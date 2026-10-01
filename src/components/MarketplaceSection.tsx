@@ -1002,35 +1002,39 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     const convertedCustProjects: MarketplaceOrder[] = (customerProjects || []).map(cp => {
       const existing = marketplaceOrders.find(o => o.id === cp.id || (o.title === cp.serviceTitle && o.buyerId === cp.customerId));
       if (existing) return null;
+      const isDirect = Boolean(cp.isDirectOffer);
       return {
         id: cp.id,
-        type: 'custom_agency_order',
-        title: cp.serviceTitle || 'পাবলিক প্রজেক্ট অফার',
-        category: cp.category || 'কাস্টম পাবলিক অফার',
+        type: isDirect ? 'direct_offer' : 'custom_agency_order',
+        title: cp.serviceTitle || (isDirect ? 'ডিরেক্ট পার্সোনাল প্রজেক্ট অফার' : 'পাবলিক প্রজেক্ট অফার'),
+        category: cp.category || 'কাস্টম অফার',
         buyerId: cp.customerId,
         buyerName: cp.customerName,
         buyerEmail: cp.customerEmail,
         buyerPhone: cp.customerPhone,
-        sellerId: cp.assignedStaff || 'pending_expert',
-        sellerName: cp.assignedStaff || 'সকল এক্সপার্টদের অফার রিসিভড অপেক্ষমান',
+        sellerId: cp.targetSellerId || cp.assignedStaff || 'pending_expert',
+        sellerName: cp.targetSellerName || cp.assignedStaff || (isDirect ? 'সেলার ইনবক্স অপেক্ষমান' : 'সকল এক্সপার্টদের অফার রিসিভড অপেক্ষমান'),
         sellerAvatar: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=150&q=80',
-        isInternalStaff: true,
+        isInternalStaff: !isDirect,
         packageType: 'Custom',
-        amount: cp.priceEstimate || 15000,
-        adminCommission: Math.round((cp.priceEstimate || 15000) * 0.1),
-        sellerPayout: Math.round((cp.priceEstimate || 15000) * 0.9),
+        amount: cp.priceEstimate || 5000,
+        adminCommission: Math.round((cp.priceEstimate || 5000) * 0.1),
+        sellerPayout: Math.round((cp.priceEstimate || 5000) * 0.9),
         paymentMethod: 'PTEN IT Official Escrow',
-        transactionId: `TRX-PUBLIC-${cp.id.slice(-6)}`,
-        status: cp.status === 'Completed' ? 'completed' : cp.status === 'Cancelled' ? 'cancelled' : cp.status === 'Under Testing' ? 'in_review' : cp.status === 'In Progress' ? 'in_progress' : 'pending_approval',
+        transactionId: `TRX-${isDirect ? 'DIRECT' : 'PUBLIC'}-${cp.id.slice(-6)}`,
+        status: cp.status === 'Completed' ? 'completed' : cp.status === 'Cancelled' ? 'cancelled' : cp.status === 'Under Testing' ? 'in_review' : cp.status === 'In Progress' ? 'in_progress' : 'pending',
         deliveryDays: 3,
         deliveryNote: cp.description,
         createdAt: cp.createdAt,
         deadlineDate: cp.deadline || (cp.createdAt ? new Date(new Date(cp.createdAt).getTime() + 3 * 86400000).toISOString().split('T')[0] : new Date(Date.now() + 3 * 86400000).toISOString().split('T')[0]),
-        isPublicOffer: true,
+        isPublicOffer: !isDirect,
+        isDirectOffer: isDirect,
+        targetSellerId: cp.targetSellerId,
+        targetSellerName: cp.targetSellerName,
         assignedExpert: cp.assignedStaff,
-        reachCount: 42,
-        likesCount: 14,
-        budgetRange: cp.budgetRange || '৳১৫,০০০ - ৳৩০,০০০'
+        reachCount: isDirect ? 1 : 42,
+        likesCount: isDirect ? 0 : 14,
+        budgetRange: cp.budgetRange || `৳${(cp.priceEstimate || 5000).toLocaleString('bn-BD')}`
       };
     }).filter(Boolean) as MarketplaceOrder[];
 
@@ -1049,27 +1053,6 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     return (enrollments || []).filter(e => e.userId === currentUser.id || e.studentId === currentUser.id || (currentUser.email && (e as any).userEmail && (e as any).userEmail.toLowerCase() === currentUser.email.toLowerCase()));
   }, [enrollments, currentUser]);
 
-  const buyerDigitalOrders = useMemo(() => {
-    return (allBuyerOrders || []).filter(o => 
-      o.type === 'digital_product_order' || 
-      Boolean(o.digitalProductId) || 
-      Boolean(o.id?.startsWith('DIGI-')) ||
-      Boolean(o.deliveryType) ||
-      o.category?.toLowerCase().includes('canva') ||
-      o.category?.toLowerCase().includes('source code') ||
-      o.category?.toLowerCase().includes('script')
-    );
-  }, [allBuyerOrders]);
-
-  const buyerProjectOrders = useMemo(() => {
-    return (allBuyerOrders || []).filter(o => 
-      o.type !== 'digital_product_order' && 
-      !o.digitalProductId && 
-      !o.id?.startsWith('DIGI-') &&
-      !o.deliveryType
-    );
-  }, [allBuyerOrders]);
-
   // লোকাল সেশনে বায়ারের ক্রিয়েট করা পোস্ট আইডিসমূহ
   const [myCreatedPostIds, setMyCreatedPostIds] = useState<string[]>(() => {
     try {
@@ -1082,31 +1065,79 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     return [];
   });
 
+  const isMyBuyerOrder = useCallback((o: MarketplaceOrder) => {
+    if (!currentUser) {
+      return myCreatedPostIds.includes(o.id);
+    }
+    // Strictly match user's own identity so new accounts start with clean 0 orders
+    if (o.buyerId && o.buyerId === currentUser.id) return true;
+    if ((o as any).customerId && (o as any).customerId === currentUser.id) return true;
+    if (currentUser.email && o.buyerEmail && o.buyerEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) return true;
+    if (currentUser.mobile && (o as any).buyerPhone && (o as any).buyerPhone.trim() === currentUser.mobile.trim()) return true;
+    return false;
+  }, [currentUser, myCreatedPostIds]);
+
+  const buyerDigitalOrders = useMemo(() => {
+    return (allBuyerOrders || [])
+      .filter(isMyBuyerOrder)
+      .filter(o => 
+        o.type === 'digital_product_order' || 
+        Boolean(o.digitalProductId) || 
+        Boolean(o.id?.startsWith('DIGI-')) ||
+        Boolean(o.deliveryType) ||
+        o.category?.toLowerCase().includes('canva') ||
+        o.category?.toLowerCase().includes('source code') ||
+        o.category?.toLowerCase().includes('script')
+      );
+  }, [allBuyerOrders, isMyBuyerOrder]);
+
+  const buyerProjectOrders = useMemo(() => {
+    return (allBuyerOrders || [])
+      .filter(isMyBuyerOrder)
+      .filter(o => 
+        o.type !== 'digital_product_order' && 
+        !o.digitalProductId && 
+        !o.id?.startsWith('DIGI-') &&
+        !o.deliveryType
+      );
+  }, [allBuyerOrders, isMyBuyerOrder]);
+
+  // সেলার হিসেবে বর্তমান ইউজারের নিজস্ব ক্লায়েন্ট অর্ডারসমূহ (নতুন একাউন্টে যেন ডিফল্টভাবে অর্ডার বা ব্যাজ না দেখায়)
+  const mySellerOrders = useMemo(() => {
+    if (!currentUser) return [];
+    if (currentUser.role === 'admin') return marketplaceOrders;
+    return marketplaceOrders.filter(o =>
+      (o.sellerId && o.sellerId === currentUser.id) ||
+      (currentUser.email && o.sellerEmail && o.sellerEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) ||
+      (currentUser.name && o.assignedExpert && o.assignedExpert.trim().toLowerCase() === currentUser.name.trim().toLowerCase())
+    );
+  }, [currentUser, marketplaceOrders]);
+
+
+
+
   // বায়ারের নিজের পোস্ট কিনা তা যাচাই (নিজের ছাড়া অন্য কোনো ব্যক্তির পোস্ট বায়ারের তালিকায় দেখাবে না)
   const isMyBuyerPost = useCallback((o: MarketplaceOrder) => {
-    // ১. এই ব্রাউজারে ইউজার নিজে কোনো পোস্ট ক্রিয়েট করলে তার আইডি ম্যাচিং
-    if (myCreatedPostIds.includes(o.id)) return true;
-    if ((o as any).jobId && myCreatedPostIds.includes((o as any).jobId)) return true;
-    if ((o as any).customerId && myCreatedPostIds.includes((o as any).customerId)) return true;
-
-    // ২. লগইন করা ইউজার থাকলে তার আইডি, ইমেইল বা ফোন নম্বরের সাথে ম্যাচিং
-    if (currentUser) {
-      if (o.buyerId && (o.buyerId === currentUser.id || o.buyerId === 'buyer-self')) return true;
-      if ((o as any).customerId && ((o as any).customerId === currentUser.id || (o as any).customerId === 'buyer-self')) return true;
-      if (currentUser.email && o.buyerEmail && o.buyerEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) return true;
-      if (currentUser.name && o.buyerName && o.buyerName.toLowerCase().trim() === currentUser.name.toLowerCase().trim()) return true;
-      if (currentUser.mobile && (o as any).buyerPhone && (o as any).buyerPhone.trim() === currentUser.mobile.trim()) return true;
-      return false;
+    // If not logged in, only check local session post IDs
+    if (!currentUser) {
+      return myCreatedPostIds.includes(o.id) || 
+        Boolean((o as any).jobId && myCreatedPostIds.includes((o as any).jobId)) ||
+        Boolean((o as any).customerId && myCreatedPostIds.includes((o as any).customerId));
     }
-
-    // ৩. লগইন করা না থাকলে শুধুমাত্র এই সেশনে তৈরি পোস্টই বায়ারের নিজের পোস্ট
-    return o.buyerId === 'buyer-self';
+    // For logged-in users, strictly match their own account identity (ID, Email, Mobile)
+    if (o.buyerId && (o.buyerId === currentUser.id || (currentUser.email && o.buyerId === currentUser.email))) return true;
+    if ((o as any).customerId && ((o as any).customerId === currentUser.id || (currentUser.email && (o as any).customerId === currentUser.email))) return true;
+    if (currentUser.email && o.buyerEmail && o.buyerEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) return true;
+    if (currentUser.mobile && (o as any).buyerPhone && (o as any).buyerPhone.trim() === currentUser.mobile.trim()) return true;
+    return false;
   }, [currentUser, myCreatedPostIds]);
 
   // বায়ারের ওপেন পাবলিক পোস্টসমূহ (যেগুলো এখনো কোনো সেলার বা এক্সপার্ট রিসিভ/এক্সেপ্ট করেনি এবং শুধুমাত্র নিজের পোস্ট)
   const isBuyerOpenPost = useCallback((o: MarketplaceOrder) => {
+    if (o.isDirectOffer) return false;
     const isPostType = o.isPublicOffer || o.type === 'custom_agency_order';
-    const isOpenStatus = o.status === 'pending' || o.status === 'pending_approval' || !o.sellerId || o.sellerId === 'unassigned' || o.sellerId === 'pending_expert';
+    const s = (o.status || '').toLowerCase().trim();
+    const isOpenStatus = s === 'pending' || s === 'pending_approval' || s === 'pending review' || s === 'under review' || !o.sellerId || o.sellerId === 'unassigned' || o.sellerId === 'pending_expert';
     return isPostType && isOpenStatus;
   }, []);
 
@@ -1115,8 +1146,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
   }, [allBuyerOrders, isBuyerOpenPost, isMyBuyerPost]);
 
   const buyerServiceOrders = useMemo(() => {
-    return (allBuyerOrders || []).filter(o => !isBuyerOpenPost(o));
-  }, [allBuyerOrders, isBuyerOpenPost]);
+    return (allBuyerOrders || []).filter(isMyBuyerOrder).filter(o => !isBuyerOpenPost(o));
+  }, [allBuyerOrders, isMyBuyerOrder, isBuyerOpenPost]);
 
   const buyerActiveOrders = useMemo(() => {
     return buyerServiceOrders.filter(o => o.status === 'in_progress' || o.status === 'in_review');
@@ -1802,6 +1833,8 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     const newAgencyOrderId = `ord-ptenit-${timestamp}`;
 
     createCustomerProject({
+      id: newProjId,
+      orderId: newAgencyOrderId,
       customerId: currentUser?.id || `cust-${timestamp}`,
       customerName: currentUser?.name || "সম্মানিত বায়ার",
       customerEmail: currentUser?.email || "customer@ptenit.com",
@@ -2093,10 +2126,32 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
   const isSellerMode = viewMode === 'selling';
 
-  // Filter notifications based on active mode (Seller vs. Buyer)
+  // Filter notifications based on current user and active mode (Seller vs. Buyer)
   const roleScopedNotifications = useMemo(() => {
     if (!notifications) return [];
     return notifications.filter(n => {
+      // Admin notifications only for admin
+      if (n.recipientRole === 'admin' && currentUser?.role !== 'admin') return false;
+      if (n.targetTab === 'admin' && currentUser?.role !== 'admin') return false;
+
+      // Strict user matching for logged-in users
+      if (currentUser) {
+        if (n.recipientId) {
+          if (n.recipientId !== currentUser.id && n.recipientId !== "all") return false;
+        } else if (n.recipientEmail) {
+          if (!currentUser.email || (n.recipientEmail.toLowerCase() !== currentUser.email.toLowerCase() && n.recipientEmail !== "all")) return false;
+        } else {
+          // If no recipientId/recipientEmail, hide private order/payment alerts from new accounts
+          if (!n.isBroadcast && n.recipientRole !== "all") {
+            return false;
+          }
+        }
+      } else {
+        // Guests: Only show public broadcast announcements
+        if (n.recipientId || n.recipientEmail || n.category === 'seller' || n.category === 'payout' || n.category === 'buyer') {
+          return false;
+        }
+      }
       if (n.mode === 'selling') return isSellerMode;
       if (n.mode === 'buying') return !isSellerMode;
       if (n.mode === 'both') return true;
@@ -2145,12 +2200,20 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
         return true;
       }
     });
-  }, [notifications, isSellerMode]);
+  }, [notifications, currentUser, isSellerMode]);
 
-  // Filter direct messages based on active mode (Seller vs. Buyer)
+  // Filter direct messages strictly for currentUser based on active mode (Seller vs. Buyer)
   const roleScopedDirectMessages = useMemo(() => {
-    if (!directMessages) return [];
+    if (!directMessages || !currentUser) return [];
     return directMessages.filter(m => {
+      const isParticipant =
+        (m.recipientId && m.recipientId === currentUser.id) ||
+        (m.senderId && m.senderId === currentUser.id) ||
+        (currentUser.email && m.recipientEmail && m.recipientEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) ||
+        (currentUser.email && m.senderEmail && m.senderEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim());
+
+      if (!isParticipant) return false;
+
       if (m.mode === 'selling') return isSellerMode;
       if (m.mode === 'buying') return !isSellerMode;
       if (m.mode === 'both') return true;
@@ -3131,7 +3194,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
   const isMentorPending = mentorAppStatus === 'pending';
 
   // Central Combined Unread Notification Counter
-  const totalUnreadCount = (notifications?.filter(n => !n.read).length || 0) + (directMessages?.filter(m => !m.read && (m.unreadCount === undefined || m.unreadCount > 0) && (!readConversationIds || !readConversationIds.includes(m.id))).length || 0);
+  const totalUnreadCount = (roleScopedNotifications?.filter(n => !n.read).length || 0) + (roleScopedDirectMessages?.filter(m => !m.read && (m.unreadCount === undefined || m.unreadCount > 0) && (!readConversationIds || !readConversationIds.includes(m.id))).length || 0);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isSpecialistHeaderDropdownOpen, setIsSpecialistHeaderDropdownOpen] = useState(false);
   const [isBuyerHeaderDropdownOpen, setIsBuyerHeaderDropdownOpen] = useState(false);
@@ -3178,172 +3241,95 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     postedTime: string;
   }
 
-  const INITIAL_LIVE_OFFERS: LiveOfferItem[] = [
-    {
-      id: 'live-ord-101',
-      type: 'personal',
-      typeLabel: 'ডিরেক্ট পার্সোনাল অর্ডার',
-      source: 'Client Direct Request',
-      clientName: 'মোশাররফ হোসেন',
-      clientAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80',
-      clientLocation: 'ঢাকা, বাংলাদেশ',
-      postedTime: '১০ মিনিট আগে',
-      title: 'ফুল-স্ট্যাক ই-কমার্স ওয়েবসাইট UI/UX রি-ডিজাইন ও পেমেন্ট ইন্টিগ্রেশন (bKash/Nagad)',
-      category: 'Web Development',
-      budget: 14500,
-      deadline: '২ দিন',
-      rating: '4.9 (24 রিভিউ)',
-      isVerified: true,
-      durationSec: 15,
-      requirements: 'আমাদের রানিং ফ্যাশন ব্র্যান্ডের জন্য Next.js ও Tailwind CSS বেসড একটি রেসপনসিভ অনলাইন স্টোর তৈরি করতে হবে। সাথে SSLCommerz/bKash পেমেন্ট গেটওয়ে এবং ইনভয়েস জেনারেশন সিস্টেম যুক্ত থাকবে। Figma ফাইল প্রস্তুত আছে।',
-      deliverables: [
-        'ফুল রেসপনসিভ ফ্রন্টএন্ড ডিজাইন (Next.js 14)',
-        'SSLCommerz & bKash পেমেন্ট গেটওয়ে সেটআপ',
-        'অটোমেটেড SMS ও ইমেইল ইনভয়েস সিস্টেম',
-        '৭ দিনের ফ্রি বাগ ফিক্সিং ওয়ারেন্টি'
-      ]
-    },
-    {
-      id: 'live-ord-102',
-      type: 'public',
-      typeLabel: 'লাইভ পাবলিক প্রজেক্ট অফার',
-      source: 'Admin Panel Featured',
-      clientName: 'তানভীর হাসান (Dhaka IT Solutions)',
-      clientAvatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=200&q=80',
-      clientLocation: 'চট্টগ্রাম, বাংলাদেশ',
-      postedTime: '২৫ মিনিট আগে',
-      title: 'লারাভেল ও রিয়্যাক্ট লাইভ মেন্টরশিপ & রিয়েল-টাইম প্রজেক্ট সাপোর্ট সেশন',
-      category: 'Live Mentorship',
-      budget: 6000,
-      deadline: 'আজকের মধ্যে',
-      rating: '5.0 (48 রিভিউ)',
-      isVerified: true,
-      durationSec: 20,
-      requirements: 'আমাদের জুনিয়র ডেভেলপার টিমের জন্য ২ ঘণ্টার লাইভ কোডিং ও প্রবলেম সলভিং সেশন পরিচালনা করতে হবে। মূল ফোকাস: RESTful API সিকিউরিটি, JWT অথেনটিকেশন এবং স্টেট ম্যানেজমেন্ট।',
-      deliverables: [
-        '২ ঘণ্টার ওয়ান-টু-ওয়ান গুগল মিট সেশন',
-        'কোড রিভিউ ও সিকিউরিটি অডিট গাইডলাইন',
-        'প্রজেক্ট আর্কিটেকচার স্যাম্পল রেপো'
-      ]
-    },
-    {
-      id: 'live-ord-103',
-      type: 'personal',
-      typeLabel: 'ডিরেক্ট পার্সোনাল অর্ডার',
-      source: 'Client Direct Request',
-      clientName: 'ফারহানা চৌধুরী (NexGen Agency)',
-      clientAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
-      clientLocation: 'বনানী, ঢাকা',
-      postedTime: '১ ঘণ্টা আগে',
-      title: 'মোবাইল অ্যাপ স্ক্রিন প্রোটোটাইপিং (Figma to Flutter/React Native)',
-      category: 'UI/UX Design',
-      budget: 8500,
-      deadline: '২৪ ঘণ্টা',
-      rating: '5.0 (19 রিভিউ)',
-      isVerified: true,
-      durationSec: 12,
-      requirements: 'একটি হেলথ-টেক স্টার্টআপের জন্য ১২টি প্রিমিয়াম মোবাইল স্ক্রিনের আধুনিক Figma প্রোটোটাইপ ও কম্পোনেন্ট সিস্টেম ডিজাইন করতে হবে। ডার্ক ও লাইট মোড উভয়ই থাকতে হবে।',
-      deliverables: [
-        '১২টি ফুল ইন্টারঅ্যাক্টিভ Figma স্ক্রিন',
-        'অটো-লেআউট এবং ডিজাইন টোকেনস',
-        'ডেভেলপার হ্যান্ডঅফ রেডি এসেটস'
-      ]
-    },
-    {
-      id: 'live-ord-104',
-      type: 'public',
-      typeLabel: '⚡ লাইভ ক্লায়েন্ট প্রজেক্ট অফার',
-      source: 'Client Direct Request',
-      clientName: 'রাকিব আহমেদ',
-      clientAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
-      clientLocation: 'সিলেট, বাংলাদেশ',
-      postedTime: '২ ঘণ্টা আগে',
-      title: 'প্রফেশনাল ডিজিটাল মার্কেটিং ও ফেসবুক এডস কনসালটেশন প্যাক',
-      category: 'Digital Marketing',
-      budget: 4500,
-      deadline: '৩ দিন',
-      rating: '4.8 (12 রিভিউ)',
-      isVerified: true,
-      durationSec: 18,
-      requirements: 'একটি ই-কমার্স ব্র্যান্ডের জন্য মেটা ও গুগল এডস ক্যাম্পেইন সেটআপ, পিক্সেল ট্র্যাকিং এবং কাস্টম অডিয়েন্স ফানেল তৈরি করতে হবে।',
-      deliverables: [
-        'টার্গেটেড এডস স্ট্র্যাটেজি প্ল্যান',
-        'ROAS অপটিমাইজেশন গাইড',
-        'ক্যাম্পেইন মনিটরিং সাপোর্ট'
-      ]
-    },
-    {
-      id: 'live-course-105',
-      type: 'course',
-      typeLabel: '⚡ লাইভ কোর্স এনরোলমেন্ট অফার',
-      source: 'PTENit Admin Official',
-      clientName: 'PTENit IT Academy (মেইন এডমিন)',
-      clientAvatar: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=200&q=80',
-      clientLocation: 'মিরপুর-১০, ঢাকা (অফিশিয়াল)',
-      postedTime: '১০ মিনিট আগে',
-      title: 'প্রফেশনাল ফুল-স্ট্যাক ওয়েব ডেভেলপমেন্ট (Next.js, Node.js & AI Masterclass)',
-      category: 'Full-Stack Development',
-      budget: 12500,
-      deadline: '২৪টি লাইভ ক্লাস • ৪টি মডিউল',
-      rating: '5.0 (অফিশিয়াল লাইভ কোর্স)',
-      isVerified: true,
-      durationSec: 20,
-      requirements: 'PTENit একাডেমি কর্তৃক নির্ধারিত প্রফেশনাল লাইভ ব্যাচ। ইন্সট্রাক্টর হিসেবে রিসিভ করে সরাসরি ক্লাস ও অ্যাসাইনমেন্ট পরিচালনা করতে পারবেন। ৩৫% কমিশন সম্মানিয়াম ইনস্ট্যান্ট জমা হবে।',
-      deliverables: [
-        '২৪টি প্রফেশনাল লাইভ ক্লাস লেকচার',
-        '৪টি রিয়েল-টাইম অ্যাসাইনমেন্ট ও কোড রিভিউ',
-        'প্রজেক্ট ফিডব্যাক ও সার্টিফিকেট প্রদান'
-      ]
-    },
-    {
-      id: 'live-course-106',
-      type: 'course',
-      typeLabel: '⚡ লাইভ কোর্স এনরোলমেন্ট অফার',
-      source: 'PTENit Admin Official',
-      clientName: 'PTENit Academy Admin',
-      clientAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-      clientLocation: 'মিরপুর-১০, ঢাকা',
-      postedTime: '৫ মিনিট আগে',
-      title: 'প্রফেশনাল ডিজিটাল মার্কেটিং & মেটা এডস ফানেল (লাইভ ব্যাচ ২০২৬)',
-      category: 'Digital Marketing',
-      budget: 8500,
-      deadline: '১৮টি লাইভ ক্লাস • ৩টি মডিউল',
-      rating: '5.0 (অফিশিয়াল লাইভ কোর্স)',
-      isVerified: true,
-      durationSec: 18,
-      requirements: 'ডিজিটাল মার্কেটিং ও মেটা এডস ক্যাম্পেইনের ওপর লাইভ সেশন পরিচালনা করতে হবে। স্টুডেন্টদের কাস্টম এডস সাপোর্ট প্রদান আবশ্যক।',
-      deliverables: [
-        '১৮টি লাইভ প্র্যাকটিক্যাল ক্লাস',
-        'মেটা ও গুগল এডস ফানেল প্রজেক্ট',
-        'স্টুডেন্ট প্রফেশনাল ফিডব্যাক'
-      ]
-    },
-    {
-      id: 'live-course-107',
-      type: 'course',
-      typeLabel: '⚡ লাইভ কোর্স এনরোলমেন্ট অফার',
-      source: 'PTENit Admin Official',
-      clientName: 'PTENit Tech Team',
-      clientAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
-      clientLocation: 'উত্তরা, ঢাকা',
-      postedTime: '১ মিনিট আগে',
-      title: 'UI/UX ও প্রোডাক্ট ডিজাইন মাস্টারক্লাস (Figma, Design System & Portfolio)',
-      category: 'UI/UX Design',
-      budget: 9500,
-      deadline: '২০টি লাইভ ক্লাস • ৪টি মডিউল',
-      rating: '5.0 (অফিশিয়াল লাইভ কোর্স)',
-      isVerified: true,
-      durationSec: 20,
-      requirements: 'Figma প্রফেশনাল ডিজাইন সিস্টেম, অটো-লেআউট এবং মোবাইল/ওয়েব অ্যাপ ডিজাইন শেখাতে হবে।',
-      deliverables: [
-        '২০টি লাইভ ডিজাইন সেশন',
-        '২টি রিয়েল প্রোডাক্ট কেস স্টাডি',
-        'পোর্টফোলিও বিল্ডিং রিভিউ'
-      ]
-    }
-  ];
+  // No default mock offers - strictly dynamic real offers from jobs & projects
+  const INITIAL_LIVE_OFFERS: LiveOfferItem[] = [];
 
-  const [activeOffersList, setActiveOffersList] = useState<LiveOfferItem[]>(INITIAL_LIVE_OFFERS);
+  // Derive live offers dynamically from real customerProjects and open jobs
+  const derivedLiveOffers: LiveOfferItem[] = useMemo(() => {
+    const list: LiveOfferItem[] = [];
+
+    (customerProjects || []).forEach(cp => {
+      // If direct offer, ONLY show to the targeted seller or admin while valid (24 hours)
+      if (cp.isDirectOffer) {
+        if (cp.isExpiredReturned) return; // Expired / returned offers are hidden from seller live radar
+        const isTarget = currentUser && (
+          cp.targetSellerId === currentUser.id ||
+          currentUser.role === 'admin' ||
+          (currentUser.name && cp.targetSellerName && cp.targetSellerName.toLowerCase().includes(currentUser.name.toLowerCase()))
+        );
+        if (!isTarget) return; // Never show direct private offers to other sellers!
+
+        // If 24h validity period has expired, auto-hide
+        if (cp.expiresAt && Date.now() > new Date(cp.expiresAt).getTime()) {
+          return;
+        }
+      }
+
+      list.push({
+        id: "live-cp-" + cp.id,
+        type: cp.isDirectOffer ? "personal" : "personal",
+        typeLabel: cp.isDirectOffer ? "🔒 ডিরেক্ট পার্সোনাল অফার (২৪h)" : "💼 কাস্টম প্রজেক্ট রিকোয়েস্ট",
+        source: cp.isDirectOffer ? "সরাসরি আপনাকে পাঠানো অফার (২৪ ঘণ্টা ভ্যালিডিটি)" : "Client Direct Request",
+        clientName: cp.customerName || "ক্লায়েন্ট",
+        clientAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80",
+        clientLocation: "ঢাকা, বাংলাদেশ",
+        postedTime: cp.createdAt || "এখনই",
+        title: cp.serviceTitle || "কাস্টম প্রজেক্ট",
+        category: cp.category || "Development",
+        budget: cp.priceEstimate || 10000,
+        deadline: cp.deadline || "৭ দিন",
+        rating: "5.0 (ভেরিফাইড বায়ার)",
+        isVerified: true,
+        durationSec: cp.isDirectOffer ? 25 : 20,
+        requirements: cp.description || "কাস্টম রিকোয়ারমেন্ট অনুযায়ী কাজ করতে হবে।",
+        deliverables: ["সম্পূর্ণ প্রজেক্ট সোর্স ফাইল", "লাইভ ডেপ্লয়মেন্ট", "সাপোর্ট"]
+      });
+    });
+
+    (jobs || []).filter(j => j.status === "open").forEach(j => {
+      // If direct job offer, only show to target seller
+      if (j.isDirectOffer) {
+        if (j.isExpiredReturned) return;
+        const isTarget = currentUser && (
+          j.targetSellerId === currentUser.id ||
+          currentUser.role === 'admin' ||
+          (currentUser.name && j.targetSellerName && j.targetSellerName.toLowerCase().includes(currentUser.name.toLowerCase()))
+        );
+        if (!isTarget) return;
+        if (j.expiresAt && Date.now() > new Date(j.expiresAt).getTime()) {
+          return;
+        }
+      }
+
+      list.push({
+        id: "live-job-" + j.id,
+        type: j.isDirectOffer ? "personal" : "public",
+        typeLabel: j.isDirectOffer ? "🔒 ডিরেক্ট পার্সোনাল জব (২৪h)" : "📢 নতুন ক্লায়েন্ট জব অফার",
+        source: j.isDirectOffer ? "সরাসরি প্রেরিত জব অফার" : "Marketplace Job Board",
+        clientName: j.buyerName || "ক্লায়েন্ট",
+        clientAvatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=200&q=80",
+        clientLocation: "বাংলাদেশ",
+        postedTime: j.createdAt || "এখনই",
+        title: j.title,
+        category: j.category || "Web Development",
+        budget: j.budget,
+        deadline: (j.deadlineDays || 5) + " দিন",
+        rating: "5.0 (ভেরিফাইড)",
+        isVerified: true,
+        durationSec: 18,
+        requirements: j.description,
+        deliverables: ["কোয়ালিটি ডেলিভারি", "রিভিশন সাপোর্ট", "সোর্স কোড"]
+      });
+    });
+
+    return list;
+  }, [customerProjects, jobs, currentUser]);
+
+  const [activeOffersList, setActiveOffersList] = useState<LiveOfferItem[]>(derivedLiveOffers);
+
+  useEffect(() => {
+    setActiveOffersList(derivedLiveOffers);
+  }, [derivedLiveOffers]);
   const [activeOfferIndex, setActiveOfferIndex] = useState(0);
   const [isOfferPaused, setIsOfferPaused] = useState(false);
   const [offerCountdown, setOfferCountdown] = useState(15);
@@ -3811,6 +3797,82 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
     return (b.salesCount || 1) - (a.salesCount || 1);
   });
 
+  // Buyer Public Job Offers & Project Requests (Dynamic real posts from jobs and customerProjects)
+  const buyerPublicPostsAsGigs: MarketplaceGig[] = useMemo(() => {
+    const result: MarketplaceGig[] = [];
+
+    (jobs || []).filter(j => j.status === "open" && !j.isDirectOffer && j.visibility !== 'custom_assigned' && !j.isExpiredReturned).forEach(j => {
+      const budget = j.budget || 5000;
+      const days = j.deadlineDays || 5;
+      result.push({
+        id: j.id,
+        title: j.title,
+        description: j.description,
+        category: j.category || "Web Development",
+        price: budget,
+        thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80",
+        images: ["https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80"],
+        sellerId: j.buyerId,
+        sellerName: j.buyerName || "ক্লায়েন্ট জব অফার",
+        sellerAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
+        sellerTitle: "বায়ার • ক্লায়েন্ট",
+        sellerLevel: "পাবলিক জব পোস্ট",
+        rating: 5.0,
+        reviewsCount: 1,
+        salesCount: 0,
+        status: "active",
+        packages: {
+          basic: { price: budget, deliveryDays: days, revisions: 3, features: ["ক্লিন কোডিং", "লাইভ সাপোর্ট"] },
+          standard: { price: budget, deliveryDays: days, revisions: 5, features: ["ক্লিন কোডিং", "লাইভ সাপোর্ট", "ডকুমেন্টেশন"] },
+          premium: { price: budget, deliveryDays: days, revisions: 10, features: ["ফুল সোর্স কোড", "লাইভ ডেপ্লয়মেন্ট", "ভিআইপি সাপোর্ট"] }
+        },
+        createdAt: j.createdAt || new Date().toISOString().split("T")[0]
+      });
+    });
+
+    // Public projects only (Direct private 24h offers are kept private to target seller)
+    (customerProjects || []).filter(cp => !cp.isDirectOffer && cp.status !== 'Cancelled' && !cp.isExpiredReturned).forEach(cp => {
+      const estimate = cp.priceEstimate || 15000;
+      result.push({
+        id: cp.id,
+        title: cp.serviceTitle || "কাস্টম প্রজেক্ট রিকোয়েস্ট",
+        description: cp.description,
+        category: cp.category || "PTEN IT Agency",
+        price: estimate,
+        thumbnail: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=600&q=80",
+        images: ["https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=600&q=80"],
+        sellerId: cp.customerId,
+        sellerName: cp.customerName || "ক্লায়েন্ট",
+        sellerAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
+        sellerTitle: "বায়ার • প্রজেক্ট ক্লায়েন্ট",
+        sellerLevel: "কাস্টম অফার",
+        rating: 5.0,
+        reviewsCount: 1,
+        salesCount: 0,
+        status: "active",
+        packages: {
+          basic: { price: estimate, deliveryDays: 7, revisions: 3, features: ["রিকোয়ারমেন্ট বাস্তবায়ন", "সাপোর্ট"] },
+          standard: { price: estimate, deliveryDays: 7, revisions: 5, features: ["রিকোয়ারমেন্ট বাস্তবায়ন", "সাপোর্ট", "টেস্টিং"] },
+          premium: { price: estimate, deliveryDays: 7, revisions: 10, features: ["সম্পূর্ণ প্রজেক্ট ডেলিভারি", "ভিআইপি সাপোর্ট"] }
+        },
+        createdAt: cp.createdAt || new Date().toISOString().split("T")[0]
+      });
+    });
+
+    return result;
+  }, [jobs, customerProjects]);
+
+  const filteredBuyerPublicOffers = useMemo(() => {
+    return buyerPublicPostsAsGigs.filter(post => {
+      if (selectedCategory !== "All" && !post.category.toLowerCase().includes(selectedCategory.toLowerCase())) return false;
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        return post.title.toLowerCase().includes(q) || post.description.toLowerCase().includes(q) || post.sellerName.toLowerCase().includes(q);
+      }
+      return true;
+    });
+  }, [buyerPublicPostsAsGigs, selectedCategory, searchQuery]);
+
   // Check if any filter is actively applied
   const isAnyFilterActive = (
     selectedCategory !== 'All' ||
@@ -4123,13 +4185,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
   };
 
   return (
-    <div id="marketplace-top" className="w-full font-sans text-slate-900 min-h-screen bg-slate-50 pb-12 md:pb-8">
+    <div id="marketplace-top" className="w-full font-sans text-slate-900 dark:text-slate-100 min-h-screen bg-slate-50 dark:bg-slate-900 pb-12 md:pb-8">
       
       {/* PTENit MODERN MARKETPLACE HEADER */}
       {!selectedGig && !(viewMode === 'selling' && sellerSubTab === 'create_gig') && (
         <div className={`sticky top-0 z-50 text-white w-full shadow-md border-b transition-colors duration-200 ${
           isSellerMode || (viewMode as string) === 'selling'
-            ? 'bg-[#E11D48] border-[#BE123C]'
+            ? 'bg-[#E11D48] border-rose-700'
             : 'bg-[#006A4E] border-[#00543D]'
         }`}>
           <div className="w-full px-2 sm:px-4 lg:px-6 py-1 sm:py-2 flex flex-col justify-between gap-2">
@@ -4286,14 +4348,13 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   )}
                 </div>
 
-                {/* Right Action Controls: Profile Avatar & Menu (Uniform Circular Glass Elements) */}
+                {/* Right Action Controls: Profile Avatar & Menu */}
                 <div className="flex items-center justify-end gap-1.5 shrink-0">
                   {/* Profile Avatar / Login Button */}
                   {currentUser ? (
                     <div
-                      className={`w-8 h-8 rounded-full ${
-                        viewMode === 'selling' ? 'bg-[#BE123C] ring-2 ring-rose-300/50' : 'bg-[#00543D] ring-2 ring-emerald-300/50'
-                      } flex items-center justify-center cursor-default select-none shrink-0 overflow-hidden shadow-xs`}
+                      onClick={() => setIsMobileMarketplaceMenuOpen(true)}
+                      className="w-8 h-8 rounded-full border-2 border-white overflow-hidden flex items-center justify-center cursor-pointer select-none shrink-0 shadow-xs active:scale-95 transition"
                       title={`প্রোফাইল: ${currentUser.name}`}
                     >
                       <img
@@ -4306,24 +4367,29 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <button
                       type="button"
                       onClick={openAuthModal}
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-white bg-white/15 hover:bg-white/25 border border-white/20 active:scale-90 transition cursor-pointer shadow-xs"
+                      className="p-1.5 text-white hover:bg-white/15 rounded-lg active:scale-90 transition cursor-pointer"
                       title="লগইন করুন"
                       aria-label="লগইন"
                     >
-                      <User className="w-4.5 h-4.5 text-white" />
+                      <User className="w-5 h-5 text-white" />
                     </button>
                   )}
 
-                  {/* Menu Button */}
+                  {/* Menu Button (Standard clean button without round circular border) */}
                   <button
                     type="button"
                     onClick={() => {
                       setIsMobileMarketplaceMenuOpen(!isMobileMarketplaceMenuOpen);
                     }}
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white bg-white/15 hover:bg-white/25 border border-white/20 cursor-pointer shrink-0 active:scale-90 transition shadow-xs touch-manipulation"
+                    className="p-1.5 text-white hover:bg-white/15 rounded-lg cursor-pointer shrink-0 active:scale-95 transition touch-manipulation"
                     title="মেনুবার"
+                    aria-label="মেনুবার"
                   >
-                    {isMobileMarketplaceMenuOpen ? <X className="w-4.5 h-4.5 text-rose-300 stroke-[2.5]" /> : <Menu className="w-4.5 h-4.5 text-white stroke-[2.2]" />}
+                    {isMobileMarketplaceMenuOpen ? (
+                      <X className="w-5 h-5 text-white stroke-[2.2]" />
+                    ) : (
+                      <Menu className="w-5 h-5 text-white stroke-[2.2]" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -4459,15 +4525,15 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                         : 'text-white/60 stroke-[1.8] group-hover:text-white'
                     }`} />
                     {viewMode === 'selling' ? (
-                      marketplaceOrders && marketplaceOrders.length > 0 && (
+                      mySellerOrders && mySellerOrders.length > 0 && (
                         <span className="absolute -top-1 right-1.5 min-w-4 h-4 px-1 rounded-full bg-white text-[#E11D48] text-[9px] font-black flex items-center justify-center shadow-xs ring-1 ring-white/50">
-                          {marketplaceOrders.length}
+                          {mySellerOrders.length}
                         </span>
                       )
                     ) : (
-                      allBuyerOrders && allBuyerOrders.length > 0 && (
+                      (buyerServiceOrders.length + buyerOpenPosts.length) > 0 && (
                         <span className="absolute -top-1 right-1.5 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
-                          {allBuyerOrders.length}
+                          {buyerServiceOrders.length + buyerOpenPosts.length}
                         </span>
                       )
                     )}
@@ -5153,7 +5219,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <div className="relative flex items-center justify-center">
                         <ShoppingBag className="w-5 h-5 text-white transition group-hover:scale-105" />
                         <span className="absolute -top-1.5 -right-2.5 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-600 text-white text-[9px] font-black flex items-center justify-center shadow-xs border border-[#006A4E]">
-                          {allBuyerOrders.length > 0 ? allBuyerOrders.length : 18}
+                          {(buyerProjectOrders.length + buyerDigitalOrders.length) > 0 ? (buyerProjectOrders.length + buyerDigitalOrders.length) : null}
                         </span>
                       </div>
                       {/* Facebook-style Bottom Underline Indicator */}
@@ -5366,7 +5432,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           <img
                             src={currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
                             alt={currentUser.name}
-                            className="w-6 h-6 lg:w-7 lg:h-7 rounded-full object-cover border border-emerald-300"
+                            className="w-6 h-6 lg:w-7 lg:h-7 rounded-full object-cover border-2 border-white"
                           />
                           <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-white" />
                         </div>
@@ -5470,9 +5536,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   >
                     <div className="relative flex items-center justify-center">
                       <ShoppingBag className="w-5 h-5 text-white transition group-hover:scale-105" />
-                      {marketplaceOrders.length > 0 && (
+                      {mySellerOrders.length > 0 && (
                         <span className="absolute -top-1.5 -right-2.5 min-w-[18px] h-[18px] px-1 bg-white text-[#E11D48] text-[10px] font-black rounded-full shadow-xs flex items-center justify-center border border-rose-600">
-                          {marketplaceOrders.length}
+                          {mySellerOrders.length}
                         </span>
                       )}
                     </div>
@@ -5680,7 +5746,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <img
                         src={currentUser?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
                         alt={currentUser?.name || "Profile"}
-                        className="w-7 h-7 rounded-full object-cover border border-white/60"
+                        className="w-7 h-7 rounded-full object-cover border-2 border-white"
                       />
                       <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-white" />
                     </div>
@@ -6323,9 +6389,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             <ShoppingBag className={`w-4 h-4 ${activeSubTab === 'my-orders' ? 'text-white' : 'text-[#006A4E]'}`} />
                             <span>আমার অর্ডারসমূহ</span>
                           </span>
-                          {allBuyerOrders.length > 0 && (
+                          {(buyerServiceOrders.length + buyerOpenPosts.length) > 0 && (
                             <span className="px-1.5 py-0.5 rounded-full bg-rose-500 text-white text-[10px] font-bold">
-                              {allBuyerOrders.length}
+                              {buyerServiceOrders.length + buyerOpenPosts.length}
                             </span>
                           )}
                         </button>
@@ -7880,7 +7946,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       title="ক্লায়েন্টদের সক্রিয় অর্ডারসমূহ দেখুন"
                     >
                       <span className="block text-sm font-black text-slate-900 dark:text-white">
-                        {marketplaceOrders.length}
+                        {mySellerOrders.length}
                       </span>
                       <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">সক্রিয় অর্ডার</span>
                     </div>
@@ -7973,9 +8039,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                       <ShoppingBag className="w-4.5 h-4.5 text-blue-500 shrink-0" />
                       <span>ক্লায়েন্ট অর্ডারসমূহ</span>
                     </div>
-                    {marketplaceOrders.length > 0 && (
+                    {mySellerOrders.length > 0 && (
                       <span className="px-1.5 py-0.5 rounded-full bg-[#006A4E] text-white text-[10px] font-bold">
-                        {marketplaceOrders.length}
+                        {mySellerOrders.length}
                       </span>
                     )}
                   </button>
@@ -8228,7 +8294,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           }`}
                         >
                           <ShoppingBag className="w-4 h-4 shrink-0" />
-                          <span>ক্লায়েন্ট অর্ডারস ({marketplaceOrders.length})</span>
+                          <span>ক্লায়েন্ট অর্ডারস ({mySellerOrders.length})</span>
                         </button>
 
                         <button
@@ -9544,12 +9610,12 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                               ? 'text-[#006A4E] dark:text-emerald-400 font-bold'
                               : 'text-slate-500 dark:text-slate-400'
                           }`}>
-                            {filteredGigs.length}টি
+                            {filteredBuyerPublicOffers.length}টি
                           </span>
                         </div>
 
                         {/* Public Buyer Offers Feed Stream */}
-                        {filteredGigs.length === 0 ? (
+                        {filteredBuyerPublicOffers.length === 0 ? (
                           <div className="p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-center space-y-2.5 font-bengali shadow-sm">
                             <div className="w-12 h-12 rounded-full bg-blue-500/10 text-sky-500 flex items-center justify-center mx-auto ring-4 ring-[#006A4E]/5">
                               <Sparkles className="w-6 h-6" />
@@ -9586,7 +9652,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                           </div>
                         ) : (
                           <div className="space-y-3 sm:space-y-4 w-full">
-                            {filteredGigs.map(gig => (
+                            {filteredBuyerPublicOffers.map(gig => (
                               <GigCard
                                 key={gig.id}
                                 gig={gig}
@@ -9720,59 +9786,28 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                   {specialistMainTab === 'payments' && sellerSubTab === 'earnings' && (
                     <div className="space-y-6 font-bengali animate-fadeIn">
                       {(() => {
-                        const mktEarned = sellerGigs.reduce((acc, g) => acc + ((g.price || g.packages?.basic?.price || 2500) * (g.salesCount || 12)), 0) || 125000;
-                        const mntEarned = courses.reduce((acc, c) => acc + ((c.price || 3500) * (c.studentsCount || 15)), 0) || 767985;
+                        const sellerOrdersList = currentUser
+                          ? marketplaceOrders.filter(o => o.sellerId === currentUser.id || (currentUser.email && o.sellerEmail && o.sellerEmail.toLowerCase() === currentUser.email.toLowerCase()))
+                          : [];
+                        const completedSellerOrders = sellerOrdersList.filter(o => o.status === "completed");
+                        const mktEarned = completedSellerOrders.reduce((acc, o) => acc + (o.sellerPayout || o.amount || 0), 0);
+                        const myCourses = currentUser
+                          ? courses.filter(c => c.instructorId === currentUser.id || (currentUser.name && c.instructor && c.instructor.toLowerCase().includes(currentUser.name.toLowerCase())))
+                          : [];
+                        const mntEarned = myCourses.reduce((acc, c) => acc + ((c.price || 0) * (c.studentsCount || 0)), 0);
                         const totalEarned = mktEarned + mntEarned;
-                        const commFee = Math.round(totalEarned * 0.066);
+                        const commFee = Math.round(totalEarned * 0.1);
                         const netEarned = totalEarned - commFee;
-                        const availableBalance = Math.max(683919, Math.round(netEarned * 0.82));
-                        const pendingEscrow = Math.round(netEarned * 0.18);
 
                         const rawPayouts = currentUser ? payouts.filter(p =>
                           p.teacherId === currentUser.id ||
-                          (currentUser.name && p.teacherName.toLowerCase().includes(currentUser.name.toLowerCase()))
-                        ) : payouts;
-
-                        const defaultSellerPayouts = [
-                          {
-                            id: "pay-105",
-                            teacherId: currentUser?.id || "usr-1",
-                            teacherName: currentUser?.name || "MD S Kazi Sohag",
-                            teacherEmail: currentUser?.email || "sohag@ptenit.com",
-                            amount: 50000,
-                            paymentMethod: "bKash",
-                            accountNumber: "01700000000",
-                            note: "আগস্ট ২০২৬ ১ম সপ্তাহের ইনস্ট্যান্ট ক্যাশআউট",
-                            status: "Approved",
-                            requestedAt: "2026-08-10 14:30"
-                          },
-                          {
-                            id: "pay-104",
-                            teacherId: currentUser?.id || "usr-1",
-                            teacherName: currentUser?.name || "MD S Kazi Sohag",
-                            teacherEmail: currentUser?.email || "sohag@ptenit.com",
-                            amount: 25000,
-                            paymentMethod: "Nagad",
-                            accountNumber: "01800000000",
-                            note: "জুলাই ২০২৬ ২য় কিস্তি মেন্টর ও গিগ পেআউট",
-                            status: "Approved",
-                            requestedAt: "2026-07-28 11:15"
-                          },
-                          {
-                            id: "pay-103",
-                            teacherId: currentUser?.id || "usr-1",
-                            teacherName: currentUser?.name || "MD S Kazi Sohag",
-                            teacherEmail: currentUser?.email || "sohag@ptenit.com",
-                            amount: 15000,
-                            paymentMethod: "Bank",
-                            accountNumber: "205012345678",
-                            note: "ব্যাংক ট্রান্সফার পেআউট রিকোয়েস্ট",
-                            status: "Approved",
-                            requestedAt: "2026-07-15 09:40"
-                          }
-                        ];
-
-                        const basePayouts = rawPayouts.length > 0 ? rawPayouts : defaultSellerPayouts;
+                          (currentUser.email && p.teacherEmail && p.teacherEmail.toLowerCase() === currentUser.email.toLowerCase()) ||
+                          (currentUser.name && p.teacherName && p.teacherName.toLowerCase().includes(currentUser.name.toLowerCase()))
+                        ) : [];
+                        const basePayouts = rawPayouts;
+                        const approvedPaidAmount = basePayouts.filter(p => p.status === "Approved" || p.status === "Paid").reduce((acc, p) => acc + p.amount, 0);
+                        const availableBalance = Math.max(0, netEarned - approvedPaidAmount);
+                        const pendingEscrow = sellerOrdersList.filter(o => o.status === "in_progress").reduce((acc, o) => acc + (o.sellerPayout || o.amount || 0), 0);
                         const sellerPayouts = [
                           ...(activePendingPayout ? [{
                             id: activePendingPayout.id,
@@ -9895,7 +9930,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     <div className="flex items-center gap-2">
                                       <Sparkles className="w-4 h-4 text-[#38BDF8]" />
                                       <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
-                                        লাইভ কাজ ও আয়ের তালিকা ({courses.length + (marketplaceOrders.length || sellerGigs.length)})
+                                        লাইভ কাজ ও আয়ের তালিকা ({((currentUser?.role === 'admin' ? courses : courses.filter(c => c.instructorId === currentUser?.id || (currentUser?.email && (c as any).instructorEmail && (c as any).instructorEmail.toLowerCase() === currentUser.email.toLowerCase()))).length) + mySellerOrders.length})
                                       </h3>
                                     </div>
                                     <span className="text-[11px] font-black text-[#38BDF8]">
@@ -9905,7 +9940,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
 
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     {/* 1. COURSES */}
-                                    {courses.map((course, idx) => {
+                                    {(currentUser?.role === 'admin' ? courses : courses.filter(c => c.instructorId === currentUser?.id || (currentUser?.email && (c as any).instructorEmail && (c as any).instructorEmail.toLowerCase() === currentUser.email.toLowerCase()))).map((course, idx) => {
                                       const stCount = course.enrolledCount || (course as any).studentsCount || (idx === 0 ? 343 : 210);
                                       const crsFee = course.price || 1200;
                                       const crsTotal = stCount * crsFee;
@@ -9967,7 +10002,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     })}
 
                                     {/* 2. MARKETPLACE PROJECTS & GIGS */}
-                                    {(marketplaceOrders.length > 0 ? marketplaceOrders : sellerGigs).map((item: any, idx: number) => {
+                                    {mySellerOrders.map((item: any, idx: number) => {
                                       const title = item.gigTitle || item.title || 'ওয়েবসাইট ডিজাইন ও কাস্টম প্রজেক্ট';
                                       const clientName = item.buyerName || 'Client';
                                       const orderId = item.id || `ord-${idx + 1}`;
@@ -10967,7 +11002,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     />
                   ) : marketplaceCenterView === 'buyer-orders' ? (
                     <MarketplaceCenterBuyerOrders
-                      orders={buyerProjectOrders.length > 0 ? buyerProjectOrders : (marketplaceOrders || [])}
+                      orders={buyerProjectOrders}
                       searchQuery={orderSearchQuery}
                       onSearchChange={(q) => setOrderSearchQuery(q)}
                       onClearSearch={() => setOrderSearchQuery('')}
@@ -11146,7 +11181,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                     <div>
                       {(() => {
                         // শুধুমাত্র আসল চলমান (in_progress) অর্ডার ফিল্টার করা হচ্ছে
-                        const ongoingOrders = (allBuyerOrders || []).filter(o => o.status === 'in_progress');
+                        const ongoingOrders = (buyerServiceOrders || []).filter(o => o.status === 'in_progress');
                         const totalCount = ongoingOrders.length;
                         const displayList = ongoingOrders.slice(0, 4);
 
@@ -12640,7 +12675,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             <Briefcase className="w-4 h-4" />
                           </div>
                           <h3 className="text-sm sm:text-base font-black font-heading text-slate-900 dark:text-white leading-none">
-                            <AnimatedOverviewCounter value={`${buyerProjectOrders.length > 0 ? buyerProjectOrders.length : 16}টি`} />
+                            <AnimatedOverviewCounter value={`${buyerProjectOrders.length}টি`} />
                           </h3>
                           <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1">
                             মোট প্রজেক্ট
@@ -12664,7 +12699,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             <BookOpen className="w-4 h-4" />
                           </div>
                           <h3 className="text-sm sm:text-base font-black font-heading text-slate-900 dark:text-white leading-none">
-                            <AnimatedOverviewCounter value={`${userEnrollments.length > 0 ? userEnrollments.length : 2}টি`} />
+                            <AnimatedOverviewCounter value={`${userEnrollments.length}টি`} />
                           </h3>
                           <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1">
                             এনরোল্ড কোর্স
@@ -12713,7 +12748,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                             <Package className="w-4 h-4" />
                           </div>
                           <h3 className="text-sm sm:text-base font-black font-heading text-amber-600 dark:text-amber-400 leading-none">
-                            <AnimatedOverviewCounter value={`${buyerDigitalOrders.length > 0 ? buyerDigitalOrders.length : 2}টি`} />
+                            <AnimatedOverviewCounter value={`${buyerDigitalOrders.length}টি`} />
                           </h3>
                           <p className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1">
                             প্রোডাক্ট
@@ -13045,7 +13080,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <Briefcase className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-lg sm:text-2xl font-black font-heading text-slate-900 dark:text-white leading-none">
-                                  <AnimatedOverviewCounter value={`${buyerProjectOrders.length > 0 ? buyerProjectOrders.length : 16}টি`} />
+                                  <AnimatedOverviewCounter value={`${buyerProjectOrders.length}টি`} />
                                 </h3>
                                 <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1.5">
                                   মোট প্রজেক্ট
@@ -13065,7 +13100,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <BookOpen className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-lg sm:text-2xl font-black font-heading text-slate-900 dark:text-white leading-none">
-                                  <AnimatedOverviewCounter value={`${userEnrollments.length > 0 ? userEnrollments.length : 2}টি`} />
+                                  <AnimatedOverviewCounter value={`${userEnrollments.length}টি`} />
                                 </h3>
                                 <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1.5">
                                   এনরোল্ড কোর্স
@@ -13106,7 +13141,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                   <Package className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-lg sm:text-2xl font-black font-heading text-amber-600 dark:text-amber-400 leading-none">
-                                  <AnimatedOverviewCounter value={`${buyerDigitalOrders.length > 0 ? buyerDigitalOrders.length : 2}টি`} />
+                                  <AnimatedOverviewCounter value={`${buyerDigitalOrders.length}টি`} />
                                 </h3>
                                 <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-bengali mt-1.5">
                                   প্রোডাক্ট
@@ -15410,13 +15445,22 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                     </button>
                                   </div>
 
-                                  {/* Status Filter Buttons: Strictly 3-Column Grid for Service Orders (চলমান, রিভিউ, সম্পন্ন) */}
-                                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                                  {/* Status Filter Buttons: 4-Column Grid for Service Orders (পেন্ডিং, চলমান, রিভিউ, সম্পন্ন) */}
+                                  <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
                                     {[
+                                      {
+                                        id: 'pending',
+                                        label: 'পেন্ডিং',
+                                        count: buyerServiceOrders.filter(o => o.status === 'pending' || o.status === 'pending_approval' || (o.isDirectOffer && !o.isAccepted && o.status !== 'completed' && o.status !== 'cancelled')).length,
+                                        activeClass: 'bg-sky-600 text-white shadow-xs font-black',
+                                        inactiveClass: 'bg-sky-50 dark:bg-sky-950/40 text-sky-800 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900/50',
+                                        badgeActive: 'bg-black/20 text-white',
+                                        badgeInactive: 'bg-sky-200/70 dark:bg-sky-900 text-sky-900 dark:text-sky-200',
+                                      },
                                       {
                                         id: 'in_progress',
                                         label: 'চলমান',
-                                        count: buyerServiceOrders.filter(o => o.status === 'in_progress').length,
+                                        count: buyerServiceOrders.filter(o => (o.status === 'in_progress' || o.status === 'active') && !o.isDirectOffer).length,
                                         activeClass: 'bg-blue-600 text-white shadow-xs font-black',
                                         inactiveClass: 'bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50',
                                         badgeActive: 'bg-black/20 text-white',
@@ -15441,7 +15485,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                                         badgeInactive: 'bg-emerald-200/70 dark:bg-emerald-900 text-emerald-900 dark:text-emerald-200',
                                       },
                                     ].map((f) => {
-                                      const isActive = buyerOrderStatusFilter === f.id || ((buyerOrderStatusFilter as any) === 'all' && f.id === 'in_progress');
+                                      const isActive = buyerOrderStatusFilter === f.id;
                                       return (
                                         <button
                                           key={f.id}
@@ -15476,7 +15520,7 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                              ? buyerServiceOrders.filter(o => o.status === 'completed' || o.status === 'cancelled')
                              : buyerOrderStatusFilter === 'in_review'
                              ? buyerServiceOrders.filter(o => o.status === 'in_review' || o.status === 'revision_requested')
-                             : buyerServiceOrders.filter(o => o.status === 'in_progress');
+                             : buyerOrderStatusFilter === 'pending' ? buyerServiceOrders.filter(o => o.status === 'pending' || o.status === 'pending_approval' || (o.isDirectOffer && !o.isAccepted && o.status !== 'completed' && o.status !== 'cancelled')) : buyerServiceOrders.filter(o => (o.status === 'in_progress' || o.status === 'active') && !o.isDirectOffer);
 
                            const filtered = byStatus.filter(o => {
                              if (!orderSearchQuery.trim()) return true;
@@ -16979,9 +17023,9 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
                 <h3 className="text-sm font-black text-slate-900 dark:text-white">
                   নোটিফিকেশন সেন্টার
                 </h3>
-                {notifications.filter(n => !n.read).length > 0 && (
+                {roleScopedNotifications.filter(n => !n.read).length > 0 && (
                   <span className="px-1.5 py-0.5 bg-rose-500/20 text-rose-500 font-bold text-[10px] rounded-full">
-                    {notifications.filter(n => !n.read).length} নতুন
+                    {roleScopedNotifications.filter(n => !n.read).length} নতুন
                   </span>
                 )}
               </div>
@@ -17004,10 +17048,10 @@ export const MarketplaceSection: React.FC<MarketplaceSectionProps> = ({ setActiv
             </div>
 
             <div className="space-y-2 text-xs max-h-80 overflow-y-auto pr-1">
-              {notifications.length === 0 ? (
+              {roleScopedNotifications.length === 0 ? (
                 <p className="text-slate-400 text-center py-6">কোনো নোটিফিকেশন নেই</p>
               ) : (
-                notifications.map(n => (
+                roleScopedNotifications.map(n => (
                   <div
                     key={n.id}
                     onClick={() => {

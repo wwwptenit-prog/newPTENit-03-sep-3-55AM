@@ -1,9 +1,43 @@
 {
   "id": "course-fb-marketing",
+  "duration": "3 Weeks (10 Hours)",
+  "published": true,
+  "_lastSynced": "2026-09-22T19:15:07.691Z",
+  "liveClassLink": "https://meet.google.com/fb-marketing-live",
   "title": "Facebook Marketing & Paid Ads Mastery",
+  "instructorRole": "FB Ads Strategist",
   "createdAt": "2026-02-01",
-  "price": 0,
-  "isFree": true,
+  "requirements": [
+    "ইন্টারনেট কানেকশন সহ মোবাইল বা কম্পিউটার",
+    "একটি ফেসবুক অ্যাকাউন্ট"
+  ],
+  "liveClassModuleNo": "০২",
+  "liveClassTime": "20:00",
+  "instructor": "রেজওয়ান করিম",
+  "lessonsCount": 14,
+  "liveClassStatus": "scheduled",
+  "modules": [
+    {
+      "id": "m-fb-1",
+      "title": "ফেসবুক পেজ সেটআপ ও মেটা বিজনেস সুইট",
+      "courseId": "course-fb-marketing",
+      "order": 1,
+      "lessons": [
+        {
+          "isFreePreview": true,
+          "title": "লেসন ০১: পেজ অপ্টিমাইজেশন ও ব্র্যান্ডিং রুলস",
+          "moduleId": "m-fb-1",
+          "content": "পেজের ইউজারনেম, কভার আর্ট ও সিটিএ বাটন সেটআপ।",
+          "order": 1,
+          "duration": "২০ মিনিট",
+          "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          "id": "l-fb-1",
+          "courseId": "course-fb-marketing"
+        }
+      ]
+    }
+  ],
+  "discountPrice": 0,
   "whatYouWillLearn": [
     "Facebook Business Page Professional Setup",
     "Meta Business Suite & Ads Manager Setup",
@@ -11,15 +45,6 @@
     "Budgeting & Campaign Bidding Strategies",
     "Ad Creative Writing & High Conversion Tips"
   ],
-  "liveClassModuleNo": "০২",
-  "duration": "3 Weeks (10 Hours)",
-  "published": true,
-  "liveClassLessonNo": "০২",
-  "liveClassTime": "20:00",
-  "liveClassLink": "https://meet.google.com/fb-marketing-live",
-  "instructorRole": "FB Ads Strategist",
-  "liveClassTopic": "টার্গেটেড অডিয়েন্স রিসার্চ ও ফেসবুক পিক্সেল সিটআপ",
-  "lessonsCount": 14,
   "tags": [
     "#Facebook",
     "#DigitalMarketing",
@@ -27,42 +52,17 @@
     "#Freelancing",
     "#FreeCourse"
   ],
-  "requirements": [
-    "ইন্টারনেট কানেকশন সহ মোবাইল বা কম্পিউটার",
-    "একটি ফেসবুক অ্যাকাউন্ট"
-  ],
-  "liveSchedule": "০৩ সেপ্টেম্বর ২০২৬, রাত ০৮:০০ টা",
-  "thumbnail": "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80",
-  "liveClassSerialNo": "০৪",
-  "modules": [
-    {
-      "courseId": "course-fb-marketing",
-      "id": "m-fb-1",
-      "order": 1,
-      "lessons": [
-        {
-          "content": "পেজের ইউজারনেম, কভার আর্ট ও সিটিএ বাটন সেটআপ।",
-          "order": 1,
-          "isFreePreview": true,
-          "duration": "২০ মিনিট",
-          "title": "লেসন ০১: পেজ অপ্টিমাইজেশন ও ব্র্যান্ডিং রুলস",
-          "courseId": "course-fb-marketing",
-          "id": "l-fb-1",
-          "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          "moduleId": "m-fb-1"
-        }
-      ],
-      "title": "ফেসবুক পেজ সেটআপ ও মেটা বিজনেস সুইট"
-    }
-  ],
   "rating": 4.9,
-  "instructor": "রেজওয়ান করিম",
-  "liveClassDate": "2026-09-03",
-  "_lastSynced": "2026-09-21T13:23:32.009Z",
-  "liveClassStatus": "scheduled",
   "category": "Digital Marketing",
+  "description": "সম্পূর্ণ বিনামূল্যে ফেসবুক পেজ সেটআপ, অর্গানিক গ্রোথ, বিজনেস ম্যানেজার, মেটা পিক্সেল এবং প্রফেশনাল এডস রান করা শিখুন। সকল ছোট-বড় ব্যবসায়ীদের জন্য অত্যন্ত দরকারি কোর্স।",
+  "price": 0,
+  "liveClassLessonNo": "০২",
+  "liveClassTopic": "টার্গেটেড অডিয়েন্স রিসার্চ ও ফেসবুক পিক্সেল সিটআপ",
   "reviewsCount": 310,
-  "discountPrice": 0,
+  "liveClassSerialNo": "০৪",
   "enrolledCount": 1250,
-  "description": "সম্পূর্ণ বিনামূল্যে ফেসবুক পেজ সেটআপ, অর্গানিক গ্রোথ, বিজনেস ম্যানেজার, মেটা পিক্সেল এবং প্রফেশনাল এডস রান করা শিখুন। সকল ছোট-বড় ব্যবসায়ীদের জন্য অত্যন্ত দরকারি কোর্স।"
+  "isFree": true,
+  "liveClassDate": "2026-09-03",
+  "liveSchedule": "০৩ সেপ্টেম্বর ২০২৬, রাত ০৮:০০ টা",
+  "thumbnail": "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80"
 }

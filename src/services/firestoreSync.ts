@@ -42,23 +42,8 @@ export interface FirestoreErrorInfo {
 }
 
 export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
-  const errMsg = error instanceof Error ? error.message : String(error);
-  const errCode = (error as any)?.code;
-
-  // If the client is temporarily offline or unavailable, log informational notice without throwing
-  if (
-    errCode === 'unavailable' ||
-    errMsg.includes('the client is offline') ||
-    errMsg.includes('unavailable') ||
-    errMsg.includes('could not be completed') ||
-    errMsg.includes('Could not reach Cloud Firestore')
-  ) {
-    console.warn(`[Firestore Offline] Operation ${operationType} on ${path}: client is operating in offline mode.`);
-    return;
-  }
-
   const errInfo: FirestoreErrorInfo = {
-    error: errMsg,
+    error: error instanceof Error ? error.message : String(error),
     authInfo: {
       userId: auth.currentUser?.uid,
       email: auth.currentUser?.email,
@@ -127,23 +112,11 @@ export function subscribeToCollection<T>(
 }
 
 /**
- * Persist or update a single document in Firestore & Server Storage
+ * Persist or update a single document in Firestore
  */
 export async function syncDocToFirestore(collectionName: string, docId: string, data: any): Promise<boolean> {
   if (!docId || !data) return false;
   const path = `${collectionName}/${docId}`;
-
-  // 1. Post to Server Storage endpoint (cPanel & Node backend)
-  try {
-    const cleanData = JSON.parse(JSON.stringify(data));
-    fetch('/api/sync.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ collection: collectionName, docId: String(docId), data: cleanData }),
-    }).catch(() => {});
-  } catch (e) {}
-
-  // 2. Persist to Cloud Firestore
   try {
     const docRef = doc(db, collectionName, String(docId));
     // Clean data of undefined fields which Firestore rejects
@@ -166,18 +139,11 @@ export async function syncDocToFirestore(collectionName: string, docId: string, 
 }
 
 /**
- * Delete a document from Firestore & Server Storage
+ * Delete a document from Firestore
  */
 export async function deleteDocFromFirestore(collectionName: string, docId: string): Promise<boolean> {
   if (!docId) return false;
   const path = `${collectionName}/${docId}`;
-
-  try {
-    fetch(`/api/sync.php?collection=${encodeURIComponent(collectionName)}&id=${encodeURIComponent(docId)}`, {
-      method: 'DELETE'
-    }).catch(() => {});
-  } catch {}
-
   try {
     const docRef = doc(db, collectionName, String(docId));
     await deleteDoc(docRef);
@@ -194,35 +160,11 @@ export async function deleteDocFromFirestore(collectionName: string, docId: stri
 }
 
 /**
- * Fetch a collection from Server Storage (fallback & instant boot)
- */
-export async function fetchServerCollection<T>(collectionName: string): Promise<T[]> {
-  try {
-    const res = await fetch(`/api/sync.php?collection=${encodeURIComponent(collectionName)}`);
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data)) return data;
-    }
-  } catch (err) {}
-  return [];
-}
-
-/**
  * Batch synchronize an entire collection (e.g. initial seed or bulk import)
  */
 export async function syncCollectionToFirestore(collectionName: string, items: any[], idField: string = 'id'): Promise<boolean> {
   try {
     if (!Array.isArray(items) || items.length === 0) return false;
-
-    // Send batch to server storage
-    try {
-      fetch('/api/sync.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ collection: collectionName, items }),
-      }).catch(() => {});
-    } catch {}
-
     const batch = writeBatch(db);
     // Firestore batch limit is 500 operations
     const chunk = items.slice(0, 450);
@@ -244,5 +186,25 @@ export async function syncCollectionToFirestore(collectionName: string, items: a
       // Handled
     }
     return false;
+  }
+}
+
+/**
+ * Direct one-time fetch of an entire collection from Firestore
+ */
+export async function fetchServerCollection<T>(collectionName: string): Promise<T[]> {
+  try {
+    const colRef = collection(db, collectionName);
+    const snapshot = await getDocs(colRef);
+    if (!snapshot.empty) {
+      return snapshot.docs.map(d => ({
+        id: d.id,
+        ...d.data(),
+      } as unknown as T));
+    }
+    return [];
+  } catch (error) {
+    console.warn(`[Firestore fetchServerCollection] Failed to fetch ${collectionName}:`, error);
+    return [];
   }
 }

@@ -32,7 +32,7 @@ export const OfficeLocation: React.FC = () => {
   };
 
   return (
-    <section className="py-8 sm:py-12 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
+    <section className="py-8 sm:py-12 relative z-10 text-slate-800 dark:text-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
         
         {/* Header */}
@@ -49,7 +49,7 @@ export const OfficeLocation: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-6xl mx-auto">
           
           {/* Inquiry / Contact Form (Visible on all screens) */}
-          <div className="lg:col-span-6 bg-white dark:bg-slate-800/95 p-6 sm:p-8 rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-xl space-y-5">
+          <div className="lg:col-span-6 liquid-glass-card p-6 sm:p-8 rounded-3xl shadow-xl space-y-5">
             <div className="border-b border-slate-100 dark:border-slate-700/70 pb-2.5">
               <h3 className="text-base sm:text-xl font-black font-bengali text-slate-900 dark:text-white flex items-center gap-2">
                 <Send className="w-4 h-4 sm:w-5 sm:h-5 text-[#006A4E] dark:text-emerald-400" />
@@ -69,7 +69,7 @@ export const OfficeLocation: React.FC = () => {
                 </p>
                 <button
                   onClick={() => setSubmitted(false)}
-                  className="mt-2 px-5 py-2.5 bg-[#006A4E] hover:bg-[#00523d] active:bg-[#003d2e] text-white text-xs font-bold rounded-xl shadow-md cursor-pointer transition-all active:scale-95"
+                  className="mt-2 px-5 py-2.5 liquid-glass-btn-primary text-white text-xs font-bold rounded-xl shadow-md cursor-pointer transition-all active:scale-95"
                 >
                   {t('নতুন ইনকোয়ারি পাঠান', 'Send Another Inquiry')}
                 </button>
@@ -86,7 +86,7 @@ export const OfficeLocation: React.FC = () => {
                     placeholder={t("উদা: সাব্বির হোসেন", "e.g. Sabbir Hossain")}
                     value={name}
                     onChange={e => setName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
+                    className="w-full px-3.5 py-2.5 rounded-xl liquid-glass-input text-xs sm:text-sm text-slate-900 dark:text-white"
                   />
                 </div>
 
@@ -101,7 +101,7 @@ export const OfficeLocation: React.FC = () => {
                       placeholder="01712345678"
                       value={phone}
                       onChange={e => setPhone(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
+                      className="w-full px-3.5 py-2.5 rounded-xl liquid-glass-input text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
@@ -114,7 +114,7 @@ export const OfficeLocation: React.FC = () => {
                       placeholder="info@gmail.com"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
+                      className="w-full px-3.5 py-2.5 rounded-xl liquid-glass-input text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
                 </div>
@@ -126,7 +126,7 @@ export const OfficeLocation: React.FC = () => {
                   <select
                     value={serviceOrCourse}
                     onChange={e => setServiceOrCourse(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E]"
+                    className="w-full px-3.5 py-2.5 rounded-xl liquid-glass-input text-xs sm:text-sm text-slate-900 dark:text-white"
                   >
                     <option value="Web Design & Development">Web Design & Development</option>
                     <option value="Digital Marketing">Digital Marketing</option>
@@ -148,13 +148,13 @@ export const OfficeLocation: React.FC = () => {
                     placeholder={t("আপনার কি ধরণের সার্ভিস বা ট্রেনিং প্রয়োজন লিখুন...", "Write your inquiry details...")}
                     value={message}
                     onChange={e => setMessage(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-[#006A4E] resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl liquid-glass-input text-xs sm:text-sm text-slate-900 dark:text-white resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3 bg-[#006A4E] hover:bg-[#00543e] active:bg-[#004231] text-white font-bold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98"
+                  className="w-full py-3 liquid-glass-btn-primary text-white font-bold text-sm sm:text-base rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98"
                 >
                   <Send className="w-4 h-4" />
                   <span>{t('ইনকোয়ারি পাঠান', 'Send Inquiry')}</span>
@@ -164,7 +164,7 @@ export const OfficeLocation: React.FC = () => {
           </div>
 
           {/* Right Column: Office Address & Google Map (Visible on all screens) */}
-          <div className="flex flex-col space-y-5 bg-white dark:bg-slate-800/95 p-6 sm:p-8 rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-xl lg:col-span-6">
+          <div className="flex flex-col space-y-5 liquid-glass-card p-6 sm:p-8 rounded-3xl shadow-xl lg:col-span-6">
             <div className="border-b border-slate-100 dark:border-slate-700/70 pb-3">
               <span className="text-[10px] font-bold text-[#006A4E] dark:text-emerald-400 uppercase tracking-wider block">
                 {t('অফিস ঠিকানা', 'Office Address')}

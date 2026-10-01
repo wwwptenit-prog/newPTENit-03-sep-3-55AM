@@ -461,7 +461,17 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   const [chatAttachedFile, setChatAttachedFile] = useState<{ name: string; url: string; type?: string } | null>(null);
   const chatFileInputRef = React.useRef<HTMLInputElement | null>(null);
 
-  const [teacherChatList, setTeacherChatList] = useState([
+  const [teacherChatList, setTeacherChatList] = useState<Array<{
+    id: string;
+    sender: string;
+    text: string;
+    time: string;
+    isTeacher: boolean;
+    read: boolean;
+    imageUrl?: string;
+    fileName?: string;
+    fileUrl?: string;
+  }>>([
     {
       id: '1',
       sender: 'PTENit Admin',
@@ -483,46 +493,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   ]);
 
   // Combined Teacher Notifications State (Includes Student Assignment Submissions & Admin Notices)
-  const [teacherNotificationsList, setTeacherNotificationsList] = useState([
-    {
-      id: 'notif-asgn-1',
-      title: 'নতুন অ্যাসাইনমেন্ট জমা ও কমেন্ট (আরিফ হোসেন)',
-      message: 'শিক্ষার্থী আরিফ হোসেন "PTE Speaking Describe Image Task Practice" অ্যাসাইনমেন্ট জমা ও কমেন্ট করেছেন: "স্যার আমার ডেসক্রাইব ইমেজ টাস্কের ফাইল ও প্র্যাকটিস নোট জমা দিয়েছি, ফিডব্যাক ও রিভিউ রিপ্লাই দিলে কৃতজ্ঞ থাকবো।"',
-      time: '৫ মিনিট আগে',
-      read: false,
-      type: 'assignment',
-      assignmentId: 'asgn-1',
-      submissionId: 'sub-1',
-      studentName: 'আরিফ হোসেন'
-    },
-    {
-      id: 'notif-asgn-2',
-      title: 'অ্যাসাইনমেন্ট ২ উত্তরপত্র জমা (রাফসান)',
-      message: 'শিক্ষার্থী রাফসান "React Components & Tailwind Layout" অ্যাসাইনমেন্টে ফাইল আপলোড করে প্রশ্ন কমেন্ট জমা দিয়েছেন।',
-      time: '২৫ মিনিট আগে',
-      read: false,
-      type: 'assignment',
-      assignmentId: 'asgn-2',
-      submissionId: 'sub-2',
-      studentName: 'রাফসান'
-    },
-    {
-      id: 'notif-admin-1',
-      title: 'PTENit এডমিন অফিশিয়াল গাইডলাইন নোটিশ',
-      message: 'সম্মানিত কোর্স ইনস্ট্রাক্টরবৃন্দ, নতুন ব্যাচের মডিউল, লেকচার স্লাইড ও কুইজ সম্পর্কিত নির্দেশিকা প্রকাশ করা হলো।',
-      time: '১ ঘন্টা আগে',
-      read: false,
-      type: 'admin'
-    },
-    {
-      id: 'notif-admin-2',
-      title: 'ক্লাস শিডিউল ও রেজাল্ট সিস্টেম আপডেট',
-      message: 'আগামী সেমিস্টারের ক্লাস রুটিং টিচার প্যানেলে যুক্ত করা হয়েছে।',
-      time: '২ ঘন্টা আগে',
-      read: false,
-      type: 'admin'
-    }
-  ]);
+  const [teacherNotificationsList, setTeacherNotificationsList] = useState<any[]>([]);
 
   // Sound Synthesizer for Notifications & Offer Actions
   const playChimeSound = (type: 'notification' | 'accept' | 'decline' = 'notification') => {
@@ -1048,7 +1019,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   // Workflow Categorization:
   // 1. নতুন (New): status === 'submitted' or status === 'new'
   // 2. রিভিউ (Review): under_review or review or returned
-  const pendingSubmissions = submissions.filter(s => s.status === 'submitted' || s.status === 'new');
+  const pendingSubmissions = submissions.filter(s => (s.status as any) === 'submitted' || (s.status as any) === 'new');
   const reviewSubmissions = submissions.filter(s => 
     s.status === 'under_review' || 
     s.status === 'review' || 
@@ -1065,14 +1036,14 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   );
 
   return (
-    <div className="min-h-screen bg-slate-100/90 dark:bg-slate-950 py-4 sm:py-8 transition-colors font-bengali">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-4 sm:py-8 transition-colors font-bengali text-slate-900 dark:text-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Teacher Profile Header Banner & Menubar (Hidden when hideHeader is true) */}
         {!hideHeader && (
           <>
         {/* Teacher Profile Header Banner */}
-        <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-slate-900 shadow-sm border border-slate-200 mb-6 sm:mb-8 relative overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-slate-900 dark:text-white shadow-sm mb-6 sm:mb-8 relative overflow-hidden">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 relative z-10 text-center sm:text-left">
             <div className="relative group shrink-0">
               <img
@@ -1294,8 +1265,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                               onClick={() => {
                                 setTeacherNotificationsList(prev => prev.map(item => item.id === n.id ? { ...item, read: true } : item));
                                 markNotificationRead?.(n.id);
-                                if (n.targetTab && n.targetTab !== 'teacher-dashboard' && setActiveTab) {
-                                  setActiveTab(n.targetTab);
+                                if ((n as any).targetTab && (n as any).targetTab !== 'teacher-dashboard' && setActiveTab) {
+                                  setActiveTab((n as any).targetTab);
                                 } else {
                                   setExpandedNotifId(prev => prev === n.id ? null : n.id);
                                 }

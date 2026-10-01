@@ -47,12 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $collectionFile = $dataDir . '/' . $collection . '.json';
 
     if (!empty($docId)) {
-        // Fetch specific document
-        $docFile = $dataDir . '/' . $collection . '/' . $docId . '.json';
-        if (file_exists($docFile)) {
-            echo file_get_contents($docFile);
-            exit;
-        }
         // Fallback: check inside collection array
         if (file_exists($collectionFile)) {
             $items = json_decode(file_get_contents($collectionFile), true) ?: [];
@@ -70,10 +64,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // Return entire collection
     if (file_exists($collectionFile)) {
-        echo file_get_contents($collectionFile);
-    } else {
-        echo json_encode([]);
+        $content = file_get_contents($collectionFile);
+        if (!empty($content)) {
+            echo $content;
+            exit;
+        }
     }
+    echo json_encode([]);
     exit;
 }
 
@@ -120,20 +117,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT
         $docId = 'doc_' . time() . '_' . mt_rand(100, 999);
     }
 
-    // 1. Save individual document file in server_data/{collection}/{docId}.json
-    $subDir = $dataDir . '/' . $targetCollection;
-    if (!is_dir($subDir)) {
-        @mkdir($subDir, 0777, true);
-        @chmod($subDir, 0777);
-    }
-
     $data['_server_saved_at'] = date('c');
     $data['id'] = $docId;
-    $docFile = $subDir . '/' . $docId . '.json';
-    file_put_contents($docFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
-    @chmod($docFile, 0666);
 
-    // 2. Update master collection JSON file: server_data/{collection}.json
+    // Update master collection JSON file: server_data/{collection}.json
     $collectionFile = $dataDir . '/' . $targetCollection . '.json';
     $existingItems = [];
     if (file_exists($collectionFile)) {
@@ -152,6 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT
             break;
         }
     }
+
     if (!$found) {
         array_unshift($existingItems, $data);
     }
@@ -176,11 +164,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         http_response_code(400);
         echo json_encode(['error' => 'Collection and docId required for delete']);
         exit;
-    }
-
-    $docFile = $dataDir . '/' . $collection . '/' . $docId . '.json';
-    if (file_exists($docFile)) {
-        @unlink($docFile);
     }
 
     $collectionFile = $dataDir . '/' . $collection . '.json';

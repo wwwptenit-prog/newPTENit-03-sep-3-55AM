@@ -484,7 +484,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
 
       {/* Standalone Page: Search & Category Filter Pills */}
       {isStandalonePage && (
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800/40 p-3 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 sm:p-4 rounded-2xl shadow-xs">
           {/* Category Filter Pills - Just 3: সকল, প্রিমিয়াম, ফ্রি */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
             {[
@@ -499,7 +499,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   selectedCategory === tab.id
                     ? 'bg-[#006A4E] text-white shadow-xs'
-                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700/60'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
                 }`}
               >
                 {tab.label}
@@ -515,7 +515,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="প্রোডাক্ট বা টেমপ্লেট খুঁজুন..."
-              className="w-full pl-9 pr-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#006A4E]"
+              className="w-full pl-9 pr-3.5 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#006A4E]"
             />
           </div>
         </div>
@@ -524,7 +524,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
       {/* Grid: 4 columns on desktop, 2 columns on mobile */}
       <div>
         {displayedProducts.length === 0 ? (
-          <div className="text-center py-16 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 p-8 space-y-3">
+          <div className="text-center py-16 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-8 space-y-3">
             <Package className="w-12 h-12 text-slate-400 mx-auto opacity-50" />
             <p className="text-sm font-bold text-slate-600 dark:text-slate-400">
               কোনো ডিজিটাল প্রোডাক্ট খুঁজে পাওয়া যায়নি।
@@ -532,7 +532,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
             <button
               type="button"
               onClick={() => { setSelectedCategory('all'); setSearchQuery(''); }}
-              className="px-4 py-2 bg-[#006A4E] text-white rounded-xl text-xs font-bold hover:bg-[#047857] transition cursor-pointer"
+              className="px-4 py-2 bg-[#006A4E] hover:bg-[#00543e] text-white rounded-xl text-xs font-bold transition cursor-pointer"
             >
               সবগুলো দেখুন
             </button>
@@ -545,7 +545,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
               return (
                 <div
                   key={product.id}
-                  className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-1.5 hover:border-blue-600/50/70 dark:hover:border-blue-600/50/60 transition-all duration-300 flex flex-col justify-between"
+                  className="group relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
                 >
                   <div>
                     {/* Clean Cover Thumbnail - purely the image, no buttons or badges */}
@@ -590,7 +590,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                   </div>
 
                   {/* Card Footer: Harmonized Price & Action Button */}
-                  <div className="p-2.5 sm:p-3.5 bg-slate-50/90 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-1.5 rounded-b-2xl">
+                  <div className="p-2.5 sm:p-3.5 bg-white/40 dark:bg-slate-950/40 backdrop-blur-md border-t border-white/60 dark:border-white/10 flex items-center justify-between gap-1.5 rounded-b-2xl">
                     <div className="min-w-0">
                       {isFree ? (
                         <div>
@@ -619,7 +619,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
                     <button
                       type="button"
                       onClick={() => handleOpenDetail(product)}
-                      className="py-1.5 px-2.5 sm:py-2 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold shadow-xs flex items-center justify-center transition-all duration-200 active:scale-95 cursor-pointer shrink-0 bg-[#006A4E] hover:bg-[#047857] text-white"
+                      className="py-1.5 px-3 sm:py-2 sm:px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#006A4E] hover:bg-[#00543e] shadow-xs transition-all cursor-pointer flex items-center justify-center active:scale-95 shrink-0"
                     >
                       <span>বিস্তারিত</span>
                     </button>
@@ -750,7 +750,7 @@ export const DigitalProductsSection: React.FC<DigitalProductsSectionProps> = ({ 
 
   if (isStandalonePage) {
     return (
-      <div className="w-full min-h-screen bg-white dark:bg-slate-900 font-bengali text-slate-900 dark:text-slate-100 py-6 sm:py-8 px-4 sm:px-6 lg:px-8 animate-fadeIn">
+      <div className="w-full min-h-screen liquid-canvas-bg font-bengali text-slate-900 dark:text-slate-100 py-6 sm:py-8 px-4 sm:px-6 lg:px-8 animate-fadeIn">
         <div className="max-w-7xl mx-auto">
           {sectionContent}
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Briefcase,
   PlusCircle,
@@ -160,16 +160,31 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
     setTimeout(() => setProfileSaved(false), 3000);
   };
 
-  const myProjects = customerProjects;
-  const myMessages = contactMessages;
+  const myProjects = useMemo(() => {
+    if (!currentUser) return [];
+    return customerProjects.filter(p => 
+      p.customerId === currentUser.id ||
+      (currentUser.email && p.customerEmail && p.customerEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) ||
+      (currentUser.mobile && p.customerPhone && p.customerPhone.trim() === currentUser.mobile.trim())
+    );
+  }, [customerProjects, currentUser]);
+
+  const myMessages = useMemo(() => {
+    if (!currentUser) return [];
+    return contactMessages.filter(m => 
+      (m as any).userId === currentUser.id ||
+      (currentUser.email && m.email && m.email.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) ||
+      (currentUser.mobile && m.phone && m.phone.trim() === currentUser.mobile.trim())
+    );
+  }, [contactMessages, currentUser]);
 
   return (
-    <div className="min-h-screen bg-slate-100/90 dark:bg-slate-950 py-3 sm:py-6 md:py-8 pb-28 lg:pb-8 transition-colors font-bengali">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-3 sm:py-6 md:py-8 pb-28 lg:pb-8 transition-colors font-bengali text-slate-900 dark:text-slate-100">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 md:px-8 lg:px-12">
         
         {/* MOBILE APP TOP HEADER (Visible on Mobile & Tablet < lg) */}
         {!hideHeaderBanner && (
-          <div className="lg:hidden bg-slate-900/95 backdrop-blur-md border border-slate-800 p-2.5 px-3 rounded-2xl shadow-lg mb-4 flex items-center justify-between gap-2 text-white font-bengali sticky top-0 z-40">
+          <div className="lg:hidden bg-[#006A4E] text-white p-2.5 px-3 rounded-2xl shadow-lg mb-4 flex items-center justify-between gap-2 font-bengali sticky top-0 z-40">
             {/* Left: Dashboard Icon + Text */}
             <div className="flex items-center gap-2 min-w-0">
               <div className="p-2 bg-gradient-to-tr from-[#006A4E] to-sky-400 text-white rounded-xl shadow shrink-0">
@@ -425,34 +440,32 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
           <div className="hidden lg:block lg:col-span-4 xl:col-span-3 space-y-4">
             
             {/* User Profile Card */}
-            <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950 rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-white shadow-xl border border-slate-800 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
-              
+            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-slate-900 dark:text-white shadow-sm relative overflow-hidden">
               <div className="flex items-center gap-3.5 relative z-10 mb-4">
                 <img
                   src={currentUser?.avatar || "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80"}
                   alt={currentUser?.name}
-                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-blue-400/50 shadow-md shrink-0"
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-emerald-400/50 shadow-md shrink-0"
                 />
                 <div className="min-w-0 flex-1">
                   <h2 className="text-base sm:text-lg font-black truncate">{currentUser?.name}</h2>
-                  <p className="text-xs text-blue-300 font-medium truncate">{currentUser?.institution || 'PTENit ক্লায়েন্ট পোর্টাল'}</p>
-                  <span className="inline-flex items-center gap-1 text-[10px] bg-blue-500/20 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded-full font-bold mt-1">
+                  <p className="text-xs text-[#006A4E] dark:text-emerald-300 font-medium truncate">{currentUser?.institution || 'PTENit ক্লায়েন্ট পোর্টাল'}</p>
+                  <span className="inline-flex items-center gap-1 text-[10px] bg-emerald-500/15 text-[#006A4E] dark:text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold mt-1">
                     <Briefcase className="w-3 h-3 shrink-0" /> ক্লায়েন্ট অ্যাকাউন্ট
                   </span>
                 </div>
               </div>
 
-              <div className="text-[11px] text-slate-300 space-y-1 pt-3 border-t border-slate-800/80">
-                <p className="truncate"><strong className="text-slate-400 font-normal">ইমেইল:</strong> {currentUser?.email}</p>
-                <p className="truncate"><strong className="text-slate-400 font-normal">ফোন:</strong> {currentUser?.mobile}</p>
+              <div className="text-[11px] text-slate-600 dark:text-slate-300 space-y-1 pt-3 border-t border-slate-200 dark:border-slate-750">
+                <p className="truncate"><strong className="text-slate-500 dark:text-slate-400 font-normal">ইমেইল:</strong> {currentUser?.email}</p>
+                <p className="truncate"><strong className="text-slate-500 dark:text-slate-400 font-normal">ফোন:</strong> {currentUser?.mobile}</p>
               </div>
 
               {/* Action Button */}
               <button
                 type="button"
                 onClick={() => setActiveTabState('new-request')}
-                className="w-full mt-4 min-h-[44px] px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-98"
+                className="w-full mt-4 min-h-[44px] px-4 py-2.5 bg-[#006A4E] hover:bg-[#00543e] text-white font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-98"
               >
                 <PlusCircle className="w-4 h-4 shrink-0" />
                 <span>+ নতুন প্রজেক্ট রিকুয়েস্ট করুন</span>
@@ -460,7 +473,7 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ setActiveT
             </div>
 
             {/* Quick Stats Widget Panel */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-3.5 sm:p-4 shadow-sm">
+            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 sm:p-4 shadow-sm">
               <span className="text-[11px] uppercase tracking-wider font-extrabold text-slate-400 dark:text-slate-500 block mb-2.5">
                 প্রজেক্ট ওভারভিউ স্ট্যাটস:
               </span>

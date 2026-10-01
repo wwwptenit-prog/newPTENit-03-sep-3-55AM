@@ -339,15 +339,15 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
     : (siteSettings?.bankAccountNumber || '2181100098765');
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 overflow-y-auto min-h-screen font-bengali animate-fadeIn text-slate-800 dark:text-slate-100 flex flex-col">
+    <div className="fixed inset-0 z-50 liquid-canvas-bg overflow-y-auto min-h-screen font-bengali animate-fadeIn text-slate-800 dark:text-slate-100 flex flex-col">
       {/* 1. TOP BAR: সম্পূর্ণ স্ক্রিনের শীর্ষে ফিক্সড/স্টিকি (স্ক্রোল করার সময় উপরে কোনো ফাঁকা থাকবে না) */}
-      <header className="sticky top-0 z-40 w-full bg-[#006A4E] text-white border-b border-[#00543D] shadow-sm shrink-0">
+      <header className="sticky top-0 z-40 w-full liquid-glass-header text-white shadow-md shrink-0 liquid-specular-top">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2">
           {/* LEFT: BACK BUTTON (বেক বাটন - ChevronLeft, সাদা কালার, কোনো বর্ডার ছাড়া) */}
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
+            className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-white/10 text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
             title={t('ফিরে যান', 'Go Back')}
           >
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5] text-white" />
@@ -368,7 +368,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
             <button
               type="button"
               onClick={() => setIsShareMenuOpen(!isShareMenuOpen)}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-white/10 text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
               title="সোশ্যাল মিডিয়ায় শেয়ার করুন"
             >
               <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
@@ -382,7 +382,7 @@ export const DigitalProductDetailModal: React.FC<DigitalProductDetailModalProps>
                   className="fixed inset-0 z-40"
                   onClick={() => setIsShareMenuOpen(false)}
                 />
-                <div className="absolute right-0 top-full mt-2 z-50 w-56 sm:w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-3 space-y-2 animate-fadeIn font-bengali">
+                <div className="absolute right-0 top-full mt-2 z-50 w-56 sm:w-64 liquid-glass-modal rounded-2xl shadow-2xl p-3 space-y-2 animate-fadeIn font-bengali">
                   <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1 border-b border-slate-100 dark:border-slate-800 pb-1.5 flex items-center justify-between">
                     <span>সোশ্যাল মিডিয়ায় শেয়ার করুন</span>
                     <button

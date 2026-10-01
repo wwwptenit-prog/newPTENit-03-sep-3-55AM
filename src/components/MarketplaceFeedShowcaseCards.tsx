@@ -96,7 +96,7 @@ export const DigitalProductFeedCard: React.FC<DigitalProductFeedCardProps> = ({
   return (
     <div
       onClick={() => onSelectProduct(product.rawProduct || product)}
-      className="flex flex-col bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 shadow-sm rounded-2xl sm:rounded-3xl overflow-hidden hover:shadow-xl hover:border-[#006A4E]/50 transition-all duration-300 cursor-pointer font-bengali w-full"
+      className="flex flex-col liquid-glass-card rounded-2xl sm:rounded-3xl overflow-hidden hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300 cursor-pointer font-bengali w-full"
     >
       {/* 1. Header (Facebook Feed Post Style) */}
       <div className="p-3 sm:p-4 pb-1.5 sm:pb-2 flex items-center justify-between gap-2.5">
@@ -371,7 +371,7 @@ export const CourseFeedCard: React.FC<CourseFeedCardProps> = ({
   return (
     <div
       onClick={() => onSelectCourse(course.id)}
-      className="flex flex-col bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 shadow-sm rounded-2xl sm:rounded-3xl overflow-hidden hover:shadow-xl hover:border-[#006A4E]/50 transition-all duration-300 cursor-pointer font-bengali w-full"
+      className="flex flex-col liquid-glass-card rounded-2xl sm:rounded-3xl overflow-hidden hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1 transition-all duration-300 cursor-pointer font-bengali w-full"
     >
       {/* 1. Header (Facebook Feed Post Style) */}
       <div className="p-3 sm:p-4 pb-1.5 sm:pb-2 flex items-center justify-between gap-2.5">

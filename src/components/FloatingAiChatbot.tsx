@@ -136,7 +136,6 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
   const [isMinimized, setIsMinimized] = useState(false);
   const [inputMsg, setInputMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [botPersona, setBotPersona] = useState<'speed' | 'general' | 'complex'>('general');
 
   // Quick Order Modal state for clicked Services / Gigs
   const [selectedModalCard, setSelectedModalCard] = useState<InChatCardItem | null>(null);
@@ -329,12 +328,10 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
     } else {
       // GEMINI REAL AI ASSISTANT FOR ALL DOMAIN QUESTIONS
       try {
-        const history = messages
-          .filter(m => m.sender === 'user' || m.sender === 'bot')
-          .map((m) => ({
-            role: m.sender === 'user' ? 'user' : 'model',
-            text: m.text,
-          }));
+        const history = messages.map((m) => ({
+          role: m.sender === 'user' ? 'user' : 'model',
+          text: m.text,
+        }));
 
         const res = await fetch('/api/gemini/chat', {
           method: 'POST',
@@ -343,8 +340,6 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
             message: textToSend,
             history,
             currentTab: activeTab || 'home',
-            taskType: botPersona,
-            role: botPersona,
           }),
         });
 
@@ -375,27 +370,15 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
           ]);
         }
       } catch (err) {
-        console.warn('Gemini Chat bot offline/static fallback:', err);
-        const lower = textToSend.toLowerCase();
-        let fallbackReply = 'ধন্যবাদ! PTENit ও Order Boss এ আপনাকে স্বাগতম। কোর্স, সার্ভিস কিংবা ফ্রিল্যান্সিং সংক্রান্ত যেকোনো তথ্যের জন্য নিচের অপশনগুলো দেখতে পারেন।';
-        if (lower.includes('কোর্স') || lower.includes('শিখ') || lower.includes('ভর্তি') || lower.includes('admission')) {
-          fallbackReply = 'আমাদের প্ল্যাটফর্মে ওয়েব ডেভেলপমেন্ট, ফ্রন্টএন্ড, ওয়ার্ডপ্রেস, ডিজিটাল মার্কেটিং ও এসইও সহ বিভিন্ন প্রফেশনাল ও ফ্রি কোর্স রয়েছে। বিস্তারিত জানতে মেনু থেকে কোর্স সেকশন দেখুন!';
-        } else if (lower.includes('সার্ভিস') || lower.includes('ওয়েবসাইট') || lower.includes('কাজ') || lower.includes('তৈরি')) {
-          fallbackReply = 'আমরা প্রফেশনাল ওয়েবসাইট ডেভেলপমেন্ট, স্পিড অপ্টিমাইজেশন, এসইও এবং আইটি কনসালটেন্সি সার্ভিস দিয়ে থাকি। সার্ভিস সেকশন থেকে সরাসরি অর্ডার করতে পারেন।';
-        } else if (lower.includes('মার্কেটপ্লেস') || lower.includes('গিগ') || lower.includes('অর্ডার') || lower.includes('ফ্রিল্যান্স')) {
-          fallbackReply = 'Order Boss মার্কেটপ্লেসে দেশি-বিদেশি ক্লায়েন্টদের জন্য ভেরিফাইড ফ্রিল্যান্সারদের কাজ অর্ডার করা যায় এবং ১০০% মানি ব্যাক ও এস্ক্রো নিরাপত্তা রয়েছে।';
-        }
-        const richCards = getContextCards(textToSend, fallbackReply);
+        console.error('Gemini Chat bot error:', err);
         const botMsg: ChatMessage = {
           id: (Date.now() + 1).toString(),
           sender: 'bot',
-          text: fallbackReply,
+          text: 'দুঃখিত, কানেকশনে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।',
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           isStreaming: false,
-          cards: richCards.length > 0 ? richCards : undefined,
         };
         setMessages((prev) => [...prev, botMsg]);
-        setSuggestions(['অনলাইন প্রিমিয়াম কোর্সসমূহ', 'PTENit সার্ভিস ও প্যাকেজ', 'মার্কেটপ্লেস গিগসমূহ']);
       } finally {
         setIsLoading(false);
       }
@@ -511,12 +494,12 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
       {/* CHAT WINDOW */}
       {isOpen && (
         <div
-          className={`bg-[#0b132b] border-2 border-emerald-500/40 rounded-3xl shadow-2xl w-[94vw] sm:w-[420px] flex flex-col transition-all duration-300 overflow-hidden ${
+          className={`liquid-glass-modal !bg-slate-950/85 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-3xl shadow-2xl w-[94vw] sm:w-[420px] flex flex-col transition-all duration-300 overflow-hidden ${
             isMinimized ? 'h-16' : 'h-[600px]'
           }`}
         >
           {/* HEADER */}
-          <div className="bg-gradient-to-r from-[#03130e] via-[#08231c] to-[#03130e] p-3.5 border-b border-emerald-900/50 flex items-center justify-between text-white shrink-0 shadow-md">
+          <div className="bg-gradient-to-r from-[#005a42]/95 via-[#006A4E]/90 to-[#0284c7]/90 p-3.5 border-b border-white/15 flex items-center justify-between text-white shrink-0 shadow-md">
             <div className="flex items-center gap-2.5">
               <div className="relative">
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-[#006A4E] to-[#047857] flex items-center justify-center border-2 border-emerald-400 shadow-md text-white">
@@ -554,56 +537,6 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
               </button>
             </div>
           </div>
-
-          {/* AI ROLE / PERSONA SELECTOR */}
-          {!isMinimized && (
-            <div className="bg-slate-950/95 border-b border-emerald-900/40 px-3 py-2 flex items-center justify-between gap-1 text-[11px] shrink-0 font-bengali">
-              <span className="text-slate-400 text-[10px] font-bold shrink-0">এআই ভূমিকা:</span>
-              <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
-                <button
-                  type="button"
-                  onClick={() => setBotPersona('speed')}
-                  className={`px-2 py-0.5 rounded-full font-bold transition flex items-center gap-1 cursor-pointer shrink-0 text-[10px] ${
-                    botPersona === 'speed'
-                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-xs'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                  title="দ্রুত রেসপন্স (gemini-3.1-flash-lite)"
-                >
-                  <Zap className="w-3 h-3 text-amber-400" />
-                  <span>দ্রুত (Lite)</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setBotPersona('general')}
-                  className={`px-2 py-0.5 rounded-full font-bold transition flex items-center gap-1 cursor-pointer shrink-0 text-[10px] ${
-                    botPersona === 'general'
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                  title="সাধারণ সাপোর্ট ও গাইড (gemini-3.5-flash)"
-                >
-                  <Sparkles className="w-3 h-3 text-emerald-400" />
-                  <span>সাধারণ (3.5)</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setBotPersona('complex')}
-                  className={`px-2 py-0.5 rounded-full font-bold transition flex items-center gap-1 cursor-pointer shrink-0 text-[10px] ${
-                    botPersona === 'complex'
-                      ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40 shadow-xs'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                  title="জটিল কোডিং ও বিশ্লেষণ (gemini-3.1-pro-preview)"
-                >
-                  <BookOpen className="w-3 h-3 text-sky-400" />
-                  <span>কমপ্লেক্স (Pro)</span>
-                </button>
-              </div>
-            </div>
-          )}
 
           {/* CHAT BODY */}
           {!isMinimized && (
@@ -808,7 +741,7 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                   e.preventDefault();
                   if (!isBusy) handleSend();
                 }}
-                className="p-3 bg-[#0d1b3a] border-t border-slate-800 flex gap-2 items-center"
+                className="p-3 bg-white/10 dark:bg-slate-900/60 backdrop-blur-xl border-t border-white/10 flex gap-2 items-center"
               >
                 <input
                   type="text"
@@ -820,12 +753,12 @@ export const FloatingAiChatbot: React.FC<FloatingAiChatbotProps> = ({
                   }
                   value={inputMsg}
                   onChange={(e) => setInputMsg(e.target.value)}
-                  className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-[#006A4E] disabled:opacity-60 disabled:cursor-not-allowed font-sans"
+                  className="flex-1 liquid-glass-input rounded-xl px-3.5 py-2 text-xs text-white placeholder-white/60 focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed font-sans"
                 />
                 <button
                   type="submit"
                   disabled={isBusy || !inputMsg.trim()}
-                  className="p-2.5 bg-[#006A4E] hover:bg-[#047857] disabled:opacity-50 text-white font-bold rounded-xl shadow-xs cursor-pointer disabled:cursor-not-allowed transition shrink-0 active:scale-95"
+                  className="p-2.5 liquid-glass-btn-primary disabled:opacity-50 text-white font-bold rounded-xl shadow-xs cursor-pointer disabled:cursor-not-allowed transition shrink-0 active:scale-95"
                   title="মেসেজ পাঠান"
                 >
                   <Send className="w-4 h-4" />

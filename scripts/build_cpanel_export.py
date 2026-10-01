@@ -27,7 +27,7 @@ def main():
 
     # 1. Clean previous zips to prevent nested/inflated archives
     for folder in ['public', 'dist', '.']:
-        for z in ['PTENit.zip', 'ptenit_cpanel_upload.zip']:
+        for z in ['PTENit.zip', 'ptenit_cpanel_upload.zip', 'cpanel-deployment-ready.zip', 'public_html.zip']:
             target = os.path.join(workspace_root, folder, z)
             if os.path.exists(target):
                 try:
@@ -65,13 +65,19 @@ def main():
             shutil.copytree(src_api_dir, dist_api_dir)
             print("[+] Copied api/ directory to dist/api/")
 
-    # 5. Ensure server_data/ is in dist/server_data/
+    # 5. Ensure server_data/ is in dist/server_data/ (only root collection json files, no subdirs)
     dist_server_data = os.path.join(dist_dir, 'server_data')
     src_server_data = os.path.join(workspace_root, 'public', 'server_data')
+    if os.path.exists(dist_server_data):
+        shutil.rmtree(dist_server_data)
+    os.makedirs(dist_server_data, exist_ok=True)
+
     if os.path.exists(src_server_data):
-        if not os.path.exists(dist_server_data):
-            shutil.copytree(src_server_data, dist_server_data)
-            print("[+] Copied server_data/ directory to dist/server_data/")
+        for f in os.listdir(src_server_data):
+            if f.endswith('.json'):
+                src_file = os.path.join(src_server_data, f)
+                shutil.copy2(src_file, os.path.join(dist_server_data, f))
+        print("[+] Copied clean master JSON files to dist/server_data/")
 
     # 6. Ensure README_CPANEL_INSTRUCTIONS.txt is in dist
     dist_readme = os.path.join(dist_dir, 'README_CPANEL_INSTRUCTIONS.txt')
@@ -85,28 +91,50 @@ def main():
     if os.path.exists(output_zip_temp):
         os.remove(output_zip_temp)
 
+    # Gather all files and prioritize assets/ and index.html
+    files_to_pack = []
+    for root, dirs, files in os.walk(dist_dir):
+        for file in files:
+            if file.endswith('.zip') or file.startswith('server.cjs'):
+                continue
+            file_path = os.path.join(root, file)
+            rel_path = os.path.relpath(file_path, dist_dir)
+            files_to_pack.append((file_path, rel_path))
+
+    # Priority sort: assets & html first, then htaccess, php, json
+    def sort_priority(item):
+        p = item[1]
+        if p.startswith('assets/'):
+            return 0
+        if p == 'index.html':
+            return 1
+        if p == '.htaccess':
+            return 2
+        if p.startswith('api/'):
+            return 3
+        return 4
+
+    files_to_pack.sort(key=sort_priority)
+
     files_packed = []
     print("[*] Packaging files into ZIP...")
     with zipfile.ZipFile(output_zip_temp, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zipf:
-        for root, dirs, files in os.walk(dist_dir):
-            for file in files:
-                # Exclude any nested zip files or server.cjs from static cPanel zip
-                if file.endswith('.zip') or file.startswith('server.cjs'):
-                    continue
-                file_path = os.path.join(root, file)
-                rel_path = os.path.relpath(file_path, dist_dir)
-                zipf.write(file_path, arcname=rel_path)
-                files_packed.append(rel_path)
+        for file_path, rel_path in files_to_pack:
+            zipf.write(file_path, arcname=rel_path)
+            files_packed.append(rel_path)
 
     zip_size_mb = os.path.getsize(output_zip_temp) / (1024 * 1024)
     print(f"[+] ZIP generated successfully! Total size: {zip_size_mb:.2f} MB ({len(files_packed)} files)")
 
     # 6. Copy zip to all target locations
     target_locations = [
+        os.path.join(workspace_root, 'cpanel-deployment-ready.zip'),
         os.path.join(workspace_root, 'PTENit.zip'),
         os.path.join(workspace_root, 'ptenit_cpanel_upload.zip'),
+        os.path.join(workspace_root, 'public', 'cpanel-deployment-ready.zip'),
         os.path.join(workspace_root, 'public', 'PTENit.zip'),
         os.path.join(workspace_root, 'public', 'ptenit_cpanel_upload.zip'),
+        os.path.join(workspace_root, 'dist', 'cpanel-deployment-ready.zip'),
         os.path.join(workspace_root, 'dist', 'PTENit.zip'),
         os.path.join(workspace_root, 'dist', 'ptenit_cpanel_upload.zip'),
     ]

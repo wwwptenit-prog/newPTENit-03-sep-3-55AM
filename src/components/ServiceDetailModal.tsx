@@ -75,6 +75,9 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
     (service as any).offerBadge === 'পাবলিক অফার' ||
     (service as any).offerBadge === 'বায়ারের অফার' ||
     (service as any).sellerLevel === 'ভেরিফায়েড বায়ার' ||
+    (service as any).sellerLevel === 'পাবলিক জব পোস্ট' ||
+    (service as any).sellerLevel === 'কাস্টম অফার' ||
+    (service as any).sellerTitle?.includes('বায়ার') ||
     (service as any).sellerRole === 'buyer'
   );
 
@@ -88,7 +91,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
     service.packages?.basic?.deliveryDays || (service as any).deadlineDays || 5
   );
 
-  const isSellerViewing = isBuyerOffer || viewerMode === 'seller' || (currentUser && currentUser.role === 'seller' && service.sellerId !== currentUser.id && viewerMode !== 'buyer');
+  const isSellerViewing = isBuyerOffer || viewerMode === 'seller' || (currentUser && (currentUser.role as any) === 'seller' && service.sellerId !== currentUser.id && viewerMode !== 'buyer');
   const [isOrderReceived, setIsOrderReceived] = useState(false);
   const [orderReceivedSuccessMsg, setOrderReceivedSuccessMsg] = useState('');
 
@@ -126,7 +129,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
       sellerId: currentUser.id,
       sellerName: currentUser.name || 'সেলার',
       sellerAvatar: currentUser.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-      packageType: isBuyerOffer ? 'Public Offer' : selectedTier.toUpperCase(),
+      packageType: (isBuyerOffer ? 'Custom' : selectedTier.toUpperCase()) as any,
       amount: pkgPrice,
       adminCommission: Math.round(pkgPrice * 0.1),
       sellerPayout: Math.round(pkgPrice * 0.9),
@@ -384,7 +387,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
       gigId: service.id,
       title: `${service.title} (${currentPackage.name})`,
       category: service.category,
-      packageType: selectedTier,
+      packageType: (selectedTier === 'basic' ? 'Basic' : selectedTier === 'standard' ? 'Standard' : 'Premium') as any,
       buyerId: activeBuyerId,
       buyerName: customerName.trim(),
       buyerEmail: customerEmail.trim(),
@@ -1062,15 +1065,15 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
     : (siteSettings?.bankAccountNumber || '2181100098765');
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 overflow-y-auto min-h-screen font-bengali animate-fadeIn text-slate-800 dark:text-slate-100 flex flex-col">
+    <div className="fixed inset-0 z-50 liquid-canvas-bg overflow-y-auto min-h-screen font-bengali animate-fadeIn text-slate-800 dark:text-slate-100 flex flex-col">
       {/* 1. TOP BAR: সম্পূর্ণ স্ক্রিনের শীর্ষে ফিক্সড/স্টিকি (স্ক্রোল করার সময় উপরে কোনো ফাঁকা থাকবে না) */}
-      <header className="sticky top-0 z-40 w-full bg-[#006A4E] text-white border-b border-[#00543D] shadow-sm shrink-0">
+      <header className="sticky top-0 z-40 w-full liquid-glass-header text-white shadow-md shrink-0 liquid-specular-top">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2">
           {/* LEFT: BACK BUTTON (বেক বাটন - ChevronLeft, সাদা কালার, কোনো বর্ডার ছাড়া) */}
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
+            className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-white/10 text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 shrink-0 border-0 outline-none"
             title={t('ফিরে যান', 'Go Back')}
           >
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5] text-white" />
@@ -1091,7 +1094,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
             <button
               type="button"
               onClick={() => setIsShareMenuOpen(!isShareMenuOpen)}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#00543D] text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-white/10 text-white text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 border-0 outline-none"
               title="সোশ্যাল মিডিয়ায় শেয়ার করুন"
             >
               <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
@@ -1105,7 +1108,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                   className="fixed inset-0 z-40"
                   onClick={() => setIsShareMenuOpen(false)}
                 />
-                <div className="absolute right-0 top-full mt-2 z-50 w-56 sm:w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-3 space-y-2 animate-fadeIn font-bengali">
+                <div className="absolute right-0 top-full mt-2 z-50 w-56 sm:w-64 liquid-glass-modal rounded-2xl shadow-2xl p-3 space-y-2 animate-fadeIn font-bengali">
                   <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1 border-b border-slate-100 dark:border-slate-800 pb-1.5 flex items-center justify-between">
                     <span>সোশ্যাল মিডিয়ায় শেয়ার করুন</span>
                     <button
@@ -1669,7 +1672,7 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                           <h4 className="text-xs sm:text-base font-bold text-slate-900 dark:text-white truncate">
                             {isSellerViewing ? (service.sellerName || "বায়ার / ক্লায়েন্ট") : ((service as any).sellerName || "PTENit Certified Team")}
                           </h4>
-                          <BadgeCheck className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500 fill-emerald-500 text-white shrink-0" title="ভেরিফাইড প্রোফাইল" />
+                          <span title="ভেরিফাইড প্রোফাইল"><BadgeCheck className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500 fill-emerald-500 text-white shrink-0" /></span>
                         </div>
                         <div className="flex items-center gap-2 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex-wrap">
                           {isSellerViewing ? (

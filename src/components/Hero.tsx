@@ -41,17 +41,21 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
       onMouseMove={handleMouseMove}
       onTouchMove={handleTouchMove}
       onMouseLeave={handleMouseLeave}
-      className="relative bg-[#091124] text-white pt-8 sm:pt-12 lg:pt-14 pb-0 overflow-hidden border-b border-slate-800/80"
+      className="relative bg-gradient-to-b from-[#060d1d] via-[#09152b] to-[#071124] text-white pt-8 sm:pt-12 lg:pt-14 pb-0 overflow-hidden border-b border-cyan-500/15"
     >
-      {/* Subtle Ambient Light Spotlight */}
+      {/* Dynamic Ambient Fluid Spotlight (Cyan & Lavender) */}
       {mouseCoords && (
         <div
           className="absolute inset-0 pointer-events-none transition-opacity duration-300 z-0"
           style={{
-            background: `radial-gradient(550px circle at ${mouseCoords.x}px ${mouseCoords.y}px, rgba(22, 163, 74, 0.15), transparent 70%)`,
+            background: `radial-gradient(650px circle at ${mouseCoords.x}px ${mouseCoords.y}px, rgba(56, 189, 248, 0.18), rgba(167, 139, 250, 0.1) 45%, transparent 70%)`,
           }}
         />
       )}
+
+      {/* Subtle Luminous Background Glow Orbs */}
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 -right-20 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-end">
@@ -62,7 +66,7 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-3xl md:text-5xl font-black font-bengali leading-snug lg:leading-tight text-white tracking-tight"
+              className="text-3xl md:text-5xl font-black font-bengali leading-snug lg:leading-tight text-white tracking-tight drop-shadow-sm"
             >
               {siteSettings.heroHeading || t("ডিজিটাল ক্যারিয়ার ও বিজনেস গড়ুন", "Build Your Career & Business")}
             </motion.h1>
@@ -71,21 +75,21 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-sm sm:text-base text-slate-300 font-bengali max-w-xl mx-auto lg:mx-0 leading-relaxed"
+              className="text-sm sm:text-base text-slate-300 font-bengali max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium"
             >
               {siteSettings.heroSubtext || t("আধুনিক IT সেবাসমূহ, কাস্টম সফটওয়্যার, ডিজিটাল মার্কেটিং ও প্রফেশনাল ট্রেনিং।", "Modern IT services, software, digital marketing and professional training.")}
             </motion.p>
 
-            {/* Action Buttons */}
+            {/* Action Buttons with Liquid Glass Sheen */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-3"
+              className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-3.5"
             >
               <button
                 onClick={() => setActiveTab('services')}
-                className="px-6 py-3 rounded-xl font-bold text-white bg-[#006A4E] hover:bg-[#00543e] shadow-xs active:scale-95 transition-all cursor-pointer flex items-center gap-2 group text-sm sm:text-base font-bengali relative"
+                className="liquid-glass-btn-primary px-6 py-3.5 rounded-xl font-bold text-white shadow-lg active:scale-95 transition-all cursor-pointer flex items-center gap-2 group text-sm sm:text-base font-bengali relative"
               >
                 {t('সার্ভিস দেখুন', 'Services')}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -93,36 +97,36 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, mouseCoords: parentMou
 
               <button
                 onClick={() => setActiveTab('marketplace')}
-                className="px-6 py-3 rounded-xl font-bold text-white bg-[#E11D48] hover:bg-[#BE123C] active:bg-[#9F1239] shadow-md hover:shadow-rose-900/30 active:scale-95 transition-all cursor-pointer text-sm sm:text-base flex items-center gap-1.5 font-bengali"
+                className="px-6 py-3.5 rounded-xl font-bold text-white bg-gradient-to-r from-[#E11D48]/95 to-[#be123c]/95 border border-white/30 shadow-lg shadow-rose-950/30 hover:shadow-rose-900/40 backdrop-blur-xl active:scale-95 transition-all cursor-pointer text-sm sm:text-base flex items-center gap-2 font-bengali relative overflow-hidden"
               >
                 {t('মার্কেটপ্লেস', 'Marketplace')}
                 <Play className="w-3.5 h-3.5 text-white fill-white" />
               </button>
             </motion.div>
 
-            {/* Micro Feature Badges */}
+            {/* Micro Feature Floating Glass Badges */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="pt-4 border-t border-slate-800/80 max-w-md lg:max-w-xl mx-auto lg:mx-0"
+              className="pt-5 border-t border-white/10 max-w-md lg:max-w-xl mx-auto lg:mx-0"
             >
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                <div className="flex items-center gap-2 justify-start pl-2 sm:pl-0">
-                  <Sparkles className="w-5 h-5 text-[#006A4E] shrink-0 stroke-[2.2]" />
-                  <span className="text-xs sm:text-sm font-bold text-slate-200 font-bengali truncate">AI সাপোর্ট</span>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+                <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.08] backdrop-blur-xl border border-white/20 shadow-md hover:border-cyan-400/50 hover:-translate-y-0.5 transition-all">
+                  <Sparkles className="w-4 h-4 text-cyan-400 shrink-0 stroke-[2.2]" />
+                  <span className="text-xs font-bold text-slate-200 font-bengali truncate">AI সাপোর্ট</span>
                 </div>
-                <div className="flex items-center gap-2 justify-start pl-2 sm:pl-0">
-                  <Award className="w-5 h-5 text-[#006A4E] shrink-0 stroke-[2.2]" />
-                  <span className="text-xs sm:text-sm font-bold text-slate-200 font-bengali truncate">{t('সার্টিফিকেট', 'Certificate')}</span>
+                <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.08] backdrop-blur-xl border border-white/20 shadow-md hover:border-emerald-400/50 hover:-translate-y-0.5 transition-all">
+                  <Award className="w-4 h-4 text-emerald-400 shrink-0 stroke-[2.2]" />
+                  <span className="text-xs font-bold text-slate-200 font-bengali truncate">{t('সার্টিফিকেট', 'Certificate')}</span>
                 </div>
-                <div className="flex items-center gap-2 justify-start pl-2 sm:pl-0">
-                  <ShieldCheck className="w-5 h-5 text-[#006A4E] shrink-0 stroke-[2.2]" />
-                  <span className="text-xs sm:text-sm font-bold text-slate-200 font-bengali truncate">{t('বিশ্বস্ত ট্রেনিং', 'Trusted')}</span>
+                <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.08] backdrop-blur-xl border border-white/20 shadow-md hover:border-indigo-400/50 hover:-translate-y-0.5 transition-all">
+                  <ShieldCheck className="w-4 h-4 text-indigo-400 shrink-0 stroke-[2.2]" />
+                  <span className="text-xs font-bold text-slate-200 font-bengali truncate">{t('বিশ্বস্ত ট্রেনিং', 'Trusted')}</span>
                 </div>
-                <div className="flex items-center gap-2 justify-start pl-2 sm:pl-0">
-                  <Users className="w-5 h-5 text-[#006A4E] shrink-0 stroke-[2.2]" />
-                  <span className="text-xs sm:text-sm font-bold text-slate-200 font-bengali truncate">{t('লাইফটাইম সাপোর্ট', 'Support')}</span>
+                <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.08] backdrop-blur-xl border border-white/20 shadow-md hover:border-sky-400/50 hover:-translate-y-0.5 transition-all">
+                  <Users className="w-4 h-4 text-sky-400 shrink-0 stroke-[2.2]" />
+                  <span className="text-xs font-bold text-slate-200 font-bengali truncate">{t('লাইফটাইম সাপোর্ট', 'Support')}</span>
                 </div>
               </div>
             </motion.div>

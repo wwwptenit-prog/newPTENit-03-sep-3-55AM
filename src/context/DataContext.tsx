@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import {
   User,
   Course,
@@ -57,7 +57,7 @@ import {
   signInWithPopup,
   User as FirebaseUser
 } from 'firebase/auth';
-import { doc, getDoc, onSnapshot, getDocs, collection } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { 
   syncDocToFirestore, 
   deleteDocFromFirestore, 
@@ -95,6 +95,9 @@ interface DataContextType {
   contactMessages: ContactMessage[];
   notifications: NotificationItem[];
   directMessages: DirectMessageItem[];
+  roleScopedNotifications: NotificationItem[];
+  roleScopedDirectMessages: DirectMessageItem[];
+  unreadMarketplaceMsgCount: number;
   activeChatWindows: ActiveChatWindow[];
   activeMessengerConversationId: string | null;
   setActiveMessengerConversationId: (id: string | null) => void;
@@ -260,10 +263,10 @@ interface DataContextType {
   markDirectMessageRead: (id: string) => void;
   markAllDirectMessagesRead: () => void;
   sendDirectMessage: (msg: Omit<DirectMessageItem, 'id' | 'read'>) => void;
-  openChatWindow: (contact: { id?: string; senderName: string; senderRole?: string; senderAvatar?: string; initialMessage?: string }) => void;
+  openChatWindow: (contact: { id?: string; orderId?: string; senderName: string; senderRole?: string; senderAvatar?: string; initialMessage?: string; targetUserId?: string; targetUserEmail?: string }) => void;
   closeChatWindow: (id: string) => void;
   toggleMinimizeChatWindow: (id: string) => void;
-  sendChatMessage: (windowId: string, text: string, meetLink?: string, directOffer?: DirectOfferMeta) => void;
+  sendChatMessage: (windowId: string, text: string, meetLink?: string, directOffer?: DirectOfferMeta, customRecipient?: { id?: string; name?: string; role?: string; avatar?: string; email?: string }) => void;
   createGoogleMeetCall: (windowId: string, customMeetLink?: string) => void;
   inAppMeetState: {
     isOpen: boolean;
@@ -302,13 +305,6 @@ interface DataContextType {
   updateMarketplaceOrder: (id: string, updates: Partial<MarketplaceOrder>) => void;
   acceptDirectOffer: (orderIdOrProjectId: string) => void;
   declineDirectOffer: (orderIdOrProjectId: string, reason?: string) => void;
-  updateDirectOffer: (orderIdOrProjectId: string, updates: {
-    title?: string;
-    budget?: number;
-    budgetRange?: string;
-    deliveryDays?: number;
-    description?: string;
-  }) => void;
   publishDirectProjectToPublicFeed: (orderIdOrProjectId: string) => void;
   resendDirectOffer24h: (orderIdOrProjectId: string) => void;
   deleteTeacherPayout: (id: string) => void;
@@ -430,56 +426,7 @@ export const checkAndAutoCancelOverdueOrders = (orders: MarketplaceOrder[]): { u
   return { updatedOrders, hasChanges };
 };
 
-// One-time cleanup of stale test data from previous storage versions
-try {
-  if (typeof window !== 'undefined' && localStorage.getItem('ptenit_v3_migrated') !== 'true') {
-    const keysToPurge = [
-      'ptenit_database_v2_notifications',
-      'ptenit_database_v2_direct_messages',
-      'ptenit_database_v2_marketplace_orders',
-      'ptenit_database_v2_orders',
-      'ptenit_database_v2_customer_projects',
-      'ptenit_database_v2_messages',
-      'ptenit_data_notifications',
-      'ptenit_data_direct_messages',
-      'ptenit_data_marketplace_orders',
-      'ptenit_data_orders',
-      'ptenit_my_buyer_post_ids',
-      'ptenit_company_bills'
-    ];
-    keysToPurge.forEach(k => {
-      try { localStorage.removeItem(k); } catch {}
-    });
-    localStorage.setItem('ptenit_v3_migrated', 'true');
-  }
-} catch {}
-
-export const STORAGE_KEY = 'ptenit_database_v3';
-
-// Clear user session cache, active orders, and notifications from browser storage on logout or new signup
-export const clearUserSessionStorage = (storageKey: string = STORAGE_KEY) => {
-  try {
-    if (typeof window === 'undefined') return;
-    const keysToPurge = [
-      `${storageKey}_current_user`,
-      `${storageKey}_ptenit_user`,
-      `${storageKey}_marketplace_user`,
-      `${storageKey}_read_convo_ids`,
-      `${storageKey}_orders`,
-      `${storageKey}_marketplace_orders`,
-      `${storageKey}_customer_projects`,
-      `${storageKey}_notifications`,
-      `${storageKey}_direct_messages`,
-      `${storageKey}_messages`,
-      'ptenit_my_buyer_post_ids',
-      'ptenit_active_chat_windows',
-      'marketplace_mode'
-    ];
-    keysToPurge.forEach(k => {
-      try { localStorage.removeItem(k); } catch {}
-    });
-  } catch {}
-};
+const STORAGE_KEY = 'ptenit_database_v2';
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
@@ -648,21 +595,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   }, [playAppSound]);
 
-  // Safe JSON parser to protect against corrupted localStorage crashing on load
-  function safeJsonParse<T>(jsonString: string | null, fallback: T): T {
-    if (!jsonString) return fallback;
-    try {
-      const val = JSON.parse(jsonString);
-      return val !== null && val !== undefined ? val : fallback;
-    } catch {
-      return fallback;
-    }
-  }
-
   // Load state from localStorage or initialData
   const [siteSettings, setSiteSettings] = useState<SiteSettings>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_settings`);
-    return safeJsonParse(saved, initialSiteSettings);
+    return saved ? JSON.parse(saved) : initialSiteSettings;
   });
 
   const [courses, setCourses] = useState<Course[]>(() => {
@@ -703,22 +639,22 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [gallery, setGallery] = useState<GalleryItem[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_gallery`);
-    return safeJsonParse(saved, initialGallery);
+    return saved ? JSON.parse(saved) : initialGallery;
   });
 
   const [testimonials, setTestimonials] = useState<Testimonial[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_testimonials`);
-    return safeJsonParse(saved, initialTestimonials);
+    return saved ? JSON.parse(saved) : initialTestimonials;
   });
 
   const [offers, setOffers] = useState<Offer[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_offers`);
-    return safeJsonParse(saved, initialOffers);
+    return saved ? JSON.parse(saved) : initialOffers;
   });
 
   const [users, setUsers] = useState<User[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_users`);
-    return safeJsonParse(saved, initialUsers);
+    return saved ? JSON.parse(saved) : initialUsers;
   });
 
   // PTENit IT Academy / Services User Account
@@ -781,7 +717,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [certificates, setCertificates] = useState<Certificate[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_certificates`);
-    return safeJsonParse(saved, initialCertificates);
+    return saved ? JSON.parse(saved) : initialCertificates;
   });
 
   const [orders, setOrders] = useState<PaymentOrder[]>(() => {
@@ -800,7 +736,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const saved = localStorage.getItem('ptenit_company_bills');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed)) {
+          return parsed.filter(b => b.id !== 'BILL-1001' && b.id !== 'BILL-1002');
+        }
       }
     } catch (e) {}
     return [];
@@ -808,17 +746,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [contactMessages, setContactMessages] = useState<ContactMessage[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_messages`);
-    return safeJsonParse(saved, []);
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [notifications, setNotifications] = useState<NotificationItem[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_notifications`);
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          return parsed.filter(n => n.recipientId || n.recipientEmail || n.isBroadcast);
-        }
+        return JSON.parse(saved);
       } catch {
         // fallback
       }
@@ -1077,7 +1012,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
-          return parsed.filter(p => p.id !== 'proj-1' && p.customerId !== 'user-cust-1');
+          const filtered = parsed.filter(p => p.id !== 'proj-1' && p.customerId !== 'user-cust-1');
+          const map = new Map<string, CustomerProject>();
+          filtered.forEach(p => { if (p && p.id) map.set(p.id, p); });
+          return Array.from(map.values());
         }
       } catch {}
     }
@@ -1087,36 +1025,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [payouts, setPayouts] = useState<TeacherPayout[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_payouts`);
     if (saved) {
-      try { return JSON.parse(saved); } catch {}
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(p => p.id !== 'pay-101' && p.id !== 'pay-102');
+        }
+      } catch {}
     }
-    return [
-      {
-        id: "pay-101",
-        teacherId: "teacher-1",
-        teacherName: "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
-        teacherEmail: "teacher@ptenit.com",
-        amount: 8500,
-        paymentMethod: "bKash",
-        accountNumber: "01711122233",
-        note: "জুলাই মাসের কোর্স কমিশন ও মডিউল অ্যাসেসড বোনাস",
-        status: "Pending",
-        requestedAt: "2026-07-31 16:20"
-      },
-      {
-        id: "pay-102",
-        teacherId: "teacher-1",
-        teacherName: "তানভীর আহমেদ (ইনস্ট্রাক্টর)",
-        teacherEmail: "teacher@ptenit.com",
-        amount: 5000,
-        paymentMethod: "Nagad",
-        accountNumber: "01711122233",
-        note: "জুন মাসের ইনস্ট্রাকশন পেমেন্ট",
-        status: "Paid",
-        transactionId: "NG7721X90",
-        requestedAt: "2026-06-30 11:00",
-        processedAt: "2026-07-01 10:30"
-      }
-    ];
+    return [];
   });
 
   const [teacherNotices, setTeacherNotices] = useState<TeacherNotice[]>(() => {
@@ -1143,12 +1059,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           return parsed;
         }
       } catch {}
     }
-    return initialGigs;
+    return [];
   });
 
   const [jobs, setJobs] = useState<MarketplaceJob[]>(() => {
@@ -1218,7 +1134,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             o.id !== 'proj-1' &&
             o.id !== 'ord-101'
           );
-          return checkAndAutoCancelOverdueOrders(cleaned).updatedOrders;
+          const map = new Map<string, MarketplaceOrder>();
+          cleaned.forEach(o => { if (o && o.id) map.set(o.id, o); });
+          return checkAndAutoCancelOverdueOrders(Array.from(map.values())).updatedOrders;
         }
       } catch {}
     }
@@ -1464,9 +1382,42 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }));
 
     unsubs.push(subscribeToCollection<DirectMessageItem>('directMessages', (items) => {
-      if (items && items.length > 0) {
+      if (items && Array.isArray(items)) {
         setDirectMessages(items);
         localStorage.setItem(`${STORAGE_KEY}_direct_messages`, JSON.stringify(items));
+
+        // Live update active chat windows with incoming messages
+        setActiveChatWindows(prev => prev.map(win => {
+          const matching = items.filter(m =>
+            m.id === win.id ||
+            m.conversationId === win.id ||
+            (win.orderId && m.orderId === win.orderId) ||
+            (win.targetUserId && (m.senderId === win.targetUserId || m.recipientId === win.targetUserId))
+          );
+          if (matching.length === 0) return win;
+
+          const existingIds = new Set(win.messages.map(m => m.id));
+          const newConverted: ChatMessage[] = matching
+            .filter(m => !existingIds.has(m.id))
+            .map(m => ({
+              id: m.id,
+              senderName: m.senderName,
+              senderAvatar: m.senderAvatar,
+              isSelf: Boolean(currentUser && (m.senderId === currentUser.id || (m.senderEmail && currentUser.email && m.senderEmail.toLowerCase() === currentUser.email.toLowerCase()))),
+              text: m.text || m.message || '',
+              time: m.time || 'এখন',
+              meetLink: m.meetLink,
+              directOffer: m.directOffer
+            }));
+
+          if (newConverted.length > 0) {
+            return {
+              ...win,
+              messages: [...win.messages, ...newConverted]
+            };
+          }
+          return win;
+        }));
       }
     }));
 
@@ -1479,8 +1430,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     unsubs.push(subscribeToCollection<CustomerProject>('customerProjects', (items) => {
       if (items && items.length > 0) {
-        setCustomerProjects(items);
-        localStorage.setItem(`${STORAGE_KEY}_customer_projects`, JSON.stringify(items));
+        setCustomerProjects(prev => {
+          const map = new Map<string, CustomerProject>();
+          prev.forEach(p => { if (p && p.id) map.set(p.id, p); });
+          items.forEach(i => { if (i && i.id) map.set(i.id, i); });
+          const merged = Array.from(map.values());
+          localStorage.setItem(`${STORAGE_KEY}_customer_projects`, JSON.stringify(merged));
+          return merged;
+        });
       }
     }));
 
@@ -1542,14 +1499,13 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Immediate Server Storage fetch (instant load for mobile & cPanel environments)
     const loadServerBackups = async () => {
       try {
-        const [srvSettings, srvOrders, srvUsers, srvMktOrders, srvCourses, srvNotifs, srvGigs] = await Promise.all([
+        const [srvSettings, srvOrders, srvUsers, srvMktOrders, srvCourses, srvNotifs] = await Promise.all([
           fetchServerCollection<SiteSettings>('siteSettings'),
           fetchServerCollection<PaymentOrder>('orders'),
           fetchServerCollection<User>('users'),
           fetchServerCollection<MarketplaceOrder>('marketplaceOrders'),
           fetchServerCollection<Course>('courses'),
           fetchServerCollection<NotificationItem>('notifications'),
-          fetchServerCollection<MarketplaceGig>('gigs'),
         ]);
 
         if (srvSettings && srvSettings.length > 0) {
@@ -1570,17 +1526,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             prev.forEach(u => map.set(u.id, u));
             srvUsers.forEach(u => map.set(u.id, u));
             return Array.from(map.values());
-          });
-        }
-        if (srvGigs && srvGigs.length > 0) {
-          setGigs(prev => {
-            const map = new Map<string, MarketplaceGig>();
-            initialGigs.forEach(g => map.set(g.id, g));
-            prev.forEach(g => map.set(g.id, g));
-            srvGigs.forEach(g => map.set(g.id, g));
-            const merged = Array.from(map.values());
-            localStorage.setItem(`${STORAGE_KEY}_gigs`, JSON.stringify(merged));
-            return merged;
           });
         }
         if (srvNotifs && srvNotifs.length > 0) {
@@ -1630,18 +1575,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           await syncCollectionToFirestore('services', initialServices);
           await syncCollectionToFirestore('gallery', initialGallery);
           await syncCollectionToFirestore('testimonials', initialTestimonials);
+          await syncCollectionToFirestore('gigs', initialGigs);
           await syncCollectionToFirestore('jobs', initialJobs);
           await syncCollectionToFirestore('digitalProducts', initialDigitalProducts);
           await syncCollectionToFirestore('users', initialUsers);
         }
-        // Ensure gigs collection is synced to Firestore so mobile and web all have real gigs
-        try {
-          const gigsSnap = await getDocs(collection(db, 'gigs'));
-          if (gigsSnap.empty) {
-            console.log('[Firestore] Seeding initial gigs...');
-            await syncCollectionToFirestore('gigs', initialGigs);
-          }
-        } catch {}
       } catch (e) {
         console.warn('[Firestore] Seed skipped or already initialized:', e);
       }
@@ -1830,9 +1768,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         alert("আপনার একাউন্টটি সাময়িকভাবে স্থগিত করা হয়েছে। এডমিনের সাথে যোগাযোগ করুন।");
         return false;
       }
-      setActiveChatWindows([]);
-      setActiveMessengerConversationId(null);
-      setActiveMessengerOrderId(null);
       setCurrentUser(user);
       setPtenitUser(user);
       setMarketplaceUser(user);
@@ -1851,9 +1786,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       activeRole: 'student',
       createdAt: new Date().toISOString().split('T')[0]
     };
-    setActiveChatWindows([]);
-    setActiveMessengerConversationId(null);
-    setActiveMessengerOrderId(null);
     setUsers(prev => [...prev, newUser]);
     setCurrentUser(newUser);
     setPtenitUser(newUser);
@@ -1882,9 +1814,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         alert("আপনার একাউন্টটি সাময়িকভাবে স্থগিত করা হয়েছে। এডমিনের সাথে যোগাযোগ করুন।");
         return false;
       }
-      setActiveChatWindows([]);
-      setActiveMessengerConversationId(null);
-      setActiveMessengerOrderId(null);
       const updatedUser: User = {
         ...existing,
         avatar: existing.avatar || avatar,
@@ -1924,10 +1853,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       createdAt: new Date().toISOString().split('T')[0]
     };
 
-    // Thoroughly purge previous session cache and storage keys
-    clearUserSessionStorage();
-    localStorage.removeItem(`${STORAGE_KEY}_logged_out`);
-
     // Store instantly in users list (put at very beginning so admin sees it instantly!)
     setUsers(prev => {
       const next = [newUser, ...prev.filter(u => u.id !== newUser.id && (newUser.email ? u.email?.toLowerCase() !== newUser.email.toLowerCase() : true))];
@@ -1937,9 +1862,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCurrentUser(newUser);
     setPtenitUser(newUser);
     setMarketplaceUser(newUser);
-    setActiveChatWindows([]);
-    setActiveMessengerConversationId(null);
-    setActiveMessengerOrderId(null);
     localStorage.setItem(`${STORAGE_KEY}_current_user`, JSON.stringify(newUser));
 
     // Persist to server_data/users.json and Firebase
@@ -1953,25 +1875,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       time: 'এইমাত্র',
       read: false,
       type: 'info',
-      recipientRole: 'admin',
-      recipientId: 'admin',
-      targetTab: 'admin'
+      targetTab: 'admin',
+      recipientRole: 'admin'
     };
-
-    // Personalized Welcome notification specifically for this user
-    const userWelcomeNotif: NotificationItem = {
-      id: `notif-welcome-${Date.now()}`,
-      title: `স্বাগতম ${newUser.name}! 🎉`,
-      message: 'PTENit প্ল্যাটফর্মে আপনার অ্যাকাউন্ট সফলভাবে সক্রিয় হয়েছে।',
-      time: 'এখনই',
-      read: false,
-      type: 'success',
-      recipientId: newUser.id,
-      recipientEmail: newUser.email,
-      targetTab: 'profile'
-    };
-
-    setNotifications(prev => [userWelcomeNotif, adminNotif, ...prev]);
+    if (newUser.role === 'admin') {
+      setNotifications(prev => [adminNotif, ...prev]);
+    }
     syncDocToFirestore('notifications', adminNotif.id, adminNotif);
 
     return true;
@@ -1993,29 +1902,13 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         time: 'এইমাত্র',
         read: false,
         type: 'info',
-        recipientRole: 'admin',
-        recipientId: 'admin',
-        targetTab: 'admin'
+        targetTab: 'admin',
+        recipientRole: 'admin'
       };
-      setNotifications(prev => [adminNotif, ...prev]);
+      if (userCreated.role === 'admin') {
+        setNotifications(prev => [adminNotif, ...prev]);
+      }
       syncDocToFirestore('notifications', adminNotif.id, adminNotif);
-    };
-
-    // Thoroughly purge previous session cache and storage keys so new user gets a completely clean slate
-    clearUserSessionStorage();
-    localStorage.removeItem(`${STORAGE_KEY}_logged_out`);
-
-    // Personalized Welcome notification specifically for this user
-    const userWelcomeNotif: NotificationItem = {
-      id: `notif-welcome-${Date.now()}`,
-      title: `স্বাগতম ${newUser.name}! 🎉`,
-      message: 'PTENit প্ল্যাটফর্মে আপনার অ্যাকাউন্ট সফলভাবে সক্রিয় হয়েছে।',
-      time: 'এখনই',
-      read: false,
-      type: 'success',
-      recipientId: newUser.id,
-      recipientEmail: newUser.email,
-      targetTab: 'profile'
     };
 
     // 1. Immediately store in users state and localStorage so admin and user have instant access
@@ -2030,15 +1923,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCurrentUser(newUser);
     setPtenitUser(newUser);
     setMarketplaceUser(newUser);
-    setActiveChatWindows([]);
-    setActiveMessengerConversationId(null);
-    setActiveMessengerOrderId(null);
     localStorage.setItem(`${STORAGE_KEY}_current_user`, JSON.stringify(newUser));
 
     // 2. Synchronize to cPanel server_data/users.json AND Firebase Firestore
     syncDocToFirestore('users', newId, newUser);
     notifyAdminNewUser(newUser);
-    setNotifications(prev => [userWelcomeNotif, ...prev]);
 
     // 3. Connect to Firebase Auth if email provided
     if (userData.email && userData.email.includes('@')) {
@@ -2107,16 +1996,13 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     signOut(auth).catch(() => {});
-    clearUserSessionStorage();
-    localStorage.setItem(`${STORAGE_KEY}_logged_out`, 'true');
     setCurrentUser(null);
     setPtenitUser(null);
     setMarketplaceUser(null);
-    setActiveChatWindows([]);
-    setActiveMessengerConversationId(null);
-    setActiveMessengerOrderId(null);
-    setIsMessengerInboxOpen(false);
-    setIsNotificationCenterOpen(false);
+    localStorage.removeItem(`${STORAGE_KEY}_current_user`);
+    localStorage.removeItem(`${STORAGE_KEY}_ptenit_user`);
+    localStorage.removeItem(`${STORAGE_KEY}_marketplace_user`);
+    localStorage.removeItem('ptenit_my_buyer_post_ids');
   };
 
   const logoutMarketplace = () => {
@@ -2269,9 +2155,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       message: `আপনি সফলভাবে "${targetCourse?.title || 'লাইভ কোর্স'}" কোর্সটি রিসিভ করেছেন। মেন্টর সার্ভিস (Mentor Service) অটোমেটিক্যালি অ্যাক্টিভ করা হয়েছে।`,
       time: 'এইমাত্র',
       read: false,
-      type: 'success',
-      recipientId: currentUser?.id,
-      recipientEmail: currentUser?.email
+      type: 'success'
     };
     setNotifications(prev => [notif, ...prev]);
 
@@ -2397,32 +2281,15 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         time: 'এখনই',
         read: false,
         type: 'success',
-        recipientRole: 'admin',
-        recipientId: 'admin',
-        targetTab: 'admin',
+        targetTab: 'orders',
         targetId: newOrder.id
       };
-
-      // Confirmation Notification for Enrolled Student
-      const studentConfirmationNotif: NotificationItem = {
-        id: `notif-student-${Date.now()}`,
-        title: '🎓 কোর্স এনরোলমেন্ট সফল!',
-        message: `অভিনন্দন! "${newOrder.courseTitle}" কোর্সে আপনার এনরোলমেন্ট সফল হয়েছে।`,
-        time: 'এখনই',
-        read: false,
-        type: 'success',
-        recipientId: newOrder.userId,
-        recipientEmail: newOrder.userEmail,
-        targetTab: 'my-courses'
-      };
-
       setNotifications(prev => {
-        const next = [studentConfirmationNotif, notifItem, ...prev];
+        const next = [notifItem, ...prev];
         localStorage.setItem(`${STORAGE_KEY}_notifications`, JSON.stringify(next));
         return next;
       });
       syncDocToFirestore('notifications', notifItem.id, notifItem);
-      syncDocToFirestore('notifications', studentConfirmationNotif.id, studentConfirmationNotif);
       playAppSound('order');
 
       // Auto-feed into Company Bills ledger for Admin verification & financial tracking
@@ -2515,10 +2382,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         message: `অভিনন্দন! "${course.title}" কোর্সের ১০০% ক্লাস ও টাস্ক সম্পন্ন করায় আপনার সনদপত্র স্বয়ংক্রিয়ভাবে তৈরি হয়েছে।`,
         time: 'এইমাত্র',
         read: false,
-        type: 'success',
-        recipientId: currentUser.id,
-        recipientEmail: currentUser.email,
-        targetTab: 'certificates'
+        type: 'success'
       };
       setNotifications(prev => [newNotif, ...prev]);
     }
@@ -2930,20 +2794,13 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return prev.map(m => ({ ...m, read: true, unreadCount: 0 }));
     });
     setReadConversationIds(prev => {
-      const allIds = Array.from(new Set([
-        ...prev,
-        'chat-client-sohag',
-        'chat-client-tanjim',
-        'chat-client-sumaiya',
-        'chat-tanvir-ahmed',
-        'chat-creative-pixels',
-        'chat-piten-support'
-      ]));
+      const existingConvoIds = activeChatWindows.map(w => w.id);
+      const allIds = Array.from(new Set([...prev, ...existingConvoIds]));
       if (allIds.length === prev.length) return prev;
       localStorage.setItem(`${STORAGE_KEY}_read_convo_ids`, JSON.stringify(allIds));
       return allIds;
     });
-  }, []);
+  }, [activeChatWindows]);
 
   const markAllDirectMessagesRead = useCallback(() => {
     setDirectMessages(prev => {
@@ -2954,59 +2811,98 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const sendDirectMessage = (msg: Omit<DirectMessageItem, 'id' | 'read'>) => {
+    const timeStr = msg.time || new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
     const newMsg: DirectMessageItem = {
       ...msg,
-      id: `dmsg-${Date.now()}`,
-      senderId: msg.senderId || currentUser?.id,
-      senderEmail: msg.senderEmail || currentUser?.email,
+      id: `dmsg-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      time: timeStr,
+      createdAt: new Date().toISOString(),
       read: false
     };
-    setDirectMessages(prev => [newMsg, ...prev]);
+    setDirectMessages(prev => [newMsg, ...prev.filter(m => m.id !== newMsg.id)]);
+    syncDocToFirestore('directMessages', newMsg.id, newMsg);
+
+    // If targeted to a recipient, send a real notification
+    if (msg.recipientId && msg.recipientId !== currentUser?.id) {
+      const notifItem: NotificationItem = {
+        id: `notif-msg-${Date.now()}`,
+        title: `💬 নতুন বার্তা: ${msg.senderName || 'মেম্বার'}`,
+        message: (msg.text || (msg as any).message || '').slice(0, 70),
+        time: 'এইমাত্র',
+        read: false,
+        type: 'info',
+        category: 'message',
+        targetTab: 'messenger',
+        targetId: newMsg.id,
+        recipientId: msg.recipientId,
+        recipientRole: msg.recipientRole === 'seller' ? 'seller' : 'buyer',
+        mode: msg.recipientRole === 'seller' ? 'selling' : 'buying',
+        senderName: msg.senderName,
+        senderAvatar: msg.senderAvatar
+      };
+      setNotifications(prev => [notifItem, ...prev]);
+      syncDocToFirestore('notifications', notifItem.id, notifItem);
+    }
+
     playAppSound('message');
   };
 
-  const openChatWindow = (contact: { id?: string; orderId?: string; senderName: string; senderRole?: string; senderAvatar?: string; initialMessage?: string }) => {
+  const openChatWindow = (contact: {
+    id?: string;
+    orderId?: string;
+    senderName: string;
+    senderRole?: string;
+    senderAvatar?: string;
+    initialMessage?: string;
+    targetUserId?: string;
+    targetUserEmail?: string;
+  }) => {
     const windowId = contact.id || `chat-${contact.senderName.replace(/\s+/g, '-').toLowerCase()}`;
     setActiveMessengerConversationId(windowId);
     
     setActiveChatWindows(prev => {
-      const existing = prev.find(w => w.id === windowId || w.senderName === contact.senderName);
+      const existing = prev.find(w => w.id === windowId || (contact.targetUserId && w.targetUserId === contact.targetUserId));
       if (existing) {
         return [...prev.filter(w => w.id !== existing.id), { ...existing, minimized: false, orderId: contact.orderId || existing.orderId }];
       }
       
+      // Load real message history from directMessages
+      const realMsgs: ChatMessage[] = (directMessages || [])
+        .filter(dm => {
+          const matchesWindow = dm.id === windowId || dm.conversationId === windowId || (contact.orderId && dm.orderId === contact.orderId);
+          const matchesParticipants = Boolean(
+            currentUser && contact.targetUserId && (
+              (dm.senderId === currentUser.id && dm.recipientId === contact.targetUserId) ||
+              (dm.senderId === contact.targetUserId && dm.recipientId === currentUser.id)
+            )
+          );
+          return matchesWindow || matchesParticipants;
+        })
+        .map(dm => ({
+          id: dm.id,
+          senderName: dm.senderName,
+          senderAvatar: dm.senderAvatar,
+          isSelf: Boolean(currentUser && (dm.senderId === currentUser.id || (dm.senderEmail && currentUser.email && dm.senderEmail.toLowerCase() === currentUser.email.toLowerCase()))),
+          text: dm.text || (dm as any).message || '',
+          time: dm.time || 'পূর্বে',
+          meetLink: dm.meetLink,
+          directOffer: dm.directOffer
+        }));
+
       const newWin: ActiveChatWindow = {
         id: windowId,
         orderId: contact.orderId,
         senderName: contact.senderName,
         senderRole: contact.senderRole || 'customer',
         senderAvatar: contact.senderAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80',
+        targetUserId: contact.targetUserId,
+        targetUserEmail: contact.targetUserEmail,
+        initialDraft: contact.initialMessage,
         minimized: false,
-        messages: contact.initialMessage ? [
-          {
-            id: `msg-${Date.now()}-1`,
-            senderName: contact.senderName,
-            senderAvatar: contact.senderAvatar,
-            isSelf: false,
-            text: contact.initialMessage,
-            time: 'এখন'
-          }
-        ] : [
-          {
-            id: `msg-${Date.now()}-1`,
-            senderName: contact.senderName,
-            senderAvatar: contact.senderAvatar,
-            isSelf: false,
-            text: `হ্যালো! আমি ${contact.senderName}। কাজ বা প্রজেক্ট সম্পর্কিত যেকোনো তথ্যের জন্য ইনবক্সে মেসেজ করুন।`,
-            time: '১০ মিনিট আগে'
-          }
-        ]
+        messages: realMsgs
       };
       return [...prev, newWin];
     });
-
-    // Floating mini chat popup window opens on screen directly over the current view
-    // (User can view their orders and close popup with 'X' button)
   };
 
   const closeChatWindow = (id: string) => {
@@ -3085,100 +2981,199 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setActiveChatWindows(prev => prev.map(w => w.id === id ? { ...w, minimized: !w.minimized } : w));
   };
 
-  const sendChatMessage = (windowId: string, text: string, meetLink?: string, directOffer?: DirectOfferMeta) => {
+  const isSellerMode = marketplaceMode === 'selling';
+
+  // Role-scoped notifications strictly partitioned per user & mode - new user starts with 0
+  const roleScopedNotifications = React.useMemo(() => {
+    if (!currentUser) return [];
+    return (notifications || []).filter(n => {
+      // Admin sees all system notifications
+      if (currentUser.role === 'admin') return true;
+
+      // Normal users never see admin/staff alerts
+      if (n.recipientRole === 'admin' || n.targetTab === 'admin') return false;
+
+      // Mode check: strictly separate buyer and seller notifications
+      if (isSellerMode) {
+        if (n.mode === 'buying' || n.recipientRole === 'buyer' || n.recipientRole === 'customer' || n.recipientRole === 'student') {
+          return false;
+        }
+      } else {
+        if (n.mode === 'selling' || n.recipientRole === 'seller') {
+          return false;
+        }
+      }
+
+      // 1. Direct recipient targeting by ID
+      if (n.recipientId && n.recipientId !== 'all') {
+        return n.recipientId === currentUser.id;
+      }
+      // 2. Direct recipient targeting by Email
+      if (n.recipientEmail && n.recipientEmail !== 'all') {
+        return Boolean(currentUser.email && n.recipientEmail.toLowerCase() === currentUser.email.toLowerCase());
+      }
+
+      // 3. General announcements meant for all users (only if not addressed to a specific person)
+      if (n.recipientRole === 'all' && !n.recipientId && !n.recipientEmail) {
+        return true;
+      }
+
+      return false;
+    });
+  }, [notifications, currentUser, isSellerMode]);
+
+  // Role-scoped direct messages strictly partitioned per user & mode - new user starts with 0
+  const roleScopedDirectMessages = React.useMemo(() => {
+    if (!currentUser) return [];
+    return (directMessages || []).filter(m => {
+      const isParticipant = Boolean(
+        (m.recipientId && m.recipientId === currentUser.id) ||
+        (m.senderId && m.senderId === currentUser.id) ||
+        (m.recipientEmail && currentUser.email && m.recipientEmail.toLowerCase() === currentUser.email.toLowerCase()) ||
+        (m.senderEmail && currentUser.email && m.senderEmail.toLowerCase() === currentUser.email.toLowerCase())
+      );
+      if (!isParticipant) return false;
+
+      // Separate messages by active mode (buyer vs seller)
+      if (isSellerMode) {
+        if (m.mode === 'buying') return false;
+        if (m.recipientRole === 'buyer' && m.senderId === currentUser.id) return true;
+        if (m.recipientRole === 'seller' && m.recipientId === currentUser.id) return true;
+        return m.mode === 'selling' || !m.mode;
+      } else {
+        if (m.mode === 'selling') return false;
+        if (m.recipientRole === 'seller' && m.senderId === currentUser.id) return true;
+        if (m.recipientRole === 'buyer' && m.recipientId === currentUser.id) return true;
+        return m.mode === 'buying' || !m.mode;
+      }
+    });
+  }, [directMessages, currentUser, isSellerMode]);
+
+  const unreadMarketplaceMsgCount = React.useMemo(() => {
+    return roleScopedDirectMessages.filter(m => {
+      if (m.read) return false;
+      if (m.unreadCount !== undefined && m.unreadCount <= 0) return false;
+      if (readConversationIds && readConversationIds.includes(m.id)) return false;
+      return true;
+    }).length;
+  }, [roleScopedDirectMessages, readConversationIds]);
+
+  const sendChatMessage = (
+    windowId: string,
+    text: string,
+    meetLink?: string,
+    directOffer?: DirectOfferMeta,
+    customRecipient?: { id?: string; name?: string; role?: string; avatar?: string; email?: string }
+  ) => {
+    if (!text.trim() && !meetLink && !directOffer) return;
+
+    const timeStr = new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
     const userMsg: ChatMessage = {
-      id: `msg-${Date.now()}`,
+      id: `msg-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       senderName: currentUser?.name || 'আমি',
       senderAvatar: currentUser?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80',
       isSelf: true,
       text,
-      time: 'এখন',
+      time: timeStr,
       meetLink,
       directOffer
     };
 
-    // Find the target chat window to associate with order and decrement unread counter on reply
+    // Find the target chat window to associate with order and recipient info
     const currentWindows = activeChatWindows;
     const targetWin = currentWindows.find(w => w.id === windowId);
     const targetOrderId = targetWin?.orderId;
-    const targetSenderName = targetWin?.senderName;
+    const targetSenderName = targetWin?.senderName || customRecipient?.name || 'মেম্বার';
+    const targetUserId = targetWin?.targetUserId || customRecipient?.id;
+    const targetUserEmail = targetWin?.targetUserEmail || customRecipient?.email;
 
     // Decrement unread message count for this order upon sending a reply
-    setMarketplaceOrders(prev => prev.map(o => {
-      const isMatched = (targetOrderId && o.id === targetOrderId) ||
-        (targetSenderName && (o.buyerName === targetSenderName || o.sellerName === targetSenderName));
-      if (isMatched) {
-        const currentCount = o.unreadMessageCount ?? 0;
-        return {
-          ...o,
-          unreadMessageCount: Math.max(0, currentCount - 1)
-        };
-      }
-      return o;
-    }));
-
-    setActiveChatWindows(prev => prev.map(w => {
-      if (w.id === windowId) {
-        return {
-          ...w,
-          messages: [...w.messages, userMsg]
-        };
-      }
-      return w;
-    }));
-    playAppSound('message');
-
-    // Auto response for ongoing active messaging thread (only if not a direct offer or meet call)
-    if (!meetLink && !directOffer) {
-      setTimeout(() => {
-        setActiveChatWindows(prev => prev.map(w => {
-          if (w.id === windowId) {
-            const autoReplies = [
-              "ধন্যবাদ ভাইয়া! আপনার মেসেজটি পেয়েছি, কাজ দ্রুত এগিয়ে নিচ্ছি।",
-              "জি অবশ্যই! আমি বিষয়টি ড্যাশবোর্ডে ফাইলসহ আপডেট করে দেবো।",
-              "কোনো সংশোধনী থাকলে বলুন, আমরা এখনই গুগল মিটে লাইভ ডিসকাশন করতে পারি!"
-            ];
-            const randomReply = autoReplies[Math.floor(Math.random() * autoReplies.length)];
-            const autoReply: ChatMessage = {
-              id: `msg-reply-${Date.now()}`,
-              senderName: w.senderName,
-              senderAvatar: w.senderAvatar,
-              isSelf: false,
-              text: randomReply,
-              time: 'এখন'
-            };
-            return {
-              ...w,
-              messages: [...w.messages, autoReply]
-            };
-          }
-          return w;
-        }));
-        playAppSound('message');
-      }, 1200);
-    } else {
-      // Immediate acknowledgment from receiver when Google Meet link is shared
-      setTimeout(() => {
-        setActiveChatWindows(prev => prev.map(w => {
-          if (w.id === windowId) {
-            const autoReply: ChatMessage = {
-              id: `msg-reply-${Date.now()}`,
-              senderName: w.senderName,
-              senderAvatar: w.senderAvatar,
-              isSelf: false,
-              text: "ধন্যবাদ! আমি গুগল মিট (Google Meet) আমন্ত্রণটি পেয়েছি, এখনই লিংকে ক্লিক করে মিটিংয়ে যুক্ত হচ্ছি।",
-              time: 'এখন'
-            };
-            return {
-              ...w,
-              messages: [...w.messages, autoReply]
-            };
-          }
-          return w;
-        }));
-        playAppSound('message');
-      }, 1200);
+    if (targetOrderId || targetSenderName) {
+      setMarketplaceOrders(prev => prev.map(o => {
+        const isMatched = (targetOrderId && o.id === targetOrderId) ||
+          (targetSenderName && (o.buyerName === targetSenderName || o.sellerName === targetSenderName));
+        if (isMatched) {
+          const currentCount = o.unreadMessageCount ?? 0;
+          return {
+            ...o,
+            unreadMessageCount: Math.max(0, currentCount - 1)
+          };
+        }
+        return o;
+      }));
     }
+
+    setActiveChatWindows(prev => {
+      const exists = prev.some(w => w.id === windowId);
+      if (exists) {
+        return prev.map(w => w.id === windowId ? { ...w, messages: [...w.messages, userMsg] } : w);
+      }
+      return [...prev, {
+        id: windowId,
+        orderId: targetOrderId,
+        senderName: targetSenderName,
+        senderRole: targetWin?.senderRole || customRecipient?.role || 'মেম্বার',
+        senderAvatar: targetWin?.senderAvatar || customRecipient?.avatar,
+        targetUserId,
+        targetUserEmail,
+        minimized: false,
+        messages: [userMsg]
+      }];
+    });
+
+    // Real persistence into directMessages in Firestore
+    const directMsgItem: DirectMessageItem = {
+      id: userMsg.id,
+      conversationId: windowId,
+      senderId: currentUser?.id || 'guest',
+      senderEmail: currentUser?.email,
+      senderName: currentUser?.name || 'ইউজার',
+      senderRole: isSellerMode ? 'seller' : 'buyer',
+      senderAvatar: currentUser?.avatar,
+      recipientId: targetUserId,
+      recipientEmail: targetUserEmail,
+      recipientName: targetSenderName,
+      recipientRole: isSellerMode ? 'buyer' : 'seller',
+      text,
+      message: text,
+      time: timeStr,
+      createdAt: new Date().toISOString(),
+      read: false,
+      unreadCount: 1,
+      orderId: targetOrderId,
+      targetTab: 'messenger',
+      mode: isSellerMode ? 'selling' : 'buying',
+      meetLink,
+      directOffer
+    };
+
+    setDirectMessages(prev => [directMsgItem, ...prev.filter(m => m.id !== directMsgItem.id)]);
+    syncDocToFirestore('directMessages', directMsgItem.id, directMsgItem);
+
+    // Send real notification to recipient if targeted
+    if (targetUserId && targetUserId !== currentUser?.id) {
+      const notifItem: NotificationItem = {
+        id: `notif-msg-${Date.now()}`,
+        title: `💬 নতুন বার্তা: ${currentUser?.name || 'মেম্বার'}`,
+        message: text.length > 70 ? `${text.slice(0, 67)}...` : text,
+        time: 'এইমাত্র',
+        read: false,
+        type: 'info',
+        category: 'message',
+        targetTab: 'messenger',
+        targetId: windowId,
+        recipientId: targetUserId,
+        recipientRole: isSellerMode ? 'buyer' : 'seller',
+        mode: isSellerMode ? 'buying' : 'selling',
+        senderName: currentUser?.name,
+        senderAvatar: currentUser?.avatar
+      };
+      setNotifications(prev => [notifItem, ...prev]);
+      syncDocToFirestore('notifications', notifItem.id, notifItem);
+    }
+
+    playAppSound('message');
+    // NO fake canned auto-replies or dummy setTimeout bots!
   };
 
   // In-App Video/Audio/Screen Meet Studio State (Our site's native conference engine)
@@ -3549,17 +3544,16 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Customer Project Functions
-  const createCustomerProject = (projData: Omit<CustomerProject, 'id' | 'createdAt' | 'status'> & { id?: string; orderId?: string }) => {
+  const createCustomerProject = (projData: Omit<CustomerProject, 'id' | 'createdAt' | 'status'>) => {
     const createdAtIso = new Date().toISOString();
-    const projId = projData.id || `proj-${Date.now()}`;
     const newProj: CustomerProject = {
       ...projData,
-      id: projId,
+      id: `proj-${Date.now()}`,
       status: 'Pending Review',
       createdAt: createdAtIso.split('T')[0]
     };
     setCustomerProjects(prev => {
-      const next = [newProj, ...prev];
+      const next = [newProj, ...prev.filter(p => p.id !== newProj.id)];
       localStorage.setItem(`${STORAGE_KEY}_customer_projects`, JSON.stringify(next));
       return next;
     });
@@ -3570,11 +3564,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const isDirect = !!projData.isDirectOffer;
     const directExpiresAt = isDirect ? (projData.expiresAt || new Date(Date.now() + 24 * 3600 * 1000).toISOString()) : undefined;
 
-    const agencyOrderId = projData.orderId || `ord-ptenit-${projId.replace('proj-', '')}`;
     const agencyOrder: MarketplaceOrder = {
-      id: agencyOrderId,
-      jobId: newProj.id,
-      type: isDirect ? 'direct_offer' : 'custom_agency_order',
+      id: `ord-ptenit-${Date.now()}`,
+      type: 'custom_agency_order',
       title: projData.serviceTitle || (isDirect ? 'ডিরেক্ট পার্সোনাল প্রজেক্ট অফার' : 'PTEN IT এজেন্সির কাস্টম প্রজেক্ট'),
       category: projData.category || 'PTEN IT Agency',
       buyerId: projData.customerId || currentUser?.id || `guest-${Date.now()}`,
@@ -3590,8 +3582,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       adminCommission: Math.round(orderAmount * 0.1),
       sellerPayout: Math.round(orderAmount * 0.9),
       paymentMethod: 'PTEN IT Official Escrow',
-      transactionId: `TRX-${isDirect ? 'DIRECT' : 'PTENIT'}-${Math.floor(100000 + Math.random() * 900000)}`,
-      status: isDirect ? 'pending' : 'pending_approval',
+      transactionId: `TRX-PTENIT-${Math.floor(100000 + Math.random() * 900000)}`,
+      status: 'pending_approval',
       isPublicOffer: !isDirect,
       isDirectOffer: isDirect,
       targetSellerId: isDirect ? projData.targetSellerId : undefined,
@@ -3655,37 +3647,23 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       syncDocToFirestore('notifications', directNotif.id, directNotif);
     } else {
-      const adminNotif: NotificationItem = {
+      const notifItem: NotificationItem = {
         id: `notif-${Date.now()}`,
         title: `💼 নতুন কাস্টম প্রজেক্ট অর্ডার #${newProj.id}`,
         message: `${newProj.customerName} "${newProj.serviceTitle}" জমা দিয়েছেন।`,
         time: 'এখনই',
         read: false,
         type: 'info',
-        recipientRole: 'admin',
-        recipientId: 'admin',
-        targetTab: 'admin',
-        targetId: newProj.id
-      };
-      const buyerConfirmationNotif: NotificationItem = {
-        id: `notif-buyer-${Date.now()}`,
-        title: `💼 আপনার প্রজেক্ট অর্ডার #${newProj.id} সফলভাবে জমা হয়েছে`,
-        message: `আপনার "${newProj.serviceTitle}" প্রজেক্ট অর্ডারটি রিসিভ করা হয়েছে।`,
-        time: 'এখনই',
-        read: false,
-        type: 'success',
-        recipientId: buyerId,
-        recipientEmail: agencyOrder.buyerEmail,
-        targetTab: 'my-orders',
+        recipientRole: 'all',
+        targetTab: 'agency_projects',
         targetId: newProj.id
       };
       setNotifications(prev => {
-        const next = [buyerConfirmationNotif, adminNotif, ...prev];
+        const next = [notifItem, ...prev];
         localStorage.setItem(`${STORAGE_KEY}_notifications`, JSON.stringify(next));
         return next;
       });
-      syncDocToFirestore('notifications', adminNotif.id, adminNotif);
-      syncDocToFirestore('notifications', buyerConfirmationNotif.id, buyerConfirmationNotif);
+      syncDocToFirestore('notifications', notifItem.id, notifItem);
     }
     playAppSound('order');
   };
@@ -4024,10 +4002,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       time: 'এখনই',
       read: false,
       type: 'success',
-      recipientId: gig.instructorId || (gig as any).sellerId,
-      recipientEmail: gig.instructorEmail || (gig as any).sellerEmail,
-      recipientRole: 'seller',
-      mode: 'selling',
       targetTab: 'marketplace',
       targetId: order.id
     };
@@ -4039,10 +4013,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       time: 'এখনই',
       read: false,
       type: 'info',
-      recipientId: currentUser?.id || order.buyerId,
-      recipientEmail: currentUser?.email || order.buyerEmail,
-      recipientRole: 'buyer',
-      mode: 'buying',
       targetTab: 'marketplace',
       targetId: order.id
     };
@@ -4054,9 +4024,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       time: 'এখনই',
       read: false,
       type: 'success',
-      recipientRole: 'admin',
-      recipientId: 'admin',
-      targetTab: 'admin',
+      targetTab: 'orders',
       targetId: order.id
     };
 
@@ -4072,13 +4040,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setDirectMessages(prev => [
       {
         id: `dmsg-${Date.now()}`,
-        senderId: currentUser?.id || `user-cust-${Date.now()}`,
-        senderEmail: currentUser?.email,
         senderName: `${buyerName} (বায়ার)`,
         senderRole: 'customer',
         senderAvatar: currentUser?.avatar,
-        recipientId: gig.instructorId || (gig as any).sellerId || 'seller-1',
-        recipientEmail: gig.instructorEmail || (gig as any).sellerEmail,
         recipientRole: 'instructor',
         text: `সালাম! আমি "${gig.title}" এর ${pkg.name || packageType} প্যাকেজটি (৳${pkg.price}) প্লেস করেছি। (অর্ডার আইডি: #${order.id})।`,
         time: 'এখনই',
@@ -4093,12 +4057,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const deliverMarketplaceOrder = (orderId: string, note: string, fileUrl?: string, fileName?: string) => {
-    let targetBuyerId = '';
-    let targetBuyerEmail = '';
     setMarketplaceOrders(prev => prev.map(o => {
       if (o.id === orderId) {
-        targetBuyerId = o.buyerId || '';
-        targetBuyerEmail = o.buyerEmail || '';
         const item = {
           ...o,
           status: 'in_review' as const,
@@ -4121,10 +4081,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         time: 'এখনই',
         read: false,
         type: 'info',
-        recipientId: targetBuyerId,
-        recipientEmail: targetBuyerEmail,
-        recipientRole: 'buyer',
-        mode: 'buying',
         targetTab: 'marketplace',
         targetId: orderId
       },
@@ -4133,12 +4089,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const requestOrderRevision = (orderId: string, note: string) => {
-    let targetSellerId = '';
-    let targetSellerEmail = '';
     setMarketplaceOrders(prev => prev.map(o => {
       if (o.id === orderId) {
-        targetSellerId = o.sellerId || '';
-        targetSellerEmail = o.sellerEmail || '';
         const item = { ...o, status: 'revision_requested' as const, revisionNote: note };
         syncDocToFirestore('marketplaceOrders', orderId, item);
         return item;
@@ -4154,10 +4106,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         time: 'এখনই',
         read: false,
         type: 'warning',
-        recipientId: targetSellerId,
-        recipientEmail: targetSellerEmail,
-        recipientRole: 'seller',
-        mode: 'selling',
         targetTab: 'marketplace',
         targetId: orderId
       },
@@ -4194,7 +4142,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return o;
     }));
 
-    const matchedOrd = marketplaceOrders.find(o => o.id === orderId);
     setNotifications(prev => [
       {
         id: `notif-${Date.now()}`,
@@ -4205,10 +4152,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         time: 'এখনই',
         read: false,
         type: 'success',
-        recipientId: matchedOrd?.sellerId,
-        recipientEmail: matchedOrd?.sellerEmail,
-        recipientRole: 'seller',
-        mode: 'selling',
         targetTab: 'marketplace',
         targetId: orderId
       },
@@ -4226,7 +4169,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return o;
     }));
 
-    const matchedOrd = marketplaceOrders.find(o => o.id === orderId);
     setNotifications(prev => [
       {
         id: `notif-${Date.now()}`,
@@ -4235,8 +4177,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         time: 'এখনই',
         read: false,
         type: 'warning',
-        recipientId: matchedOrd?.buyerId || matchedOrd?.sellerId,
-        recipientEmail: matchedOrd?.buyerEmail || matchedOrd?.sellerEmail,
         targetTab: 'marketplace',
         targetId: orderId
       },
@@ -4245,13 +4185,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateMarketplaceOrderStatus = (orderId: string, status: MarketplaceOrder['status'], updateNote?: string) => {
-    let targetBuyerId = '';
-    let targetBuyerEmail = '';
     setMarketplaceOrders(prev => {
       const next = prev.map(o => {
         if (o.id === orderId) {
-          targetBuyerId = o.buyerId || '';
-          targetBuyerEmail = o.buyerEmail || '';
           const newUpdates = updateNote ? [
             ...(o.updates || []),
             { id: `upd-${Date.now()}`, date: new Date().toLocaleString('bn-BD', { hour12: true }), note: updateNote, sender: currentUser?.name || 'Seller' }
@@ -4278,10 +4214,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         time: 'এখনই',
         read: false,
         type: 'info',
-        recipientId: targetBuyerId,
-        recipientEmail: targetBuyerEmail,
-        recipientRole: 'buyer',
-        mode: 'buying',
         targetTab: 'marketplace',
         targetId: orderId
       },
@@ -4323,42 +4255,22 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     // Central Notification for Admin
-    const adminNotifItem: NotificationItem = {
+    const notifItem: NotificationItem = {
       id: `notif-${Date.now()}`,
       title: `🛍️ নতুন ডিজিটাল/মার্কেটপ্লেস অর্ডার #${order.id}`,
       message: `${order.buyerName} (${order.buyerPhone || ''}) "${order.title}" অর্ডার করেছেন (৳${order.amount})।`,
       time: 'এখনই',
       read: false,
       type: 'success',
-      recipientRole: 'admin',
-      recipientId: 'admin',
-      targetTab: 'admin',
-      targetId: order.id
-    };
-
-    // Confirmation Notification for Buyer
-    const buyerNotifItem: NotificationItem = {
-      id: `notif-buyer-${Date.now()}`,
-      title: `🛍️ অর্ডার সম্পন্ন #${order.id}`,
-      message: `আপনার "${order.title}" অর্ডারটি সফল হয়েছে (৳${order.amount})।`,
-      time: 'এখনই',
-      read: false,
-      type: 'success',
-      recipientId: order.buyerId,
-      recipientEmail: order.buyerEmail,
-      recipientRole: 'buyer',
-      mode: 'buying',
       targetTab: 'marketplace',
       targetId: order.id
     };
-
     setNotifications(prev => {
-      const next = [buyerNotifItem, adminNotifItem, ...prev];
+      const next = [notifItem, ...prev];
       localStorage.setItem(`${STORAGE_KEY}_notifications`, JSON.stringify(next));
       return next;
     });
-    syncDocToFirestore('notifications', adminNotifItem.id, adminNotifItem);
-    syncDocToFirestore('notifications', buyerNotifItem.id, buyerNotifItem);
+    syncDocToFirestore('notifications', notifItem.id, notifItem);
     playAppSound('order');
   };
 
@@ -4511,7 +4423,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     // Notify buyer
-    const targetOrder = marketplaceOrders.find(o => o.id === orderIdOrProjectId || o.jobId === orderIdOrProjectId);
     const notif: NotificationItem = {
       id: `notif-acc-${Date.now()}`,
       title: '🎉 ডিরেক্ট প্রজেক্ট অফার গৃহীত হয়েছে!',
@@ -4519,14 +4430,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       time: 'এখনই',
       read: false,
       type: 'success',
-      recipientId: targetOrder?.buyerId,
-      recipientEmail: targetOrder?.buyerEmail,
       recipientRole: 'buyer',
       mode: 'buying',
       targetTab: 'my-orders'
     };
     setNotifications(prev => [notif, ...prev]);
-    syncDocToFirestore('notifications', notif.id, notif);
     playAppSound('order');
   };
 
@@ -4557,57 +4465,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             ...p,
             status: 'Cancelled' as const,
             isExpiredReturned: true,
-            updatedAt: new Date().toISOString()
-          };
-          syncDocToFirestore('customerProjects', p.id, updated);
-          return updated;
-        }
-        return p;
-      });
-      localStorage.setItem(`${STORAGE_KEY}_customer_projects`, JSON.stringify(next));
-      return next;
-    });
-
-    playAppSound('notification');
-  };
-
-  const updateDirectOffer = (orderIdOrProjectId: string, updates: {
-    title?: string;
-    budget?: number;
-    budgetRange?: string;
-    deliveryDays?: number;
-    description?: string;
-  }) => {
-    setMarketplaceOrders(prev => {
-      const next = prev.map(o => {
-        if (o.id === orderIdOrProjectId || o.jobId === orderIdOrProjectId || (orderIdOrProjectId.startsWith('proj-') && o.id.includes(orderIdOrProjectId.replace('proj-', '')))) {
-          const updated = {
-            ...o,
-            title: updates.title || o.title,
-            amount: updates.budget || o.amount,
-            budgetRange: updates.budgetRange || o.budgetRange,
-            deliveryDays: updates.deliveryDays || o.deliveryDays,
-            deliveryNote: updates.description || o.deliveryNote,
-            updatedAt: new Date().toISOString()
-          };
-          syncDocToFirestore('marketplaceOrders', o.id, updated);
-          return updated;
-        }
-        return o;
-      });
-      localStorage.setItem(`${STORAGE_KEY}_marketplace_orders`, JSON.stringify(next));
-      return next;
-    });
-
-    setCustomerProjects(prev => {
-      const next = prev.map(p => {
-        if (p.id === orderIdOrProjectId || (orderIdOrProjectId.startsWith('ord-') && orderIdOrProjectId.includes(p.id.replace('proj-', '')))) {
-          const updated = {
-            ...p,
-            serviceTitle: updates.title || p.serviceTitle,
-            priceEstimate: updates.budget || p.priceEstimate,
-            budgetRange: updates.budgetRange || p.budgetRange,
-            description: updates.description || p.description,
             updatedAt: new Date().toISOString()
           };
           syncDocToFirestore('customerProjects', p.id, updated);
@@ -4914,101 +4771,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  // User Data Isolation & Strict Scoping:
-  // Admin sees all records across the platform.
-  // Regular users (students, clients, sellers) ONLY see their own records.
-  // New accounts or unauthenticated users see 0 orders/projects/notifs.
-  const isAdmin = currentUser?.role === 'admin' || Boolean(currentUser?.roles?.includes('admin'));
-
-  const scopedOrders = useMemo(() => {
-    if (isAdmin) return orders;
-    if (!currentUser) return [];
-    return orders.filter(o => 
-      o.userId === currentUser.id ||
-      (currentUser.email && (o as any).userEmail && (o as any).userEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) ||
-      (currentUser.mobile && (o as any).senderPhone && (o as any).senderPhone.trim() === currentUser.mobile.trim())
-    );
-  }, [orders, currentUser, isAdmin]);
-
-  const scopedMarketplaceOrders = useMemo(() => {
-    if (isAdmin) return marketplaceOrders;
-    if (!currentUser) return [];
-    return marketplaceOrders.filter(o => 
-      o.buyerId === currentUser.id ||
-      o.sellerId === currentUser.id ||
-      (o as any).customerId === currentUser.id ||
-      (currentUser.email && o.buyerEmail && o.buyerEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) ||
-      (currentUser.email && o.sellerEmail && o.sellerEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) ||
-      (currentUser.mobile && (o as any).buyerPhone && (o as any).buyerPhone.trim() === currentUser.mobile.trim()) ||
-      (currentUser.name && o.assignedExpert && o.assignedExpert.trim().toLowerCase() === currentUser.name.trim().toLowerCase())
-    );
-  }, [marketplaceOrders, currentUser, isAdmin]);
-
-  const scopedNotifications = useMemo(() => {
-    if (isAdmin) return notifications;
-    if (!currentUser) return [];
-    return notifications.filter(n => {
-      // Exclude admin alerts from non-admins
-      if (n.recipientRole === 'admin' || n.targetTab === 'admin' || n.recipientId === 'admin') return false;
-      // Scoped to this user
-      if (n.recipientId && n.recipientId === currentUser.id) return true;
-      if (currentUser.email && n.recipientEmail && n.recipientEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) return true;
-      // General official broadcast announcement
-      if (n.isBroadcast && n.recipientId === 'broadcast') return true;
-      return false;
-    });
-  }, [notifications, currentUser, isAdmin]);
-
-  const scopedDirectMessages = useMemo(() => {
-    if (isAdmin) return directMessages;
-    if (!currentUser) return [];
-    return directMessages.filter(dm => 
-      dm.recipientId === currentUser.id ||
-      dm.senderId === currentUser.id ||
-      (currentUser.email && dm.recipientEmail && dm.recipientEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) ||
-      (currentUser.email && dm.senderEmail && dm.senderEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim())
-    );
-  }, [directMessages, currentUser, isAdmin]);
-
-  const scopedContactMessages = useMemo(() => {
-    if (isAdmin) return contactMessages;
-    if (!currentUser) return [];
-    return contactMessages.filter(m => 
-      (m as any).userId === currentUser.id ||
-      (currentUser.email && m.email && m.email.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) ||
-      (currentUser.mobile && m.phone && m.phone.trim() === currentUser.mobile.trim())
-    );
-  }, [contactMessages, currentUser, isAdmin]);
-
-  const scopedCustomerProjects = useMemo(() => {
-    if (isAdmin) return customerProjects;
-    if (!currentUser) return [];
-    return customerProjects.filter(p => 
-      p.customerId === currentUser.id ||
-      (currentUser.email && p.customerEmail && p.customerEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim()) ||
-      (currentUser.mobile && p.customerPhone && p.customerPhone.trim() === currentUser.mobile.trim())
-    );
-  }, [customerProjects, currentUser, isAdmin]);
-
-  const scopedEnrollments = useMemo(() => {
-    if (isAdmin) return enrollments;
-    if (!currentUser) return [];
-    return enrollments.filter(e => 
-      e.userId === currentUser.id ||
-      e.studentId === currentUser.id ||
-      (currentUser.email && (e as any).userEmail && (e as any).userEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim())
-    );
-  }, [enrollments, currentUser, isAdmin]);
-
-  const scopedCertificates = useMemo(() => {
-    if (isAdmin) return certificates;
-    if (!currentUser) return [];
-    return certificates.filter(c => 
-      c.studentId === currentUser.id ||
-      (currentUser.email && (c as any).studentEmail && (c as any).studentEmail.toLowerCase().trim() === currentUser.email.toLowerCase().trim())
-    );
-  }, [certificates, currentUser, isAdmin]);
-
   return (
     <DataContext.Provider
       value={{
@@ -5032,14 +4794,17 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         services,
         gallery,
         testimonials,
-        enrollments: scopedEnrollments,
-        certificates: scopedCertificates,
+        enrollments,
+        certificates,
         offers,
         siteSettings,
-        orders: scopedOrders,
-        contactMessages: scopedContactMessages,
-        notifications: scopedNotifications,
-        directMessages: scopedDirectMessages,
+        orders,
+        contactMessages,
+        notifications,
+        directMessages,
+        roleScopedNotifications,
+        roleScopedDirectMessages,
+        unreadMarketplaceMsgCount,
         activeChatWindows,
         activeMessengerConversationId,
         setActiveMessengerConversationId,
@@ -5060,13 +4825,13 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         deleteNotification,
         assignments,
         submissions,
-        customerProjects: scopedCustomerProjects,
+        customerProjects,
         payouts,
         teacherNotices,
         gigs,
         jobs,
         proposals,
-        marketplaceOrders: scopedMarketplaceOrders,
+        marketplaceOrders,
         digitalProducts,
         addDigitalProduct,
         updateDigitalProduct,
@@ -5107,7 +4872,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateMarketplaceOrder,
         acceptDirectOffer,
         declineDirectOffer,
-        updateDirectOffer,
         publishDirectProjectToPublicFeed,
         resendDirectOffer24h,
         deleteTeacherPayout,

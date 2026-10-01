@@ -30,6 +30,41 @@ function sanitizePathSegment($segment) {
 $action = isset($_GET['action']) ? $_GET['action'] : '';
 $collection = isset($_GET['collection']) ? sanitizePathSegment($_GET['collection']) : '';
 
+// 0. Handle Email Verification Code Dispatch (cPanel PHP mail)
+if ($action === 'send_verification_email') {
+    $rawInput = file_get_contents('php://input');
+    $payload = json_decode($rawInput, true) ?: [];
+    $to = isset($payload['email']) ? trim($payload['email']) : '';
+    $code = isset($payload['code']) ? trim($payload['code']) : '';
+    $name = isset($payload['name']) ? trim($payload['name']) : 'সম্মানিত ইউজার';
+
+    if (!empty($to) && !empty($code) && filter_var($to, FILTER_VALIDATE_EMAIL)) {
+        $subject = "=?UTF-8?B?" . base64_encode("[PTENit] আপনার একাউন্ট ভেরিফিকেশন কোড: " . $code) . "?=";
+        $serverHost = isset($_SERVER['SERVER_NAME']) && !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'ptenit.com';
+        $headers = "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+        $headers .= "From: PTENit Security <noreply@" . $serverHost . ">\r\n";
+        $headers .= "Reply-To: support@" . $serverHost . "\r\n";
+
+        $body = '<div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 14px; background: #ffffff;">'
+              . '<div style="text-align: center; margin-bottom: 20px;"><h2 style="color: #006A4E; margin: 0;">PTEN<span style="color: #047857;">it</span></h2><p style="color: #64748b; font-size: 13px;">অ্যাকাউন্ট ভেরিফিকেশন</p></div>'
+              . '<div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 18px; text-align: center;">'
+              . '<p style="color: #166534; font-size: 14px; margin: 0 0 10px 0;">আসসালামু আলাইকুম <strong>' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '</strong>,</p>'
+              . '<p style="color: #334155; font-size: 13px; margin: 0;">আপনার অ্যাকাউন্ট ভেরিফাই করতে নিচের ৬-সংখ্যার কোডটি ব্যবহার করুন:</p>'
+              . '<div style="font-size: 32px; font-weight: bold; letter-spacing: 6px; color: #006A4E; background: #ffffff; border: 2px dashed #006A4E; padding: 10px 24px; border-radius: 8px; display: inline-block; margin: 16px 0;">' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '</div>'
+              . '<p style="color: #64748b; font-size: 12px; margin: 0;">কোডটি আগামী ১০ মিনিটের জন্য কার্যকর থাকবে।</p>'
+              . '</div>'
+              . '</div>';
+
+        @mail($to, $subject, $body, $headers);
+        echo json_encode(['success' => true, 'message' => 'Email sent successfully', 'recipient' => $to]);
+        exit;
+    }
+    http_response_code(400);
+    echo json_encode(['error' => 'Invalid email or code']);
+    exit;
+}
+
 // 1. GET: Fetch Collection or Document Data
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (empty($collection)) {
